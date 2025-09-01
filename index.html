@@ -140,14 +140,20 @@
     }
 
     /* --- Map setup --- */
-    const map = L.map('map').setView([40.76, -73.97], 13);
-    map.setMaxBounds([[40.68, -74.05],[40.88, -73.85]]);
+const map = L.map('map', {
+  minZoom: 12,  // don’t let users zoom out past Manhattan
+  maxZoom: 17   // optional: stop zooming in too far
+}).setView([40.76, -73.97], 13);
 
-    // Single base layer (OpenStreetMap)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+// Lock the view to Manhattan-ish bounds
+map.setMaxBounds([[40.68, -74.05], [40.88, -73.85]]);
+
+   // Single base layer (lighter Carto Positron style)
+L.tileLayer('https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+  subdomains: 'abcd',
+  maxZoom: 19
+}).addTo(map);
 
     const blackIcon = L.icon({
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/484/484167.png',
