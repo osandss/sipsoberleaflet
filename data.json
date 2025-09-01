@@ -1,10 +1,10 @@
 [
-  { "name": "The Penrose", "address": "1590 Second Ave", "website": "https://www.penrosebar.com", "brand": "Lyre's, Seedlip", "neighborhood": "Upper East Side", "lat": 40.7755, "lng": -73.9533 },
-  { "name": "Orsay", "address": "1057 Lexington Ave", "website": "https://www.orsayrestaurant.com", "brand": "Seedlip", "neighborhood": "Upper East Side", "lat": 40.7724, "lng": -73.9605 },
-  { "name": "Boqueria", "address": "1460 Second Ave", "website": "https://boqueriarestaurant.com", "brand": "Ritual Zero Proof, Seedlip", "neighborhood": "Upper East Side", "lat": 40.7716, "lng": -73.9554 },
-  { "name": "Bemelmans Bar", "address": "35 East 76th St", "website": "https://www.rosewoodhotels.com/en/the-carlyle-new-york/dining/bemelmans-bar", "brand": "Ritual Zero Proof, Seedlip", "neighborhood": "Upper East Side", "lat": 40.7744, "lng": -73.9632 }, 
-  { "name": "Crave Fishbar", "address": "945 Second Ave", "website": "https://cravefishbar.com", "brand": "Ritual Zero Proof", "neighborhood": "Upper East Side", "lat": 40.7717, "lng": -73.9556 },
-  { "name": "UVA", "address": "1486 Second Ave", "website": "https://www.uvanyc.com", "brand": "Ritual Zero Proof", "neighborhood": "Upper East Side", "lat": 40.7724, "lng": -73.9556 },
-  { "name": "Sefton", "address": "137 Ludlow St", "website": "https://thesefton.com", "brand": "Ritual Zero Proof", "neighborhood": "Upper East Side", "lat": 40.7691, "lng": -73.9554 },
-  { "name": "Hawksmoor", "address": "109 E 22nd St", "website": "https://www.hawksmoornyc.com", "brand": "Seedlip", "neighborhood": "Gramercy", "lat": 40.739, "lng": -73.985 },
-  { "name": "Gramercy Tavern", "address": "42 E 20th St", "website": "https://www.gramercytavern.com", "brand": "Lyre's", "neighborhood": "Gramercy", "lat": 40.7386, "lng": -73.9882 }
+  { "name": "The Penrose", "address": "1590 Second Ave", "website": "https://www.penrosebar.com", "brands": "Lyre's, Seedlip", "neighborhood": "Upper East Side", "lat": 40.7755, "lng": -73.9533 },
+  { "name": "Orsay", "address": "1057 Lexington Ave", "website": "https://www.orsayrestaurant.com", "brands": "Seedlip", "neighborhood": "Upper East Side", "lat": 40.7724, "lng": -73.9605 },
+  { "name": "Boqueria", "address": "1460 Second Ave", "website": "https://boqueriarestaurant.com", "brands": "Ritual Zero Proof, Seedlip", "neighborhood": "Upper East Side", "lat": 40.7716, "lng": -73.9554 },
+  { "name": "Bemelmans Bar", "address": "35 East 76th St", "website": "https://www.rosewoodhotels.com/en/the-carlyle-new-york/dining/bemelmans-bar", "brands": "Ritual Zero Proof, Seedlip", "neighborhood": "Upper East Side", "lat": 40.7744, "lng": -73.9632 }, 
+  { "name": "Crave Fishbar", "address": "945 Second Ave", "website": "https://cravefishbar.com", "brands": "Ritual Zero Proof", "neighborhood": "Upper East Side", "lat": 40.7717, "lng": -73.9556 },
+  { "name": "UVA", "address": "1486 Second Ave", "website": "https://www.uvanyc.com", "brands": "Ritual Zero Proof", "neighborhood": "Upper East Side", "lat": 40.7724, "lng": -73.9556 },
+  { "name": "Sefton", "address": "137 Ludlow St", "website": "https://thesefton.com", "brands": "Ritual Zero Proof", "neighborhood": "Upper East Side", "lat": 40.7691, "lng": -73.9554 },
+  { "name": "Hawksmoor", "address": "109 E 22nd St", "website": "https://www.hawksmoornyc.com", "brands": "Seedlip", "neighborhood": "Gramercy", "lat": 40.739, "lng": -73.985 },
+  { "name": "Gramercy Tavern", "address": "42 E 20th St", "website": "https://www.gramercytavern.com", "brands": "Lyre's", "neighborhood": "Gramercy", "lat": 40.7386, "lng": -73.9882 }
