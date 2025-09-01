@@ -4,17 +4,19 @@
   <meta charset="utf-8" />
   <title>Zero-Proof Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+  <!-- Leaflet CSS (latest CDN) -->
+  <link rel="stylesheet" 
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="anonymous"/>
+
   <style>
     body, html { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 12px; }
+    /* The map must have a height or it renders blank */
+    #map { height: calc(100vh - 50px); width: 100%; }
 
-    /* --- Filters bar above everything map-related --- */
-    #filters {
-      position: relative; z-index: 2000;
-      display: flex; gap: 10px; padding: 10px;
-      background: #f9f9f9; border-bottom: 1px solid #ddd; align-items: center;
-      pointer-events: auto;
-    }
+    
     .dropdown { position: relative; display: inline-block; z-index: 2001; pointer-events: auto; }
     .dropbtn {
       background-color: #f9f9f9; color: #333; padding: 6px 10px; font-size: 13px;
@@ -313,18 +315,27 @@ results.appendChild(card);
       map.invalidateSize();
     });
 
-    // Safety: keyboard 'R' reopens results in case the button gets obscured
-    document.addEventListener('keydown', (e)=>{
-      if (e.key && e.key.toLowerCase() === 'r') {
-        const sb = document.getElementById('sidebar');
-        const tog = document.getElementById('toggleSidebar');
-        if (sb && tog && sb.style.display === 'none') {
-          sb.style.display = 'block';
-          tog.style.display = 'none';
-          map.invalidateSize();
-        }
+     // Safety: keyboard 'R' reopens results in case the button gets obscured
+  document.addEventListener('keydown', (e)=>{
+    if (e.key && e.key.toLowerCase() === 'r') {
+      const sb  = document.getElementById('sidebar');
+      const tog = document.getElementById('toggleSidebar');
+      if (sb && tog && sb.style.display === 'none') {
+        sb.style.display = 'block';
+        tog.style.display = 'none';
+        map.invalidateSize();
       }
-    });
-  </script>
+    }
+  });
+
+  // --- Base map tiles (required for the map background) ---
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  // (Optional) quick sanity marker – remove later if not needed
+  // L.marker([40.771, -73.964]).addTo(map).bindPopup('Example location');
+</script>
 </body>
 </html>
