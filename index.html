@@ -231,13 +231,28 @@ L.tileLayer('https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/
         bounds = bounds ? bounds.extend(marker.getLatLng()) : L.latLngBounds([marker.getLatLng(), marker.getLatLng()]);
 
         const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `<span class="card-name" onclick="map.setView([${loc.lat}, ${loc.lng}], 16); openMarkerAt(${loc.lat}, ${loc.lng});">${loc.name}</span><br/>${loc.address}<br/><a href="${loc.website}" target="_blank">Website</a><br/>Brand: ${loc.brand||""}<br/>Neighborhood: ${loc.neighborhood||""}<br/><button onclick="this.style.color='red'; window.ReactNativeWebView?.postMessage('favorite:' + '${loc.name}')">♡ Favorite</button>`;
-        results.appendChild(card);
-      });
+card.className = "card";
+card.innerHTML = `
+  <span class="card-name" onclick="map.setView([${loc.lat}, ${loc.lng}], 16); openMarkerAt(${loc.lat}, ${loc.lng});">${loc.name}</span><br/>
+  ${loc.address}<br/>
+  <a href="${loc.website}" target="_blank">Website</a><br/>
+  Brand: ${loc.brand || ""}<br/>
+  Neighborhood: ${loc.neighborhood || ""}<br/>
+  <button
+    class="fav-btn"
+    data-name="${loc.name}"
+    data-website="${encodeURIComponent(loc.website)}"
+    onclick="toggleFavoriteFromButton(this)"
+  >♡ Favorite</button>
+`;
+results.appendChild(card);
 
-      return { count: filtered.length, bounds };
-    }
+// reflect current favorite state if the set is already loaded
+const btn = card.querySelector('.fav-btn');
+if (btn) {
+  const w = decodeURIComponent(btn.dataset.website);
+  if (window.__favorited && window.__favorited.has(w)) btn.classList.add('is-favorited');
+}
 
     function applyFilters() {
       // Close any open menus
@@ -344,5 +359,43 @@ L.tileLayer('https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/
       }
     });
   </script>
+  <!-- FAVORITES HELPER SCRIPT -->
+<script>
+  window.__favorited = new Set();
+
+  window.addEventListener('message', (ev) => {
+    const msg = ev.data || {};
+    if (msg.type === 'init-favorites' && Array.isArray(msg.websites)) {
+      window.__favorited = new Set(msg.websites);
+      document.querySelectorAll('.fav-btn').forEach((b) => {
+        const w = decodeURIComponent(b.dataset.website || '');
+        b.classList.toggle('is-favorited', window.__favorited.has(w));
+      });
+    }
+  });
+
+  function toggleFavoriteFromButton(btn) {
+    const name = btn.dataset.name || '';
+    const website = decodeURIComponent(btn.dataset.website || '');
+    const isFav = window.__favorited.has(website);
+
+    if (isFav) {
+      window.__favorited.delete(website);
+      btn.classList.remove('is-favorited');
+      window.parent.postMessage({ type: 'favorite:remove', payload: { name, website } }, '*');
+    } else {
+      window.__favorited.add(website);
+      btn.classList.add('is-favorited');
+      window.parent.postMessage({ type: 'favorite:add', payload: { name, website } }, '*');
+    }
+  }
+</script>
+
+<style>
+  .fav-btn.is-favorited { color: red; }
+</style>
+
+</body>
+</html>
 </body>
 </html>
