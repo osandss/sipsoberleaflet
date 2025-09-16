@@ -221,7 +221,7 @@ L.tileLayer('https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/
       let bounds = null;
 
       // --- Favorite toggle helper (add/remove) ---
-function toggleFav(btn) {
+window.toggleFav = function(btn) {
   const name = btn.dataset.name || '';
   const website = decodeURIComponent(btn.dataset.website || '');
   const isNowFav = btn.classList.toggle('is-favorited');
