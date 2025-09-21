@@ -65,6 +65,50 @@
     .card a { text-decoration: none; color: #0645AD; }
     .card button { font-size: 13px; margin-top: 4px; padding: 2px 6px; }
 
+    /* === Mobile: stack Filters -> Map -> List (sidebar below map) === */
+@media (max-width: 768px) {
+  /* Stack instead of side-by-side */
+  #main {
+    flex-direction: column;
+    height: auto;              /* let children set their own heights */
+  }
+
+  /* If you have a controls bar, keep it on top */
+  #controls {
+    order: 1;
+    position: relative;
+    z-index: 2001;             /* above Leaflet zoom buttons */
+  }
+
+  /* Map in the middle, with a fixed viewport height */
+  #map {
+    order: 2;
+    height: 58vh;              /* adjust 55–62vh to taste */
+    min-height: 320px;
+    width: 100%;
+  }
+
+  /* Sidebar becomes the scrollable list under the map */
+  #sidebar {
+    order: 3;
+    width: 100%;
+    max-width: none;
+    height: 42vh;              /* complements map’s 58vh */
+    max-height: 42vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    border-right: none;        /* remove desktop divider */
+    border-top: 1px solid #ccc;
+    position: static;          /* ensure it flows under the map */
+    box-sizing: border-box;
+    padding: 8px;
+    background: #fff;
+  }
+
+  /* Hide any desktop-only sidebar toggles on mobile */
+  #toggleSidebar { display: none; }
+}
+
     /* Selected filters row */
     #selectedRow {
       display: flex; flex-wrap: wrap; gap: 6px;
@@ -166,6 +210,18 @@ const map = L.map('map', {
 
 // Lock the view to Manhattan-ish bounds
 map.setMaxBounds([[40.68, -74.05], [40.88, -73.85]]);
+
+// ✅ Recalculate map size when device orientation or viewport changes
+window.addEventListener('orientationchange', () => {
+  setTimeout(() => map.invalidateSize(true), 300);
+});
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth <= 768) {
+    clearTimeout(window.__mapResizeTimer);
+    window.__mapResizeTimer = setTimeout(() => map.invalidateSize(true), 200);
+  }
+});
 
    // Single base layer (lighter Carto Positron style)
 L.tileLayer('https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png', {
