@@ -139,11 +139,14 @@
       return Array.from(document.querySelectorAll(`#${containerId} input[type=checkbox]:checked`)).map(cb=>cb.value.toLowerCase());
     }
 
-    /* --- Map setup --- */
+    /* --- Map setup (mobile starts wider, limits unchanged) --- */
+const isMobile = window.matchMedia('(max-width: 480px)').matches;
+const START_ZOOM = isMobile ? 12 : 13;   // mobile 12, desktop 13
+
 const map = L.map('map', {
-  minZoom: 12,  // don’t let users zoom out past Manhattan
-  maxZoom: 17   // optional: stop zooming in too far
-}).setView([40.76, -73.97], 13);
+  minZoom: 12,   // keep Manhattan floor
+  maxZoom: 17    // keep max zoom
+}).setView([40.76, -73.97], START_ZOOM);
 
 // Lock the view to Manhattan-ish bounds
 map.setMaxBounds([[40.68, -74.05], [40.88, -73.85]]);
