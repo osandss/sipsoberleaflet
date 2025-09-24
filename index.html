@@ -65,37 +65,43 @@
     box-sizing: border-box;
   }
 
-  /* Controls on top, single row */
-  #controls {
-    order: 1;
-    position: relative;
-    z-index: 2001;                 /* above Leaflet zoom */
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    flex-wrap: nowrap;             /* keep one row */
-  }
+ /* Controls on top, single row (grid: two filters + Go) */
+#controls {
+  order: 1;
+  position: relative;
+  z-index: 2001;
+  display: grid;                          /* switch to grid */
+  grid-template-columns: 1fr 1fr auto;    /* two equal filters + auto Go */
+  column-gap: 5px;
+  align-items: center;
+}
 
- /* Mobile: make Brand + Neighborhood filters match Go button */
-#controls .dropbtn {
-  flex: 1 1 43%;          /* keep them side by side */
+/* Kill global dropdown margins on mobile and allow shrinking */
+#controls .dropdown {
+  margin: 0 !important;                   /* overrides global .dropdown { margin:8px } */
   min-width: 0;
-  font-size: 10px;        /* same as Go button */
-  padding: 3px 6px;       /* same as Go button */
+}
+
+/* Brand + Neighborhood buttons: compact, fill their grid cells */
+#controls .dropbtn,
+#controls .dropdown > button {
+  width: 100% !important;                 /* fill the 1fr columns */
+  font-size: 10px !important;             /* match Go button */
+  padding: 3px 6px !important;            /* match Go button */
   border: 1px solid #333;
   background: #fff;
   border-radius: 5px;
   box-sizing: border-box;
 }
 
-  /* Go button stays tight at the end */
-  #controls button,
-  #goBtn {
-    flex: 0 0 auto;
-    white-space: nowrap;
-    font-size: 10px;
-    padding: 3px 6px;
-  }
+/* Go button in the third column (auto width, no wrap) */
+#controls #goBtn,
+#controls button#goBtn {
+  white-space: nowrap;
+  font-size: 10px;
+  padding: 3px 6px;
+}
+
 
   /* Map in the middle (no scrolling) */
   #map {
