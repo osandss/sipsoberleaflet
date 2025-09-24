@@ -76,14 +76,16 @@
     flex-wrap: nowrap;             /* keep one row */
   }
 
-  /* Two dropdowns share the row; compact text to fit */
-  #controls select {
-    flex: 1 1 45%;                 /* ≈ two selects use ~90% */
-    min-width: 0;
-    font-size: 10px;
-    padding: 3px 5px;
-    box-sizing: border-box;
-  }
+  #controls .dropbtn {
+  flex: 1 1 45%;         /* two filters ≈ 90% width */
+  min-width: 0;
+  font-size: 10px;       /* match Go button */
+  padding: 3px 6px;      /* match Go button */
+  border: 1px solid #333;
+  background: #fff;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
 
   /* Go button stays tight at the end */
   #controls button,
