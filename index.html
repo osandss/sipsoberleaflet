@@ -16,22 +16,6 @@
     /* The map must have a height or it renders blank */
     #map { height: calc(100vh - 50px); width: 100%; }
 
-    /* ▼ Add this mobile-only scale block HERE ▼ */
-  @media (max-width: 480px) {
-    body {
-      transform: scale(0.85);       /* try 0.80 if still too big */
-      transform-origin: top left;
-      width: calc(100% / 0.85);     /* keep full width after scaling */
-    }
-    html, body { overflow-x: hidden; }  /* prevent sideways scroll */
-
-    /* optional: slightly smaller Leaflet +/- buttons */
-    .leaflet-control-zoom a {
-      width: 28px; height: 28px; line-height: 28px; font-size: 14px;
-    }
-  }
-  /* ▲ End mobile-only block ▲ */
-
     .dropdown { position: relative; display: inline-block; z-index: 2001; pointer-events: auto; margin: 8px; }
     .dropbtn {
       background-color: #f9f9f9; color: #333; padding: 8px 12px; font-size: 14px;
@@ -65,65 +49,80 @@
     .card a { text-decoration: none; color: #0645AD; }
     .card button { font-size: 13px; margin-top: 4px; padding: 2px 6px; }
 
-    /* === Mobile: stack Filters -> Map -> List (sidebar below map) === */
+   /* === Mobile: Filters → Map → List (only list scrolls) === */
 @media (max-width: 768px) {
-  /* Stack instead of side-by-side */
-  #main {
-    flex-direction: column;
-    height: auto;              /* let children set their own heights */
+  /* Kill inner-page scroll inside the iframe */
+  html, body {
+    height: 100%;
+    overflow: hidden;
   }
 
-  /* If you have a controls bar, keep it on top */
-#controls {
-  order: 1;
-  position: relative;
-  z-index: 2001;        /* above Leaflet zoom buttons */
+  /* Stack vertically and fill the viewport exactly */
+  #main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;                 /* one viewport tall */
+    box-sizing: border-box;
+  }
 
-  display: flex;        /* line up dropdowns + Go */
-  align-items: center;
-  gap: 7px;
-}
+  /* Controls on top, single row */
+  #controls {
+    order: 1;
+    position: relative;
+    z-index: 2001;                 /* above Leaflet zoom */
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: nowrap;             /* keep one row */
+  }
 
-#controls select {
-  flex: 1 1 45%;              /* dropdowns expand evenly */
-  min-width: 0;         /* prevents overflow on small screens */
-  font-size: 11px;
-  padding: 3px 5px;
-}
+  /* Two dropdowns share the row; compact text to fit */
+  #controls select {
+    flex: 1 1 45%;                 /* ≈ two selects use ~90% */
+    min-width: 0;
+    font-size: 11px;
+    padding: 3px 5px;
+    box-sizing: border-box;
+  }
 
-#controls button {
-  flex: 0 0 auto;       /* Go button keeps natural size */
-  white-space: nowrap;
-  font-size: 11px;
-  padding: 3px 6px;
-}
+  /* Go button stays tight at the end */
+  #controls button,
+  #goBtn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 11px;
+    padding: 3px 6px;
+  }
 
-/* Map in the middle, with a fixed viewport height */
-#map {
-  order: 2;
-  height: 52vh;         /* was 58vh */
-  min-height: 320px;
-  width: 100%;
-}
+  /* Map in the middle (no scrolling) */
+  #map {
+    order: 2;
+    height: 52vh;                  /* pair with 48vh list */
+    min-height: 300px;
+    width: 100%;
+    overflow: hidden;
+  }
 
-  /* Sidebar becomes the scrollable list under the map */
-  #sidebar {
+  /* List under the map: the ONLY scroller */
+  #sidebar, #results {
     order: 3;
     width: 100%;
-    max-width: none;
-    height: 48vh;              /* was 42vh */
+    height: 48vh;                  /* 52 + 48 = 100vh */
     max-height: 48vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    border-right: none;        /* remove desktop divider */
     border-top: 1px solid #ccc;
-    position: static;          /* ensure it flows under the map */
+    border-right: none;
+    position: static;
     box-sizing: border-box;
     padding: 8px;
     background: #fff;
   }
 
-  /* Hide any desktop-only sidebar toggles on mobile */
+  /* Tidy card bottom spacing */
+  .card:last-child { margin-bottom: 0; }
+
+  /* Hide desktop-only toggle on mobile */
   #toggleSidebar { display: none; }
 }
 
