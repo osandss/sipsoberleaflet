@@ -76,11 +76,12 @@
     flex-wrap: nowrap;             /* keep one row */
   }
 
-  #controls .dropbtn {
-  flex: 1 1 45%;         /* two filters ≈ 90% width */
+ /* Mobile: make Brand + Neighborhood filters match Go button */
+#controls .dropbtn {
+  flex: 1 1 45%;          /* keep them side by side */
   min-width: 0;
-  font-size: 10px;       /* match Go button */
-  padding: 3px 6px;      /* match Go button */
+  font-size: 10px;        /* same as Go button */
+  padding: 3px 6px;       /* same as Go button */
   border: 1px solid #333;
   background: #fff;
   border-radius: 5px;
