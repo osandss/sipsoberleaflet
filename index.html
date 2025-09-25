@@ -454,6 +454,37 @@ if (markersLayer && markersLayer.eachLayer) {
 
     // Re-measure map after load to be safe in Wix iframe
     setTimeout(() => map.invalidateSize(), 150);
+
+    // === Fill iframe height on desktop: map + results match available space ===
+  function setHeights() {
+    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+    const mapEl = document.getElementById('map');
+    const resultsEl = document.getElementById('results');
+    const filtersEl = document.getElementById('filters');
+
+    if (!mapEl || !resultsEl) return;
+
+    if (isDesktop) {
+      const filtersH = filtersEl ? filtersEl.offsetHeight : 0;
+      const pad = 10; // adjust if needed
+      const available = Math.max(300, Math.floor(window.innerHeight - filtersH - pad));
+
+      mapEl.style.height = available + 'px';
+      resultsEl.style.height = available + 'px';
+      resultsEl.style.maxHeight = available + 'px';
+    } else {
+      // On mobile, revert to vh-based CSS
+      mapEl.style.height = '';
+      resultsEl.style.height = '';
+      resultsEl.style.maxHeight = '';
+    }
+
+    // Let Leaflet re-measure map tiles/canvas
+    setTimeout(() => map.invalidateSize(), 100);
+  }
+
+  window.addEventListener('load', setHeights);
+  window.addEventListener('resize', setHeights);
   </script>
 </body>
 </html>
