@@ -192,6 +192,21 @@
   #map{ height: 60vh !important; }
   #results{ max-height: 34vh !important; }
 }
+
+/* --- Fix mobile order: filters on top, map+list below --- */
+@media (max-width: 767px){
+  #filters{
+    order: 0 !important;     /* put filters first */
+    position: sticky;
+    top: 0;
+    z-index: 2002;
+    background: white;
+  }
+  .layout{
+    order: 1 !important;     /* map + list after filters */
+    display: block;
+  }
+}
   </style>
 </head>
 <body>
