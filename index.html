@@ -109,7 +109,7 @@
 
     /* Go button */
     #goBtn{
-      background: var(--accent);
+      background: #202329;
       color: white;
       border: 0;
       border-radius: 10px;
@@ -246,11 +246,13 @@
       scrollWheelZoom: true
     }).setView([40.77, -73.97], 12.6);
 
-    // Tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 20,
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+    // Tile layer — light/desaturated (Carto Positron)
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  maxZoom: 20,
+  subdomains: 'abcd',
+  attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+}).addTo(map);
+
 
     // Manhattan bounds (approx)
     const manhattanBounds = L.latLngBounds([40.680, -74.047], [40.882, -73.906]);
@@ -262,6 +264,26 @@
 
     // Keep a layer group for markers
     let markersLayer = L.layerGroup().addTo(map);
+
+    // --- Custom near-black pin (#202329) and global default ---
+function makePinIcon(hex = '#202329') {
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="38" viewBox="0 0 28 38">
+      <path fill="${hex}" d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"/>
+      <circle cx="14" cy="13" r="5.2" fill="#fff"/>
+    </svg>`;
+  return L.icon({
+    iconUrl: 'data:image/svg+xml;utf8,' + encodeURIComponent(svg),
+    iconSize: [28, 38],
+    iconAnchor: [14, 38],   // tip of the pin
+    popupAnchor: [0, -32]
+  });
+}
+const pinIcon = makePinIcon('#202329');
+
+// Make ALL Leaflet markers use this by default
+L.Marker.prototype.options.icon = pinIcon;
+
 
     // ----------------------------
     // Dropdown open/close behavior
