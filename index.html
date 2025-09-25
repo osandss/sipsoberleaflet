@@ -184,21 +184,7 @@
     a{ color:#0a58ca; text-decoration: none; }
     a:hover{ text-decoration: underline; }
 
-    /* === Desktop: let map + results flex to fill taller iframes === */
-@media (min-width: 768px){
-  .layout{
-    min-height: calc(100vh - 0px);
-    padding-bottom: 0;
-  }
-  #map{
-    height: auto !important;
-    min-height: 540px;
-  }
-  #results{
-    height: auto !important;
-    max-height: none !important;
-  }
-}
+    
 
 /* === Mobile tweaks: smaller type + taller map === */
 @media (max-width: 767px){
@@ -470,36 +456,62 @@ if (markersLayer && markersLayer.eachLayer) {
     // Re-measure map after load to be safe in Wix iframe
     setTimeout(() => map.invalidateSize(), 150);
 
-    // === Fill iframe height on desktop: map + results match available space ===
-  function setHeights() {
-    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
-    const mapEl = document.getElementById('map');
-    const resultsEl = document.getElementById('results');
-    const filtersEl = document.getElementById('filters');
+// === Fill iframe height reliably inside Wix ===
+// 1) Lock <html> and <body> to the iframe's actual inner height
+function lockBodyToIframeHeight() {
+  const h = Math.max(
+    document.documentElement.clientHeight || 0,
+    window.innerHeight || 0
+  );
+  document.documentElement.style.height = h + 'px';
+  document.body.style.height = h + 'px';
+}
 
-    if (!mapEl || !resultsEl) return;
+// 2) After we lock heights, size map + results to fill under the filters bar
+function sizeMapAndList() {
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+  const mapEl = document.getElementById('map');
+  const resultsEl = document.getElementById('results');
+  const filtersEl = document.getElementById('filters');
+  if (!mapEl || !resultsEl) return;
 
-    if (isDesktop) {
-      const filtersH = filtersEl ? filtersEl.offsetHeight : 0;
-      const pad = 10; // adjust if needed
-      const available = Math.max(300, Math.floor(window.innerHeight - filtersH - pad));
-
-      mapEl.style.height = available + 'px';
-      resultsEl.style.height = available + 'px';
-      resultsEl.style.maxHeight = available + 'px';
-    } else {
-      // On mobile, revert to vh-based CSS
-      mapEl.style.height = '';
-      resultsEl.style.height = '';
-      resultsEl.style.maxHeight = '';
-    }
-
-    // Let Leaflet re-measure map tiles/canvas
-    setTimeout(() => map.invalidateSize(), 100);
+  if (isDesktop) {
+    const filtersH = filtersEl ? filtersEl.offsetHeight : 0;
+    const pad = 10;
+    const h = Math.max(
+      document.documentElement.clientHeight || 0,
+      window.innerHeight || 0
+    );
+    const available = Math.max(300, Math.floor(h - filtersH - pad));
+    mapEl.style.height = available + 'px';
+    resultsEl.style.height = available + 'px';
+    resultsEl.style.maxHeight = available + 'px';
+  } else {
+    mapEl.style.height = '';
+    resultsEl.style.height = '';
+    resultsEl.style.maxHeight = '';
   }
 
-  window.addEventListener('load', setHeights);
-  window.addEventListener('resize', setHeights);
+  setTimeout(() => map.invalidateSize(), 80);
+}
+
+// 3) Orchestrate updates
+function refreshHeights() {
+  lockBodyToIframeHeight();
+  sizeMapAndList();
+}
+
+refreshHeights();
+window.addEventListener('resize', refreshHeights);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshHeights(); });
+const ro = new ResizeObserver(() => refreshHeights());
+ro.observe(document.documentElement);
+ro.observe(document.body);
+document.addEventListener('click', (e) => {
+  const isToggle = e.target.closest('.dropdown > button');
+  const clickedOutside = !e.target.closest('.dropdown');
+  if (isToggle || clickedOutside) setTimeout(refreshHeights, 50);
+});
   </script>
 </body>
 </html>
