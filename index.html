@@ -168,6 +168,29 @@
     .pill{ background: var(--chip); color: var(--chip-text); padding: 4px 8px; border-radius: 999px; border:1px solid var(--border); font-size:12px; }
     a{ color:#0a58ca; text-decoration: none; }
     a:hover{ text-decoration: underline; }
+
+    /* === Desktop: let map + results flex to fill taller iframes === */
+@media (min-width: 768px){
+  .layout{
+    min-height: calc(100vh - 0px);
+    padding-bottom: 0;
+  }
+  #map{
+    height: auto !important;
+    min-height: 540px;
+  }
+  #results{
+    height: auto !important;
+    max-height: none !important;
+  }
+}
+
+/* === Mobile tweaks: smaller type + taller map === */
+@media (max-width: 767px){
+  html, body { font-size: 12px; }
+  #map{ height: 60vh !important; }
+  #results{ max-height: 34vh !important; }
+}
   </style>
 </head>
 <body>
@@ -283,6 +306,23 @@ const pinIcon = makePinIcon('#202329');
 
 // Make ALL Leaflet markers use this by default
 L.Marker.prototype.options.icon = pinIcon;
+   
+// --- Force all future markers to use pinIcon, even if created elsewhere/earlier ---
+const __origMarkerFactory = L.marker;
+L.marker = function(latlng, options) {
+  const opts = options || {};
+  if (!opts.icon) opts.icon = pinIcon;
+  return __origMarkerFactory.call(this, latlng, opts);
+};
+
+// Recolor any markers that might already be on the map (created before override)
+if (markersLayer && markersLayer.eachLayer) {
+  markersLayer.eachLayer((layer) => {
+    if (layer && typeof layer.setIcon === 'function') {
+      layer.setIcon(pinIcon);
+    }
+  });
+}
 
 
     // ----------------------------
