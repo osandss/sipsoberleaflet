@@ -6,467 +6,392 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Leaflet CSS (latest CDN) -->
-  <link rel="stylesheet"
+  <link rel="stylesheet" 
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
         crossorigin="anonymous"/>
 
   <style>
-    body, html { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; }
-    /* The map must have a height or it renders blank */
-    #map { height: calc(100vh - 50px); width: 100%; }
+    /* Base */
+    :root{
+      --bg:#ffffff;
+      --text:#111;
+      --muted:#666;
+      --border:#eaeaea;
+      --chip:#f6f7fb;
+      --chip-text:#2f3b69;
+      --accent:#2f3b69;
+    }
+    html, body { height:100%; }
+    body, html { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; background: var(--bg); color: var(--text); }
 
-    .dropdown { position: relative; display: inline-block; z-index: 2001; pointer-events: auto; margin: 8px; }
-    .dropbtn {
-      background-color: #f9f9f9; color: #333; padding: 8px 12px; font-size: 14px;
-      border: 1px solid #ccc; border-radius: 5px; cursor: pointer;
-    }
-    .dropdown-content {
-      display: none; position: absolute; background-color: white; min-width: 200px;
-      border: 1px solid #ccc; z-index: 2020; padding: 8px 8px 10px 8px;
-      max-height: 240px; overflow-y: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      pointer-events: auto;
-    }
-    .dropdown-content.open { display: block !important; }
-    .dropdown-content label { font-size: 14px; display: block; margin: 6px 0; padding-right: 18px; }
-    .dropdown-content input[type="checkbox"] { margin-right: 6px; }
-    /* X close button inside dropdowns */
-    .close-dd {
-      position: sticky; top: 0; float: right; margin-left: auto;
-      border: none; background: transparent; font-size: 16px; line-height: 1;
-      cursor: pointer; color: #333; padding: 2px 4px;
+    /* Layout wrappers */
+    .topbar.filterbar{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
     }
 
-    #goBtn { padding: 6px 10px; font-size: 14px; border: 1px solid #333; background: #fff; border-radius: 5px; cursor: pointer; }
-
-    #main { display: flex; flex: 1; height: calc(100vh - 50px); }
-    #sidebar { width: 42%; max-width: 380px; padding: 8px; overflow-y: auto; border-right: 1px solid #ccc; box-sizing: border-box; position: relative; }
-    #toggleSidebar { display: none; position: absolute; top: 10px; left: 10px; z-index: 2030; padding: 6px 10px; font-size: 12px; background: #fff; border: 1px solid #aaa; border-radius: 4px; cursor: pointer; }
-    #closeSidebar { position: absolute; top: 6px; right: 6px; font-size: 14px; cursor: pointer; background: #eee; border: none; border-radius: 4px; padding: 2px 6px; }
-    #map { flex-grow: 1; height: 100%; }
-
-    .card { border: 1px solid #ddd; border-radius: 6px; padding: 8px; margin-bottom: 8px; font-size: 14px; }
-    .card a { text-decoration: none; color: #0645AD; }
-    .card button { font-size: 13px; margin-top: 4px; padding: 2px 6px; }
-
-   /* === Mobile: Filters → Map → List (only list scrolls) === */
-@media (max-width: 768px) {
-    /* DEBUG — remove after one refresh */
-  body { outline: 3px solid #ff0066 !important; }
-  #controls { outline: 3px dashed #09f !important; }
-
-  /* Kill inner-page scroll inside the iframe */
-  html, body {
-    height: 100%;
-    overflow: hidden;
-  }
-
-  /* Stack vertically and fill the viewport exactly */
-  #main {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;                 /* one viewport tall */
-    box-sizing: border-box;
-  }
-
- /* Controls on top, single row (grid: two filters + Go) */
-#controls {
-  order: 1;
-  position: relative;
-  z-index: 2001;
-  display: grid;                          /* switch to grid */
-  grid-template-columns: minmax(0,1fr) minmax(0,1fr) auto;    /* two equal filters + auto Go */
-  column-gap: 5px;
-  align-items: center;
-}
-
-/* Kill global dropdown margins on mobile and allow shrinking */
-#controls .dropdown {
-  margin: 0 !important;                   /* overrides global .dropdown { margin:8px } */
-  min-width: 0;
-}
-
-/* Brand + Neighborhood buttons: compact, fill their grid cells */
-#controls #brandDropdown,
-#controls #neighborhoodDropdown {
-  width: 100% !important;                 /* fill the 1fr columns */
-  min-width: 0;
-  font-size: 10px !important;             /* match Go button */
-  padding: 3px 6px !important;            /* match Go button */
-  border: 1px solid #333;
-  background: #fff;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-/* Go button in the third column (auto width, no wrap) */
-#controls #goBtn,
-#controls button#goBtn {
-  white-space: nowrap;
-  font-size: 10px;
-  padding: 3px 6px;
-}
-
-
-  /* Map in the middle (no scrolling) */
-  #map {
-    order: 2;
-    height: 52vh;                  /* pair with 48vh list */
-    min-height: 300px;
-    width: 100%;
-    overflow: hidden;
-  }
-
-  /* List under the map: the ONLY scroller */
-  #sidebar, #results {
-    order: 3;
-    width: 100%;
-    height: 48vh;                  /* 52 + 48 = 100vh */
-    max-height: 48vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    border-top: 1px solid #ccc;
-    border-right: none;
-    position: static;
-    box-sizing: border-box;
-    padding: 8px;
-    background: #fff;
-  }
-
-  /* Tidy card bottom spacing */
-  .card:last-child { margin-bottom: 0; }
-
-  /* Hide desktop-only toggle on mobile */
-  #toggleSidebar { display: none; }
-}
-
-    /* Selected filters row */
-    #selectedRow {
-      display: flex; flex-wrap: wrap; gap: 6px;
-      padding: 6px 10px 8px 10px; border-bottom: 1px solid #eee; background: #fff;
-      font-size: 12px; align-items: center;
+    .layout{
+      display: flex;              /* Desktop side-by-side by default */
+      gap: 12px;
+      padding: 0 10px 10px;
+      box-sizing: border-box;
     }
-    #selectedRow:empty { display: none; }
-    #selectedBrandsRow, #selectedNeighborhoodsRow { display: inline; }
-    .sel-title { font-weight: 600; margin-right: 6px; }
-    .sel-item {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 2px 6px; border: 1px solid #ccc; border-radius: 12px; background: #f5f5f5;
-      margin-right: 6px; margin-bottom: 4px;
+
+    /* Map & results */
+    #map { 
+      height: calc(100vh - 90px);
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      flex: 1 1 auto;
     }
-    .sel-item .remove { border: none; background: transparent; cursor: pointer; font-size: 12px; line-height: 1; }
 
-    /* Popup styling */
-    .leaflet-popup-content .popup { font-size: 14px; line-height: 1.3; }
-    .leaflet-popup-content .p-name { margin-bottom: 2px; }
-    .leaflet-popup-content .p-addr { color: #333; margin-bottom: 4px; }
-    .leaflet-popup-content .p-web a { text-decoration: none; }
+    #results{
+      width: 360px;               /* desktop side panel width */
+      max-height: calc(100vh - 110px);
+      overflow: auto;
+      border-left: 1px solid var(--border);
+      padding-left: 10px;
+      box-sizing: border-box;
+      background: var(--bg);
+    }
 
-    .card-name { color: #000; text-decoration: underline; cursor: pointer; font-weight: 600; }
+    /* Cards */
+    .card{
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.4;
+    }
+    .card-name{
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .card-name:hover{ text-decoration: underline; }
+    .card .meta{ color: var(--muted); font-size: 12px; }
 
-    /* Keep Leaflet controls under our UI */
-    .leaflet-control-container, .leaflet-top, .leaflet-bottom { z-index: 500 !important; }
+    /* Dropdowns / filters */
+    .dropdown { position: relative; display: inline-block; z-index: 2001; pointer-events: auto; }
+    .dropdown > button{
+      background: var(--chip);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      color: var(--chip-text);
+      cursor: pointer;
+    }
+    .dropdown.open > .menu{
+      display: block;
+    }
+    .menu{
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 220px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      z-index: 2002; /* above Leaflet controls */
+    }
+    .menu .row{ display: flex; align-items: center; gap: 8px; padding: 6px 4px; }
+    .menu label{ flex: 1; cursor: pointer; }
+    .menu input[type="checkbox"]{ transform: translateY(1px); }
+
+    /* Go button */
+    #goBtn{
+      background: var(--accent);
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Ensure filter dropdowns float above Leaflet zoom buttons */
+    .dropdown, .filterbar { position: relative; z-index: 2001; }
+
+    /* Leaflet control base z-index (so filters win) */
+    .leaflet-top, .leaflet-bottom { z-index: 400; }
+
+    /* ====== Mobile stack: filters → map → list ====== */
+    @media (max-width: 767px){
+      .layout{ 
+        display: block;           /* stack vertically */
+        padding: 0;
+      }
+      /* Keep the filters bar visible at the top on mobile */
+      #filters{
+        order: 1;
+        position: sticky;
+        top: 0;
+        z-index: 2002;
+        background: white;
+        padding: 6px 10px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .topbar.filterbar{
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      #map{
+        height: 52vh;             /* upper half of the screen */
+        width: 100%;
+        border-radius: 0;
+      }
+      #results{
+        max-height: 42vh;         /* lower half; scrolls */
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        border-top: 1px solid var(--border);
+        padding: 8px 10px;
+        background: white;
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+
+    /* Utilities */
+    .row-inline{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .pill{ background: var(--chip); color: var(--chip-text); padding: 4px 8px; border-radius: 999px; border:1px solid var(--border); font-size:12px; }
+    a{ color:#0a58ca; text-decoration: none; }
+    a:hover{ text-decoration: underline; }
   </style>
 </head>
 <body>
-  <div id="filters">
-    <div class="dropdown">
-      <button type="button" class="dropbtn" onclick="toggleDropdown('brandDropdown')">Select Brand ⌄</button>
-      <div class="dropdown-content" id="brandDropdown">
-        <button class="close-dd" title="Close" onclick="closeDropdown('brandDropdown')">×</button>
-        <label><input type="checkbox" value="Lyre's" /> Lyre's</label>
-        <label><input type="checkbox" value="Ritual Zero Proof" /> Ritual Zero Proof</label>
-        <label><input type="checkbox" value="Seedlip" /> Seedlip</label>
+
+  <!-- TOP CONTROLS (filters + Go) -->
+  <div id="filters" class="topbar filterbar">
+    <!-- Example dropdowns (replace options with your data as needed) -->
+    <div class="dropdown" id="brandDD">
+      <button type="button" aria-expanded="false">Brands ▾</button>
+      <div class="menu" role="menu">
+        <div class="row">
+          <input id="brand-seedlip" type="checkbox" value="Seedlip" />
+          <label for="brand-seedlip">Seedlip</label>
+        </div>
+        <div class="row">
+          <input id="brand-ritual" type="checkbox" value="Ritual Zero Proof" />
+          <label for="brand-ritual">Ritual Zero Proof</label>
+        </div>
+        <div class="row">
+          <input id="brand-lyres" type="checkbox" value="Lyre's" />
+          <label for="brand-lyres">Lyre's</label>
+        </div>
       </div>
     </div>
 
-    <div class="dropdown">
-      <button type="button" class="dropbtn" onclick="toggleDropdown('neighborhoodDropdown')">Select Neighborhood ⌄</button>
-      <div class="dropdown-content" id="neighborhoodDropdown">
-        <button class="close-dd" title="Close" onclick="closeDropdown('neighborhoodDropdown')">×</button>
-        <label><input type="checkbox" value="Upper East Side" /> Upper East Side</label>
-        <label><input type="checkbox" value="Kips Bay" /> Kips Bay</label>
-        <label><input type="checkbox" value="Gramercy" /> Gramercy</label>
-        <label><input type="checkbox" value="Upper West Side" /> Upper West Side</label>
-        <label><input type="checkbox" value="Chelsea" /> Chelsea</label>
+    <div class="dropdown" id="neighborhoodDD">
+      <button type="button" aria-expanded="false">Neighborhoods ▾</button>
+      <div class="menu" role="menu">
+        <div class="row">
+          <input id="n-ues" type="checkbox" value="Upper East Side" />
+          <label for="n-ues">Upper East Side</label>
+        </div>
+        <div class="row">
+          <input id="n-midtown" type="checkbox" value="Midtown East" />
+          <label for="n-midtown">Midtown East</label>
+        </div>
+        <div class="row">
+          <input id="n-gramercy" type="checkbox" value="Gramercy" />
+          <label for="n-gramercy">Gramercy</label>
+        </div>
       </div>
     </div>
 
-    <button id="goBtn" type="button" onclick="applyFilters()">Go</button>
+    <button id="goBtn" type="button">Go</button>
   </div>
 
-  <div id="selectedRow">
-    <div id="selectedBrandsRow"></div>
-    <div id="selectedNeighborhoodsRow"></div>
-  </div>
-
-  <div id="main">
-    <div id="toggleSidebar">Show Results</div>
-    <div id="sidebar">
-      <button id="closeSidebar">×</button>
-      <div id="results"></div>
-    </div>
+  <!-- LAYOUT WRAPPER -->
+  <div class="layout">
     <div id="map"></div>
+    <div id="results"></div>
   </div>
 
   <!-- Leaflet JS (latest CDN) -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-          crossorigin="anonymous"></script>
+  <script 
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin="anonymous"></script>
 
   <script>
-    /* --- Dropdown helpers --- */
-    function toggleDropdown(id) {
-      // close other dropdowns
-      document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('open'));
-      const dd = document.getElementById(id);
-      dd.classList.toggle('open');
-    }
-    function closeDropdown(id) {
-      const dd = document.getElementById(id);
-      dd.classList.remove('open');
-    }
-    function getCheckedValues(containerId) {
-      return Array.from(document.querySelectorAll(`#${containerId} input[type=checkbox]:checked`)).map(cb=>cb.value.toLowerCase());
-    }
+    // ----------------------------
+    // Basic data (replace with your live data source)
+    // ----------------------------
+    const locations = [
+      { name: "Bemelman's Bar", address: "35 E 76th St, NY", lat: 40.7740, lng: -73.9636, website: "https://www.rosewoodhotels.com", brand: "Seedlip", neighborhood: "Upper East Side" },
+      { name: "Bar Avant (Olly Olly Market)", address: "601 W 26th St, NY", lat: 40.7498, lng: -74.0075, website: "https://ollyollymarket.com", brand: "Lyre's", neighborhood: "Chelsea" },
+      { name: "Fumo", address: "Chelsea, NY", lat: 40.7448, lng: -73.9809, website: "https://fumonyc.com", brand: "Ritual Zero Proof", neighborhood: "Chelsea" },
+      { name: "Miriam", address: "Upper West Side, NY", lat: 40.7809, lng: -73.9797, website: "https://miriamrestaurant.com", brand: "Seedlip", neighborhood: "Upper West Side" },
+      { name: "Sarabeth's", address: "Upper West Side, NY", lat: 40.7860, lng: -73.9770, website: "https://sarabethsrestaurants.com", brand: "Lyre's", neighborhood: "Upper West Side" }
+    ];
 
-    /* --- Map setup (mobile starts wider, limits unchanged) --- */
-const isMobile = window.matchMedia('(max-width: 480px)').matches;
-const START_ZOOM = isMobile ? 12 : 13;   // mobile 12, desktop 13
+    // ----------------------------
+    // Map init
+    // ----------------------------
+    const map = L.map('map', {
+      zoomControl: true,
+      scrollWheelZoom: true
+    }).setView([40.77, -73.97], 12.6);
 
-const map = L.map('map', {
-  minZoom: 12,   // keep Manhattan floor
-  maxZoom: 17    // keep max zoom
-}).setView([40.76, -73.97], START_ZOOM);
+    // Tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 20,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
 
-// Lock the view to Manhattan-ish bounds
-map.setMaxBounds([[40.68, -74.05], [40.88, -73.85]]);
-
-// ✅ Recalculate map size when device orientation or viewport changes
-window.addEventListener('orientationchange', () => {
-  setTimeout(() => map.invalidateSize(true), 300);
-});
-
-window.addEventListener('resize', () => {
-  if (window.innerWidth <= 768) {
-    clearTimeout(window.__mapResizeTimer);
-    window.__mapResizeTimer = setTimeout(() => map.invalidateSize(true), 200);
-  }
-});
-
-   // Single base layer (lighter Carto Positron style)
-L.tileLayer('https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
-  subdomains: 'abcd',
-  maxZoom: 19
-}).addTo(map);
-
-    const blackIcon = L.icon({
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/484/484167.png',
-      iconSize: [30,30], iconAnchor: [15,30], popupAnchor: [0,-30]
+    // Manhattan bounds (approx)
+    const manhattanBounds = L.latLngBounds([40.680, -74.047], [40.882, -73.906]);
+    map.setMaxBounds(manhattanBounds);
+    map.setMinZoom(12.3);
+    map.on('drag', () => {
+      map.panInsideBounds(manhattanBounds, { animate: true });
     });
 
-    /* --- Data (same schema as before) --- */
-    // NOTE: you have a few malformed rows like {`.7361, ...}
-    // We'll guard against bad values so the page still works.
-    let allData = [{"name": "The Penrose", "address": "1590 Second Ave", "website": "https://www.penrosebar.com", "brand": "Lyre's, Seedlip", "neighborhood": "Upper East Side", "lat": 40.7755, "lng": -73.9533}, {"name": "Orsay", "address": "1057 Lexington Ave", "website": "https://www.orsayrestaurant.com", "brand": "Seedlip", "neighborhood": "Upper East Side", "lat": 40.7724, "lng": -73.9605}, {"name": "Boqueria", "address": "1460 Second Ave", "website": "https://boqueriarestaurant.com", "brand": "Ritual Zero Proof, Seedlip", "neighborhood": "Upper East Side", "lat": 40.7716, "lng": -73.9554}, {"name": "Bemelmans Bar", "address": "35 East 76th St", "website": "https://www.rosewoodhotels.com/en/the-carlyle-new-york/dining/bemelmans-bar", "brand": "Ritual Zero Proof, Seedlip", "neighborhood": "Upper East Side", "lat": 40.7744, "lng": -73.9632}, {"name": "Crave Fishbar", "address": "945 Second Ave", "website": "https://cravefishbar.com", "brand": "Ritual Zero Proof", "neighborhood": "Upper East Side", "lat": 40.7717, "lng": -73.9556}, {"name": "UVA", "address": "1486 Second Ave", "website": "https://www.uvanyc.com", "brand": "Ritual Zero Proof", "neighborhood": "Upper East Side", "lat": 40.7724, "lng": -73.9556}, {"name": "Sefton", "address": "137 Ludlow St", "website": "https://thesefton.com", "brand": "Ritual Zero Proof", "neighborhood": "Upper East Side", "lat": 40.7691, "lng": -73.9554}, {"name": "Hawksmoor", "address": "109 E 22nd St", "website": "https://www.hawksmoornyc.com", "brand": "Seedlip", "neighborhood": "Gramercy", "lat": 40.739, "lng": -73.985}, {"name": "Gramercy Tavern", "address": "42 E 20th St", "website": "https://www.gramercytavern.com", "brand": "Lyre's", "neighborhood": "Gramercy", "lat": 40.7386, "lng": -73.9882} /* ... keep your other rows here ... */ ];
+    // Keep a layer group for markers
+    let markersLayer = L.layerGroup().addTo(map);
 
-    // --- Coordinate sanitizer for specific venues ---
-    (function fixKnownCoords(){
-      const NEED_FIX = new Set([
-        "Martiny's",
-        "Fumo",
-        "Miriam",
-        "Sarabeth's",
-        "Fumo (Chelsea)",
-        "Bar Avant (Olly Olly Market)"
-      ]);
-      for (const loc of allData) {
-        if (!NEED_FIX.has(loc.name)) continue;
-        if (typeof loc.lat === 'number' && loc.lat < 0) loc.lat = Math.abs(loc.lat);
-        if (typeof loc.lng === 'number') {
-          if (loc.lng < -74.05) loc.lng = -74.05;
-          if (loc.lng > -73.85) loc.lng = -73.85;
-        }
-      }
-    })();
-
-    let markers = [];
-
-    // Open marker popup by approximate lat/lng
-    function openMarkerAt(lat, lng) {
-      if (!markers || markers.length === 0) return;
-      for (const m of markers) {
-        const ll = m.getLatLng();
-        if (Math.abs(ll.lat - lat) < 1e-6 && Math.abs(ll.lng - lng) < 1e-6) {
-          m.openPopup();
-          return;
-        }
-      }
+    // ----------------------------
+    // Dropdown open/close behavior
+    // ----------------------------
+    function closeAllMenus() {
+      document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('open'));
+      document.querySelectorAll('.dropdown > button').forEach(btn => btn.setAttribute('aria-expanded', 'false'));
     }
 
-    function filterAndDisplay() {
-      const selectedBrands = getCheckedValues("brandDropdown");
-      const selectedNeighborhoods = getCheckedValues("neighborhoodDropdown");
-      const results = document.getElementById("results");
-      results.innerHTML = "";
-      markers.forEach(m => map.removeLayer(m)); markers = [];
+    document.addEventListener('click', (e) => {
+      const dd = e.target.closest('.dropdown');
+      const btn = e.target.closest('.dropdown > button');
+      if (btn) {
+        const parent = btn.parentElement;
+        const willOpen = !parent.classList.contains('open');
+        closeAllMenus();
+        if (willOpen) {
+          parent.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      } else if (!dd) {
+        closeAllMenus();
+      }
+    });
 
-      const filtered = allData.filter(loc => {
-        const brand = (loc.brand || "").toLowerCase();
-        const hood = (loc.neighborhood || "").toLowerCase();
+    // ----------------------------
+    // Build markers from data
+    // ----------------------------
+    function renderMarkers(data){
+      markersLayer.clearLayers();
+      const bounds = L.latLngBounds([]);
+      data.forEach(loc => {
+        const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
+        m.bindPopup(`
+          <div style="min-width:200px">
+            <div style="font-weight:600">${loc.name}</div>
+            <div class="meta">${loc.address}</div>
+            <div><a href="${loc.website}" target="_blank" rel="noopener">Website</a></div>
+            <div class="meta">Brand: ${loc.brand||""}</div>
+            <div class="meta">Neighborhood: ${loc.neighborhood||""}</div>
+          </div>
+        `);
+        bounds.extend([loc.lat, loc.lng]);
+      });
+      return { count: data.length, bounds: data.length ? bounds : null };
+    }
 
-        // Guard against malformed rows
-        const validCoords = Number.isFinite(loc.lat) && Number.isFinite(loc.lng);
-
-        const matchesBrand = selectedBrands.length===0 || selectedBrands.some(sel=>brand.includes(sel));
-        const matchesHood  = selectedNeighborhoods.length===0 || selectedNeighborhoods.includes(hood);
-        return validCoords && matchesBrand && matchesHood;
-      }).sort((a,b)=>(a.name||"").localeCompare(b.name||""));
-
-      let bounds = null;
-
-      // --- Favorite toggle helper (add/remove) ---
-window.toggleFav = function(btn) {
-  const name = btn.dataset.name || '';
-  const website = decodeURIComponent(btn.dataset.website || '');
-  const isNowFav = btn.classList.toggle('is-favorited');
-  btn.style.color = isNowFav ? 'red' : '';
-
-  const type = isNowFav ? 'favorite:add' : 'favorite:remove';
-  const payload = { type, payload: { name, website } };
-
-  // Wix iframe (if used)
-  try { window.parent && window.parent.postMessage && window.parent.postMessage(payload, '*'); } catch(e){}
-
-  // Thunkable fallback (old path)
-  try { window.ReactNativeWebView && window.ReactNativeWebView.postMessage && window.ReactNativeWebView.postMessage(`${type}:${name}|${website}`); } catch(e){}
-}
-
-      filtered.forEach(loc => {
-        const marker = L.marker([loc.lat, loc.lng], {icon: blackIcon}).addTo(map)
-          .bindPopup(`<div class='popup'><div class='p-name'><strong>${loc.name}</strong></div><div class='p-addr'>${loc.address}</div><div class='p-web'><a href='${loc.website}' target='_blank' rel='noopener noreferrer'>Website</a></div></div>`);
-        markers.push(marker);
-
-        // keep a small reference on the location object for card->popup
-        loc.__marker = marker;
-
-        bounds = bounds ? bounds.extend(marker.getLatLng()) : L.latLngBounds([marker.getLatLng(), marker.getLatLng()]);
-
+    // ----------------------------
+    // Render results list
+    // ----------------------------
+    function renderList(data){
+      const results = document.getElementById('results');
+      results.innerHTML = '';
+      data.forEach(loc => {
         const card = document.createElement("div");
         card.className = "card";
-        card.innerHTML = `<span class="card-name" onclick="map.setView([${loc.lat}, ${loc.lng}], 16); openMarkerAt(${loc.lat}, ${loc.lng});">${loc.name}</span><br/>${loc.address}<br/><a href="${loc.website}" target="_blank">Website</a><br/>Brand: ${loc.brand||""}<br/>Neighborhood: ${loc.neighborhood||""}<br/><button class="fav-btn" data-name="${loc.name}" data-website="${encodeURIComponent(loc.website || '')}" onclick="toggleFav(this)">♡ Favorite</button>`;
-
+        card.innerHTML = `
+          <span class="card-name" onclick="map.setView([${loc.lat}, ${loc.lng}], 16); openMarkerAt(${loc.lat}, ${loc.lng});">${loc.name}</span><br/>
+          ${loc.address}<br/>
+          <a href="${loc.website}" target="_blank" rel="noopener">Website</a><br/>
+          <span class="meta">Brand: ${loc.brand||""}</span><br/>
+          <span class="meta">Neighborhood: ${loc.neighborhood||""}</span>
+        `;
         results.appendChild(card);
       });
+    }
 
-      return { count: filtered.length, bounds };
+    // Helper to open a marker popup at a given lat/lng
+    function openMarkerAt(lat, lng){
+      let found = null;
+      markersLayer.eachLayer((layer) => {
+        const p = layer.getLatLng();
+        if (Math.abs(p.lat - lat) < 1e-6 && Math.abs(p.lng - lng) < 1e-6) {
+          found = layer;
+        }
+      });
+      if (found){ found.openPopup(); }
+    }
+
+    // ----------------------------
+    // Filter logic
+    // ----------------------------
+    function getSelectedValues(prefix){
+      return Array.from(document.querySelectorAll(`input[id^="${prefix}-"]:checked`)).map(cb => cb.value);
     }
 
     function applyFilters() {
       // Close any open menus
-      document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('open'));
-      const { count, bounds } = filterAndDisplay();
+      closeAllMenus();
+
+      const selectedBrands = getSelectedValues('brand');
+      const selectedNeighborhoods = getSelectedValues('n');
+
+      const filtered = locations.filter(loc => {
+        const brandOK = selectedBrands.length ? selectedBrands.includes(loc.brand) : true;
+        const hoodOK  = selectedNeighborhoods.length ? selectedNeighborhoods.includes(loc.neighborhood) : true;
+        return brandOK && hoodOK;
+      });
+
+      renderList(filtered);
+      const { count, bounds } = renderMarkers(filtered);
+
       if (count > 0 && bounds) {
         map.fitBounds(bounds, { padding: [30, 30] });
       }
-    }
 
-    // Initial render
-    filterAndDisplay();
+      // Store bounds for other components if needed
+      window.filteredBounds = bounds;
 
-    // --- Selected filters chips (comma-separated with removable ×) ---
-    function refreshSelected() {
-      const brands = Array.from(document.querySelectorAll('#brandDropdown input[type=checkbox]:checked')).map(cb=>cb.value);
-      const hoods  = Array.from(document.querySelectorAll('#neighborhoodDropdown input[type=checkbox]:checked')).map(cb=>cb.value);
-
-      const bRow = document.getElementById('selectedBrandsRow');
-      const nRow = document.getElementById('selectedNeighborhoodsRow');
-      bRow.innerHTML = '';
-      nRow.innerHTML = '';
-
-      if (brands.length > 0) {
-        const title = document.createElement('span');
-        title.className = 'sel-title';
-        title.textContent = 'Brands:';
-        bRow.appendChild(title);
-
-        brands.forEach((val, idx) => {
-          const chip = document.createElement('span');
-          chip.className = 'sel-item';
-          chip.innerHTML = `<span>${val}</span><button class="remove" title="Remove" onclick="removeSelection('brandDropdown', '${val.replace("'", "\\'")}')">×</button>`;
-          bRow.appendChild(chip);
-          if (idx < brands.length - 1) {
-            const comma = document.createTextNode(', ');
-            bRow.appendChild(comma);
-          }
-        });
-      }
-
-      if (hoods.length > 0) {
-        const title = document.createElement('span');
-        title.className = 'sel-title';
-        title.textContent = 'Neighborhoods:';
-        if (brands.length > 0) {
-          const spacer = document.createElement('span');
-          spacer.style.marginLeft = '10px';
-          nRow.appendChild(spacer);
-        }
-        nRow.appendChild(title);
-
-        hoods.forEach((val, idx) => {
-          const chip = document.createElement('span');
-          chip.className = 'sel-item';
-          chip.innerHTML = `<span>${val}</span><button class="remove" title="Remove" onclick="removeSelection('neighborhoodDropdown', '${val.replace("'", "\\'")}')">×</button>`;
-          nRow.appendChild(chip);
-          if (idx < hoods.length - 1) {
-            const comma = document.createTextNode(', ');
-            nRow.appendChild(comma);
-          }
-        });
-      }
-    }
-
-    function removeSelection(containerId, value) {
-      const boxes = document.querySelectorAll(`#${containerId} input[type=checkbox]`);
-      boxes.forEach(cb => {
-        if (cb.value === value) cb.checked = false;
-      });
-      refreshSelected(); // only update list; filtering still waits for Go
-    }
-
-    refreshSelected();
-
-    // Auto-close dropdown after any selection, but DO NOT auto-filter until Go
-    document.querySelectorAll('#brandDropdown input[type=checkbox], #neighborhoodDropdown input[type=checkbox]').forEach(cb=>cb.addEventListener('change', ()=>{
-      document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('open'));
-      refreshSelected();
-    }));
-
-    // Sidebar toggles
-    document.getElementById("closeSidebar").addEventListener("click",()=>{
-      document.getElementById("sidebar").style.display="none";
-      document.getElementById("toggleSidebar").style.display="block";
-      map.invalidateSize();
-    });
-    document.getElementById("toggleSidebar").addEventListener("click",()=>{
-      document.getElementById("sidebar").style.display="block";
-      document.getElementById("toggleSidebar").style.display="none";
-      map.invalidateSize();
-    });
-
-    // Safety: keyboard 'R' reopens results in case the button gets obscured
-    document.addEventListener('keydown', (e)=>{
-      if (e.key && e.key.toLowerCase() === 'r') {
-        const sb  = document.getElementById('sidebar');
-        const tog = document.getElementById('toggleSidebar');
-        if (sb && tog && sb.style.display === 'none') {
-          sb.style.display = 'block';
-          tog.style.display = 'none';
-          map.invalidateSize();
+      // On mobile, bring the results list into view under the map
+      if (window.matchMedia('(max-width: 768px)').matches) {
+        const resEl = document.getElementById('results') || document.getElementById('sidebar');
+        if (resEl) {
+          resEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }
-    });
+
+      // Re-measure map after DOM shifts
+      setTimeout(() => map.invalidateSize(true), 120);
+    }
+
+    document.getElementById('goBtn').addEventListener('click', applyFilters);
+
+    // Initial render: show all
+    renderList(locations);
+    const initial = renderMarkers(locations);
+    if (initial.bounds) map.fitBounds(initial.bounds, { padding:[30,30] });
+
+    // Re-measure map after load to be safe in Wix iframe
+    setTimeout(() => map.invalidateSize(), 150);
   </script>
 </body>
 </html>
