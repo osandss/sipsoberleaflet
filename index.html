@@ -22,16 +22,20 @@
       --chip-text:#2f3b69;
       --accent:#2f3b69;
     }
-    html, body { height:100%; }
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 14px;
-      background: var(--bg);
-      color: var(--text);
-    }
+   html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  body {
+    min-height: 100vh; /* 👈 ensures full viewport height */
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    background: var(--bg);
+    color: var(--text);
+  }
+
     /* Make the page fill the iframe and let layout take the rest */
     body { display: flex; flex-direction: column; }
     
@@ -138,6 +142,47 @@
 
     /* Leaflet control base z-index (so filters win) */
     .leaflet-top, .leaflet-bottom { z-index: 400; }
+
+    /* ===== Desktop full-height layout ===== */
+@media (min-width: 1024px) {
+  /* Make page a full-height grid: topbar + content */
+  body {
+    display: grid;
+    grid-template-rows: auto 1fr;      /* topbar then content */
+    grid-template-columns: 1fr 380px;  /* map | results panel */
+    height: 100vh;
+  }
+
+  .topbar.filterbar {
+    grid-row: 1;
+    grid-column: 1 / span 2;           /* stretch across */
+  }
+
+  /* Let .layout pass its children straight to the grid */
+  .layout {
+    grid-row: 2;
+    grid-column: 1 / span 2;
+    display: contents;
+  }
+
+  /* Map on the left, full height */
+  #map {
+    grid-row: 2;
+    grid-column: 1;
+    height: 100%;
+    min-height: 0;
+  }
+
+  /* Results on the right, scrollable */
+  #results {
+    grid-row: 2;
+    grid-column: 2;
+    height: 100%;
+    overflow-y: auto;
+    width: auto;    /* grid controls width */
+    min-height: 0;
+  }
+}
 
     /* ====== Mobile stack: filters → map → list ====== */
     @media (max-width: 767px){
