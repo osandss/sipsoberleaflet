@@ -148,9 +148,10 @@
   /* Make page a full-height grid: topbar + content */
   body {
     display: grid;
-    grid-template-rows: auto 1fr;      /* topbar then content */
+    grid-template-rows: auto minmax(0, 1fr);      /* topbar then content */
     grid-template-columns: 1fr 380px;  /* map | results panel */
-    height: 100vh;
+    height: 100%;
+    min-height: 100vh;
   }
 
   .topbar.filterbar {
@@ -173,7 +174,7 @@
     min-height: 0;
   }
 
-  /* Results on the right, scrollable */
+    /* Results on the right, scrollable */
   #results {
     grid-row: 2;
     grid-column: 2;
@@ -182,7 +183,12 @@
     width: auto;    /* grid controls width */
     min-height: 0;
   }
+
+  /* Safety lines to prevent flex/grid overflow issues */
+  .layout, #map, #results { min-height: 0; }
+  #results { overflow-y: auto; }
 }
+
 
     /* ====== Mobile stack: filters → map → list ====== */
     @media (max-width: 767px){
