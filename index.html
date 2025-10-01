@@ -22,19 +22,28 @@
       --chip-text:#2f3b69;
       --accent:#2f3b69;
     }
-   html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-  }
+  
+    /* Base sizing: allow growth beyond one viewport */
+html {
+  margin: 0;
+  padding: 0;
+  height: auto;       /* ✅ can grow with the Wix iframe */
+  min-height: 100%;   /* at least the iframe’s height baseline */
+}
 
-  body {
-    min-height: 100vh; /* 👈 ensures full viewport height */
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 14px;
-    background: var(--bg);
-    color: var(--text);
-  }
+body {
+  margin: 0;
+  padding: 0;
+  height: auto;       /* ✅ can exceed one viewport */
+  min-height: 100vh;  /* but never shorter than a screen */
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+}
+
 
     /* Make the page fill the iframe and let layout take the rest */
     body { display: flex; flex-direction: column; }
