@@ -12,7 +12,9 @@
         crossorigin="anonymous"/>
 
   <style>
-    /* Base */
+    /* =========================
+       A) BASE + VARIABLES
+       ========================= */
     :root{
       --bg:#ffffff;
       --text:#111;
@@ -22,33 +24,31 @@
       --chip-text:#2f3b69;
       --accent:#2f3b69;
     }
-  
-    /* Base sizing: allow growth beyond one viewport */
-html {
-  margin: 0;
-  padding: 0;
-  height: auto;       /* ✅ can grow with the Wix iframe */
-  min-height: 100%;   /* at least the iframe’s height baseline */
-}
 
-body {
-  margin: 0;
-  padding: 0;
-  height: auto;       /* ✅ can exceed one viewport */
-  min-height: 100vh;  /* but never shorter than a screen */
-  display: flex;
-  flex-direction: column;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 14px;
-  background: var(--bg);
-  color: var(--text);
-}
+    html {
+      margin: 0;
+      padding: 0;
+      height: auto;       /* can grow with the Wix iframe */
+      min-height: 100%;
+    }
 
+    body {
+      margin: 0;
+      padding: 0;
+      height: auto;       /* can exceed one viewport */
+      min-height: 100vh;  /* but never shorter than a screen */
+      display: flex;
+      flex-direction: column;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      background: var(--bg);
+      color: var(--text);
+    }
 
-    /* Make the page fill the iframe and let layout take the rest */
-    body { display: flex; flex-direction: column; }
-    
-    /* Layout wrappers */
+    /* =========================
+       B) LAYOUT (desktop-first)
+       ========================= */
+
     .topbar.filterbar{
       display: flex;
       align-items: center;
@@ -63,31 +63,35 @@ body {
       gap: 12px;
       padding: 0 10px 10px;
       box-sizing: border-box;
-      flex: 1 1 auto;             /* fill all remaining height under .topbar */
+      flex: 1 1 auto;             /* fill remaining height under .topbar */
       min-height: 0;              /* allow children to scroll instead of overflow */
     }
 
-   /* Map & results */
-  #map { 
-    height: 100%;               /* fill .layout’s height */
-    width: 100%;
-    border-radius: 10px;
-    overflow: hidden;
-    flex: 1 1 0;                /* take remaining width */
-    min-height: 300px;
-  }
+    /* Map & results */
+    #map { 
+      height: 100%;               /* fill .layout’s height */
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      flex: 1 1 0;                /* take remaining width */
+      min-height: 300px;
+    }
 
-  #results{
-    width: 360px;               /* desktop side panel width */
-    height: 100%;               /* match .layout’s height */
-    max-height: none;
-    overflow: auto;
-    border-left: 1px solid var(--border);
-    padding-left: 10px;
-    box-sizing: border-box;
-    background: var(--bg);
-    min-height: 0;
-  }
+    #results{
+      width: 360px;               /* desktop side panel width */
+      height: 100%;               /* match .layout’s height */
+      max-height: none;
+      overflow: auto;
+      border-left: 1px solid var(--border);
+      padding-left: 10px;
+      box-sizing: border-box;
+      background: var(--bg);
+      min-height: 0;
+    }
+
+    /* =========================
+       C) COMPONENTS
+       ========================= */
 
     /* Cards */
     .card{
@@ -115,9 +119,7 @@ body {
       color: var(--chip-text);
       cursor: pointer;
     }
-    .dropdown.open > .menu{
-      display: block;
-    }
+    .dropdown.open > .menu{ display: block; }
     .menu{
       display: none;
       position: absolute;
@@ -146,58 +148,62 @@ body {
       cursor: pointer;
     }
 
-    /* Ensure filter dropdowns float above Leaflet zoom buttons */
+    /* Ensure filter dropdowns float above Leaflet zoom buttons (keep once) */
     .dropdown, .filterbar { position: relative; z-index: 2001; }
-
-    /* Leaflet control base z-index (so filters win) */
     .leaflet-top, .leaflet-bottom { z-index: 400; }
 
-    /* ===== Desktop full-height layout ===== */
-@media (min-width: 1024px) {
-  /* Make page a full-height grid: topbar + content */
-  body {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);      /* topbar then content */
-    grid-template-columns: 1fr 380px;  /* map | results panel */
-    height: 100%;
-    min-height: 100vh;
-  }
+    /* =========================
+       D) UTILITIES
+       ========================= */
+    .row-inline{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .pill{ background: var(--chip); color: var(--chip-text); padding: 4px 8px; border-radius: 999px; border:1px solid var(--border); font-size:12px; }
+    a{ color:#0a58ca; text-decoration: none; }
+    a:hover{ text-decoration: underline; }
 
-  .topbar.filterbar {
-    grid-row: 1;
-    grid-column: 1 / span 2;           /* stretch across */
-  }
+    /* =========================
+       E) MEDIA QUERIES
+       ========================= */
 
-  /* Let .layout pass its children straight to the grid */
-  .layout {
-    grid-row: 2;
-    grid-column: 1 / span 2;
-    display: contents;
-  }
+    /* Desktop full-height with CSS grid */
+    @media (min-width: 1024px) {
+      body {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);      /* topbar then content */
+        grid-template-columns: 1fr 380px;  /* map | results panel */
+        height: 100%;
+        min-height: 100vh;
+      }
 
-  /* Map on the left, full height */
-  #map {
-    grid-row: 2;
-    grid-column: 1;
-    height: 100%;
-    min-height: 0;
-  }
+      .topbar.filterbar {
+        grid-row: 1;
+        grid-column: 1 / span 2;           /* stretch across */
+      }
 
-    /* Results on the right, scrollable */
-  #results {
-    grid-row: 2;
-    grid-column: 2;
-    height: 100%;
-    overflow-y: auto;
-    width: auto;    /* grid controls width */
-    min-height: 0;
-  }
+      .layout {
+        grid-row: 2;
+        grid-column: 1 / span 2;
+        display: contents;
+      }
 
-  /* Safety lines to prevent flex/grid overflow issues */
-  .layout, #map, #results { min-height: 0; }
-  #results { overflow-y: auto; }
-}
+      #map {
+        grid-row: 2;
+        grid-column: 1;
+        height: 100%;
+        min-height: 0;
+      }
 
+      #results {
+        grid-row: 2;
+        grid-column: 2;
+        height: 100%;
+        overflow-y: auto;
+        width: auto;    /* grid controls width */
+        min-height: 0;
+      }
+
+      .layout, #map, #results { min-height: 0; }
+      #results { overflow-y: auto; }
+    }
 
     /* ====== Mobile stack: filters → map → list ====== */
     @media (max-width: 767px){
@@ -236,37 +242,25 @@ body {
         width: 100%;
         box-sizing: border-box;
       }
+
+      /* Smaller base type and taller map on small screens */
+      html, body { font-size: 12px; }
+      #map{ height: 60vh !important; }
+      #results{ max-height: 34vh !important; }
+
+      /* Fix mobile order: filters on top, map+list below */
+      #filters{
+        order: 0 !important;     /* put filters first */
+        position: sticky;
+        top: 0;
+        z-index: 2002;
+        background: white;
+      }
+      .layout{
+        order: 1 !important;     /* map + list after filters */
+        display: block;
+      }
     }
-
-    /* Utilities */
-    .row-inline{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .pill{ background: var(--chip); color: var(--chip-text); padding: 4px 8px; border-radius: 999px; border:1px solid var(--border); font-size:12px; }
-    a{ color:#0a58ca; text-decoration: none; }
-    a:hover{ text-decoration: underline; }
-
-    
-
-/* === Mobile tweaks: smaller type + taller map === */
-@media (max-width: 767px){
-  html, body { font-size: 12px; }
-  #map{ height: 60vh !important; }
-  #results{ max-height: 34vh !important; }
-}
-
-/* --- Fix mobile order: filters on top, map+list below --- */
-@media (max-width: 767px){
-  #filters{
-    order: 0 !important;     /* put filters first */
-    position: sticky;
-    top: 0;
-    z-index: 2002;
-    background: white;
-  }
-  .layout{
-    order: 1 !important;     /* map + list after filters */
-    display: block;
-  }
-}
   </style>
 </head>
 <body>
@@ -326,9 +320,9 @@ body {
     crossorigin="anonymous"></script>
 
   <script>
-    // ----------------------------
-    // Basic data (replace with your live data source)
-    // ----------------------------
+    /* =========================
+       A) DATA
+       ========================= */
     const locations = [
       { name: "Bemelman's Bar", address: "35 E 76th St, NY", lat: 40.7740, lng: -73.9636, website: "https://www.rosewoodhotels.com", brand: "Seedlip", neighborhood: "Upper East Side" },
       { name: "Bar Avant (Olly Olly Market)", address: "601 W 26th St, NY", lat: 40.7498, lng: -74.0075, website: "https://ollyollymarket.com", brand: "Lyre's", neighborhood: "Chelsea" },
@@ -349,21 +343,20 @@ body {
       { name: "Hawksmoor NYC", address: "109 E 22nd St, NY", lat: 40.7394, lng: -73.9861, website: "https://hawksmoor.com/locations/new-york/", brand: "Seedlip", neighborhood: "Gramercy" }
     ];
 
-    // ----------------------------
-    // Map init
-    // ----------------------------
+    /* =========================
+       B) MAP INIT
+       ========================= */
     const map = L.map('map', {
       zoomControl: true,
       scrollWheelZoom: true
     }).setView([40.77, -73.97], 12.6);
 
     // Tile layer — light/desaturated (Carto Positron)
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-  maxZoom: 20,
-  subdomains: 'abcd',
-  attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-}).addTo(map);
-
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 20,
+      subdomains: 'abcd',
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+    }).addTo(map);
 
     // Manhattan bounds (approx)
     const manhattanBounds = L.latLngBounds([40.680, -74.047], [40.882, -73.906]);
@@ -376,70 +369,80 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     // Keep a layer group for markers
     let markersLayer = L.layerGroup().addTo(map);
 
-    // --- Custom near-black pin (#202329) and global default ---
-function makePinIcon(hex = '#202329') {
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="38" viewBox="0 0 28 38">
-      <path fill="${hex}" d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"/>
-      <circle cx="14" cy="13" r="5.2" fill="#fff"/>
-    </svg>`;
-  return L.icon({
-    iconUrl: 'data:image/svg+xml;utf8,' + encodeURIComponent(svg),
-    iconSize: [28, 38],
-    iconAnchor: [14, 38],   // tip of the pin
-    popupAnchor: [0, -32]
-  });
-}
-const pinIcon = makePinIcon('#202329');
-
-// Make ALL Leaflet markers use this by default
-L.Marker.prototype.options.icon = pinIcon;
-   
-// --- Force all future markers to use pinIcon, even if created elsewhere/earlier ---
-const __origMarkerFactory = L.marker;
-L.marker = function(latlng, options) {
-  const opts = options || {};
-  if (!opts.icon) opts.icon = pinIcon;
-  return __origMarkerFactory.call(this, latlng, opts);
-};
-
-// Recolor any markers that might already be on the map (created before override)
-if (markersLayer && markersLayer.eachLayer) {
-  markersLayer.eachLayer((layer) => {
-    if (layer && typeof layer.setIcon === 'function') {
-      layer.setIcon(pinIcon);
+    /* =========================
+       C) ICONS
+       ========================= */
+    function makePinIconSVG(hex = '#202329', size = [28, 38]) {
+      const [w,h] = size;
+      return `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 28 38">
+          <path fill="${hex}" d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"/>
+          <circle cx="14" cy="13" r="5.2" fill="#fff"/>
+        </svg>`;
     }
-  });
-}
+    function makeIcon(size = [28,38], color = '#202329'){
+      return L.icon({
+        iconUrl: 'data:image/svg+xml;utf8,' + encodeURIComponent(makePinIconSVG(color, size)),
+        iconSize: size,
+        iconAnchor: [Math.floor(size[0]/2), size[1]],
+        popupAnchor: [0, -Math.floor(size[1]*0.84)]
+      });
+    }
 
+    // Default (desktop) icon
+    let currentIcon = makeIcon([28,38], '#202329');
 
-    // ----------------------------
-    // Dropdown open/close behavior
-    // ----------------------------
+    // Make ALL Leaflet markers use this by default
+    L.Marker.prototype.options.icon = currentIcon;
+
+    // Force all future markers to use currentIcon
+    const __origMarkerFactory = L.marker;
+    L.marker = function(latlng, options) {
+      const opts = options || {};
+      if (!opts.icon) opts.icon = currentIcon;
+      return __origMarkerFactory.call(this, latlng, opts);
+    };
+
+    // Mobile-only smaller pins
+    const mobileQuery = window.matchMedia('(max-width: 767px)');
+    function applyIconForViewport() {
+      const isMobile = mobileQuery.matches;
+      const size = isMobile ? [22, 30] : [28, 38];
+      currentIcon = makeIcon(size, '#202329');
+      L.Marker.prototype.options.icon = currentIcon;
+      // Repaint existing markers
+      if (markersLayer && markersLayer.eachLayer) {
+        markersLayer.eachLayer((layer) => {
+          if (layer && typeof layer.setIcon === 'function') layer.setIcon(currentIcon);
+        });
+      }
+    }
+    applyIconForViewport();
+    mobileQuery.addEventListener('change', applyIconForViewport);
+
+    /* =========================
+       D) UI HELPERS
+       ========================= */
     function closeAllMenus() {
       document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('open'));
       document.querySelectorAll('.dropdown > button').forEach(btn => btn.setAttribute('aria-expanded', 'false'));
     }
 
-    document.addEventListener('click', (e) => {
-      const dd = e.target.closest('.dropdown');
-      const btn = e.target.closest('.dropdown > button');
-      if (btn) {
-        const parent = btn.parentElement;
-        const willOpen = !parent.classList.contains('open');
-        closeAllMenus();
-        if (willOpen) {
-          parent.classList.add('open');
-          btn.setAttribute('aria-expanded', 'true');
+    // Helper to open a marker popup at a given lat/lng
+    function openMarkerAt(lat, lng){
+      let found = null;
+      markersLayer.eachLayer((layer) => {
+        const p = layer.getLatLng();
+        if (Math.abs(p.lat - lat) < 1e-6 && Math.abs(p.lng - lng) < 1e-6) {
+          found = layer;
         }
-      } else if (!dd) {
-        closeAllMenus();
-      }
-    });
+      });
+      if (found){ found.openPopup(); }
+    }
 
-    // ----------------------------
-    // Build markers from data
-    // ----------------------------
+    /* =========================
+       E) RENDERERS
+       ========================= */
     function renderMarkers(data){
       markersLayer.clearLayers();
       const bounds = L.latLngBounds([]);
@@ -459,9 +462,6 @@ if (markersLayer && markersLayer.eachLayer) {
       return { count: data.length, bounds: data.length ? bounds : null };
     }
 
-    // ----------------------------
-    // Render results list
-    // ----------------------------
     function renderList(data){
       const results = document.getElementById('results');
       results.innerHTML = '';
@@ -479,21 +479,9 @@ if (markersLayer && markersLayer.eachLayer) {
       });
     }
 
-    // Helper to open a marker popup at a given lat/lng
-    function openMarkerAt(lat, lng){
-      let found = null;
-      markersLayer.eachLayer((layer) => {
-        const p = layer.getLatLng();
-        if (Math.abs(p.lat - lat) < 1e-6 && Math.abs(p.lng - lng) < 1e-6) {
-          found = layer;
-        }
-      });
-      if (found){ found.openPopup(); }
-    }
-
-    // ----------------------------
-    // Filter logic
-    // ----------------------------
+    /* =========================
+       F) FILTER LOGIC
+       ========================= */
     function getSelectedValues(prefix){
       return Array.from(document.querySelectorAll(`input[id^="${prefix}-"]:checked`)).map(cb => cb.value);
     }
@@ -515,7 +503,8 @@ if (markersLayer && markersLayer.eachLayer) {
       const { count, bounds } = renderMarkers(filtered);
 
       if (count > 0 && bounds) {
-        map.fitBounds(bounds, { padding: [30, 30] });
+        // cap zoom so we don't over-zoom and "fight" setMaxBounds
+        map.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
       }
 
       // Store bounds for other components if needed
@@ -523,9 +512,10 @@ if (markersLayer && markersLayer.eachLayer) {
 
       // On mobile, bring the results list into view under the map
       if (window.matchMedia('(max-width: 768px)').matches) {
-        const resEl = document.getElementById('results') || document.getElementById('sidebar');
+        const resEl = document.getElementById('results');
         if (resEl) {
-          resEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // ensure map height finalized before scrolling
+          setTimeout(() => resEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
         }
       }
 
@@ -533,8 +523,103 @@ if (markersLayer && markersLayer.eachLayer) {
       setTimeout(() => map.invalidateSize(true), 120);
     }
 
+    /* =========================
+       G) EVENT WIRING
+       ========================= */
+    // Dropdown open/close behavior (click)
+    document.addEventListener('click', (e) => {
+      const dd = e.target.closest('.dropdown');
+      const btn = e.target.closest('.dropdown > button');
+      if (btn) {
+        const parent = btn.parentElement;
+        const willOpen = !parent.classList.contains('open');
+        closeAllMenus();
+        if (willOpen) {
+          parent.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      } else if (!dd) {
+        closeAllMenus();
+      }
+    });
+
+    // Close menus on Escape; add light ARIA wiring
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAllMenus();
+    });
+    // ARIA relationships
+    document.querySelectorAll('.dropdown > button').forEach((btn) => {
+      btn.setAttribute('aria-haspopup', 'true');
+      const dd = btn.parentElement;
+      const menu = dd.querySelector('.menu');
+      if (dd && menu) {
+        const id = dd.id ? dd.id + '-menu' : 'menu-' + Math.random().toString(36).slice(2);
+        menu.id = id;
+        btn.setAttribute('aria-controls', id);
+      }
+    });
+
     document.getElementById('goBtn').addEventListener('click', applyFilters);
 
+    /* =========================
+       H) SIZING / IFRAME HELPERS
+       ========================= */
+    function lockBodyToIframeHeight() {
+      const h = Math.max(
+        document.documentElement.clientHeight || 0,
+        window.innerHeight || 0
+      );
+      document.documentElement.style.height = h + 'px';
+      document.body.style.height = h + 'px';
+    }
+
+    function sizeMapAndList() {
+      const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+      const mapEl = document.getElementById('map');
+      const resultsEl = document.getElementById('results');
+      const filtersEl = document.getElementById('filters');
+      if (!mapEl || !resultsEl) return;
+
+      if (isDesktop) {
+        const filtersH = filtersEl ? filtersEl.offsetHeight : 0;
+        const pad = 10;
+        const h = Math.max(
+          document.documentElement.clientHeight || 0,
+          window.innerHeight || 0
+        );
+        const available = Math.max(300, Math.floor(h - filtersH - pad));
+        mapEl.style.height = available + 'px';
+        resultsEl.style.height = available + 'px';
+        resultsEl.style.maxHeight = available + 'px';
+      } else {
+        mapEl.style.height = '';
+        resultsEl.style.height = '';
+        resultsEl.style.maxHeight = '';
+      }
+
+      setTimeout(() => map.invalidateSize(), 80);
+    }
+
+    function refreshHeights() {
+      lockBodyToIframeHeight();
+      sizeMapAndList();
+    }
+
+    refreshHeights();
+    window.addEventListener('resize', refreshHeights);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshHeights(); });
+    const ro = new ResizeObserver(() => refreshHeights());
+    ro.observe(document.documentElement);
+    ro.observe(document.body);
+    document.addEventListener('click', (e) => {
+      const isToggle = e.target.closest('.dropdown > button');
+      const clickedOutside = !e.target.closest('.dropdown');
+      if (isToggle || clickedOutside) setTimeout(refreshHeights, 50);
+    });
+
+    /* =========================
+       I) INITIALIZE
+       ========================= */
     // Initial render: show all
     renderList(locations);
     const initial = renderMarkers(locations);
@@ -542,63 +627,6 @@ if (markersLayer && markersLayer.eachLayer) {
 
     // Re-measure map after load to be safe in Wix iframe
     setTimeout(() => map.invalidateSize(), 150);
-
-// === Fill iframe height reliably inside Wix ===
-// 1) Lock <html> and <body> to the iframe's actual inner height
-function lockBodyToIframeHeight() {
-  const h = Math.max(
-    document.documentElement.clientHeight || 0,
-    window.innerHeight || 0
-  );
-  document.documentElement.style.height = h + 'px';
-  document.body.style.height = h + 'px';
-}
-
-// 2) After we lock heights, size map + results to fill under the filters bar
-function sizeMapAndList() {
-  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
-  const mapEl = document.getElementById('map');
-  const resultsEl = document.getElementById('results');
-  const filtersEl = document.getElementById('filters');
-  if (!mapEl || !resultsEl) return;
-
-  if (isDesktop) {
-    const filtersH = filtersEl ? filtersEl.offsetHeight : 0;
-    const pad = 10;
-    const h = Math.max(
-      document.documentElement.clientHeight || 0,
-      window.innerHeight || 0
-    );
-    const available = Math.max(300, Math.floor(h - filtersH - pad));
-    mapEl.style.height = available + 'px';
-    resultsEl.style.height = available + 'px';
-    resultsEl.style.maxHeight = available + 'px';
-  } else {
-    mapEl.style.height = '';
-    resultsEl.style.height = '';
-    resultsEl.style.maxHeight = '';
-  }
-
-  setTimeout(() => map.invalidateSize(), 80);
-}
-
-// 3) Orchestrate updates
-function refreshHeights() {
-  lockBodyToIframeHeight();
-  sizeMapAndList();
-}
-
-refreshHeights();
-window.addEventListener('resize', refreshHeights);
-document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshHeights(); });
-const ro = new ResizeObserver(() => refreshHeights());
-ro.observe(document.documentElement);
-ro.observe(document.body);
-document.addEventListener('click', (e) => {
-  const isToggle = e.target.closest('.dropdown > button');
-  const clickedOutside = !e.target.closest('.dropdown');
-  if (isToggle || clickedOutside) setTimeout(refreshHeights, 50);
-});
   </script>
 </body>
 </html>
