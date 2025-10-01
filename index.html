@@ -154,48 +154,48 @@ body {
 
     /* ===== Desktop full-height layout ===== */
 @media (min-width: 1024px) {
-  /* Make page a full-height grid: topbar + content */
+  /* Keep body as a flex column — the topbar sits above, .layout fills the rest */
   body {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);      /* topbar then content */
-    grid-template-columns: 1fr 380px;  /* map | results panel */
-    height: 100%;
-    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    height: 100%;      /* follow iframe height when you drag the Wix box */
+    min-height: 100vh; /* but never shorter than a screen */
   }
 
   .topbar.filterbar {
-    grid-row: 1;
-    grid-column: 1 / span 2;           /* stretch across */
+    flex: 0 0 auto;    /* fixed-height row at the top */
   }
 
-  /* Let .layout pass its children straight to the grid */
+  /* CRITICAL CHANGE: .layout stays a real box and becomes the grid */
   .layout {
-    grid-row: 2;
-    grid-column: 1 / span 2;
-    display: contents;
+    display: grid;
+    grid-template-columns: 1fr 380px;   /* map | results */
+    grid-template-rows: minmax(0, 1fr); /* take all remaining height */
+    height: 100%;        /* fill the space under the topbar */
+    min-height: 0;       /* allow children to compute height:100% */
+    gap: 12px;
+    padding: 0 10px 10px;
+    box-sizing: border-box;
+    flex: 1 1 auto;      /* fill under the topbar */
   }
 
   /* Map on the left, full height */
   #map {
-    grid-row: 2;
     grid-column: 1;
+    grid-row: 1;
     height: 100%;
     min-height: 0;
   }
 
-    /* Results on the right, scrollable */
+  /* Results on the right, scrollable */
   #results {
-    grid-row: 2;
     grid-column: 2;
+    grid-row: 1;
     height: 100%;
-    overflow-y: auto;
-    width: auto;    /* grid controls width */
     min-height: 0;
+    overflow-y: auto;
+    width: auto; /* grid sets the width */
   }
-
-  /* Safety lines to prevent flex/grid overflow issues */
-  .layout, #map, #results { min-height: 0; }
-  #results { overflow-y: auto; }
 }
 
 
