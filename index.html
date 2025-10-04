@@ -284,6 +284,10 @@
           <input id="brand-lyres" type="checkbox" value="Lyre's" />
           <label for="brand-lyres">Lyre's</label>
         </div>
+        <div class="row">
+          <input id="brand-agrestis" type="checkbox" value="St. Agrestis" />
+          <label for="brand-agrestis">St. Agrestis</label>
+        </div>
       </div>
     </div>
 
@@ -333,23 +337,31 @@
        A) DATA
        ========================= */
     const locations = [
-      { name: "Bemelman's Bar", address: "35 E 76th St, NY", lat: 40.7740, lng: -73.9636, website: "https://www.rosewoodhotels.com", brand: "Seedlip", neighborhood: "Upper East Side" },
-      { name: "Bar Avant (Olly Olly Market)", address: "601 W 26th St, NY", lat: 40.7498, lng: -74.0075, website: "https://ollyollymarket.com", brand: "Lyre's", neighborhood: "Chelsea" },
-      { name: "Fumo", address: "198 8th Ave, NY", lat: 40.7448, lng: -73.9809, website: "https://fumonyc.com", brand: "Ritual Zero Proof", neighborhood: "Chelsea" },
-      { name: "Miriam", address: "300 Amsterdam Ave, NY", lat: 40.7809, lng: -73.9797, website: "https://miriamrestaurant.com", brand: "Seedlip", neighborhood: "Upper West Side" },
+      { name: "Bemelman's Bar", address: "35 E 76th St, NY", lat: 40.7740, lng: -73.9636, website: "https://www.rosewoodhotels.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side" },
+      { name: "Bar Avant (Olly Olly Market)", address: "601 W 26th St, NY", lat: 40.7498, lng: -74.0075, website: "https://ollyollymarket.com", brand: "Seedlip, St. Agrestis", neighborhood: "Chelsea" },
+      { name: "Fumo", address: "198 8th Ave, NY", lat: 40.7448, lng: -73.9809, website: "https://fumonyc.com", brand: "Seedlip", neighborhood: "Chelsea" },
+      { name: "Miriam", address: "300 Amsterdam Ave, NY", lat: 40.7809, lng: -73.9797, website: "https://miriamrestaurant.com", brand: "Seedlip, Lyre's", neighborhood: "Upper West Side" },
       { name: "Sarabeth's", address: "423 Amsterdam Ave, NY", lat: 40.7860, lng: -73.9770, website: "https://sarabethsrestaurants.com", brand: "Lyre's", neighborhood: "Upper West Side" },
-      { name: "Bondurants", address: "303 E 85th St, NY", lat: 40.7770, lng: -73.9518, website: "https://bondurantsnyc.com", brand: "Seedlip", neighborhood: "Upper East Side" },
-      { name: "Sfoglia", address: "1402 Lexington Ave, NY", lat: 40.7835, lng: -73.9529, website: "https://sfogliarestaurant.com", brand: "Lyre's", neighborhood: "Upper East Side" },
-      { name: "The Blasket", address: "1085 2nd Ave, NY", lat: 40.7579, lng: -73.9635, website: "https://theblasketnyc.com", brand: "Ritual Zero Proof", neighborhood: "Midtown" },
-      { name: "Rosemary's Midtown", address: "825 3rd Ave, New York, NY 10022", lat: 40.7559, lng: -73.9701, website: "https://rosemarysnyc.com", brand: "Seedlip", neighborhood: "Midtown" },
-      { name: "Hutong NYC", address: "731 Lexington Ave, NY", lat: 40.761812, lng: -73.968178, website: "https://hutong-nyc.com", brand: "Lyre's", neighborhood: "Midtown" },
-      { name: "The Penrose", address: "1590 2nd Ave, NY", lat: 40.7763, lng: -73.9498, website: "https://penrosebar.com", brand: "Seedlip", neighborhood: "Upper East Side" },
-      { name: "Orsay", address: "1057 Lexington Ave, NY", lat: 40.7731, lng: -73.9599, website: "https://orsayrestaurant.com", brand: "Lyre's", neighborhood: "Upper East Side" },
-      { name: "Boqueria", address: "1460 2nd Ave, NY", lat: 40.7728, lng: -73.9530, website: "https://boqueriarestaurant.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side" },
+      { name: "Bondurants", address: "303 E 85th St, NY", lat: 40.7770, lng: -73.9518, website: "https://bondurantsnyc.com", brand: "Seedlip, Lyre's", neighborhood: "Upper East Side" },
+      { name: "Sfoglia", address: "1402 Lexington Ave, NY", lat: 40.7835, lng: -73.9529, website: "https://sfogliarestaurant.com", brand: "Lyre's, Ritual Zero Proof, St. Agrestis", neighborhood: "Upper East Side" },
+      { name: "The Blasket", address: "1085 2nd Ave, NY", lat: 40.7579, lng: -73.9635, website: "https://theblasketnyc.com", brand: "Lyre's, St. Agrestis", neighborhood: "Midtown" },
+      { name: "Rosemary's Midtown", address: "825 3rd Ave, NY", lat: 40.7559, lng: -73.9701, website: "https://rosemarysnyc.com", brand: "Lyre's", neighborhood: "Midtown" },
+      { name: "Hutong NYC", address: "731 Lexington Ave, NY", lat: 40.761812, lng: -73.968178, website: "https://hutong-nyc.com", brand: "Seedlip, St. Agrestis", neighborhood: "Midtown" },
+      { name: "The Penrose", address: "1590 2nd Ave, NY", lat: 40.7763, lng: -73.9498, website: "https://penrosebar.com", brand: "Seedlip, Lyre's", neighborhood: "Upper East Side" },
+      { name: "Orsay", address: "1057 Lexington Ave, NY", lat: 40.7731, lng: -73.9599, website: "https://orsayrestaurant.com", brand: "Seedlip", neighborhood: "Upper East Side" },
+      { name: "Boqueria", address: "1460 2nd Ave, NY", lat: 40.7728, lng: -73.9530, website: "https://boqueriarestaurant.com", brand: "Ritual Zero Proof, Seedlip", neighborhood: "Upper East Side" },
       { name: "Crave Fishbar", address: "945 2nd Ave, NY", lat: 40.7544, lng: -73.9685, website: "https://cravefishbar.com", brand: "Seedlip", neighborhood: "Midtown" },
       { name: "UVA", address: "1486 2nd Ave, NY", lat: 40.7726, lng: -73.9541, website: "https://uvanyc.com", brand: "Lyre's", neighborhood: "Upper East Side" },
       { name: "Sefton", address: "510 E 117th St, NY", lat: 40.7969, lng: -73.9304, website: "https://seftonnyc.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side" },
-      { name: "Hawksmoor NYC", address: "109 E 22nd St, NY", lat: 40.7394, lng: -73.9861, website: "https://hawksmoor.com/locations/new-york/", brand: "Seedlip", neighborhood: "Gramercy" }
+      { name: "Hawksmoor NYC", address: "109 E 22nd St, NY", lat: 40.7394, lng: -73.9861, website: "https://hawksmoor.com/locations/new-york/", brand: "Seedlip", neighborhood: "Gramercy" },
+      { name: "Monkey Bar", address: "60 E 54th St, NY", lat: 40.7598, lng: -73.9732, website: "https://www.nycmonkeybar.com", brand: "Ritual Zero Proof, St. Agrestis", neighborhood: "Midtown" },
+      { name: "Gramercy Tavern", address: "42 E 20th St, NY", lat: 40.7386, lng: -73.9882, website: "https://www.gramercytavern.com", brand: "Lyre's, St. Agrestis", neighborhood: "Gramercy" },
+      { name: "Handcraft Kitchen & Cocktails", address: "367 3rd Avenue, NY", lat: 40.7427, lng: -73.9805, website: "https://www.handcraftnyc.com", brand: "Lyre's, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "The Junction", address: "329 Lexington Ave, NY", lat: 40.7470, lng: -73.9760, website: "https://www.thejunctionnyc.com", brand: "Lyre's, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "Broken Shaker", address: "23 Lexington Ave, NY", lat: 40.7395, lng: -73.9845, website: "https://www.brokenshaker.com", brand: "Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "Wildflower", address: "505 W 23 St A, NY", lat: 40.7440, lng: -73.9988, website: "https://www.wildflowernyc.com", brand: "Seedlip, St. Agrestis", neighborhood: "Chelsea" },
+      { name: "The Campbell", address: "15 Vanderbilt Ave, NY", lat: 40.7525, lng: -73.9778, website: "https://www.thecampbellnyc.com", brand: "St. Agrestis", neighborhood: "Midtown" },
+      { name: "Jungle Bird", address: "174 8th Ave, NY", lat: 40.7429, lng: -74.0011, website: "https://junglebirdnyc.com", brand: "St. Agrestis, Ritual Zero Proof, Seedlip", neighborhood: "Chelsea" },
     ];
 
     /* =========================
