@@ -365,6 +365,7 @@
       { name: "Sempre Oggi", address: "164 W 75th St, NY", lat: 40.7803, lng: -73.9799, website: "https://www.semprenyc.com", brand: "St. Agrestis", neighborhood: "Upper West Side" },
       { name: "The Wolfe", address: "425 Amsterdam Ave, NY", lat: 40.7868, lng: -73.9783, website: "https://www.thewolfenyc.com", brand: "St. Agrestis, Lyre's", neighborhood: "Upper West Side" },
       { name: "Elea", address: "217 W 85th St, NY", lat: 40.7893, lng: -73.9766, website: "https://eleanyc.com", brand: "Ritual Zero Proof", neighborhood: "Upper West Side" },
+      { name: "Friend of a Farmer", address: "68 W 71st St, NY", lat: 40.7782, lng: -73.9791, website: "https://www.friendofafarmer.com", brand: "Seedlip", neighborhood: "Upper West Side" },
     ];
 
     /* =========================
@@ -518,10 +519,15 @@
       const selectedNeighborhoods = getSelectedValues('n');
 
       const filtered = locations.filter(loc => {
-        const brandOK = selectedBrands.length ? selectedBrands.includes(loc.brand) : true;
-        const hoodOK  = selectedNeighborhoods.length ? selectedNeighborhoods.includes(loc.neighborhood) : true;
-        return brandOK && hoodOK;
-      });
+  const brandOK = selectedBrands.length
+    ? selectedBrands.some(b => loc.brand && loc.brand.toLowerCase().includes(b.toLowerCase()))
+    : true;
+  const hoodOK = selectedNeighborhoods.length
+    ? selectedNeighborhoods.includes(loc.neighborhood)
+    : true;
+  return brandOK && hoodOK;
+});
+
 
       renderList(filtered);
       const { count, bounds } = renderMarkers(filtered);
