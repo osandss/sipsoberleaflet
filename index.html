@@ -16,6 +16,12 @@
    APPLE MAPS–STYLE LAYOUT
    ========================= */
 
+  :root {
+  /* mobile panel heights (used for dynamic map resizing) */
+  --panel-collapsed: 30vh;   /* collapsed height on mobile */
+  --panel-expanded: 65vh;    /* expanded height on mobile */
+}
+    
 html, body {
   margin: 0;
   padding: 0;
@@ -105,7 +111,7 @@ html, body {
 /* --- Bottom results panel --- */
 #bottom-panel {
   position: fixed;
-  bottom: -10px;
+  bottom: 0px;
   left: 0;
   right: 0;
   height: 35vh;
@@ -116,6 +122,7 @@ html, body {
   z-index: 2003;
   overflow: hidden;
   transition: height 0.3s ease, bottom 0.3s ease;
+  will-hange: height, bottom;
 }
 
 #bottom-panel.expanded {
@@ -156,32 +163,38 @@ html, body {
     font-size: 12px;
   }
 
-  /* make map shorter but eliminate white gap */
+  /* Map fills down to top of bottom panel — no white gap */
   #map {
-    position: relative;
-    top: 44px;          /* leaves room for filter bar */
-    height: 42vh;       /* smaller map */
-    margin-bottom: -12px; /* pulls up panel to overlap */
+    position: absolute;
+    top: 44px; /* leaves space for filters bar */
+    left: 0;
+    right: 0;
+    bottom: var(--panel-collapsed); /* automatically adjusts to panel height */
+    height: auto;
   }
 
-  /* smaller dropdown buttons */
+  /* Bottom panel: clean and flush to bottom */
+  #bottom-panel {
+    bottom: 0;
+    height: var(--panel-collapsed);
+  }
+
+  #bottom-panel.expanded {
+    height: var(--panel-expanded);
+  }
+
+  /* When panel expands, lift map’s bottom edge to match new height */
+  body.panel-expanded #map {
+    bottom: var(--panel-expanded);
+  }
+
+  /* Smaller dropdown buttons */
   .dropdown > button {
     font-size: 12px;
     padding: 5px 10px;
   }
 
-  /* compact bottom panel */
-  #bottom-panel {
-    bottom: -10px;      /* lift panel slightly into map */
-    height: 28vh;       /* collapsed height */
-  }
-
-  #bottom-panel.expanded {
-    height: 65vh;       /* expanded height */
-    bottom: 0;
-  }
-
-  /* tighter card styling */
+  /* Compact cards */
   .card {
     padding: 8px 6px;
     font-size: 12px;
