@@ -167,50 +167,37 @@ body.panel-expanded #map {
 
 /* --- Mobile layout adjustments --- */
 @media (max-width: 767px) {
-  /* smaller mobile panel heights (override defaults) */
-  :root {
-    --panel-collapsed: 28vh;   /* smaller closed panel */
-    --panel-expanded: 60vh;    /* smaller open panel */
-  }
-
   /* smaller base type */
   html, body {
     font-size: 12px;
   }
 
-
-  /* Map fills down to top of bottom panel — no white gap */
+  /* map shorter and no white gap */
   #map {
     position: absolute;
-    top: 44px; /* leaves space for filters bar */
+    top: 44px; /* space for filters bar */
     left: 0;
     right: 0;
-    bottom: var(--panel-collapsed); /* automatically adjusts to panel height */
+    bottom: 28vh; /* match collapsed panel height */
     height: auto;
   }
 
-  /* Bottom panel: clean and flush to bottom */
+  /* smaller bottom panel heights */
   #bottom-panel {
     bottom: 0;
-    height: var(--panel-collapsed);
+    height: 28vh; /* collapsed */
   }
-
   #bottom-panel.expanded {
-    height: var(--panel-expanded);
+    height: 60vh; /* expanded */
   }
 
-  /* When panel expands, lift map’s bottom edge to match new height */
-  body.panel-expanded #map {
-    bottom: var(--panel-expanded);
-  }
-
-  /* Smaller dropdown buttons */
+  /* smaller dropdown buttons */
   .dropdown > button {
     font-size: 12px;
     padding: 5px 10px;
   }
 
-  /* Compact cards */
+  /* compact cards */
   .card {
     padding: 8px 6px;
     font-size: 12px;
