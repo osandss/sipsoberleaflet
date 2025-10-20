@@ -167,10 +167,17 @@ body.panel-expanded #map {
 
 /* --- Mobile layout adjustments --- */
 @media (max-width: 767px) {
+  /* smaller mobile panel heights (override defaults) */
+  :root {
+    --panel-collapsed: 28vh;   /* smaller closed panel */
+    --panel-expanded: 60vh;    /* smaller open panel */
+  }
+
   /* smaller base type */
   html, body {
     font-size: 12px;
   }
+
 
   /* Map fills down to top of bottom panel — no white gap */
   #map {
