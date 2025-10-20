@@ -12,323 +12,157 @@
         crossorigin="anonymous"/>
 
   <style>
-    /* =========================
-       A) BASE + VARIABLES
-       ========================= */
-    :root{
-      --bg:#ffffff;
-      --text:#111;
-      --muted:#666;
-      --border:#eaeaea;
-      --chip:#f6f7fb;
-      --chip-text:#2f3b69;
-      --accent:#2f3b69;
-    }
+/* =========================
+   APPLE MAPS–STYLE LAYOUT
+   ========================= */
 
-    html {
-      margin: 0;
-      padding: 0;
-      height: 100%;       /* can grow with the Wix iframe */
-      min-height: 0;
-    }
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #fff;
+  color: #111;
+}
 
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100%;       /* can exceed one viewport */
-      min-height: 0;  /* but never shorter than a screen */
-      display: flex;
-      flex-direction: column;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 14px;
-      background: var(--bg);
-      color: var(--text);
-    }
+/* --- Top filters bar --- */
+#filters {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2002;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #ddd;
+}
 
-    /* =========================
-       B) LAYOUT (desktop-first)
-       ========================= */
+.dropdown > button {
+  background: #f2f2f7;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #2f3b69;
+}
 
-    .topbar.filterbar{
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 10px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-    }
+#goBtn {
+  background: #202329;
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
 
-    .layout{
-      display: flex;              /* Desktop side-by-side by default */
-      gap: 12px;
-      padding: 0 10px 10px;
-      box-sizing: border-box;
-      flex: 1 1 auto;             /* fill remaining height under .topbar */
-      min-height: 0;              /* allow children to scroll instead of overflow */
-    }
+/* --- Map fills the screen --- */
+#map {
+  position: absolute;
+  top: 48px; /* leaves space for the filters bar */
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 
-    /* Map & results */
-    #map { 
-      height: 100%;               /* fill .layout’s height */
-      width: 100%;
-      border-radius: 10px;
-      overflow: hidden;
-      flex: 1 1 0;                /* take remaining width */
-      min-height: 300px;
-    }
+/* --- Bottom results panel --- */
+#bottom-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 35vh;
+  background: #fff;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 2003;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
 
-    #results{
-      width: 360px;               /* desktop side panel width */
-      height: 100%;               /* match .layout’s height */
-      max-height: none;
-      overflow: auto;
-      border-left: 1px solid var(--border);
-      padding-left: 10px;
-      box-sizing: border-box;
-      background: var(--bg);
-      min-height: 0;
-    }
+#bottom-panel.expanded {
+  height: 75vh;
+}
 
-    /* =========================
-       C) COMPONENTS
-       ========================= */
+#handle {
+  width: 40px;
+  height: 5px;
+  background: #ccc;
+  border-radius: 3px;
+  margin: 8px auto;
+}
 
-    /* Cards */
-    .card{
-      padding: 10px 8px;
-      border-bottom: 1px solid var(--border);
-      line-height: 1.4;
-    }
-    .card-name{
-      font-weight: 600;
-      cursor: pointer;
-      color: var(--text);
-      text-decoration: none;
-    }
-    .card-name:hover{ text-decoration: underline; }
-    .card .meta{ color: var(--muted); font-size: 12px; }
+#results {
+  overflow-y: auto;
+  max-height: calc(100% - 20px);
+  padding: 10px;
+}
 
-    /* Dropdowns / filters */
-    .dropdown { position: relative; display: inline-block; z-index: 2001; pointer-events: auto; }
-    .dropdown > button{
-      background: var(--chip);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 13px;
-      color: var(--chip-text);
-      cursor: pointer;
-    }
-    .dropdown.open > .menu{ display: block; }
-    .menu{
-      display: none;
-      position: absolute;
-      top: calc(100% + 6px);
-      left: 0;
-      min-width: 220px;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      z-index: 2002; /* above Leaflet controls */
-    }
-    .menu .row{ display: flex; align-items: center; gap: 8px; padding: 6px 4px; }
-    .menu label{ flex: 1; cursor: pointer; }
-    .menu input[type="checkbox"]{ transform: translateY(1px); }
+.card {
+  padding: 10px 8px;
+  border-bottom: 1px solid #eee;
+  line-height: 1.4;
+}
 
-    /* Go button */
-    #goBtn{
-      background: #202329;
-      color: white;
-      border: 0;
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+.card-name {
+  font-weight: 600;
+  cursor: pointer;
+  color: #111;
+}
+.card-name:hover { text-decoration: underline; }
 
-    /* Ensure filter dropdowns float above Leaflet zoom buttons (keep once) */
-    .dropdown, .filterbar { position: relative; z-index: 2001; }
-    .leaflet-top, .leaflet-bottom { z-index: 400; }
+@media (max-width: 767px) {
+  #bottom-panel { height: 40vh; }
+  #bottom-panel.expanded { height: 80vh; }
+}
+</style>
 
-    /* =========================
-       D) UTILITIES
-       ========================= */
-    .row-inline{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .pill{ background: var(--chip); color: var(--chip-text); padding: 4px 8px; border-radius: 999px; border:1px solid var(--border); font-size:12px; }
-    a{ color:#0a58ca; text-decoration: none; }
-    a:hover{ text-decoration: underline; }
-
-    /* =========================
-       E) MEDIA QUERIES
-       ========================= */
-
-    /* Desktop full-height with CSS grid */
-    @media (min-width: 1024px) {
-      body {
-        display: grid;
-        grid-template-rows: auto minmax(0, 1fr);      /* topbar then content */
-        grid-template-columns: 1fr 380px;  /* map | results panel */
-        height: 100%;
-        min-height: 0;
-      }
-
-      .topbar.filterbar {
-        grid-row: 1;
-        grid-column: 1 / span 2;           /* stretch across */
-      }
-
-      .layout {
-        grid-row: 2;
-        grid-column: 1 / span 2;
-        display: contents;
-        min-height: 0;
-      }
-
-      #map {
-        grid-row: 2;
-        grid-column: 1;
-        height: 100%;
-        min-height: 0;
-      }
-
-      #results {
-        grid-row: 2;
-        grid-column: 2;
-        height: 100%;
-        overflow-y: auto;
-        width: auto;    /* grid controls width */
-        min-height: 0;
-      }
-
-      .layout, #map, #results { min-height: 0; }
-      #results { overflow-y: auto; }
-    }
-
-    /* ====== Mobile stack: filters → map → list ====== */
-    @media (max-width: 767px){
-      .layout{ 
-        display: block;           /* stack vertically */
-        padding: 0;
-      }
-      /* Keep the filters bar visible at the top on mobile */
-      #filters{
-        order: 1;
-        position: sticky;
-        top: 0;
-        z-index: 2002;
-        background: white;
-        padding: 6px 10px;
-        border-bottom: 1px solid #eee;
-      }
-
-      .topbar.filterbar{
-        padding: 8px 10px;
-        border-bottom: 1px solid var(--border);
-      }
-
-      #map{
-        height: 52vh;             /* upper half of the screen */
-        width: 100%;
-        border-radius: 0;
-      }
-      #results{
-        max-height: 42vh;         /* lower half; scrolls */
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        border-top: 1px solid var(--border);
-        padding: 8px 10px;
-        background: white;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      /* Smaller base type and taller map on small screens */
-      html, body { font-size: 12px; }
-      #map{ height: 45vh; }
-      #results{ max-height: none; }
-
-      /* Fix mobile order: filters on top, map+list below */
-      #filters{
-        order: 0 !important;     /* put filters first */
-        position: sticky;
-        top: 0;
-        z-index: 2002;
-        background: white;
-      }
-      .layout{
-        order: 1 !important;     /* map + list after filters */
-        display: block;
-      }
-    }
-  </style>
 </head>
 <body>
 
   <!-- TOP CONTROLS (filters + Go) -->
-  <div id="filters" class="topbar filterbar">
-    <!-- Example dropdowns (replace options with your data as needed) -->
-    <div class="dropdown" id="brandDD">
-      <button type="button" aria-expanded="false">Brands ▾</button>
-      <div class="menu" role="menu">
-        <div class="row">
-          <input id="brand-seedlip" type="checkbox" value="Seedlip" />
-          <label for="brand-seedlip">Seedlip</label>
-        </div>
-        <div class="row">
-          <input id="brand-ritual" type="checkbox" value="Ritual Zero Proof" />
-          <label for="brand-ritual">Ritual Zero Proof</label>
-        </div>
-        <div class="row">
-          <input id="brand-lyres" type="checkbox" value="Lyre's" />
-          <label for="brand-lyres">Lyre's</label>
-        </div>
-        <div class="row">
-          <input id="brand-agrestis" type="checkbox" value="St. Agrestis" />
-          <label for="brand-agrestis">St. Agrestis</label>
-        </div>
-        <div class="row">
-          <input id="brand-aplos" type="checkbox" value="Aplós" />
-          <label for="brand-aplos">Aplós</label>
-        </div>
-      </div>
+  <!-- Floating Filters Bar -->
+<div id="filters" class="topbar filterbar">
+  <div class="dropdown" id="brandDD">
+    <button type="button" aria-expanded="false">Brands ▾</button>
+    <div class="menu" role="menu">
+      <div class="row"><input id="brand-seedlip" type="checkbox" value="Seedlip" /><label for="brand-seedlip">Seedlip</label></div>
+      <div class="row"><input id="brand-ritual" type="checkbox" value="Ritual Zero Proof" /><label for="brand-ritual">Ritual Zero Proof</label></div>
+      <div class="row"><input id="brand-lyres" type="checkbox" value="Lyre's" /><label for="brand-lyres">Lyre's</label></div>
+      <div class="row"><input id="brand-agrestis" type="checkbox" value="St. Agrestis" /><label for="brand-agrestis">St. Agrestis</label></div>
     </div>
-
-    <div class="dropdown" id="neighborhoodDD">
-      <button type="button" aria-expanded="false">Neighborhoods ▾</button>
-      <div class="menu" role="menu">
-        <div class="row">
-          <input id="n-ues" type="checkbox" value="Upper East Side" />
-          <label for="n-ues">Upper East Side</label>
-        </div>
-        <div class="row">
-          <input id="n-midtown" type="checkbox" value="Midtown" />
-          <label for="n-midtown">Midtown</label>
-        </div>
-        <div class="row">
-          <input id="n-gramercy" type="checkbox" value="Gramercy" />
-          <label for="n-gramercy">Gramercy</label>
-        </div>
-        <div class="row">
-          <input id="n-uws" type="checkbox" value="Upper West Side" />
-          <label for="n-uws">Upper West Side</label>
-        </div>
-        <div class="row">
-          <input id="n-chelsea" type="checkbox" value="Chelsea" />
-          <label for="n-chelsea">Chelsea</label>
-        </div>
-      </div>
-    </div>
-
-    <button id="goBtn" type="button">Go</button>
   </div>
 
-  <!-- LAYOUT WRAPPER -->
-  <div class="layout">
-    <div id="map"></div>
-    <div id="results"></div>
+  <div class="dropdown" id="neighborhoodDD">
+    <button type="button" aria-expanded="false">Neighborhoods ▾</button>
+    <div class="menu" role="menu">
+      <div class="row"><input id="n-ues" type="checkbox" value="Upper East Side" /><label for="n-ues">Upper East Side</label></div>
+      <div class="row"><input id="n-midtown" type="checkbox" value="Midtown" /><label for="n-midtown">Midtown</label></div>
+      <div class="row"><input id="n-gramercy" type="checkbox" value="Gramercy" /><label for="n-gramercy">Gramercy</label></div>
+      <div class="row"><input id="n-chelsea" type="checkbox" value="Chelsea" /><label for="n-chelsea">Chelsea</label></div>
+      <div class="row"><input id="n-uws" type="checkbox" value="Upper West Side" /><label for="n-uws">Upper West Side</label></div>
+    </div>
   </div>
+
+  <button id="goBtn" type="button">Go</button>
+</div>
+
+<!-- Fullscreen Map -->
+<div id="map"></div>
+
+<!-- Sliding Bottom Results Panel -->
+<div id="bottom-panel">
+  <div id="handle"></div>
+  <div id="results"></div>
+</div>
 
   <!-- Leaflet JS (latest CDN) -->
   <script 
@@ -599,62 +433,7 @@
 
     document.getElementById('goBtn').addEventListener('click', applyFilters);
 
-    /* =========================
-       H) SIZING / IFRAME HELPERS
-       ========================= */
-    function lockBodyToIframeHeight() {
-      const h = Math.max(
-        document.documentElement.clientHeight || 0,
-        window.innerHeight || 0
-      );
-      document.documentElement.style.height = h + 'px';
-      document.body.style.height = h + 'px';
-    }
-
-    function sizeMapAndList() {
-      const isDesktop = window.matchMedia('(min-width: 768px)').matches;
-      const mapEl = document.getElementById('map');
-      const resultsEl = document.getElementById('results');
-      const filtersEl = document.getElementById('filters');
-      if (!mapEl || !resultsEl) return;
-
-      if (isDesktop) {
-        const filtersH = filtersEl ? filtersEl.offsetHeight : 0;
-        const pad = 10;
-        const h = Math.max(
-          document.documentElement.clientHeight || 0,
-          window.innerHeight || 0
-        );
-        const available = Math.max(300, Math.floor(h - filtersH - pad));
-        mapEl.style.height = available + 'px';
-        resultsEl.style.height = available + 'px';
-        resultsEl.style.maxHeight = available + 'px';
-      } else {
-        mapEl.style.height = '';
-        resultsEl.style.height = '';
-        resultsEl.style.maxHeight = '';
-      }
-
-      setTimeout(() => map.invalidateSize(), 80);
-    }
-
-    function refreshHeights() {
-      lockBodyToIframeHeight();
-      sizeMapAndList();
-    }
-
-    refreshHeights();
-    window.addEventListener('resize', refreshHeights);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshHeights(); });
-    const ro = new ResizeObserver(() => refreshHeights());
-    ro.observe(document.documentElement);
-    ro.observe(document.body);
-    document.addEventListener('click', (e) => {
-      const isToggle = e.target.closest('.dropdown > button');
-      const clickedOutside = !e.target.closest('.dropdown');
-      if (isToggle || clickedOutside) setTimeout(refreshHeights, 50);
-    });
-
+    
     /* =========================
        I) INITIALIZE
        ========================= */
@@ -665,6 +444,43 @@
 
     // Re-measure map after load to be safe in Wix iframe
     setTimeout(() => map.invalidateSize(), 150);
+
+/* =========================
+   J) SLIDE-UP PANEL BEHAVIOR
+   ========================= */
+const panel = document.getElementById("bottom-panel");
+const handle = document.getElementById("handle");
+let startY = 0;
+let startHeight = 0;
+let isDragging = false;
+
+handle.addEventListener("touchstart", (e) => {
+  startY = e.touches[0].clientY;
+  startHeight = panel.offsetHeight;
+  isDragging = true;
+});
+
+window.addEventListener("touchmove", (e) => {
+  if (!isDragging) return;
+  const dy = startY - e.touches[0].clientY;
+  const newHeight = Math.min(window.innerHeight * 0.8, Math.max(window.innerHeight * 0.35, startHeight + dy));
+  panel.style.height = newHeight + "px";
+});
+
+window.addEventListener("touchend", () => {
+  if (!isDragging) return;
+  isDragging = false;
+  const currentHeight = panel.offsetHeight;
+  const expanded = currentHeight > window.innerHeight * 0.55;
+  panel.classList.toggle("expanded", expanded);
+  panel.style.height = "";
+});
+
+// Optional: toggle on tap
+handle.addEventListener("click", () => {
+  panel.classList.toggle("expanded");
+});
+    
   </script>
 </body>
 </html>
