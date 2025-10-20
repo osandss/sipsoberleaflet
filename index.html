@@ -72,6 +72,35 @@ html, body {
   right: 0;
 }
 
+/* --- Dropdown menus (hide/show) --- */
+.dropdown {
+  position: relative;
+}
+
+.dropdown .menu {
+  display: none;
+  position: absolute;
+  top: 120%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 6px 10px;
+  z-index: 3000;
+}
+
+.dropdown.open .menu {
+  display: block;
+}
+
+.dropdown .row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 3px 0;
+}
+
 /* --- Bottom results panel --- */
 #bottom-panel {
   position: fixed;
