@@ -149,10 +149,40 @@ html, body {
 }
 .card-name:hover { text-decoration: underline; }
 
+/* --- Mobile layout adjustments --- */
 @media (max-width: 767px) {
-  #bottom-panel { height: 40vh; }
-  #bottom-panel.expanded { height: 80vh; }
+  /* smaller base text */
+  html, body {
+    font-size: 12px;
+  }
+
+  /* reduce map height */
+  #map {
+    top: 44px;             /* leave room for filters bar */
+    height: 45vh;          /* shorter map for mobile */
+  }
+
+  /* smaller dropdown buttons */
+  .dropdown > button {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  /* smaller results panel */
+  #bottom-panel {
+    height: 30vh;          /* collapsed */
+  }
+  #bottom-panel.expanded {
+    height: 65vh;          /* expanded */
+  }
+
+  /* smaller text and spacing inside cards */
+  .card {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
 }
+
 </style>
 
 </head>
