@@ -105,17 +105,17 @@ html, body {
 /* --- Bottom results panel --- */
 #bottom-panel {
   position: fixed;
-  bottom: 0;
+  bottom: -10px;
   left: 0;
   right: 0;
   height: 35vh;
   background: #fff;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.15);
   z-index: 2003;
   overflow: hidden;
-  transition: height 0.3s ease;
+  transition: height 0.3s ease, bottom 0.3s ease;
 }
 
 #bottom-panel.expanded {
