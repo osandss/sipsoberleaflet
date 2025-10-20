@@ -151,16 +151,17 @@ html, body {
 
 /* --- Mobile layout adjustments --- */
 @media (max-width: 767px) {
-  /* smaller base text */
+  /* smaller base type */
   html, body {
     font-size: 12px;
   }
 
-  /* reduce map height */
+  /* make map shorter but eliminate white gap */
   #map {
-    top: 44px;             
-    bottom: 30vh;
-    height: auto;          
+    position: relative;
+    top: 44px;          /* leaves room for filter bar */
+    height: 42vh;       /* smaller map */
+    margin-bottom: -12px; /* pulls up panel to overlap */
   }
 
   /* smaller dropdown buttons */
@@ -169,18 +170,25 @@ html, body {
     padding: 5px 10px;
   }
 
-  /* smaller results panel */
+  /* compact bottom panel */
   #bottom-panel {
-    height: 30vh;          /* collapsed */
-  }
-  #bottom-panel.expanded {
-    height: 65vh;          /* expanded */
+    bottom: -10px;      /* lift panel slightly into map */
+    height: 28vh;       /* collapsed height */
   }
 
-  /* smaller text and spacing inside cards */
+  #bottom-panel.expanded {
+    height: 65vh;       /* expanded height */
+    bottom: 0;
+  }
+
+  /* tighter card styling */
   .card {
     padding: 8px 6px;
     font-size: 12px;
+  }
+
+  #handle {
+    margin: 10px auto;
   }
 }
 
