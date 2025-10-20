@@ -18,8 +18,8 @@
 
   :root {
   /* mobile panel heights (used for dynamic map resizing) */
-  --panel-collapsed: 30vh;   /* collapsed height on mobile */
-  --panel-expanded: 65vh;    /* expanded height on mobile */
+  --panel-collapsed: 35vh;   /* collapsed height on mobile */
+  --panel-expanded: 75vh;    /* expanded height on mobile */
 }
     
 html, body {
@@ -69,13 +69,15 @@ html, body {
   cursor: pointer;
 }
 
-/* --- Map fills the screen --- */
+/* --- Map fills down to top of bottom panel --- */
 #map {
   position: absolute;
-  top: 48px; /* leaves space for the filters bar */
-  bottom: 0;
+  top: 48px; /* leaves space for filters bar */
   left: 0;
   right: 0;
+  bottom: var(--panel-collapsed); /* map ends where collapsed panel begins */
+  transition: bottom 0.35s ease;
+  will-change: bottom;
 }
 
 /* --- Dropdown menus (hide/show) --- */
@@ -111,23 +113,30 @@ html, body {
 /* --- Bottom results panel --- */
 #bottom-panel {
   position: fixed;
-  bottom: 0px;
   left: 0;
   right: 0;
-  height: 35vh;
+  bottom: 0;
+  height: var(--panel-collapsed);
   background: #fff;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.15);
   z-index: 2003;
   overflow: hidden;
-  transition: height 0.3s ease, bottom 0.3s ease;
-  will-hange: height, bottom;
+  transition: height 0.35s ease, bottom 0.35s ease;
+  will-change: height, bottom;
 }
 
+/* --- Expanded state --- */
 #bottom-panel.expanded {
-  height: 75vh;
+  height: var(--panel-expanded);
 }
+
+/* --- Sync map with expanded panel --- */
+body.panel-expanded #map {
+  bottom: var(--panel-expanded);
+}
+
 
 #handle {
   width: 40px;
