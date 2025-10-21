@@ -25,7 +25,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   background: #fff;
@@ -169,8 +169,8 @@ body.panel-expanded #map {
 @media (max-width: 767px) {
   /* smaller mobile panel heights (override defaults) */
   :root {
-    --panel-collapsed: 28vh;   /* smaller closed panel */
-    --panel-expanded: 60vh;    /* smaller open panel */
+    --panel-collapsed: 45vh;   /* smaller closed panel */
+    --panel-expanded: 70vh;    /* smaller open panel */
   }
 
   /* smaller base type */
@@ -182,7 +182,7 @@ body.panel-expanded #map {
   /* Map fills down to top of bottom panel — no white gap */
   #map {
     position: absolute;
-    top: 44px; /* leaves space for filters bar */
+    top: 48px; /* leaves space for filters bar */
     left: 0;
     right: 0;
     bottom: var(--panel-collapsed); /* automatically adjusts to panel height */
