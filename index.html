@@ -26,7 +26,8 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100vh;
-  width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   background: #fff;
   color: #111;
@@ -169,8 +170,8 @@ body.panel-expanded #map {
 @media (max-width: 767px) {
   /* smaller mobile panel heights (override defaults) */
   :root {
-    --panel-collapsed: 45vh;   /* smaller closed panel */
-    --panel-expanded: 50vh;    /* smaller open panel */
+    --panel-collapsed: 30vh;   /* smaller closed panel */
+    --panel-expanded: 55vh;    /* smaller open panel */
   }
 
   /* smaller base type */
@@ -182,11 +183,13 @@ body.panel-expanded #map {
   /* Map fills down to top of bottom panel — no white gap */
   #map {
     position: absolute;
-    top: 48px; /* leaves space for filters bar */
+    top: 44px; /* leaves space for filters bar */
     left: 0;
     right: 0;
     bottom: var(--panel-collapsed); /* automatically adjusts to panel height */
     height: auto;
+    transition: bottom 0.35s ease;
+    will-change: bottom;
   }
 
   /* Bottom panel: clean and flush to bottom */
@@ -372,7 +375,7 @@ body.panel-expanded #map {
     const mobileQuery = window.matchMedia('(max-width: 767px)');
     function applyIconForViewport() {
       const isMobile = mobileQuery.matches;
-      const size = isMobile ? [22, 30] : [28, 38];
+      const size = isMobile ? [18, 26] : [28, 38];
       currentIcon = makeIcon(size, '#202329');
       L.Marker.prototype.options.icon = currentIcon;
       // Repaint existing markers
