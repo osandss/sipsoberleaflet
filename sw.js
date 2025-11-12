@@ -1,53 +1,48 @@
-// ===== Sip Sober PWA service worker =====
-const BASE = "/sipsoberleaflet/";   // correct for osandss.github.io/sipsoberleaflet/
-const VERSION = "v1.0.0";
-const CACHE = `sipsober-${VERSION}`;
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+  const sameOrigin = url.origin === self.location.origin;
 
-// Files to cache for offline support
-const ASSETS = [
-  `${BASE}`,
-  `${BASE}index.html`,
-  `${BASE}debug-map.html`,
-  `${BASE}manifest.json`,
-  `${BASE}data.json`
-];
+  if (sameOrigin) {
+    // Normalize URLs with ?source=pwa etc. to cached index.html
+    if (url.pathname === "/sipsoberleaflet/" || url.pathname === "/sipsoberleaflet/index.html") {
+      event.respondWith(
+        fetch(request)
+          .then((resp) => {
+            const copy = resp.clone();
+            caches.open(CACHE).then((c) => c.put("/sipsoberleaflet/index.html", copy));
+            return resp;
+          })
+          .catch(() => caches.match("/sipsoberleaflet/index.html"))
+      );
+      return;
+    }
 
-self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
-});
-
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
-  );
-});
-
-self.addEventListener("fetch", (e) => {
-  const req = e.request;
-  const url = new URL(req.url);
-
-  const isTile =
-    url.hostname.startsWith("tile.") ||
-    /(\btiles?\b|{z}\/{x}\/{y})/.test(url.pathname);
-
-  const isData =
-    url.pathname.endsWith(".json") ||
-    url.searchParams.get("format") === "json";
-
-  if (isTile || isData) {
-    e.respondWith(
-      fetch(req).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE).then((c) => c.put(req, copy));
-        return res;
-      }).catch(() => caches.match(req))
+    // Other same-origin requests: cache-first
+    event.respondWith(
+      caches.match(request).then(
+        (cached) =>
+          cached ||
+          fetch(request).then((resp) => {
+            const copy = resp.clone();
+            caches.open(CACHE).then((c) => c.put(request, copy));
+            return resp;
+          })
+      )
     );
-    return;
+  } else {
+    // Cross-origin (tiles/CDNs): stale-while-revalidate
+    event.respondWith(
+      caches.open("runtime-xo").then(async (cache) => {
+        const cached = await cache.match(request);
+        const fetchPromise = fetch(request)
+          .then((resp) => {
+            cache.put(request, resp.clone());
+            return resp;
+          })
+          .catch(() => cached);
+        return cached || fetchPromise;
+      })
+    );
   }
-
-  e.respondWith(
-    caches.match(req).then((hit) => hit || fetch(req))
-  );
 });
