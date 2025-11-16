@@ -34,10 +34,21 @@ html, body {
   height: 100vh;
   overflow: hidden;
   overscroll-behavior: none;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #fff;
-  color: #111;
+
+  /* Cleaner, more modern iOS font stack */
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+
+  /* Softer, professional text color */
+  background: #ffffff;
+  color: #1c1c1e;
+
+  /* Makes text look smoother on iPhone */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  line-height: 1.45;
 }
+
 
 /* --- Top filters bar: floating pill --- */
 #filters {
