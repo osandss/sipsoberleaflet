@@ -39,41 +39,56 @@ html, body {
   color: #111;
 }
 
-/* --- Top filters bar --- */
+/* --- Top filters bar (floating pill style) --- */
 #filters {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 10px;                /* pulled down from very top for breathing room */
+  left: 12px;
+  right: 12px;
   z-index: 2002;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  padding: 6px 10px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid #ddd;
+
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 999px;     /* full pill shape */
+  border: 1px solid #e2e4ec;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+
+  backdrop-filter: none;    /* we don't need blur here */
 }
 
+/* Dropdown buttons */
 .dropdown > button {
-  background: #f2f2f7;
-  border: 1px solid #ccc;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #f7f7fb;
+  border: 1px solid #d6d9e6;
   border-radius: 999px;
-  padding: 6px 12px;
+  padding: 7px 12px;
+
   font-size: 13px;
+  font-weight: 500;
+  color: #202329;
   cursor: pointer;
-  color: #2f3b69;
 }
 
+/* Go button */
 #goBtn {
-  background: #202329;
-  color: white;
-  border: 0;
-  border-radius: 10px;
-  padding: 8px 14px;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+
+  background: #202329;      /* your existing dark brand color */
+  color: #ffffff;
 }
 
 /* --- Map fills down to top of bottom panel --- */
@@ -186,48 +201,88 @@ body.panel-expanded #map {
   }
 
 
-  /* Map fills down to top of bottom panel — no white gap */
-  #map {
-    position: absolute;
-    top: 44px; /* leaves space for filters bar */
-    left: 0;
-    right: 0;
-    bottom: var(--panel-collapsed); /* automatically adjusts to panel height */
-    height: auto;
-    transition: bottom 0.35s ease;
-    will-change: bottom;
-  }
+  /* Map fills down to top of bottom panel */
+#map {
+  position: absolute;
+  top: 54px;                 /* a bit more room for the floating filters pill */
+  left: 0;
+  right: 0;
+  bottom: var(--panel-collapsed);
+  height: auto;
+  transition: bottom 0.3s ease;
+  will-change: bottom;
+}
 
-  /* Bottom panel: clean and flush to bottom */
-  #bottom-panel {
-    bottom: 0;
-    height: var(--panel-collapsed);
-  }
+/* Bottom sheet container */
+#bottom-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-  #bottom-panel.expanded {
-    height: var(--panel-expanded);
-  }
+  height: var(--panel-collapsed);
+  background: #ffffff;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.24);
+  padding: 8px 16px 16px;
+  overflow: hidden;
+}
 
-  /* When panel expands, lift map’s bottom edge to match new height */
-  body.panel-expanded #map {
-    bottom: var(--panel-expanded);
-  }
+#bottom-panel.expanded {
+  height: var(--panel-expanded);
+}
 
-  /* Smaller dropdown buttons */
-  .dropdown > button {
-    font-size: 12px;
-    padding: 5px 10px;
-  }
+/* When panel expands, lift map’s bottom edge to match new height */
+body.panel-expanded #map {
+  bottom: var(--panel-expanded);
+}
 
-  /* Compact cards */
-  .card {
-    padding: 8px 6px;
-    font-size: 12px;
-  }
+/* Grab handle at top of sheet */
+#handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: #d4d7e2;
+  margin: 6px auto 10px;
+}
 
-  #handle {
-    margin: 10px auto;
-  }
+/* Venue cards inside bottom panel */
+.card {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
+
+.card:last-child {
+  border-bottom: none;
+}
+
+/* Optional: if you use these classes in HTML */
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 2px;
+}
+
+.card-address {
+  font-size: 13px;
+  margin: 0 0 2px;
+}
+
+.card-meta {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.card a {
+  font-size: 13px;
+  font-weight: 500;
+  color: #f28b5b;  /* tweak to your accent color if you like */
+  text-decoration: none;
+}
+
+.card a:hover {
+  text-decoration: underline;
 }
 
 </style>
