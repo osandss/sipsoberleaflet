@@ -179,19 +179,48 @@ body.panel-expanded #map {
   padding: 10px;
 }
 
+/* --- Bottom panel card styling --- */
 .card {
-  padding: 10px 8px;
+  padding: 10px 4px 12px;
   border-bottom: 1px solid #eee;
-  line-height: 1.4;
+  font-size: 14px; 
+  color: #333;
+  line-height: 1.35;
 }
 
+.card:last-child {
+  border-bottom: none;
+}
+
+/* Venue name */
 .card-name {
+  display: block;
+  font-size: 16px;
   font-weight: 600;
-  cursor: pointer;
+  margin-bottom: 4px;
   color: #111;
+  cursor: pointer;
 }
-.card-name:hover { text-decoration: underline; }
 
+.card-name:hover {
+  text-decoration: underline;
+}
+
+/* Clean up paragraph spacing inside cards */
+#bottom-panel .card p {
+  margin: 2px 0;         /* removes big gaps between lines */
+  line-height: 1.32;     /* tight, app-like text spacing */
+}
+
+/* Website link style */
+#bottom-panel .card a {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2f3b69;        /* subtle, modern blue */
+  text-decoration: underline;
+}
+
+    
 /* --- Mobile layout adjustments --- */
 @media (max-width: 767px) {
   /* smaller mobile panel heights (override defaults) */
