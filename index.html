@@ -140,18 +140,18 @@ html, body {
 /* --- Bottom results panel --- */
 #bottom-panel {
   position: fixed;
-  left: 0;
-  right: 0;
+  left: 12px;
+  right: 12px;
   bottom: 0;
+  
   height: var(--panel-collapsed);
-  background: #fff;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.15);
-  z-index: 2003;
-  overflow: hidden;
-  transition: height 0.35s ease, bottom 0.35s ease;
-  will-change: height, bottom;
+  background: #ffffff;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -8px 26px rgba(0, 0, 0, 0.2);
+  
+  padding: 10px 18px 14px;
+  overflow-y: auto;
+  z-index: 2001;
 }
 
 /* --- Expanded state --- */
