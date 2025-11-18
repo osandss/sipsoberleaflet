@@ -1,7 +1,7 @@
 {
   "name": "Sip Sober — Zero-Proof Map",
   "short_name": "Sip Sober",
-  "start_url": "/sipsoberleaflet/?source=pwa",
+  "start_url": "/sipsoberleaflet/app.html?source=pwa",
   "scope": "/sipsoberleaflet/",
   "display": "standalone",
   "background_color": "#ffffff",
