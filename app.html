@@ -121,7 +121,7 @@ html, body {
 /* --- Map fills down to top of bottom panel --- */
 #map {
   position: absolute;
-  top: 48px; /* leaves space for filters bar */
+  top: calc(var(--ss-header-height) + 12px);
   left: 0;
   right: 0;
   bottom: var(--panel-collapsed); /* map ends where collapsed panel begins */
