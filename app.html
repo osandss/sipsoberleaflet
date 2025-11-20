@@ -124,7 +124,7 @@ html, body {
   top: calc(var(--ss-header-height) + 12px);
   left: 0;
   right: 0;
-  bottom: var(--panel-collapsed); /* map ends where collapsed panel begins */
+  bottom: 0;  /* map goes ALL the way to bottom of the screen */
   transition: bottom 0.35s ease;
   will-change: bottom;
 }
@@ -184,11 +184,6 @@ html, body {
 /* --- Expanded state --- */
 #bottom-panel.expanded {
   height: var(--panel-expanded);
-}
-
-/* --- Sync map with expanded panel --- */
-body.panel-expanded #map {
-  bottom: var(--panel-expanded);
 }
 
 
