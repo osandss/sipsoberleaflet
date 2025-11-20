@@ -262,13 +262,13 @@ body.panel-expanded #map {
   }
 
 
-  /* Map fills down behind bottom panel on mobile */
+  /* Map fills down to top of bottom panel — no white gap */
 #map {
   position: absolute;
-  top: calc(var(--ss-header-height) + 12px);  /* sits just below banner */
+  top: 44px; /* leaves space for filters bar */
   left: 0;
   right: 0;
-  bottom: 0;  /* map goes all the way to the bottom of the screen */
+  bottom: var(--panel-collapsed); /* automatically adjusts to panel height */
   height: auto;
   transition: bottom 0.35s ease;
   will-change: bottom;
@@ -285,9 +285,9 @@ body.panel-expanded #map {
 }
 
 /* When panel expands, lift map’s bottom edge to match new height */
-/* body.panel-expanded #map {
+body.panel-expanded #map {
   bottom: var(--panel-expanded);
-} */
+}
 
 /* Smaller dropdown buttons */
 .dropdown > button {
