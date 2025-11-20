@@ -257,38 +257,33 @@ html, body {
   }
 
 
-  /* Map fills down to top of bottom panel — no white gap */
-  #map {
-    position: absolute;
-    top: 44px; /* leaves space for filters bar */
-    left: 0;
-    right: 0;
-    bottom: var(--panel-collapsed); /* automatically adjusts to panel height */
-    height: auto;
-    transition: bottom 0.35s ease;
-    will-change: bottom;
-  }
+/* Map fills down behind bottom panel */
+#map {
+  position: absolute;
+  top: calc(var(--ss-header-height) + 12px); /* sits just below banner */
+  left: 0;
+  right: 0;
+  bottom: 0; /* map goes all the way to the bottom */
+  height: auto;
+  transition: bottom 0.35s ease;
+  will-change: bottom;
+}
 
-  /* Bottom panel: clean and flush to bottom */
-  #bottom-panel {
-    bottom: 0;
-    height: var(--panel-collapsed);
-  }
+/* Bottom panel: clean and flush to bottom */
+#bottom-panel {
+  bottom: 0;
+  height: var(--panel-collapsed);
+}
 
-  #bottom-panel.expanded {
-    height: var(--panel-expanded);
-  }
+#bottom-panel.expanded {
+  height: var(--panel-expanded);
+}
 
-  /* When panel expands, lift map’s bottom edge to match new height */
-  body.panel-expanded #map {
-    bottom: var(--panel-expanded);
-  }
+/* When panel expands, lift map’s bottom edge to match new height */
+/* body.panel-expanded #map {
+  bottom: var(--panel-expanded);
+} */
 
-  /* Smaller dropdown buttons */
-  .dropdown > button {
-    font-size: 12px;
-    padding: 5px 10px;
-  }
 
   /* Compact cards */
   .card {
