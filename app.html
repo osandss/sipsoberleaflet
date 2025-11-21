@@ -678,7 +678,8 @@ handle.addEventListener("click", () => {
 });
 </script>
 
-<!-- Register the PWA service worker -->
+<!-- Service worker disabled during development to prevent stale caching -->
+<!--
 <script>
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
@@ -688,5 +689,7 @@ handle.addEventListener("click", () => {
     });
   }
 </script>
+-->
 </body>
 </html>
+
