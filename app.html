@@ -262,18 +262,6 @@ html, body {
   }
 
 
-  /* Map fills down to top of bottom panel — no white gap */
-#map {
-  position: absolute;
-  top: 44px; /* leaves space for filters bar */
-  left: 0;
-  right: 0;
-  bottom: var(--panel-collapsed); /* automatically adjusts to panel height */
-  height: auto;
-  transition: bottom 0.35s ease;
-  will-change: bottom;
-}
-
 /* Bottom panel: clean and flush to bottom */
 #bottom-panel {
   bottom: 0;
