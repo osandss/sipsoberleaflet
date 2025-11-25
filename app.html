@@ -402,13 +402,22 @@ html, body {
       attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
     }).addTo(map);
 
-    // Manhattan bounds (approx)
-    const manhattanBounds = L.latLngBounds([40.680, -74.047], [40.882, -73.906]);
-    map.setMaxBounds(manhattanBounds);
-    map.setMinZoom(12.3);
-    map.on('drag', () => {
-      map.panInsideBounds(manhattanBounds, { animate: true });
-    });
+    // Manhattan bounds (focused but with looser dragging)
+const manhattanBounds = L.latLngBounds(
+  [40.680, -74.047],  // SW
+  [40.882, -73.906]   // NE
+);
+
+// Start map centered in Manhattan
+map.fitBounds(manhattanBounds);
+
+// Soft boundary: user can drag outside, but the map bounces back
+map.setMaxBounds(manhattanBounds);
+map.options.maxBoundsViscosity = 0.4;
+
+// Limit how far you can zoom out
+map.setMinZoom(12.3);
+
 
     // Keep a layer group for markers
     let markersLayer = L.layerGroup().addTo(map);
