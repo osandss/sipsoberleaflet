@@ -127,15 +127,14 @@ html, body {
   cursor: pointer;
 }
 
-/* --- Map fills down to top of bottom panel --- */
+/* --- Map fills the entire screen behind filters + panel --- */
 #map {
-  position: absolute;
+  position: fixed !important;
   top: calc(var(--ss-header-height) + 12px);
   left: 0;
   right: 0;
   bottom: 0;
-  transition: bottom 0.35s ease;
-  will-change: bottom;
+  z-index: 1; /* map sits behind filters + panel */
 }
 
 /* --- Dropdown menus (hide/show) --- */
@@ -173,18 +172,19 @@ html, body {
   color: #1c1c1e;
 }
     
-/* --- Bottom results panel --- */
+/* --- Bottom results panel floats above the map, not replacing it --- */
 #bottom-panel {
   position: fixed;
   left: 12px;
   right: 12px;
   bottom: 0;
-  
+
   height: var(--panel-collapsed);
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.94); /* slightly see-through = modern iOS */
+  backdrop-filter: blur(12px);            /* optional but beautiful */
   border-radius: 18px 18px 0 0;
   box-shadow: 0 -8px 26px rgba(0, 0, 0, 0.2);
-  
+
   padding: 10px 18px 14px;
   overflow-y: auto;
   z-index: 2001;
