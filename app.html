@@ -264,13 +264,15 @@ body.panel-expanded #map {
   top: auto !important;
 }
     
-/* --- Mobile layout adjustments --- */
-@media (max-width: 767px) {
-  /* smaller mobile panel heights (override defaults) */
-  :root {
-    --panel-collapsed: 30vh;   /* smaller closed panel */
-    --panel-expanded: 55vh;    /* smaller open panel */
-  }
+/* Move Leaflet zoom controls to bottom-right and above filters */
+.leaflet-top.leaflet-left {
+  top: auto !important;
+  left: auto !important;
+  right: 16px !important;
+  bottom: 24px !important;
+  z-index: 3200 !important; /* higher than filters (3100) */
+}
+
 
   /* smaller base type */
   html, body {
