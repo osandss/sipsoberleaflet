@@ -190,19 +190,6 @@ html, body {
   z-index: 2001;
 }
 
-/* --- Expanded state --- */
-#bottom-panel.expanded {
-  height: var(--panel-expanded);
-}
-
-
-#handle {
-  width: 40px;
-  height: 5px;
-  background: #ccc;
-  border-radius: 3px;
-  margin: 8px auto;
-}
 
 #results {
   overflow-y: auto;
@@ -310,9 +297,7 @@ html, body {
     font-size: 12px;
   }
 
-  #handle {
-    margin: 10px auto;
-  }
+
 }
 
 </style>
@@ -361,7 +346,6 @@ html, body {
 
 <!-- Sliding Bottom Results Panel -->
 <div id="bottom-panel">
-  <div id="handle"></div>
   <div id="results"></div>
 </div>
 
@@ -650,41 +634,6 @@ html, body {
     // Re-measure map after load to be safe in Wix iframe
     setTimeout(() => map.invalidateSize(), 150);
 
-/* =========================
-   J) SLIDE-UP PANEL BEHAVIOR
-   ========================= */
-const panel = document.getElementById("bottom-panel");
-const handle = document.getElementById("handle");
-let startY = 0;
-let startHeight = 0;
-let isDragging = false;
-
-handle.addEventListener("touchstart", (e) => {
-  startY = e.touches[0].clientY;
-  startHeight = panel.offsetHeight;
-  isDragging = true;
-});
-
-window.addEventListener("touchmove", (e) => {
-  if (!isDragging) return;
-  const dy = startY - e.touches[0].clientY;
-  const newHeight = Math.min(window.innerHeight * 0.8, Math.max(window.innerHeight * 0.35, startHeight + dy));
-  panel.style.height = newHeight + "px";
-});
-
-window.addEventListener("touchend", () => {
-  if (!isDragging) return;
-  isDragging = false;
-  const currentHeight = panel.offsetHeight;
-  const expanded = currentHeight > window.innerHeight * 0.55;
-  panel.classList.toggle("expanded", expanded);
-  panel.style.height = "";
-});
-
-// Optional: toggle on tap
-handle.addEventListener("click", () => {
-  panel.classList.toggle("expanded");
-});
 </script>
 
 <!-- Service worker disabled during development to prevent stale caching -->
