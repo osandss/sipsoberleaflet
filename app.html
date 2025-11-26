@@ -414,7 +414,10 @@ map.fitBounds(manhattanBounds);
 // 👇 SHIFT the map down so pins appear higher above the bottom panel
 map.panBy([0, 120]);  // 120px downward = pins move upward visually
   
-
+// Soft boundary: user can drag outside, but the map bounces back
+map.setMaxBounds(manhattanBounds);
+map.options.maxBoundsViscosity = 0.4;
+    
 // Limit how far you can zoom out
 map.setMinZoom(12.3);
 
