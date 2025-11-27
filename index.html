@@ -1,686 +1,969 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Zero-Proof Map</title>
+  <title>Sip Sober — Zero-Proof Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Brand font -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- PWA manifest + icons -->
-  <link rel="manifest" href="/sipsoberleaflet/manifest.json">
-  <meta name="theme-color" content="#202329">
-  <link rel="apple-touch-icon" href="/sipsoberleaflet/icons/icon-192.png">
-  <link rel="icon" href="/sipsoberleaflet/icons/icon-192.png">
-
-  <!-- Leaflet CSS (latest CDN) -->
-  <link rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        crossorigin="anonymous"/>
-</head>
+  <!-- Optional: favicon -->
+  <!-- <link rel="icon" type="image/png" href="icons/icon-192.png" /> -->
 
   <style>
-/* =========================
-   APPLE MAPS–STYLE LAYOUT
-   ========================= */
+    :root {
+      --ss-bg: #0f1115;
+      --ss-bg-alt: #181b22;
+      --ss-card: #ffffff;
+      --ss-accent: #f1a7c5;
+      --ss-accent-soft: #ffe6f1;
+      --ss-text-main: #f9fafb;
+      --ss-text-muted: #a9b0c5;
+      --ss-border-subtle: rgba(255, 255, 255, 0.08);
+      --ss-pill-bg: rgba(255, 255, 255, 0.06);
+      --ss-radius-lg: 20px;
+      --ss-radius-xl: 28px;
+      --ss-shadow-soft: 0 26px 60px rgba(0, 0, 0, 0.45);
+    }
 
-  :root {
-  /* mobile panel heights (used for dynamic map resizing) */
-  --panel-collapsed: 28vh;   /* collapsed height on mobile */
-  --panel-expanded: 60vh;    /* expanded height on mobile */
-}
-  * --- Minimal SIP SOBER Header (GitHub version) --- */
-:root {
-  --ss-header-height: 54px;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-#ss-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: var(--ss-header-height);
-  background: #202329;
-  z-index: 3000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
+    body {
+      font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #25293b 0, #050609 52%, #000000 100%);
+      color: var(--ss-text-main);
+      line-height: 1.6;
+    }
 
-#ss-header .ss-title {
-  font-family: "Georgia", "Times New Roman", serif;
-  color: #ffffff;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  margin-top: 2px;
-}  
-    
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  overflow: hidden;
-  overscroll-behavior: none;
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-  /* Cleaner, more modern iOS font stack */
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    img {
+      max-width: 100%;
+      display: block;
+    }
 
-  /* Softer, professional text color */
-  background: #ffffff;
-  color: #1c1c1e;
+    .page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-  /* Makes text look smoother on iPhone */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    .ss-container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 16px 80px;
+    }
 
-  line-height: 1.45;
-}
+    /* HEADER */
+    .ss-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0 6px;
+    }
 
+    .ss-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-/* --- Top filters bar: floating pill --- */
-#filters {
-  position: fixed;
-  top: 10px;
-  left: 12px;
-  right: 12px;
-  z-index: 2002;
-  
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  
-  padding: 6px 8px;
-  background: rgba(255, 255, 255, 0.98);
-  border-radius: 999px;   /* pill shape */
-  border: 1px solid #e2e4ec;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+    .ss-logo-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 20%, #ffe6f1 0, #f1a7c5 35%, #2d3343 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      font-size: 18px;
+      font-weight: 700;
+      color: #111216;
+    }
 
-  backdrop-filter: none;  /* no glassy bar look */
-}
+    .ss-logo-text-main {
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
 
-.dropdown > button {
-  background: #f2f2f7;
-  border: 1px solid #ccc;
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 13px;
-  cursor: pointer;
-  color: #2f3b69;
-}
+    .ss-logo-text-sub {
+      font-size: 11px;
+      color: var(--ss-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+    }
 
-#goBtn {
-  background: #202329;
-  color: white;
-  border: 0;
-  border-radius: 10px;
-  padding: 8px 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
+    .ss-nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 13px;
+    }
 
-/* --- Map fills down to top of bottom panel --- */
-#map {
-  position: absolute;
-  top: 48px; /* leaves space for filters bar */
-  left: 0;
-  right: 0;
-  bottom: var(--panel-collapsed); /* map ends where collapsed panel begins */
-  transition: bottom 0.35s ease;
-  will-change: bottom;
-}
+    .ss-nav a {
+      color: var(--ss-text-muted);
+      padding: 6px 0;
+    }
 
-/* --- Dropdown menus (hide/show) --- */
-.dropdown {
-  position: relative;
-}
+    .ss-nav a:hover {
+      color: #ffffff;
+    }
 
-.dropdown .menu {
-  display: none;
-  position: absolute;
-  top: 120%;
-  left: 0;
-  
-  background: #ffffff;
-  border: 1px solid #e2e4ec;
-  border-radius: 16px;
-  padding: 10px 12px;
-  width: 200px;
-  z-index: 3000;
-  
-  box-shadow: 0 10px 26px rgba(0,0,0,0.16);  
-}
+    .ss-nav-cta {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
 
-.dropdown.open .menu {
-  display: block;
-}
+    .ss-nav-cta:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
 
-.dropdown .row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 3px 0;
-  margin: 0;
-  font size: 14px;
-  color: #1c1c1e;
-}
-    
-/* --- Bottom results panel --- */
-#bottom-panel {
-  position: fixed;
-  left: 12px;
-  right: 12px;
-  bottom: 0;
-  
-  height: var(--panel-collapsed);
-  background: #ffffff;
-  border-radius: 18px 18px 0 0;
-  box-shadow: 0 -8px 26px rgba(0, 0, 0, 0.2);
-  
-  padding: 10px 18px 14px;
-  overflow-y: auto;
-  z-index: 2001;
-}
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: center;
+      margin-top: 34px;
+    }
 
-/* --- Expanded state --- */
-#bottom-panel.expanded {
-  height: var(--panel-expanded);
-}
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--ss-pill-bg);
+      border: 1px solid var(--ss-border-subtle);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ss-text-muted);
+      margin-bottom: 14px;
+    }
 
-/* --- Sync map with expanded panel --- */
-body.panel-expanded #map {
-  bottom: var(--panel-expanded);
-}
+    .hero-label-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #4ade80;
+    }
 
+    .hero-title {
+      font-size: clamp(30px, 4vw, 40px);
+      line-height: 1.1;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
 
-#handle {
-  width: 40px;
-  height: 5px;
-  background: #ccc;
-  border-radius: 3px;
-  margin: 8px auto;
-}
+    .hero-title span {
+      color: var(--ss-accent);
+    }
 
-#results {
-  overflow-y: auto;
-  max-height: calc(100% - 20px);
-  padding: 10px;
-}
+    .hero-subtitle {
+      font-size: 15px;
+      color: var(--ss-text-muted);
+      max-width: 420px;
+      margin-bottom: 22px;
+    }
 
-/* --- Bottom panel card styling --- */
-.card {
-  padding: 10px 4px 12px;
-  border-bottom: 1px solid #eee;
-  font-size: 14px; 
-  color: #333;
-  line-height: 1.35;
-}
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
 
-.card:last-child {
-  border-bottom: none;
-}
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 20px;
+      border-radius: 999px;
+      border: none;
+      background: #f8c4da;
+      background: linear-gradient(135deg, #ffe6f1 0, #f1a7c5 45%, #e073b5 100%);
+      color: #111216;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+      cursor: pointer;
+    }
 
-/* Venue name */
-.card-name {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #111;
-  cursor: pointer;
-}
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 22px 55px rgba(0, 0, 0, 0.55);
+    }
 
-.card-name:hover {
-  text-decoration: underline;
-}
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: transparent;
+      color: var(--ss-text-main);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      cursor: pointer;
+    }
 
-/* Clean up paragraph spacing inside cards */
-#bottom-panel .card p {
-  margin: 2px 0;         /* removes big gaps between lines */
-  line-height: 1.32;     /* tight, app-like text spacing */
-}
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
 
-/* Website link style */
-#bottom-panel .card a {
-  font-size: 14px;
-  font-weight: 500;
-  color: #2f3b69;        /* subtle, modern blue */
-  text-decoration: underline;
-}
+    .hero-footnote {
+      font-size: 11px;
+      color: var(--ss-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-top: 4px;
+    }
 
-    
-/* --- Mobile layout adjustments --- */
-@media (max-width: 767px) {
-  /* smaller mobile panel heights (override defaults) */
-  :root {
-    --panel-collapsed: 26vh;   /* smaller closed panel */
-    --panel-expanded: 50vh;    /* smaller open panel */
-  }
+    .hero-footnote span {
+      color: #e5e7eb;
+    }
 
-  /* smaller base type */
-  html, body {
-    font-size: 12px;
-  }
+    .hero-right {
+      align-self: stretch;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
+    .phone-frame {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 34px;
+      padding: 10px;
+      background: radial-gradient(circle at top, #3c405c 0, #202329 45%, #050609 100%);
+      box-shadow: var(--ss-shadow-soft);
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
 
-  /* Map fills down to top of bottom panel — no white gap */
-  #map {
-    position: absolute;
-    top: 44px; /* leaves space for filters bar */
-    left: 0;
-    right: 0;
-    bottom: var(--panel-collapsed); /* automatically adjusts to panel height */
-    height: auto;
-    transition: bottom 0.35s ease;
-    will-change: bottom;
-  }
+    .phone-notch {
+      width: 40%;
+      height: 13px;
+      background: #111216;
+      border-radius: 0 0 16px 16px;
+      margin: 0 auto 8px;
+    }
 
-  /* Bottom panel: clean and flush to bottom */
-  #bottom-panel {
-    bottom: 0;
-    height: var(--panel-collapsed);
-  }
+    .phone-inner {
+      border-radius: 26px;
+      background: #f7f7fb;
+      overflow: hidden;
+    }
 
-  #bottom-panel.expanded {
-    height: var(--panel-expanded);
-  }
+    .phone-topbar {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+    }
 
-  /* When panel expands, lift map’s bottom edge to match new height */
-  body.panel-expanded #map {
-    bottom: var(--panel-expanded);
-  }
+    .phone-topbar span {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
 
-  /* Smaller dropdown buttons */
-  .dropdown > button {
-    font-size: 12px;
-    padding: 5px 10px;
-  }
+    .phone-tagline {
+      font-size: 11px;
+      color: #6b7280;
+    }
 
-  /* Compact cards */
-  .card {
-    padding: 8px 6px;
-    font-size: 12px;
-  }
+    .phone-map-preview {
+      height: 170px;
+      background: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 40%, #f1a7c5 100%);
+      position: relative;
+      overflow: hidden;
+    }
 
-  #handle {
-    margin: 10px auto;
-  }
-}
+    .map-pill {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #4b5563;
+    }
 
-</style>
+    .map-pin {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #111827;
+      border: 3px solid #f9fafb;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, 0.45);
+    }
 
+    .map-pin.brand-1 { left: 34%; top: 38%; }
+    .map-pin.brand-2 { left: 58%; top: 58%; background: #f97316; }
+    .map-pin.brand-3 { left: 72%; top: 30%; background: #0ea5e9; }
+
+    .phone-list {
+      padding: 10px 12px 12px;
+      background: #ffffff;
+    }
+
+    .phone-list-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+
+    .phone-card {
+      padding: 8px 9px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .phone-card-main {
+      font-size: 11px;
+    }
+
+    .phone-card-name {
+      font-weight: 600;
+      margin-bottom: 1px;
+    }
+
+    .phone-card-meta {
+      font-size: 10px;
+      color: #6b7280;
+    }
+
+    .phone-card-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      background: #f9fafb;
+      border-radius: 999px;
+      padding: 2px 6px;
+      align-self: center;
+    }
+
+    .phone-favorite {
+      position: absolute;
+      right: 16px;
+      bottom: 18px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(17, 24, 39, 0.92);
+      color: #facc15;
+      font-size: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* SECTION: ABOUT & FEATURES */
+    .section {
+      margin-top: 60px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-end;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-kicker {
+      font-size: 13px;
+      color: var(--ss-text-muted);
+      max-width: 380px;
+    }
+
+    .section-pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ss-text-muted);
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--ss-border-subtle);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 28px;
+    }
+
+    .about-card {
+      background: linear-gradient(145deg, var(--ss-bg-alt), #10121a);
+      border-radius: var(--ss-radius-xl);
+      padding: 22px 22px 20px;
+      border: 1px solid var(--ss-border-subtle);
+    }
+
+    .about-card h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .about-card p {
+      font-size: 14px;
+      color: var(--ss-text-muted);
+      margin-bottom: 12px;
+    }
+
+    .about-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .about-highlight-pill {
+      font-size: 11px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--ss-pill-bg);
+      border: 1px solid var(--ss-border-subtle);
+      color: var(--ss-text-muted);
+    }
+
+    .about-note {
+      font-size: 12px;
+      color: var(--ss-text-muted);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .feature-card {
+      background: rgba(13, 16, 24, 0.85);
+      border-radius: 18px;
+      padding: 16px 16px 14px;
+      border: 1px solid var(--ss-border-subtle);
+    }
+
+    .feature-kicker {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ss-text-muted);
+      margin-bottom: 6px;
+    }
+
+    .feature-title {
+      font-size: 14px;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .feature-body {
+      font-size: 12px;
+      color: var(--ss-text-muted);
+    }
+
+    /* SECTION: HOW IT WORKS */
+    .how-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .steps-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .step-number {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: var(--ss-pill-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--ss-text-muted);
+    }
+
+    .step-body {
+      font-size: 13px;
+    }
+
+    .step-title {
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .step-text {
+      color: var(--ss-text-muted);
+      font-size: 12px;
+    }
+
+    .how-card {
+      background: #ffffff;
+      border-radius: var(--ss-radius-xl);
+      padding: 18px 18px 16px;
+      color: #111827;
+      box-shadow: var(--ss-shadow-soft);
+      border: 1px solid #e5e7eb;
+    }
+
+    .how-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+
+    .how-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .how-body {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+
+    .how-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .how-chip {
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: #f3f4f6;
+    }
+
+    .how-meta {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 10px;
+    }
+
+    /* SECTION: FINAL CTA */
+    .cta-panel {
+      margin-top: 64px;
+      border-radius: var(--ss-radius-xl);
+      padding: 22px 20px 20px;
+      background: radial-gradient(circle at top left, #3b3c54 0, #161823 40%, #050609 100%);
+      border: 1px solid var(--ss-border-subtle);
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-copy-main {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .cta-copy-sub {
+      font-size: 13px;
+      color: var(--ss-text-muted);
+      max-width: 420px;
+    }
+
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* FOOTER */
+    .ss-footer {
+      padding: 26px 16px 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      margin-top: 40px;
+      font-size: 11px;
+      color: var(--ss-text-muted);
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--ss-text-muted);
+    }
+
+    .footer-links a:hover {
+      color: #ffffff;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-right {
+        order: -1;
+        margin-bottom: 6px;
+      }
+      .about-grid,
+      .how-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .section-heading {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .features-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .cta-panel {
+        align-items: flex-start;
+      }
+      .ss-nav {
+        display: none; /* simple: hide full nav on very small screens */
+      }
+      .ss-container {
+        padding-inline: 16px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="page-wrapper">
+    <main class="ss-container">
+      <!-- HEADER -->
+      <header class="ss-header">
+        <div class="ss-logo">
+          <div class="ss-logo-mark">S</div>
+          <div>
+            <div class="ss-logo-text-main">Sip Sober</div>
+            <div class="ss-logo-text-sub">Zero-Proof Map</div>
+          </div>
+        </div>
 
-  <!-- TOP CONTROLS (filters + Go) -->
-  <!-- Floating Filters Bar -->
-<div id="filters" class="topbar filterbar">
-  <div class="dropdown" id="brandDD">
-    <button type="button" aria-expanded="false">Brands ▾</button>
-    <div class="menu" role="menu">
-      <div class="row"><input id="brand-seedlip" type="checkbox" value="Seedlip" /><label for="brand-seedlip">Seedlip</label></div>
-      <div class="row"><input id="brand-ritual" type="checkbox" value="Ritual Zero Proof" /><label for="brand-ritual">Ritual Zero Proof</label></div>
-      <div class="row"><input id="brand-lyres" type="checkbox" value="Lyre's" /><label for="brand-lyres">Lyre's</label></div>
-      <div class="row"><input id="brand-agrestis" type="checkbox" value="St. Agrestis" /><label for="brand-agrestis">St. Agrestis</label></div>
-      <div class="row"><input id="brand-aplos" type="checkbox" value="Aplós" /><label for="brand-aplos">Aplós</label></div>
-    </div>
+        <nav class="ss-nav">
+          <a href="#about">About</a>
+          <a href="#how">How it works</a>
+          <a href="#cta">The app</a>
+          <a class="ss-nav-cta" href="#login">Log in</a>
+        </nav>
+      </header>
+
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-left">
+          <div class="hero-label">
+            <span class="hero-label-dot"></span>
+            <span>NYC Zero-Proof Guide</span>
+          </div>
+          <h1 class="hero-title">
+            Find zero-proof drinks that actually feel <span>special.</span>
+          </h1>
+          <p class="hero-subtitle">
+            Sip Sober is your map to NYC bars and restaurants serving real alcohol-free options — not just soda and seltzer. Filter by neighborhood, brand, and save your favorites for next time.
+          </p>
+
+          <div class="hero-ctas">
+            <!-- TODO: update href to your map/app page (e.g., app.html) -->
+            <a class="btn-primary" href="app.html">
+              Launch the map
+            </a>
+
+            <!-- TODO: update href to your eventual signup/login route -->
+            <a class="btn-ghost" href="#login">
+              Create an account
+            </a>
+          </div>
+
+          <div class="hero-footnote">
+            Now featuring: <span>Upper East Side · Midtown East · Gramercy</span> with Seedlip, Ritual Zero Proof &amp; Lyre’s on menus.
+          </div>
+        </div>
+
+        <!-- HERO: APP PREVIEW -->
+        <div class="hero-right" aria-hidden="true">
+          <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <div class="phone-inner">
+              <div class="phone-topbar">
+                <span>Sip Sober</span>
+                <span class="phone-tagline">Zero-proof map</span>
+              </div>
+              <div class="phone-map-preview">
+                <div class="map-pill">NYC · Zero-proof spots</div>
+                <div class="map-pin brand-1"></div>
+                <div class="map-pin brand-2"></div>
+                <div class="map-pin brand-3"></div>
+
+                <div class="phone-favorite">
+                  ★ Saved 12 spots
+                </div>
+              </div>
+              <div class="phone-list">
+                <div class="phone-list-label">Today in the Upper East Side</div>
+
+                <div class="phone-card">
+                  <div class="phone-card-main">
+                    <div class="phone-card-name">Jungle Bird</div>
+                    <div class="phone-card-meta">Lyre’s · Mocktail menu · Chelsea</div>
+                  </div>
+                  <div class="phone-card-tag">Brand Feature</div>
+                </div>
+
+                <div class="phone-card">
+                  <div class="phone-card-main">
+                    <div class="phone-card-name">Sfoglia</div>
+                    <div class="phone-card-meta">Lyre’s · Italian spritz · UES</div>
+                  </div>
+                  <div class="phone-card-tag">Spritz</div>
+                </div>
+
+                <div class="phone-card">
+                  <div class="phone-card-main">
+                    <div class="phone-card-name">The Wolfe</div>
+                    <div class="phone-card-meta">Seedlip · Ritual · Cozy bar</div>
+                  </div>
+                  <div class="phone-card-tag">Date Night</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT & FEATURES -->
+      <section id="about" class="section">
+        <div class="section-heading">
+          <div>
+            <div class="section-title">Why Sip Sober exists</div>
+            <p class="section-kicker">
+              Because “I’m not drinking tonight” shouldn’t mean you’re stuck with water. Sip Sober helps you find places that take zero-proof seriously — with cocktails built to match the moment, not just the menu.
+            </p>
+          </div>
+          <div class="section-pill">
+            For sober, sober-curious, and “just not tonight”
+          </div>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-card">
+            <h3>We map spots that respect your choice.</h3>
+            <p>
+              We focus on venues that offer thoughtful zero-proof options: balanced spritzes, spirit-free riffs on classics, and drinks built with brands like Seedlip, Ritual Zero Proof, and Lyre’s.
+            </p>
+            <p class="about-note">
+              No judgments, no labels. Just better nights out — minus the hangover.
+            </p>
+
+            <div class="about-highlights">
+              <span class="about-highlight-pill">Curated venue list</span>
+              <span class="about-highlight-pill">Brand-level filtering</span>
+              <span class="about-highlight-pill">Save favorites for later</span>
+            </div>
+          </div>
+
+          <div>
+            <p class="about-note">
+              Start with a neighborhood you love, or a brand you trust. Our map zooms you in, highlights where to sip, and keeps track of your go-to spots so planning your next night out takes seconds — not a spreadsheet.
+            </p>
+          </div>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-kicker">Feature one</div>
+            <div class="feature-title">Filter by neighborhood</div>
+            <p class="feature-body">
+              Start in the Upper East Side, Midtown East or Gramercy. We’ll expand across NYC — one zero-proof-friendly neighborhood at a time.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-kicker">Feature two</div>
+            <div class="feature-title">Search by brand</div>
+            <p class="feature-body">
+              Craving a Lyre’s spritz or a Seedlip-based cocktail? Filter by brand to see where your favorites are already behind the bar.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-kicker">Feature three</div>
+            <div class="feature-title">Save your go-to spots</div>
+            <p class="feature-body">
+              Create an account to favorite venues and build your own zero-proof list — perfect for date nights, catchups, or solo evenings out.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS / APP PREVIEW -->
+      <section id="how" class="section">
+        <div class="section-heading">
+          <div>
+            <div class="section-title">How the app works</div>
+            <p class="section-kicker">
+              Sip Sober is designed to feel like a calm, focused map — no clutter, no noise. Just filters that make sense and a list you can actually use on your way out the door.
+            </p>
+          </div>
+        </div>
+
+        <div class="how-grid">
+          <div class="steps-list">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-body">
+                <div class="step-title">Choose a neighborhood.</div>
+                <p class="step-text">
+                  Start in the Upper East Side, Midtown East, or Gramercy. The map locks to Manhattan so you don’t end up zoomed out over the whole planet.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-body">
+                <div class="step-title">Filter by brand & vibe.</div>
+                <p class="step-text">
+                  Want a Lyre’s spritz? Ritual for something more spirit-forward? Pick your brands and see where they’re pouring — all in one view.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-body">
+                <div class="step-title">Tap, save, and go.</div>
+                <p class="step-text">
+                  Tap a spot to see details, save it to your favorites, and use the website like a lightweight app from your home screen.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <aside class="how-card">
+            <div class="how-tag">App preview</div>
+            <div class="how-title">Built to feel like a map-first app, not a website.</div>
+            <p class="how-body">
+              The full Sip Sober experience opens in a clean, app-style view — perfect for using on the way to dinner, at the bar, or on the couch planning your next night out.
+            </p>
+            <div class="how-row">
+              <div class="how-chip">Mobile-first design</div>
+              <div class="how-chip">Works from your home screen</div>
+            </div>
+            <p class="how-meta">
+              Add Sip Sober to your phone as a shortcut and it behaves like an app — no downloads, no accounts required just to peek at the map.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- FINAL CTA -->
+      <section id="cta" class="cta-panel">
+        <div>
+          <div class="cta-copy-main">
+            Ready to plan your next zero-proof night out?
+          </div>
+          <div class="cta-copy-sub">
+            Launch the map to browse NYC, or create an account to start saving your favorite venues and brands as you go.
+          </div>
+        </div>
+        <div class="cta-actions">
+          <!-- TODO: same as hero: link this to your map page -->
+          <a class="btn-primary" href="app.html">Launch the map</a>
+          <!-- TODO: update signup/login link -->
+          <a class="btn-ghost" id="login" href="#login">Log in / Sign up</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="ss-footer">
+      <div class="footer-inner">
+        <div>© <span id="year"></span> Sip Sober NYC. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#about">About</a>
+          <a href="#how">How it works</a>
+          <a href="#cta">The app</a>
+        </div>
+      </div>
+    </footer>
   </div>
-
-  <div class="dropdown" id="neighborhoodDD">
-    <button type="button" aria-expanded="false">Neighborhoods ▾</button>
-    <div class="menu" role="menu">
-      <div class="row"><input id="n-ues" type="checkbox" value="Upper East Side" /><label for="n-ues">Upper East Side</label></div>
-      <div class="row"><input id="n-midtown" type="checkbox" value="Midtown" /><label for="n-midtown">Midtown</label></div>
-      <div class="row"><input id="n-gramercy" type="checkbox" value="Gramercy" /><label for="n-gramercy">Gramercy</label></div>
-      <div class="row"><input id="n-chelsea" type="checkbox" value="Chelsea" /><label for="n-chelsea">Chelsea</label></div>
-      <div class="row"><input id="n-uws" type="checkbox" value="Upper West Side" /><label for="n-uws">Upper West Side</label></div>
-      <div class="row"><input id="n-flatiron" type="checkbox" value="Flatiron" /><label for="n-flatiron">Flatiron</label></div>
-    </div>
-  </div>
-
-  <button id="goBtn" type="button">Go</button>
-</div>
-
-<!-- Fullscreen Map -->
-<div id="map"></div>
-
-<!-- Sliding Bottom Results Panel -->
-<div id="bottom-panel">
-  <div id="handle"></div>
-  <div id="results"></div>
-</div>
-
-  <!-- Leaflet JS (latest CDN) -->
-  <script 
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin="anonymous"></script>
 
   <script>
-    /* =========================
-       A) DATA
-       ========================= */
-    const locations = [
-      { name: "Bemelman's Bar", address: "35 E 76th St, NY", lat: 40.7740, lng: -73.9636, website: "https://www.rosewoodhotels.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side" },
-      { name: "Bar Avant (Olly Olly Market)", address: "601 W 26th St, NY", lat: 40.7498, lng: -74.0075, website: "https://ollyollymarket.com", brand: "Seedlip, St. Agrestis", neighborhood: "Chelsea" },
-      { name: "Fumo", address: "198 8th Ave, NY", lat: 40.7448, lng: -73.9809, website: "https://fumonyc.com", brand: "Seedlip", neighborhood: "Chelsea" },
-      { name: "Miriam", address: "300 Amsterdam Ave, NY", lat: 40.7809, lng: -73.9797, website: "https://miriamrestaurant.com", brand: "Seedlip, Lyre's", neighborhood: "Upper West Side" },
-      { name: "Sarabeth's", address: "423 Amsterdam Ave, NY", lat: 40.7860, lng: -73.9770, website: "https://sarabethsrestaurants.com", brand: "Lyre's", neighborhood: "Upper West Side" },
-      { name: "Bondurants", address: "303 E 85th St, NY", lat: 40.7770, lng: -73.9518, website: "https://bondurantsnyc.com", brand: "Seedlip, Lyre's", neighborhood: "Upper East Side" },
-      { name: "Sfoglia", address: "1402 Lexington Ave, NY", lat: 40.7835, lng: -73.9529, website: "https://sfogliarestaurant.com", brand: "Lyre's, Ritual Zero Proof, St. Agrestis", neighborhood: "Upper East Side" },
-      { name: "The Blasket", address: "1085 2nd Ave, NY", lat: 40.7579, lng: -73.9635, website: "https://theblasketnyc.com", brand: "Lyre's, St. Agrestis", neighborhood: "Midtown" },
-      { name: "Rosemary's Midtown", address: "825 3rd Ave, NY", lat: 40.7559, lng: -73.9701, website: "https://rosemarysnyc.com", brand: "Lyre's", neighborhood: "Midtown" },
-      { name: "Hutong NYC", address: "731 Lexington Ave, NY", lat: 40.761812, lng: -73.968178, website: "https://hutong-nyc.com", brand: "Seedlip, St. Agrestis", neighborhood: "Midtown" },
-      { name: "The Penrose", address: "1590 2nd Ave, NY", lat: 40.7763, lng: -73.9498, website: "https://penrosebar.com", brand: "Seedlip, Lyre's", neighborhood: "Upper East Side" },
-      { name: "Orsay", address: "1057 Lexington Ave, NY", lat: 40.7731, lng: -73.9599, website: "https://orsayrestaurant.com", brand: "Seedlip", neighborhood: "Upper East Side" },
-      { name: "Boqueria", address: "1460 2nd Ave, NY", lat: 40.7728, lng: -73.9530, website: "https://boqueriarestaurant.com", brand: "Ritual Zero Proof, Seedlip", neighborhood: "Upper East Side" },
-      { name: "Crave Fishbar", address: "945 2nd Ave, NY", lat: 40.7544, lng: -73.9685, website: "https://cravefishbar.com", brand: "Seedlip", neighborhood: "Midtown" },
-      { name: "UVA", address: "1486 2nd Ave, NY", lat: 40.7726, lng: -73.9541, website: "https://uvanyc.com", brand: "Lyre's", neighborhood: "Upper East Side" },
-      { name: "Sefton", address: "510 E 117th St, NY", lat: 40.7969, lng: -73.9304, website: "https://seftonnyc.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side" },
-      { name: "Hawksmoor NYC", address: "109 E 22nd St, NY", lat: 40.7394, lng: -73.9861, website: "https://hawksmoor.com/locations/new-york/", brand: "Seedlip", neighborhood: "Gramercy" },
-      { name: "Monkey Bar", address: "60 E 54th St, NY", lat: 40.7598, lng: -73.9732, website: "https://www.nycmonkeybar.com", brand: "Ritual Zero Proof, St. Agrestis", neighborhood: "Midtown" },
-      { name: "Gramercy Tavern", address: "42 E 20th St, NY", lat: 40.7386, lng: -73.9882, website: "https://www.gramercytavern.com", brand: "Lyre's, St. Agrestis", neighborhood: "Gramercy" },
-      { name: "Handcraft Kitchen & Cocktails", address: "367 3rd Avenue, NY", lat: 40.7427, lng: -73.9805, website: "https://www.handcraftnyc.com", brand: "Lyre's, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
-      { name: "The Junction", address: "329 Lexington Ave, NY", lat: 40.7470, lng: -73.9760, website: "https://www.thejunctionnyc.com", brand: "Lyre's, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
-      { name: "Broken Shaker", address: "23 Lexington Ave, NY", lat: 40.7395, lng: -73.9845, website: "https://www.brokenshaker.com", brand: "Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
-      { name: "Wildflower", address: "505 W 23 St A, NY", lat: 40.7440, lng: -73.9988, website: "https://www.wildflowernyc.com", brand: "Seedlip, St. Agrestis", neighborhood: "Chelsea" },
-      { name: "The Campbell", address: "15 Vanderbilt Ave, NY", lat: 40.7525, lng: -73.9778, website: "https://www.thecampbellnyc.com", brand: "St. Agrestis", neighborhood: "Midtown" },
-      { name: "Jungle Bird", address: "174 8th Ave, NY", lat: 40.7429, lng: -74.0011, website: "https://junglebirdnyc.com", brand: "St. Agrestis, Ritual Zero Proof, Seedlip", neighborhood: "Chelsea" },
-      { name: "Sempre Oggi", address: "164 W 75th St, NY", lat: 40.7803, lng: -73.9799, website: "https://www.semprenyc.com", brand: "St. Agrestis", neighborhood: "Upper West Side" },
-      { name: "The Wolfe", address: "425 Amsterdam Ave, NY", lat: 40.7868, lng: -73.9783, website: "https://www.thewolfenyc.com", brand: "St. Agrestis, Lyre's", neighborhood: "Upper West Side" },
-      { name: "Elea", address: "217 W 85th St, NY", lat: 40.7893, lng: -73.9766, website: "https://eleanyc.com", brand: "Ritual Zero Proof", neighborhood: "Upper West Side" },
-      { name: "Friend of a Farmer", address: "68 W 71st St, NY", lat: 40.7782, lng: -73.9791, website: "https://www.friendofafarmer.com", brand: "Seedlip", neighborhood: "Upper West Side" },
-      { name: "Bar Pendry", address: "438 W 33rd St, NY", lat: 40.7536, lng: -73.9934, website: "https://www.pendry.com/manhattan-west/", brand: "Lyre's", neighborhood: "Midtown" },
-      { name: "The Portrait Bar", address: "1 W 28th St, NY", lat: 40.7450, lng: -73.9886, website: "https://www.theportraitbar.com", brand: "Aplós, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
-      { name: "Clemente Bar", address: "11 Madison Ave, NY", lat: 40.7417, lng: -73.9872, website: "https://www.clementebar.com", brand: "Seedlip", neighborhood: "Flatiron" },
-      { name: "Del Frisco's Grille", address: "50 Rockefeller Plaza, NY", lat: 40.7590, lng: -73.9799, website: "https://www.delfriscosgrille.com", brand: "Aplós, Ritual Zero Proof", neighborhood: "Midtown" },
-      { name: "Cosme", address: "35 E 21st St, NY", lat: 40.7396, lng: -73.9884, website: "https://cosmenyc.com", brand: "Seedlip", neighborhood: "Flatiron" },
-      { name: "Bar Calico", address: "23 Lexington Ave, NY", lat: 40.7415, lng: -73.9874, website: "https://barcaliconyc.com", brand: "Ritual Zero Proof", neighborhood: "Flatiron" },
-      { name: "Lobby Bar at The Edition", address: "5 Madison Ave, NY", lat: 40.7420, lng: -73.9870, website: "https://www.editionhotels.com/new-york/restaurants-and-bars/lobby-bar/", brand: "Lyre's", neighborhood: "Flatiron" },
-      { name: "L'Americana", address: "51 Irving Place, NY", lat: 40.7375, lng: -73.9854, website: "https://www.lamericana-nyc.com", brand: "Seedlip", neighborhood: "Gramercy" },
-    ];
-
-    /* =========================
-       B) MAP INIT
-       ========================= */
-    const map = L.map('map', {
-      zoomControl: true,
-      scrollWheelZoom: true
-    }).setView([40.77, -73.97], 12.6);
-
-    // Tile layer — light/desaturated (Carto Positron)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 20,
-      subdomains: 'abcd',
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-    }).addTo(map);
-
-    // Manhattan bounds (approx)
-    const manhattanBounds = L.latLngBounds([40.680, -74.047], [40.882, -73.906]);
-    map.setMaxBounds(manhattanBounds);
-    map.setMinZoom(12.3);
-    map.on('drag', () => {
-      map.panInsideBounds(manhattanBounds, { animate: true });
-    });
-
-    // Keep a layer group for markers
-    let markersLayer = L.layerGroup().addTo(map);
-
-    /* =========================
-       C) ICONS
-       ========================= */
-    function makePinIconSVG(hex = '#202329', size = [28, 38]) {
-      const [w,h] = size;
-      return `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 28 38">
-          <path fill="${hex}" d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"/>
-          <circle cx="14" cy="13" r="5.2" fill="#fff"/>
-        </svg>`;
-    }
-    function makeIcon(size = [28,38], color = '#202329'){
-      return L.icon({
-        iconUrl: 'data:image/svg+xml;utf8,' + encodeURIComponent(makePinIconSVG(color, size)),
-        iconSize: size,
-        iconAnchor: [Math.floor(size[0]/2), size[1]],
-        popupAnchor: [0, -Math.floor(size[1]*0.84)]
-      });
-    }
-
-    // Default (desktop) icon
-    let currentIcon = makeIcon([28,38], '#202329');
-
-    // Make ALL Leaflet markers use this by default
-    L.Marker.prototype.options.icon = currentIcon;
-
-    // Force all future markers to use currentIcon
-    const __origMarkerFactory = L.marker;
-    L.marker = function(latlng, options) {
-      const opts = options || {};
-      if (!opts.icon) opts.icon = currentIcon;
-      return __origMarkerFactory.call(this, latlng, opts);
-    };
-
-    // Mobile-only smaller pins
-    const mobileQuery = window.matchMedia('(max-width: 767px)');
-    function applyIconForViewport() {
-      const isMobile = mobileQuery.matches;
-      const size = isMobile ? [18, 26] : [28, 38];
-      currentIcon = makeIcon(size, '#202329');
-      L.Marker.prototype.options.icon = currentIcon;
-      // Repaint existing markers
-      if (markersLayer && markersLayer.eachLayer) {
-        markersLayer.eachLayer((layer) => {
-          if (layer && typeof layer.setIcon === 'function') layer.setIcon(currentIcon);
-        });
-      }
-    }
-    applyIconForViewport();
-    mobileQuery.addEventListener('change', applyIconForViewport);
-
-    /* =========================
-       D) UI HELPERS
-       ========================= */
-    function closeAllMenus() {
-      document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('open'));
-      document.querySelectorAll('.dropdown > button').forEach(btn => btn.setAttribute('aria-expanded', 'false'));
-    }
-
-    // Helper to open a marker popup at a given lat/lng
-    function openMarkerAt(lat, lng){
-      let found = null;
-      markersLayer.eachLayer((layer) => {
-        const p = layer.getLatLng();
-        if (Math.abs(p.lat - lat) < 1e-6 && Math.abs(p.lng - lng) < 1e-6) {
-          found = layer;
-        }
-      });
-      if (found){ found.openPopup(); }
-    }
-
-    /* =========================
-       E) RENDERERS
-       ========================= */
-    function renderMarkers(data){
-      markersLayer.clearLayers();
-      const bounds = L.latLngBounds([]);
-      data.forEach(loc => {
-        const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
-        m.bindPopup(`
-          <div style="min-width:200px">
-            <div style="font-weight:600">${loc.name}</div>
-            <div class="meta">${loc.address}</div>
-            <div><a href="${loc.website}" target="_blank" rel="noopener">Website</a></div>
-            <div class="meta">Brand: ${loc.brand||""}</div>
-            <div class="meta">Neighborhood: ${loc.neighborhood||""}</div>
-          </div>
-        `);
-        bounds.extend([loc.lat, loc.lng]);
-      });
-      return { count: data.length, bounds: data.length ? bounds : null };
-    }
-
-    function renderList(data){
-      const results = document.getElementById('results');
-      results.innerHTML = '';
-      data.forEach(loc => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <span class="card-name" onclick="map.setView([${loc.lat}, ${loc.lng}], 16); openMarkerAt(${loc.lat}, ${loc.lng});">${loc.name}</span><br/>
-          ${loc.address}<br/>
-          <a href="${loc.website}" target="_blank" rel="noopener">Website</a><br/>
-          <span class="meta">Brand: ${loc.brand||""}</span><br/>
-          <span class="meta">Neighborhood: ${loc.neighborhood||""}</span>
-        `;
-        results.appendChild(card);
-      });
-    }
-
-    /* =========================
-       F) FILTER LOGIC
-       ========================= */
-    function getSelectedValues(prefix){
-      return Array.from(document.querySelectorAll(`input[id^="${prefix}-"]:checked`)).map(cb => cb.value);
-    }
-
-    function applyFilters() {
-      // Close any open menus
-      closeAllMenus();
-
-      const selectedBrands = getSelectedValues('brand');
-      const selectedNeighborhoods = getSelectedValues('n');
-
-      const filtered = locations.filter(loc => {
-  const brandOK = selectedBrands.length
-    ? selectedBrands.some(b => loc.brand && loc.brand.toLowerCase().includes(b.toLowerCase()))
-    : true;
-  const hoodOK = selectedNeighborhoods.length
-    ? selectedNeighborhoods.includes(loc.neighborhood)
-    : true;
-  return brandOK && hoodOK;
-});
-
-
-      renderList(filtered);
-      const { count, bounds } = renderMarkers(filtered);
-
-      if (count > 0 && bounds) {
-        // cap zoom so we don't over-zoom and "fight" setMaxBounds
-        map.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
-      }
-
-      // Store bounds for other components if needed
-      window.filteredBounds = bounds;
-
-      // On mobile, bring the results list into view under the map
-      if (window.matchMedia('(max-width: 768px)').matches) {
-        const resEl = document.getElementById('results');
-        if (resEl) {
-          // ensure map height finalized before scrolling
-          setTimeout(() => resEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
-        }
-      }
-
-      // Re-measure map after DOM shifts
-      setTimeout(() => map.invalidateSize(true), 120);
-    }
-
-    /* =========================
-       G) EVENT WIRING
-       ========================= */
-    // Dropdown open/close behavior (click)
-    document.addEventListener('click', (e) => {
-      const dd = e.target.closest('.dropdown');
-      const btn = e.target.closest('.dropdown > button');
-      if (btn) {
-        const parent = btn.parentElement;
-        const willOpen = !parent.classList.contains('open');
-        closeAllMenus();
-        if (willOpen) {
-          parent.classList.add('open');
-          btn.setAttribute('aria-expanded', 'true');
-        }
-      } else if (!dd) {
-        closeAllMenus();
-      }
-    });
-
-    // Close menus on Escape; add light ARIA wiring
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeAllMenus();
-    });
-    // ARIA relationships
-    document.querySelectorAll('.dropdown > button').forEach((btn) => {
-      btn.setAttribute('aria-haspopup', 'true');
-      const dd = btn.parentElement;
-      const menu = dd.querySelector('.menu');
-      if (dd && menu) {
-        const id = dd.id ? dd.id + '-menu' : 'menu-' + Math.random().toString(36).slice(2);
-        menu.id = id;
-        btn.setAttribute('aria-controls', id);
-      }
-    });
-
-    document.getElementById('goBtn').addEventListener('click', applyFilters);
-
-    
-    /* =========================
-       I) INITIALIZE
-       ========================= */
-    // Initial render: show all
-    renderList(locations);
-    const initial = renderMarkers(locations);
-    if (initial.bounds) map.fitBounds(initial.bounds, { padding:[30,30] });
-
-    // Re-measure map after load to be safe in Wix iframe
-    setTimeout(() => map.invalidateSize(), 150);
-
-/* =========================
-   J) SLIDE-UP PANEL BEHAVIOR
-   ========================= */
-const panel = document.getElementById("bottom-panel");
-const handle = document.getElementById("handle");
-let startY = 0;
-let startHeight = 0;
-let isDragging = false;
-
-handle.addEventListener("touchstart", (e) => {
-  startY = e.touches[0].clientY;
-  startHeight = panel.offsetHeight;
-  isDragging = true;
-});
-
-window.addEventListener("touchmove", (e) => {
-  if (!isDragging) return;
-  const dy = startY - e.touches[0].clientY;
-  const newHeight = Math.min(window.innerHeight * 0.8, Math.max(window.innerHeight * 0.35, startHeight + dy));
-  panel.style.height = newHeight + "px";
-});
-
-window.addEventListener("touchend", () => {
-  if (!isDragging) return;
-  isDragging = false;
-  const currentHeight = panel.offsetHeight;
-  const expanded = currentHeight > window.innerHeight * 0.55;
-  panel.classList.toggle("expanded", expanded);
-  panel.style.height = "";
-});
-
-// Optional: toggle on tap
-handle.addEventListener("click", () => {
-  panel.classList.toggle("expanded");
-});
-</script>
-
-<!-- Register the PWA service worker -->
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker
-        .register("/sipsoberleaflet/sw.js", { scope: "/sipsoberleaflet/" })
-        .catch(console.error);
-    });
-  }
-</script>
+    // Simple: keep footer year current
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
