@@ -7,6 +7,8 @@
   
   <!-- Brand font -->
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
 
   <!-- Optional: favicon -->
   <!-- <link rel="icon" type="image/png" href="icons/icon-192.png" /> -->
@@ -698,28 +700,74 @@
         padding-inline: 16px;
       }
     }
+
+    /* === OVERRIDE HEADER TO MATCH YOUR DESIGN === */
+
+/* Header background + spacing */
+.ss-header {
+  background: #202239 !important;
+  padding: 20px 24px !important;
+  border-radius: 0 !important;
+}
+
+/* Remove the circle icon */
+.ss-logo-mark {
+  display: none !important;
+}
+
+/* “SIP SOBER” title using Playfair Display */
+.ss-logo-text-main {
+  font-family: "Playfair Display", serif !important;
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+}
+
+/* Hide subtitle */
+.ss-logo-text-sub {
+  display: none !important;
+}
+
+/* Navigation links — white */
+.ss-nav a,
+.ss-nav-cta {
+  color: #ffffff !important;
+  font-size: 16px !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Hover effect */
+.ss-nav a:hover,
+.ss-nav-cta:hover {
+  opacity: 0.7;
+}
+
+/* Remove border around login pill */
+.ss-nav-cta {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
   </style>
 </head>
 <body>
   <div class="page-wrapper">
     <main class="ss-container">
       <!-- HEADER -->
-      <header class="ss-header">
-        <div class="ss-logo">
-          <div class="ss-logo-mark">S</div>
-          <div>
-            <div class="ss-logo-text-main">Sip Sober</div>
-            <div class="ss-logo-text-sub">Zero-Proof Map</div>
-          </div>
-        </div>
+      <header class="ss-header ss-header-bar">
+  <div class="ss-header-title">SIP SOBER</div>
 
-        <nav class="ss-nav">
-          <a href="#about">About</a>
-          <a href="#how">How it works</a>
-          <a href="#cta">The app</a>
-          <a class="ss-nav-cta" href="#login">Log in</a>
-        </nav>
-      </header>
+  <nav class="ss-header-nav">
+    <a href="#about">About</a>
+    <a href="#how">How it works</a>
+    <a href="#cta">The App</a>
+    <a href="#login">Log In</a>
+  </nav>
+</header>
+
 
       <!-- HERO -->
       <section class="hero">
