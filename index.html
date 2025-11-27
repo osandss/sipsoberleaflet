@@ -701,54 +701,75 @@
       }
     }
 
-    /* === OVERRIDE HEADER TO MATCH YOUR DESIGN === */
+    /* === OVERRIDE HEADER TO MATCH CANVA BANNER === */
 
-/* Header background + spacing */
+/* Full-width dark bar */
 .ss-header {
   background: #202239 !important;
-  padding: 20px 24px !important;
+  padding: 18px 32px !important;
   border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  /* make the bar stretch edge-to-edge across the viewport */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* Remove the circle icon */
+/* Hide the round logo mark */
 .ss-logo-mark {
   display: none !important;
 }
 
-/* “SIP SOBER” title using Playfair Display */
+/* “SIP SOBER” text */
 .ss-logo-text-main {
   font-family: "Playfair Display", serif !important;
   font-size: 32px !important;
   font-weight: 700 !important;
   color: #ffffff !important;
-  letter-spacing: 0.02em !important;
-  text-transform: none !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
 }
 
-/* Hide subtitle */
+/* Hide subtitle under logo */
 .ss-logo-text-sub {
   display: none !important;
 }
 
-/* Navigation links — white */
+/* Navigation on the right */
+.ss-nav {
+  display: flex;
+  gap: 32px;
+}
+
+/* Menu words white */
 .ss-nav a,
 .ss-nav-cta {
   color: #ffffff !important;
-  font-size: 16px !important;
-  letter-spacing: 0.01em !important;
+  font-size: 14px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
 }
 
-/* Hover effect */
-.ss-nav a:hover,
-.ss-nav-cta:hover {
-  opacity: 0.7;
-}
-
-/* Remove border around login pill */
+/* No pill/button look for login */
 .ss-nav-cta {
   border: none !important;
   background: transparent !important;
   padding: 0 !important;
+}
+
+/* Simple hover */
+.ss-nav a:hover,
+.ss-nav-cta:hover {
+  opacity: 0.7;
 }
 
   </style>
