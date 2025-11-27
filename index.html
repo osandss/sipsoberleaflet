@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Sip Sober — Zero-Proof Map</title>
+  <title>Sip Sober — NYC’s Zero-Proof Bar Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Fonts -->
@@ -12,10 +12,9 @@
     :root {
       --ss-navy: #202239;
       --ss-bg: #f5f5f8;
-      --ss-text-main: #111217;
-      --ss-text-muted: #737589;
-      --ss-accent: #f1a7c5;
       --ss-card: #ffffff;
+      --ss-text-main: #111217;
+      --ss-text-muted: #6d6f82;
       --ss-border: #e1e2ec;
       --ss-radius: 18px;
     }
@@ -28,7 +27,9 @@
 
     body {
       font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--ss-bg);
+      background:
+        radial-gradient(circle, rgba(210,214,230,0.75) 1px, transparent 0) 0 0 / 18px 18px,
+        var(--ss-bg);
       color: var(--ss-text-main);
       line-height: 1.6;
     }
@@ -43,33 +44,31 @@
       display: block;
     }
 
-    .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+    .page-frame {
+      max-width: 1120px;
+      margin: 22px auto 40px;
+      background: #ffffff;
+      box-shadow: 0 18px 40px rgba(18, 19, 31, 0.12);
+      border-radius: 0;
+      overflow: hidden;
     }
 
-    .container {
-      max-width: 1080px;
+    .inner {
+      max-width: 960px;
       margin: 0 auto;
-      padding: 24px 18px 60px;
-      width: 100%;
+      padding-inline: 24px;
     }
 
     /* HEADER BAR */
     .site-header {
       background: var(--ss-navy);
       color: #ffffff;
-      padding: 18px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
     }
 
     .header-inner {
-      max-width: 1080px;
+      max-width: 960px;
       margin: 0 auto;
-      width: 100%;
+      padding: 18px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -78,8 +77,8 @@
 
     .brand {
       font-family: "Playfair Display", serif;
-      font-size: 30px;
-      letter-spacing: 0.06em;
+      font-size: 32px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       font-weight: 700;
       white-space: nowrap;
@@ -88,8 +87,8 @@
     .nav {
       display: flex;
       gap: 24px;
-      font-size: 13px;
-      letter-spacing: 0.16em;
+      font-size: 12px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
@@ -103,58 +102,83 @@
 
     /* HERO */
     .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 32px;
-      margin-top: 32px;
+      position: relative;
+      height: 68vh;
+      min-height: 420px;
+      color: #ffffff;
+      display: flex;
       align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* TODO: replace URL with your real skyline image */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to bottom, rgba(12, 14, 24, 0.25), rgba(12, 14, 24, 0.65)),
+        url("https://osandss.github.io/sipsoberleaflet/heromapss.png");
+      background-size: cover;
+      background-position: center;
+      z-index: -2;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      height: 120px;
+      background: linear-gradient(to top, #ffffff, transparent);
+      z-index: -1;
+    }
+
+    .hero-content {
+      padding: 0 24px;
+      max-width: 720px;
     }
 
     .hero-kicker {
       font-size: 11px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--ss-text-muted);
-      margin-bottom: 10px;
+      margin-bottom: 14px;
+      opacity: 0.9;
     }
 
     .hero-title {
       font-family: "Playfair Display", serif;
       font-size: clamp(30px, 4vw, 40px);
-      line-height: 1.15;
-      margin-bottom: 14px;
-    }
-
-    .hero-title span {
-      color: var(--ss-accent);
+      line-height: 1.2;
+      margin-bottom: 12px;
     }
 
     .hero-subtitle {
       font-size: 14px;
-      color: var(--ss-text-muted);
-      max-width: 440px;
-      margin-bottom: 20px;
+      max-width: 540px;
+      margin: 0 auto 22px;
+      opacity: 0.9;
     }
 
-    .hero-ctas {
-      display: flex;
+    .hero-cta-row {
+      display: inline-flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 10px;
+      justify-content: center;
     }
 
     .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
       padding: 11px 22px;
       border-radius: 999px;
       border: none;
-      background: var(--ss-navy);
-      color: #ffffff;
+      background: #ffffff;
+      color: var(--ss-navy);
       font-size: 12px;
-      letter-spacing: 0.16em;
       text-transform: uppercase;
+      letter-spacing: 0.18em;
       cursor: pointer;
     }
 
@@ -163,184 +187,109 @@
     }
 
     .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
       padding: 10px 20px;
       border-radius: 999px;
-      border: 1px solid var(--ss-border);
-      background: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      background: transparent;
+      color: #ffffff;
       font-size: 12px;
-      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--ss-text-main);
+      letter-spacing: 0.18em;
       cursor: pointer;
     }
 
     .btn-ghost:hover {
-      background: #f3f3f8;
+      background: rgba(20, 22, 40, 0.45);
     }
 
-    .hero-note {
-      font-size: 11px;
-      color: var(--ss-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      margin-top: 4px;
+    /* MAIN CONTENT */
+    main {
+      padding: 40px 0 40px;
     }
 
-    .hero-note span {
-      color: var(--ss-text-main);
-    }
-
-    .hero-card {
-      background: var(--ss-card);
-      border-radius: var(--ss-radius);
-      padding: 20px 20px 18px;
-      border: 1px solid var(--ss-border);
-      box-shadow: 0 18px 40px rgba(15, 16, 26, 0.08);
-    }
-
-    .hero-card-label {
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--ss-text-muted);
-      margin-bottom: 8px;
-    }
-
-    .hero-card-title {
-      font-family: "Playfair Display", serif;
-      font-size: 20px;
-      margin-bottom: 6px;
-    }
-
-    .hero-card-body {
-      font-size: 13px;
-      color: var(--ss-text-muted);
-      margin-bottom: 12px;
-    }
-
-    .hero-tag-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-size: 11px;
-    }
-
-    .hero-tag {
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: #f5f5fb;
-      border: 1px solid var(--ss-border);
-      color: var(--ss-text-muted);
-    }
-
-    /* SECTION BLOCKS */
     section {
-      margin-top: 48px;
+      margin-bottom: 40px;
     }
 
-    .section-heading {
-      margin-bottom: 16px;
+    .section-kicker {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ss-text-muted);
+      margin-bottom: 4px;
     }
 
     .section-title {
-      font-size: 18px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      font-weight: 500;
-      margin-bottom: 6px;
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      margin-bottom: 8px;
     }
 
-    .section-intro {
+    .section-body {
       font-size: 14px;
-      color: var(--ss-text-muted);
-      max-width: 540px;
-    }
-
-    .about-body {
-      font-size: 14px;
-      max-width: 640px;
-      margin-top: 10px;
       color: var(--ss-text-main);
+      max-width: 640px;
     }
 
-    .feature-grid {
+    .two-column {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 18px;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: flex-start;
     }
 
-    .feature-card {
-      background: var(--ss-card);
-      border-radius: var(--ss-radius);
-      border: 1px solid var(--ss-border);
-      padding: 16px 16px 14px;
-    }
-
-    .feature-kicker {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--ss-text-muted);
-      margin-bottom: 4px;
-    }
-
-    .feature-title {
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    .feature-text {
-      font-size: 13px;
-      color: var(--ss-text-muted);
-    }
-
-    .cta-panel {
+    .map-card {
       background: var(--ss-card);
       border-radius: var(--ss-radius);
       border: 1px solid var(--ss-border);
       padding: 18px 18px 16px;
-      margin-top: 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
+      text-align: center;
     }
 
-    .cta-main {
-      font-size: 16px;
-      font-weight: 500;
-      margin-bottom: 4px;
+    .map-card-title {
+      font-family: "Playfair Display", serif;
+      font-size: 18px;
+      margin-bottom: 6px;
     }
 
-    .cta-sub {
+    .map-card-sub {
       font-size: 13px;
       color: var(--ss-text-muted);
-      max-width: 420px;
+      margin-bottom: 14px;
     }
 
-    .cta-actions {
+    .map-card-note {
+      font-size: 12px;
+      color: var(--ss-text-muted);
+      margin-top: 8px;
+    }
+
+    .map-chip-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .map-chip {
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #f7f7fc;
+      border: 1px solid var(--ss-border);
+      color: var(--ss-text-muted);
     }
 
     /* FOOTER */
     footer {
-      border-top: 1px solid #dddfee;
-      margin-top: 40px;
-      padding: 18px 18px 26px;
+      border-top: 1px solid #e3e4ee;
+      padding: 16px 24px 20px;
       font-size: 11px;
       color: var(--ss-text-muted);
     }
 
     .footer-inner {
-      max-width: 1080px;
+      max-width: 960px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -360,24 +309,25 @@
 
     /* RESPONSIVE */
     @media (max-width: 860px) {
-      .hero {
+      .two-column {
         grid-template-columns: minmax(0, 1fr);
       }
     }
 
     @media (max-width: 720px) {
-      .site-header {
-        padding-inline: 18px;
+      .page-frame {
+        margin: 0;
+        border-radius: 0;
       }
 
       .header-inner {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+        padding-inline: 18px;
       }
 
       .brand {
-        font-size: 24px;
+        font-size: 26px;
       }
 
       .nav {
@@ -386,154 +336,122 @@
         flex-wrap: wrap;
       }
 
-      .feature-grid {
-        grid-template-columns: minmax(0, 1fr);
+      .hero {
+        height: 60vh;
+        min-height: 360px;
       }
 
-      .cta-panel {
-        align-items: flex-start;
+      .hero-content {
+        padding-inline: 18px;
+      }
+
+      main .inner {
+        padding-inline: 18px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="page">
+  <div class="page-frame">
     <!-- HEADER -->
     <header class="site-header">
       <div class="header-inner">
         <div class="brand">SIP SOBER</div>
         <nav class="nav">
           <a href="#about">About</a>
-          <a href="#features">Features</a>
-          <a href="#how">How it Works</a>
-          <a href="#account">Account</a>
+          <a href="#map">Map</a>
+          <a href="#learn">Learn</a>
         </nav>
       </div>
     </header>
 
-    <main class="container">
-      <!-- HERO -->
-      <section class="hero">
-        <div>
-          <div class="hero-kicker">NYC · ZERO-PROOF GUIDE</div>
-          <h1 class="hero-title">
-            Zero-proof drinks, without the <span>guesswork.</span>
-          </h1>
-          <p class="hero-subtitle">
-            Sip Sober helps you find NYC bars and restaurants serving real alcohol-free options — not just soda and seltzer. Filter by neighborhood, see which brands are on the menu, and save the spots you love.
-          </p>
-
-          <div class="hero-ctas">
-            <!-- TODO: change this to your real map file, e.g. app.html -->
-            <a class="btn-primary" href="app.html">Launch the map</a>
-            <a class="btn-ghost" href="#how">How it works</a>
-          </div>
-
-          <div class="hero-note">
-            Now live in <span>Upper East Side · Midtown East · Gramercy</span>
-          </div>
-        </div>
-
-        <aside class="hero-card">
-          <div class="hero-card-label">App snapshot</div>
-          <div class="hero-card-title">A calm, map-first view for nights out.</div>
-          <p class="hero-card-body">
-            Designed to feel like a simple app: choose a neighborhood, toggle your favorite brands, and see a short list of spots that actually care about zero-proof drinks.
-          </p>
-          <div class="hero-tag-row">
-            <span class="hero-tag">NYC-only for now</span>
-            <span class="hero-tag">Brand-level filters</span>
-            <span class="hero-tag">Save favorites</span>
-          </div>
-        </aside>
-      </section>
-
-      <!-- ABOUT -->
-      <section id="about">
-        <div class="section-heading">
-          <h2 class="section-title">What is Sip Sober?</h2>
-          <p class="section-intro">
-            A map-based guide for anyone who wants to drink less — or not at all — without giving up going out. No labels, no lectures. Just places that take their zero-proof menu seriously.
-          </p>
-        </div>
-        <p class="about-body">
-          We curate NYC bars and restaurants that offer thoughtful non-alcoholic drinks: balanced spritzes, spirit-free riffs on classics, and cocktails built with brands like Seedlip, Ritual Zero Proof, and Lyre’s. 
-          <br><br>
-          Whether you’re sober, sober-curious, or “just not tonight,” Sip Sober makes it easier to plan dates, birthdays, and after-work drinks that still feel like a night out.
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-kicker">DISCOVER NYC’S ZERO-PROOF COCKTAILS — MAPPED.</div>
+        <h1 class="hero-title">
+          Discover NYC’s best zero-proof cocktails — mapped.
+        </h1>
+        <p class="hero-subtitle">
+          Welcome to your ultimate guide to navigating the world of zero-proof spirits. Sip Sober helps those who choose not to drink uncover bars and restaurants that offer top-tier alcohol-free options.
         </p>
-      </section>
 
-      <!-- FEATURES -->
-      <section id="features">
-        <div class="section-heading">
-          <h2 class="section-title">What you can do</h2>
-          <p class="section-intro">
-            Built to be simple enough to use while you’re walking down the street — but detailed enough to actually help you choose where to go.
+        <div class="hero-cta-row">
+          <!-- TODO: update to your real map file, e.g. app.html -->
+          <a class="btn-primary" href="app.html">Launch the map</a>
+          <a class="btn-ghost" href="#about">Learn more</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main>
+      <div class="inner">
+        <!-- ABOUT -->
+        <section id="about">
+          <div class="section-kicker">LEARN MORE</div>
+          <h2 class="section-title">About Us</h2>
+          <p class="section-body">
+            Welcome to your ultimate guide to navigating the world of zero-proof spirits. Our mission is to help those who choose not to drink uncover bars and restaurants that offer top-tier alcohol-free options.
+            <br><br>
+            We highlight venues that take their zero-proof menus seriously — from Lyre’s spritzes to Seedlip-based cocktails and Ritual Zero Proof classics. Whether you’re sober, sober-curious, or “just not tonight,” Sip Sober makes planning a night out feel easy again.
           </p>
-        </div>
+        </section>
 
-        <div class="feature-grid">
-          <article class="feature-card">
-            <div class="feature-kicker">Feature</div>
-            <div class="feature-title">Browse by neighborhood</div>
-            <p class="feature-text">
-              Start in the Upper East Side, Midtown East, or Gramercy. The map stays locked on Manhattan so you’re never zooming in from outer space.
+        <!-- MAP BLURB -->
+        <section id="map" class="two-column">
+          <div>
+            <div class="section-kicker">THE MAP</div>
+            <h2 class="section-title">NYC’s Zero-Proof Bar Map</h2>
+            <p class="section-body">
+              Built for mobile first. Open the map, choose your neighborhood, and see which spots have real zero-proof options on the menu — not just club soda.
+              <br><br>
+              Tap a bar to see details, view its site, and decide where you want to go before you even leave the apartment.
             </p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-kicker">Feature</div>
-            <div class="feature-title">See which brands are pouring</div>
-            <p class="feature-text">
-              Look for venues pouring Seedlip, Ritual Zero Proof, Lyre’s, and more — so you know what kind of zero-proof experience to expect before you arrive.
-            </p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-kicker">Feature</div>
-            <div class="feature-title">Save your go-to spots</div>
-            <p class="feature-text">
-              Create an account to favorite venues and build your own list of places you trust for zero-proof drinks, from date-night spots to casual neighborhood hangs.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <!-- HOW IT WORKS / ACCOUNT CTA -->
-      <section id="how">
-        <div class="section-heading">
-          <h2 class="section-title">How it works</h2>
-          <p class="section-intro">
-            Sip Sober lives in your browser but behaves like a lightweight app you can keep on your home screen.
-          </p>
-        </div>
-
-        <p class="about-body">
-          Open the map, choose your neighborhood, and toggle any brands you’re excited about. You’ll see a focused list of venues with zero-proof options and a simple way to tap through to their site or directions. 
-        </p>
-      </section>
-
-      <section id="account" class="cta-panel">
-        <div>
-          <div class="cta-main">Want to keep track of your favorites?</div>
-          <div class="cta-sub">
-            You’ll always be able to open the map without an account. But if you want to save spots and build your own zero-proof list, you’ll be able to create a profile soon.
           </div>
-        </div>
-        <div class="cta-actions">
-          <!-- Placeholder until you have real auth -->
-          <button class="btn-ghost" type="button">Account coming soon</button>
-        </div>
-      </section>
+
+          <aside class="map-card">
+            <div class="map-card-title">Built for mobile. Tap to open the map.</div>
+            <p class="map-card-sub">
+              Use Sip Sober like a lightweight app right from your browser — no downloads needed. Perfect for planning as you walk, ride, or ride the subway.
+            </p>
+            <div class="hero-cta-row" style="margin-bottom: 10px;">
+              <!-- TODO: same map link as above -->
+              <a class="btn-primary" href="app.html">Launch the map</a>
+            </div>
+            <div class="map-chip-row">
+              <span class="map-chip">Upper East Side</span>
+              <span class="map-chip">Midtown East</span>
+              <span class="map-chip">Gramercy</span>
+              <span class="map-chip">Seedlip · Ritual · Lyre’s</span>
+            </div>
+            <div class="map-card-note">
+              More neighborhoods and brands coming soon.
+            </div>
+          </aside>
+        </section>
+
+        <!-- LEARN / MOVEMENT -->
+        <section id="learn">
+          <div class="section-kicker">THE MOVEMENT</div>
+          <h2 class="section-title">Why zero-proof matters</h2>
+          <p class="section-body">
+            For years, going out in NYC meant going out for a drink. As the sober-curious movement grows, more people are choosing to drink less — or not at all — without giving up the city’s energy, restaurants, and late-night plans.
+            <br><br>
+            Sip Sober is here to make that choice feel normal, not complicated. You don’t need a reason or a label — just a place that knows how to make a great drink without alcohol.
+          </p>
+        </section>
+      </div>
     </main>
 
+    <!-- FOOTER -->
     <footer>
       <div class="footer-inner">
         <div>© <span id="year"></span> Sip Sober NYC.</div>
         <div class="footer-links">
           <a href="#about">About</a>
-          <a href="#features">Features</a>
-          <a href="#how">How it works</a>
+          <a href="#map">Map</a>
+          <a href="#learn">Learn</a>
         </div>
       </div>
     </footer>
