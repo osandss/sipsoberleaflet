@@ -143,18 +143,31 @@
       margin-bottom: 10px;
     }
 
-    /* HERO IMAGE (right side) */
-.hero-visual {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    /* HERO – centered full-width image with text below */
+.hero {
+  margin-top: 32px;
 }
 
-.hero-image {
-  max-width: 480px;
+.hero-image-wrap {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 16px; /* space under the navy header */
+}
+
+.hero-image-full {
+  width: 100%;
+  max-width: 720px;  /* control how big the image feels */
   height: auto;
   display: block;
+}
+
+.hero-text {
+  margin-top: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 
@@ -387,12 +400,23 @@
 
     <main class="container">
       <!-- HERO -->
-      <section class="hero">
-  <div>
+     <section class="hero">
+
+  <div class="hero-image-wrap">
+    <img
+      src="heromapss.png"
+      alt="Sip Sober mobile preview"
+      class="hero-image-full"
+    />
+  </div>
+
+  <div class="hero-text">
     <div class="hero-kicker">NYC · ZERO-PROOF GUIDE</div>
+
     <h1 class="hero-title">
       Zero-proof drinks, without the <span>guesswork.</span>
     </h1>
+
     <p class="hero-subtitle">
       Sip Sober helps you find NYC bars and restaurants serving real alcohol-free options — not just soda and seltzer. Filter by neighborhood, see which brands are on the menu, and save the spots you love.
     </p>
@@ -407,13 +431,6 @@
     </div>
   </div>
 
-  <aside class="hero-visual">
-    <img
-      src="heromapss.png"
-      alt="Sip Sober mobile app preview"
-      class="hero-image"
-    />
-  </aside>
 </section>
 
 
