@@ -409,14 +409,16 @@ h1.hero-title {
     }
 
     /* RESPONSIVE */
-    @media (max-width: 860px) {
-      .hero {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 
+/* MOBILE */
+@media (max-width: 720px) {
 
-  @media (max-width: 720px) {
+  /* Header */
   .site-header {
     padding: 12px 0 10px;          /* shorter header */
   }
@@ -443,35 +445,36 @@ h1.hero-title {
     font-size: 11px;               /* smaller than desktop */
     letter-spacing: 0.12em;        /* same vibe, just not huge */
   }
-}
 
-      .feature-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
+  /* Layout sections */
+  .feature-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 
-      .cta-panel {
-        align-items: flex-start;
-      }
-    }
-    
-    /* MOBILE — smaller section headings */
-@media (max-width: 720px) {
+  .cta-panel {
+    align-items: flex-start;
+  }
+
+  /* Section headings */
   h2, h3, h4, h5, h6 {
-    font-size: 16px;      /* smaller mobile size */
-    letter-spacing: -0.15px;  /* slightly tighter */
+    font-size: 16px;               /* smaller mobile size */
+    letter-spacing: -0.15px;       /* slightly tighter */
   }
 
   .section-title {
-    font-size: 20px;          /* adjust as you like */
-    letter-spacing: -0.25px;  /* tighter spacing */
+    font-size: 20px;               /* adjust as you like */
+    letter-spacing: -0.25px;       /* tighter spacing */
     line-height: 1.2;
   }
 
-/* SHRINK HERO ON MOBILE */
+  /* SHRINK HERO ON MOBILE */
   .hero {
+    height: 45vh;                  /* <— main change */
+    min-height: 320px;             /* override 520px min-height */
     padding-top: 40px;
     padding-bottom: 40px;
     gap: 20px;
+    background-position: center top;  /* crop a bit more of the bottom */
   }
 
   .hero-overlay {
