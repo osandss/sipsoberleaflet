@@ -395,50 +395,33 @@
       }
     }
 
-    @media (max-width: 720px) {
-
-  .site-header {
-    padding-inline: 16px;
-    padding-block: 12px;
-  }
-
-  .header-inner {
-    flex-direction: column;
-    align-items: center;     /* center logo + menu */
-    gap: 6px;                /* tighter spacing */
-  }
-
-  .brand {
-    font-size: 22px;         /* slightly smaller logo text */
-  }
 
   @media (max-width: 720px) {
-
   .site-header {
-    padding-inline: 12px;     /* tighten side padding */
+    padding: 12px 0 10px;          /* shorter header */
   }
 
   .header-inner {
-    flex-direction: row;      /* keep logo + menu in ONE row */
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    max-width: 100%;
+    padding-inline: 18px;          /* a little side padding */
+    flex-direction: column;        /* logo on top, nav under */
+    align-items: center;           /* center everything */
+    gap: 6px;                      /* tight space between logo and nav */
   }
 
   .brand {
-    font-size: 20px;          /* scaled-down SIP SOBER */
-    letter-spacing: 0.5px;
+    font-size: 24px;               /* slightly smaller logo text */
   }
 
   .nav {
-    font-size: 9.5px;        /* smaller menu */
-    gap: 14px;                /* tighter spacing */
-    letter-spacing: 0.12em;   /* same vibe, slightly smaller */
-    flex-wrap: nowrap;        /* forces items into one row */
+    gap: 16px;                     /* tighter spacing between items */
+    flex-wrap: nowrap;             /* keep them on one line if possible */
+    justify-content: center;       /* center nav items */
   }
 
   .nav a {
-    white-space: nowrap;      /* PREVENTS wrapping */
+    font-size: 11px;               /* smaller than desktop */
+    letter-spacing: 0.12em;        /* same vibe, just not huge */
   }
 }
 
