@@ -102,9 +102,6 @@ html, body {
   opacity: 0.75;
 }
 
-#map {
-  top: 74px;
-}
 
 /* --- Top filters bar: floating pill --- */
 #filters {
@@ -147,14 +144,15 @@ html, body {
   cursor: pointer;
 }
 
-/* --- Map fills the entire screen behind filters + panel --- */
+/* Main map area – fits under header + filters */
 #map {
-  position: fixed !important;
-  top: calc(var(--ss-header-height) + 12px);
+  position: absolute;
+  top: 74px;              /* sits just under the navy header & filters */
   left: 0;
   right: 0;
-  bottom: 0;
-  z-index: 1; /* map sits behind filters + panel */
+  bottom: var(--panel-collapsed);
+  height: auto;
+  z-index: 1;
 }
 
 /* --- Dropdown menus (hide/show) --- */
@@ -314,10 +312,6 @@ html, body {
 
 <body class="has-top-banner">
 
-  <!-- SIP SOBER Top Bar -->
-  <header id="ss-header">
-    <div class="ss-title">SIP SOBER</div>
-  </header>
 
   
   <!-- TOP CONTROLS (filters + Go) -->
