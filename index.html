@@ -105,13 +105,21 @@
   opacity: 0.75;
 }
 
-/* Make all headings match hero font */
-h1, h2, h3, h4, h5, h6 {
+/* Unique, premium sans-serif headings (not basic Apple font) */
+h2, h3, h4, h5, h6 {
+  font-family: "Satoshi", "Inter", "Neue Montreal", "Poppins", sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  text-transform: none;
+}
+
+/* Keep the hero using Playfair Display */
+h1.hero-title {
   font-family: "Playfair Display", serif;
   font-weight: 700;
-  text-transform: none; 
-  letter-spacing: -0.5;
+  letter-spacing: -0.5px;
 }
+
 
     /* HERO */
     .hero {
