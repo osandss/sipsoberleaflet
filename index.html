@@ -413,14 +413,32 @@
 
   @media (max-width: 720px) {
 
-  .nav {
-    font-size: 10px;          /* smaller so everything fits */
-    gap: 10px;                /* tighter spacing */
-    letter-spacing: 0.12em;   /* slightly smaller tracking */
-    flex-wrap: nowrap;        /* forces everything on one line */
-    justify-content: center;  /* centers the whole row */
+  .site-header {
+    padding-inline: 12px;     /* tighten side padding */
   }
 
+  .header-inner {
+    flex-direction: row;      /* keep logo + menu in ONE row */
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .brand {
+    font-size: 20px;          /* scaled-down SIP SOBER */
+    letter-spacing: 0.5px;
+  }
+
+  .nav {
+    font-size: 10.5px;        /* smaller menu */
+    gap: 14px;                /* tighter spacing */
+    letter-spacing: 0.12em;   /* same vibe, slightly smaller */
+    flex-wrap: nowrap;        /* forces items into one row */
+  }
+
+  .nav a {
+    white-space: nowrap;      /* PREVENTS wrapping */
+  }
 }
 
       .feature-grid {
