@@ -85,21 +85,24 @@
       white-space: nowrap;
     }
 
-    .nav {
-      display: flex;
-      gap: 24px;
-      font-size: 13px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
+    /* Match app header text style */
+.nav {
+  display: flex;
+  gap: 40px; /* same spacing as your app header */
+}
 
-    .nav a {
-      color: #ffffff;
-    }
+.nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;       /* app header size */
+  font-weight: 500;      /* app header weight */
+  letter-spacing: 0.18em; /* app header spacing */
+  text-transform: uppercase;
+}
 
-    .nav a:hover {
-      opacity: 0.75;
-    }
+.nav a:hover {
+  opacity: 0.75;
+}
 
     /* HERO */
     .hero {
