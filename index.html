@@ -88,16 +88,17 @@
     /* Match app header text style */
 .nav {
   display: flex;
-  gap: 40px; /* same spacing as your app header */
+  gap: 28px; /* same spacing as app */
 }
 
 .nav a {
   color: #ffffff;
   text-decoration: none;
-  font-size: 14px;       /* app header size */
-  font-weight: 500;      /* app header weight */
-  letter-spacing: 0.18em; /* app header spacing */
+  font-size: 13px;        /* exact match */
+  font-weight: 400;       /* NOT bold */
+  letter-spacing: 0.12em; /* exact match */
   text-transform: uppercase;
+  font-family: inherit !important; /* prevents serif Playfair */
 }
 
 .nav a:hover {
