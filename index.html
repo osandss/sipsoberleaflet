@@ -411,12 +411,14 @@
     font-size: 22px;         /* slightly smaller logo text */
   }
 
+  @media (max-width: 720px) {
+
   .nav {
-    font-size: 11px;         /* same as index */
-    gap: 14px;
-    letter-spacing: 0.14em;
-    flex-wrap: wrap;
-    justify-content: center;
+    font-size: 10px;          /* smaller so everything fits */
+    gap: 10px;                /* tighter spacing */
+    letter-spacing: 0.12em;   /* slightly smaller tracking */
+    flex-wrap: nowrap;        /* forces everything on one line */
+    justify-content: center;  /* centers the whole row */
   }
 
 }
