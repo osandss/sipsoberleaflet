@@ -105,13 +105,18 @@
   opacity: 0.75;
 }
 
-/* Unique, premium sans-serif headings (not basic Apple font) */
+/* Section headings — smaller + tighter spacing */
 h2, h3, h4, h5, h6 {
   font-family: "Satoshi", "Inter", "Neue Montreal", "Poppins", sans-serif;
   font-weight: 600;
-  letter-spacing: -0.3px;
+
+  font-size: 22px;        /* smaller — adjust here */
+  letter-spacing: -0.2px; /* tighter — no wide spacing */
   text-transform: none;
+  line-height: 1.25;      /* cleaner vertical spacing */
+  margin-bottom: 16px;
 }
+
 
 /* Keep the hero using Playfair Display */
 h1.hero-title {
@@ -119,7 +124,6 @@ h1.hero-title {
   font-weight: 700;
   letter-spacing: -0.5px;
 }
-
 
     /* HERO */
     .hero {
