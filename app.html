@@ -35,35 +35,7 @@
   --panel-collapsed: 20vh;   /* collapsed height on mobile */
   --panel-expanded: 68vh;    /* expanded height on mobile */
 }
-  /* --- Minimal SIP SOBER Header (GitHub version) --- */
-
-:root {
-  --ss-header-height: 54px;
-}
-
-#ss-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: var(--ss-header-height);
-  background: #202329;
-  z-index: 3000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-#ss-header .ss-title {
-  font-family: "Georgia", "Times New Roman", serif;
-  color: #ffffff;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  margin-top: 2px;
-}  
-    
+ 
 html, body {
   margin: 0;
   padding: 0;
@@ -85,11 +57,59 @@ html, body {
   line-height: 1.45;
 }
 
+/* === Full SIP SOBER header (same as homepage) === */
+.site-header {
+  background: #202329;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3000;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-inline: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  font-family: "Playfair Display", serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.nav {
+  display: flex;
+  gap: 28px;
+}
+
+.nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.nav a:hover {
+  opacity: 0.75;
+}
+
+#map {
+  top: 74px;
+}
 
 /* --- Top filters bar: floating pill --- */
 #filters {
   position: fixed;
-  top: calc(var(--ss-header-height) + 8px);
+  top: 74px;
   left: 12px;
   right: 12px;
   z-index: 3100;
