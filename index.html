@@ -505,6 +505,77 @@ h1.hero-title {
   color: #202329 !important;
   opacity: 1;
 }
+
+.app-preview {
+  padding: 120px 0;
+  background: #ffffff;
+}
+
+.app-preview-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  padding: 0 24px;
+}
+
+.app-preview-image img {
+  width: 260px;
+  height: auto;
+  border-radius: 32px;
+  border: 10px solid #f3f3f3;
+  background: #f8f8f8;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.app-preview-text {
+  max-width: 480px;
+}
+
+.app-preview-title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #202239;
+}
+
+.app-preview-subtitle {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 28px;
+  color: #444;
+}
+
+.btn-preview {
+  display: inline-block;
+  padding: 14px 30px;
+  background: #202239;
+  color: #ffffff;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s ease;
+}
+
+.btn-preview:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 800px) {
+  .app-preview-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .app-preview-image img {
+    width: 210px;
+  }
+}
+
     
   </style>
 
@@ -556,6 +627,28 @@ h1.hero-title {
     </div>
   </div>
 </section>
+
+<!-- APP PREVIEW SECTION -->
+<section class="app-preview">
+  <div class="app-preview-inner">
+
+    <div class="app-preview-image">
+      <img src="mapmobile.png" alt="Sip Sober mobile map preview">
+    </div>
+
+    <div class="app-preview-text">
+      <h3 class="app-preview-title">Sip Sober on the Go</h3>
+      <p class="app-preview-subtitle">
+        A clean mobile map of NYC’s zero-proof bars.<br>
+        Filter by neighborhood or brand and save your favorite spots.
+      </p>
+
+      <a class="btn-preview" href="app.html">Open the Map</a>
+    </div>
+
+  </div>
+</section>
+
 
 <!-- START PAGE CONTENT -->
 <main class="container">
