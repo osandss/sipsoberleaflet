@@ -506,48 +506,48 @@ h1.hero-title {
   opacity: 1;
 }
 
-/* APP PREVIEW SECTION – refined */
+/* FINAL — Clean banner under hero */
 .app-preview {
-  padding: 20px 0;                 /* was 60/120 – shorter band */
-  background: #f7f8fb;             /* subtle band so it feels intentional */
+  background: #f7f8fb;       /* grey band */
+  padding: 40px 0;           /* tight height */
 }
 
 .app-preview-inner {
-  max-width: 1000px;               /* a bit tighter than 1100 */
+  max-width: 1100px;
   margin: 0 auto;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 32px;                       /* closer together */
   padding: 0 24px;
+
+  display: flex;
+  align-items: center;       /* centers text + phone vertically */
+  justify-content: center;   /* centers BOTH in the middle of page */
+  gap: 48px;                 /* spacing between phone + text */
 }
 
 .app-preview-image img {
-  width: 160px;                    /* smaller phone */
+  width: 200px;              /* slightly bigger phone */
   height: auto;
   border-radius: 28px;
   border: 8px solid #f3f3f3;
   background: #f8f8f8;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
 }
 
 .app-preview-text {
-  max-width: 460px;
+  max-width: 420px;
 }
 
 .app-preview-title {
-  font-size: 21px;                 /* slightly smaller, more editorial */
+  font-size: 30px;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: #202239;
 }
 
 .app-preview-subtitle {
-  font-size: 13px;
-  line-height: 1.7;
+  font-size: 16px;
+  line-height: 1.65;
   margin-bottom: 24px;
-  color: #444;
+  color: #4a4a4a;
 }
 
 .btn-preview {
