@@ -581,24 +581,31 @@ h1.hero-title {
   }
 
   .app-preview-inner {
-    flex-direction: row;          /* stay side by side */
-    align-items: center;          /* vertical centering */
-    justify-content: center;      /* center both in the band */
-    gap: 20px;                    /* tighter spacing on mobile */
-    text-align: left;             /* no centered paragraphs */
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    text-align: left;
   }
 
   .app-preview-image img {
-    width: 140px;                 /* smaller phone on mobile */
+    width: 140px;
   }
 
   .app-preview-text {
-    max-width: 55%;               /* keep text from getting too wide */
+    max-width: 55%;
   }
 
-  .app-preview-text p {
-  font-size: 14px;   /* or 15px / 13px — whatever you want */
-  line-height: 1.45; /* optional but makes it nicer */
+  /* MOBILE text sizes — this is the part you were missing */
+  .app-preview-title {
+    font-size: 18px;       /* smaller title on mobile */
+    margin-bottom: 8px;
+  }
+
+  .app-preview-subtitle {
+    font-size: 14px;       /* smaller subtitle on mobile */
+    line-height: 1.45;
+    margin-bottom: 16px;
   }
 }
 
