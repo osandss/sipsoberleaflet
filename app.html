@@ -65,6 +65,12 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2000;   /* higher than #map’s z-index: 1 */
 }
 
 .header-inner {
@@ -334,6 +340,10 @@ html, body {
   .nav a {
     font-size: 11px;
     letter-spacing: 0.12em;
+  }
+
+  #map {
+    top: 110px;   /* try 100; then tweak to 90–110px if needed */
   }
 }
 
