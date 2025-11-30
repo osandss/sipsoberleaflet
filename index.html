@@ -581,17 +581,19 @@ h1.hero-title {
   }
 
   .app-preview-inner {
-    flex-direction: column;
-    text-align: center;
-    gap: 16px;
+    flex-direction: row;          /* stay side by side */
+    align-items: center;          /* vertical centering */
+    justify-content: center;      /* center both in the band */
+    gap: 20px;                    /* tighter spacing on mobile */
+    text-align: left;             /* no centered paragraphs */
   }
 
   .app-preview-image img {
-    width: 180px;                  /* a bit larger on small screens */
+    width: 140px;                 /* smaller phone on mobile */
   }
 
   .app-preview-text {
-    max-width: 100%;
+    max-width: 55%;               /* keep text from getting too wide */
   }
 }
 
