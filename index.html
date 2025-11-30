@@ -172,8 +172,8 @@ h1.hero-title {
 .hero {
   position: relative;
   margin-top: 0;              /* sit right under the header */
-  height: 55vh;
-  min-height: 520px;
+  height: 45vh;
+  min-height: 450px;
   background-image:
     linear-gradient(to bottom, rgba(12, 14, 24, 0.25), rgba(12, 14, 24, 0.70)),
     url("heromapss.png");
@@ -508,7 +508,7 @@ h1.hero-title {
 
 /* APP PREVIEW SECTION – refined */
 .app-preview {
-  padding: 48px 0;                 /* was 60/120 – shorter band */
+  padding: 20px 0;                 /* was 60/120 – shorter band */
   background: #f7f8fb;             /* subtle band so it feels intentional */
 }
 
@@ -516,7 +516,7 @@ h1.hero-title {
   max-width: 1000px;               /* a bit tighter than 1100 */
   margin: 0 auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 32px;                       /* closer together */
   padding: 0 24px;
@@ -537,14 +537,14 @@ h1.hero-title {
 }
 
 .app-preview-title {
-  font-size: 24px;                 /* slightly smaller, more editorial */
+  font-size: 21px;                 /* slightly smaller, more editorial */
   font-weight: 600;
   margin-bottom: 10px;
   color: #202239;
 }
 
 .app-preview-subtitle {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.7;
   margin-bottom: 24px;
   color: #444;
@@ -577,13 +577,13 @@ h1.hero-title {
 /* Mobile layout */
 @media (max-width: 800px) {
   .app-preview {
-    padding: 40px 0;
+    padding: 24px 0;
   }
 
   .app-preview-inner {
     flex-direction: column;
     text-align: center;
-    gap: 24px;
+    gap: 16px;
   }
 
   .app-preview-image img {
