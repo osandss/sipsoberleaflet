@@ -506,76 +506,120 @@ h1.hero-title {
   opacity: 1;
 }
 
+/* APP PREVIEW SECTION – refined */
 .app-preview {
-  padding: 60px 0;
-  background: #ffffff;
+  padding: 48px 0;                 /* was 60/120 – shorter band */
+  background: #f7f8fb;             /* subtle band so it feels intentional */
 }
 
 .app-preview-inner {
-  max-width: 1100px;
+  max-width: 1000px;               /* a bit tighter than 1100 */
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 40px;
+  gap: 32px;                       /* closer together */
   padding: 0 24px;
 }
 
 .app-preview-image img {
-  width: 200px;
+  width: 160px;                    /* smaller phone */
   height: auto;
-  border-radius: 32px;
-  border: 10px solid #f3f3f3;
+  border-radius: 28px;
+  border: 8px solid #f3f3f3;
   background: #f8f8f8;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .app-preview-text {
-  max-width: 480px;
+  max-width: 460px;
 }
 
 .app-preview-title {
-  font-size: 26px;
+  font-size: 28px;                 /* slightly smaller, more editorial */
   font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: #202239;
 }
 
 .app-preview-subtitle {
   font-size: 16px;
-  line-height: 1.6;
-  margin-bottom: 28px;
+  line-height: 1.7;
+  margin-bottom: 24px;
   color: #444;
 }
 
 .btn-preview {
   display: inline-block;
-  padding: 14px 30px;
+  padding: 13px 28px;
   background: #202239;
   color: #ffffff;
   border-radius: 999px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
   letter-spacing: 0.02em;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .btn-preview:hover {
-  opacity: 0.85;
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
+/* Phone hover – tiny float */
+.app-preview-image:hover img {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
+}
+
+/* Mobile layout */
 @media (max-width: 800px) {
+  .app-preview {
+    padding: 40px 0;
+  }
+
   .app-preview-inner {
     flex-direction: column;
     text-align: center;
+    gap: 24px;
   }
 
   .app-preview-image img {
-    width: 210px;
+    width: 180px;                  /* a bit larger on small screens */
+  }
+
+  .app-preview-text {
+    max-width: 100%;
   }
 }
 
+/* Fade-up on load */
+@keyframes fadeUpSoft {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app-preview-image,
+.app-preview-text {
+  opacity: 0;
+  animation: fadeUpSoft 0.6s ease-out forwards;
+}
+
+.app-preview-image {
+  animation-delay: 0.05s;
+}
+
+.app-preview-text {
+  animation-delay: 0.18s;
+}
     
   </style>
 
