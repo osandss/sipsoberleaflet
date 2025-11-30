@@ -306,11 +306,11 @@ html, body {
     font-size: 12px;
   }
 
-/* === ADD MOBILE HEADER OVERRIDES HERE === */
+/* === MOBILE HEADER FIX === */
 @media (max-width: 720px) {
 
   .site-header {
-    padding: 12px 0 10px;
+    padding: 18px 0 14px;   /* more breathing room */
   }
 
   .header-inner {
@@ -318,21 +318,22 @@ html, body {
     padding-inline: 18px;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 10px;              /* space between logo + nav */
   }
 
   .brand {
-    font-size: 24px;
+    font-size: 26px;
+    margin-bottom: 4px;     /* push nav slightly downward */
   }
 
   .nav {
-    gap: 16px;
+    gap: 20px;
     flex-wrap: nowrap;
     justify-content: center;
   }
 
   .nav a {
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.12em;
   }
 }
