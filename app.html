@@ -240,7 +240,7 @@ html, body {
 /* Venue name */
 .card-name {
   display: block;
-  font-size: 14px
+  font-size: 14px;
   font-weight: 600;
   margin-bottom: 0px;
   color: #111;
@@ -605,11 +605,11 @@ map.setMinZoom(11.5);
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-          <span class="card-name" onclick="map.setView([${loc.lat}, ${loc.lng}], 16); openMarkerAt(${loc.lat}, ${loc.lng});">${loc.name}</span><br/>
-          ${loc.address}<br/>
-          <a href="${loc.website}" target="_blank" rel="noopener">Website</a><br/>
-          <span class="meta">Brand: ${loc.brand||""}</span><br/>
-          <span class="meta">Neighborhood: ${loc.neighborhood||""}</span>
+        <span class="card-name" onclick="map.setView([${loc.lat}, ${loc.lng}], 16); openMarkerAt(${loc.lat}, ${loc.lng});">${loc.name}</span>
+        <div class="meta">${loc.address}</div>
+        <a href="${loc.website}" target="_blank" rel="noopener">Website</a>
+        <div class="meta">Brand: ${loc.brand||""}</div>
+        <div class="meta">Neighborhood: ${loc.neighborhood||""}</div>
         `;
         results.appendChild(card);
       });
