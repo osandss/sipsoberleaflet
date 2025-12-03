@@ -346,6 +346,33 @@ html, body {
   #map {
     top: 95px;   /* try 100; then tweak to 90–110px if needed */
   }
+
+/* ============================
+   ACTIVE FILTERS ABOVE RESULTS
+   ============================ */
+
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0 10px;
+  padding: 0 4px;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  background: #f2f2f2;
+  border-radius: 14px;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: #333;
+}
+
+.filter-pill-x {
+  margin-left: 6px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 </style>
@@ -415,6 +442,7 @@ html, body {
 
 <!-- Sliding Bottom Results Panel -->
 <div id="bottom-panel">
+  <div id="active-filters" class="active-filters"></div>  <!-- 👈 NEW -->
   <div id="results"></div>
 </div>
 
