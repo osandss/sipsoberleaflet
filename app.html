@@ -352,7 +352,7 @@ html, body {
    ============================ */
 
 .active-filters {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   gap: 6px;
   margin: 6px 0 10px;
@@ -644,6 +644,60 @@ map.setMinZoom(11.5);
       });
     }
 
+/* =========================
+   ACTIVE FILTER CHIPS
+   ========================= */
+
+function updateActiveFilters(selectedBrands, selectedNeighborhoods) {
+  const container = document.getElementById('active-filters');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  const hasAny = selectedBrands.length || selectedNeighborhoods.length;
+  container.style.display = hasAny ? 'flex' : 'none';
+  if (!hasAny) return;
+
+  function makePill(type, value) {
+    const pill = document.createElement('span');
+    pill.className = 'filter-pill';
+
+    const x = document.createElement('span');
+    x.className = 'filter-pill-x';
+    x.textContent = '×';
+
+    const label = document.createElement('span');
+    label.textContent = value;
+
+    x.addEventListener('click', () => {
+      clearSingleFilter(type, value);
+    });
+
+    pill.appendChild(x);
+    pill.appendChild(label);
+    container.appendChild(pill);
+  }
+
+  selectedNeighborhoods.forEach(n => makePill('neighborhood', n));
+  selectedBrands.forEach(b => makePill('brand', b));
+}
+
+function clearSingleFilter(type, value) {
+  if (type === 'brand') {
+    document.querySelectorAll('input[id^="brand-"]').forEach(cb => {
+      if (cb.value === value) cb.checked = false;
+    });
+  } else if (type === 'neighborhood') {
+    document.querySelectorAll('input[id^="n-"]').forEach(cb => {
+      if (cb.value === value) cb.checked = false;
+    });
+  }
+
+  // Re-run your normal filtering
+  applyFilters();
+}
+
+    
     /* =========================
        F) FILTER LOGIC
        ========================= */
@@ -668,9 +722,9 @@ map.setMinZoom(11.5);
   return brandOK && hoodOK;
 });
 
-
       renderList(filtered);
       const { count, bounds } = renderMarkers(filtered);
+      updateActiveFilters(selectedBrands, selectedNeighborhoods);
 
       if (count > 0 && bounds) {
         // cap zoom so we don't over-zoom and "fight" setMaxBounds
