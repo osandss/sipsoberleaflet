@@ -352,12 +352,17 @@ html, body {
    ============================ */
 
 .active-filters {
-  display: none;
+  display: none;           /* JS switches to flex when filters are active */
   flex-wrap: wrap;
   gap: 6px;
-  margin: 6px 0 10px;
-  padding: 0 4px;
+  margin: 0 0 10px;        /* no top margin so it hugs the top */
+  padding: 4px 4px 6px;
+  position: sticky;        /* 🔑 stays visible while panel scrolls */
+  top: 0;
+  z-index: 2;
+  background: #fff;        /* so cards don't show behind it when scrolling */
 }
+
 
 .filter-pill {
   display: inline-flex;
@@ -734,14 +739,14 @@ function clearSingleFilter(type, value) {
       // Store bounds for other components if needed
       window.filteredBounds = bounds;
 
-      // On mobile, bring the results list into view under the map
+      // On mobile, bring the bottom panel into view under the map
       if (window.matchMedia('(max-width: 768px)').matches) {
-        const resEl = document.getElementById('results');
-        if (resEl) {
-          // ensure map height finalized before scrolling
-          setTimeout(() => resEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
-        }
+        const panelEl = document.getElementById('bottom-panel');
+        if (panelEl) {
+          setTimeout(() => panelEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
       }
+    }
+
 
       // Re-measure map after DOM shifts
       setTimeout(() => map.invalidateSize(true), 120);
