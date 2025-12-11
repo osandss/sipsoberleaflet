@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+
+  <!-- Disable caching so updates always load fresh -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <title>Zero-Proof Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- PWA manifest + icons -->
+  <link rel="manifest" href="/sipsoberleaflet/manifest.json">
+  <meta name="theme-color" content="#202329">
+  <link rel="apple-touch-icon" href="/sipsoberleaflet/icons/icon-192.png">
+  <link rel="icon" href="/sipsoberleaflet/icons/icon-192.png">
+
+  <!-- Leaflet CSS (latest CDN) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin="anonymous"
+  />
+
+  <style>
+    /* =========================
+       APP-ONLY MAP LAYOUT
+       ========================= */
+
+    :root {
+      /* mobile panel heights (used for dynamic map resizing) */
+      --panel-collapsed: 28vh;   /* collapsed height on mobile */
+      --panel-expanded: 68vh;    /* expanded height on mobile */
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      overscroll-behavior: none;
+
+      /* Cleaner, more modern iOS font stack */
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+        sans-serif;
+
+      /* Softer, professional text color */
+      background: #ffffff;
+      color: #1c1c1e;
+
+      /* Makes text look smoother on iPhone */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+
+      line-height: 1.45;
+      font-size: 12px; /* smaller base type */
+    }
+
+    /* --- Top filters bar: floating pill --- */
+    #filters {
+      position: fixed;
+      top: 12px; /* ✅ up near the top now */
+      left: 12px;
+      right: 12px;
+      z-index: 3100;
+
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 6px 8px;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 999px; /* pill shape */
+      border: 1px solid #e2e4ec;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+
+      backdrop-filter: none;
+    }
+
+    .dropdown > button {
+      background: #f2f2f7;
+      border: 1px solid #ccc;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      color: #2f3b69;
+    }
+
+    #goBtn {
+      background: #202329;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    /* Main map area – fills behind filters and above bottom panel */
+    #map {
+      position: absolute;
+      top: 0; /* ✅ map goes all the way to the top; filters float above */
+      left: 0;
+      right: 0;
+      bottom: var(--panel-collapsed);
+      height: auto;
+      z-index: 1;
+    }
+
+    /* --- Dropdown menus (hide/show) --- */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown .menu {
+      display: none;
+      position: absolute;
+      top: 120%;
+      left: 0;
+
+      background: #ffffff;
+      border: 1px solid #e2e4ec;
+      border-radius: 16px;
+      padding: 10px 12px;
+      width: 200px;
+      z-index: 3000;
+
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.16);
+    }
+
+    .dropdown.open .menu {
+      display: block;
+    }
+
+    .dropdown .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 3px 0;
+      margin: 0;
+      font-size: 14px;
+      color: #1c1c1e;
+    }
+
+    /* --- Bottom results panel floats above the map --- */
+    #bottom-panel {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 0;
+
+      height: var(--panel-collapsed);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px); /* nice iOS glass effect */
+      border-radius: 18px 18px 0 0;
+      box-shadow: 0 -8px 26px rgba(0, 0, 0, 0.2);
+
+      padding: 10px 18px 14px;
+      overflow-y: auto;
+      z-index: 2001;
+    }
+
+    #bottom-panel.expanded {
+      height: var(--panel-expanded);
+    }
+
+    #results {
+      overflow-y: auto;
+      max-height: calc(100% - 20px);
+      padding: 10px;
+    }
+
+    /* --- Bottom panel card styling --- */
+    .card {
+      padding: 8px 6px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: #333;
+      line-height: 1.35;
+    }
+
+    .card:last-child {
+      border-bottom: none;
+    }
+
+    /* Venue name */
+    .card-name {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 0;
+      color: #111;
+      cursor: pointer;
+    }
+
+    .card-name:hover {
+      text-decoration: underline;
+    }
+
+    #bottom-panel .card p {
+      margin: 0;
+      line-height: 1.32;
+    }
+
+    #bottom-panel .card a {
+      font-size: 12px;
+      font-weight: 500;
+      color: #2f3b69;
+      text-decoration: underline;
+    }
+
+    /* Move Leaflet zoom controls to bottom-right */
+    .leaflet-control-zoom {
+      bottom: 20px;
+      right: 20px;
+      left: auto !important;
+      top: auto !important;
+    }
+
+    .leaflet-top.leaflet-left {
+      top: auto !important;
+      left: auto !important;
+      right: 16px !important;
+      bottom: 24px !important;
+      z-index: 3200 !important; /* above filters */
+    }
+
+    /* ============================
+       ACTIVE FILTERS ABOVE RESULTS
+       ============================ */
+
+    .active-filters {
+      display: none; /* JS switches to flex when filters are active */
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 10px;
+      padding: 4px 4px 6px;
+      position: sticky; /* stays visible while panel scrolls */
+      top: 0;
+      z-index: 2;
+      background: #fff;
+    }
+
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      background: #f2f2f2;
+      border-radius: 14px;
+      padding: 4px 10px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .filter-pill-x {
+      margin-left: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Small tweak for phones only (optional) */
+    @media (max-width: 720px) {
+      #filters {
+        top: 10px;
+      }
+    }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-W6LRN7EDH7"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-W6LRN7EDH7", {
+      send_page_view: true,
+    });
+  </script>
+</head>
+
+<body>
+  <!-- ✅ NO WEBSITE HEADER HERE – app-only version -->
+
+  <!-- TOP CONTROLS (filters + Go) -->
+  <div id="filters" class="topbar filterbar">
+    <div class="dropdown" id="brandDD">
+      <button type="button" aria-expanded="false">Brands ▾</button>
+      <div class="menu" role="menu">
+        <div class="row">
+          <input id="brand-seedlip" type="checkbox" value="Seedlip" /><label
+            for="brand-seedlip"
+            >Seedlip</label
+          >
+        </div>
+        <div class="row">
+          <input
+            id="brand-ritual"
+            type="checkbox"
+            value="Ritual Zero Proof"
+          /><label for="brand-ritual">Ritual Zero Proof</label>
+        </div>
+        <div class="row">
+          <input id="brand-lyres" type="checkbox" value="Lyre's" /><label
+            for="brand-lyres"
+            >Lyre's</label
+          >
+        </div>
+        <div class="row">
+          <input
+            id="brand-agrestis"
+            type="checkbox"
+            value="St. Agrestis"
+          /><label for="brand-agrestis">St. Agrestis</label>
+        </div>
+        <div class="row">
+          <input id="brand-aplos" type="checkbox" value="Aplós" /><label
+            for="brand-aplos"
+            >Aplós</label
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="dropdown" id="neighborhoodDD">
+      <button type="button" aria-expanded="false">Neighborhoods ▾</button>
+      <div class="menu" role="menu">
+        <div class="row">
+          <input
+            id="n-ues"
+            type="checkbox"
+            value="Upper East Side"
+          /><label for="n-ues">Upper East Side</label>
+        </div>
+        <div class="row">
+          <input id="n-midtown" type="checkbox" value="Midtown" /><label
+            for="n-midtown"
+            >Midtown</label
+          >
+        </div>
+        <div class="row">
+          <input
+            id="n-gramercy"
+            type="checkbox"
+            value="Gramercy"
+          /><label for="n-gramercy">Gramercy</label>
+        </div>
+        <div class="row">
+          <input id="n-chelsea" type="checkbox" value="Chelsea" /><label
+            for="n-chelsea"
+            >Chelsea</label
+          >
+        </div>
+        <div class="row">
+          <input
+            id="n-uws"
+            type="checkbox"
+            value="Upper West Side"
+          /><label for="n-uws">Upper West Side</label>
+        </div>
+        <div class="row">
+          <input
+            id="n-flatiron"
+            type="checkbox"
+            value="Flatiron"
+          /><label for="n-flatiron">Flatiron</label>
+        </div>
+      </div>
+    </div>
+
+    <button id="goBtn" type="button">Go</button>
+  </div>
+
+  <!-- Fullscreen Map -->
+  <div id="map"></div>
+
+  <!-- Sliding Bottom Results Panel -->
+  <div id="bottom-panel">
+    <div id="active-filters" class="active-filters"></div>
+    <div id="results"></div>
+  </div>
+
+  <!-- Leaflet JS (latest CDN) -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin="anonymous"
+  ></script>
+
+  <script>
+    /* =========================
+       A) DATA
+       ========================= */
+    const locations = [
+      { name: "Bemelman's Bar", address: "35 E 76th St, NY", lat: 40.774, lng: -73.9636, website: "https://www.rosewoodhotels.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side" },
+      { name: "Bar Avant (Olly Olly Market)", address: "601 W 26th St, NY", lat: 40.7498, lng: -74.0075, website: "https://ollyollymarket.com", brand: "Seedlip, St. Agrestis", neighborhood: "Chelsea" },
+      { name: "Fumo", address: "198 8th Ave, NY", lat: 40.7448, lng: -73.9809, website: "https://fumonyc.com", brand: "Seedlip", neighborhood: "Chelsea" },
+      { name: "Miriam", address: "300 Amsterdam Ave, NY", lat: 40.7809, lng: -73.9797, website: "https://miriamrestaurant.com", brand: "Seedlip, Lyre's", neighborhood: "Upper West Side" },
+      { name: "Sarabeth's", address: "423 Amsterdam Ave, NY", lat: 40.786, lng: -73.977, website: "https://sarabethsrestaurants.com", brand: "Lyre's", neighborhood: "Upper West Side" },
+      { name: "Bondurants", address: "303 E 85th St, NY", lat: 40.777, lng: -73.9518, website: "https://bondurantsnyc.com", brand: "Seedlip, Lyre's", neighborhood: "Upper East Side" },
+      { name: "Sfoglia", address: "1402 Lexington Ave, NY", lat: 40.7835, lng: -73.9529, website: "https://sfogliarestaurant.com", brand: "Lyre's, Ritual Zero Proof, St. Agrestis", neighborhood: "Upper East Side" },
+      { name: "The Blasket", address: "1085 2nd Ave, NY", lat: 40.7579, lng: -73.9635, website: "https://theblasketnyc.com", brand: "Lyre's, St. Agrestis", neighborhood: "Midtown" },
+      { name: "Rosemary's Midtown", address: "825 3rd Ave, NY", lat: 40.7559, lng: -73.9701, website: "https://rosemarysnyc.com", brand: "Lyre's", neighborhood: "Midtown" },
+      { name: "Hutong NYC", address: "731 Lexington Ave, NY", lat: 40.761812, lng: -73.968178, website: "https://hutong-nyc.com", brand: "Seedlip, St. Agrestis", neighborhood: "Midtown" },
+      { name: "The Penrose", address: "1590 2nd Ave, NY", lat: 40.7763, lng: -73.9498, website: "https://penrosebar.com", brand: "Seedlip, Lyre's", neighborhood: "Upper East Side" },
+      { name: "Orsay", address: "1057 Lexington Ave, NY", lat: 40.7731, lng: -73.9599, website: "https://orsayrestaurant.com", brand: "Seedlip", neighborhood: "Upper East Side" },
+      { name: "Boqueria", address: "1460 2nd Ave, NY", lat: 40.7728, lng: -73.953, website: "https://boqueriarestaurant.com", brand: "Ritual Zero Proof, Seedlip", neighborhood: "Upper East Side" },
+      { name: "Crave Fishbar", address: "945 2nd Ave, NY", lat: 40.7544, lng: -73.9685, website: "https://cravefishbar.com", brand: "Seedlip", neighborhood: "Midtown" },
+      { name: "UVA", address: "1486 2nd Ave, NY", lat: 40.7726, lng: -73.9541, website: "https://uvanyc.com", brand: "Lyre's", neighborhood: "Upper East Side" },
+      { name: "Sefton", address: "510 E 117th St, NY", lat: 40.7969, lng: -73.9304, website: "https://seftonnyc.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side" },
+      { name: "Hawksmoor NYC", address: "109 E 22nd St, NY", lat: 40.7394, lng: -73.9861, website: "https://thehawksmoor.com/us/?pl=null&utm_source=google&utm_medium=organic&utm_campaign=gbp", brand: "Seedlip", neighborhood: "Gramercy" },
+      { name: "Monkey Bar", address: "60 E 54th St, NY", lat: 40.7598, lng: -73.9732, website: "https://www.nycmonkeybar.com", brand: "Ritual Zero Proof, St. Agrestis", neighborhood: "Midtown" },
+      { name: "Gramercy Tavern", address: "42 E 20th St, NY", lat: 40.7386, lng: -73.9882, website: "https://www.gramercytavern.com", brand: "Lyre's, St. Agrestis", neighborhood: "Gramercy" },
+      { name: "Handcraft Kitchen & Cocktails", address: "367 3rd Avenue, NY", lat: 40.7427, lng: -73.9805, website: "https://www.handcraftnyc.com", brand: "Lyre's, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "The Junction", address: "329 Lexington Ave, NY", lat: 40.747, lng: -73.976, website: "https://www.thejunctionnyc.com", brand: "Lyre's, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "Broken Shaker", address: "23 Lexington Ave, NY", lat: 40.7395, lng: -73.9845, website: "https://www.brokenshaker.com", brand: "Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "Wildflower", address: "505 W 23 St A, NY", lat: 40.744, lng: -73.9988, website: "https://www.wildflowernyc.com", brand: "Seedlip, St. Agrestis", neighborhood: "Chelsea" },
+      { name: "The Campbell", address: "15 Vanderbilt Ave, NY", lat: 40.7525, lng: -73.9778, website: "https://www.thecampbellnyc.com", brand: "St. Agrestis", neighborhood: "Midtown" },
+      { name: "Jungle Bird", address: "174 8th Ave, NY", lat: 40.7429, lng: -74.0011, website: "https://junglebirdnyc.com", brand: "St. Agrestis, Ritual Zero Proof, Seedlip", neighborhood: "Chelsea" },
+      { name: "Sempre Oggi", address: "164 W 75th St, NY", lat: 40.7803, lng: -73.9799, website: "https://www.semprenyc.com", brand: "St. Agrestis", neighborhood: "Upper West Side" },
+      { name: "The Wolfe", address: "425 Amsterdam Ave, NY", lat: 40.7868, lng: -73.9783, website: "https://www.thewolfenyc.com", brand: "St. Agrestis, Lyre's", neighborhood: "Upper West Side" },
+      { name: "Elea", address: "217 W 85th St, NY", lat: 40.7893, lng: -73.9766, website: "https://eleanyc.com", brand: "Ritual Zero Proof", neighborhood: "Upper West Side" },
+      { name: "Friend of a Farmer", address: "68 W 71st St, NY", lat: 40.7782, lng: -73.9791, website: "https://www.friendofafarmer.com", brand: "Seedlip", neighborhood: "Upper West Side" },
+      { name: "Bar Pendry", address: "438 W 33rd St, NY", lat: 40.7536, lng: -73.9934, website: "https://www.pendry.com/manhattan-west/", brand: "Lyre's", neighborhood: "Midtown" },
+      { name: "The Portrait Bar", address: "1 W 28th St, NY", lat: 40.745, lng: -73.9886, website: "https://www.theportraitbar.com", brand: "Aplós, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "Clemente Bar", address: "11 Madison Ave, NY", lat: 40.7417, lng: -73.9872, website: "https://www.clementebar.com", brand: "Seedlip", neighborhood: "Flatiron" },
+      { name: "Del Frisco's Grille", address: "50 Rockefeller Plaza, NY", lat: 40.759, lng: -73.9799, website: "https://www.delfriscosgrille.com", brand: "Aplós, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "Cosme", address: "35 E 21st St, NY", lat: 40.7396, lng: -73.9884, website: "https://cosmenyc.com", brand: "Seedlip", neighborhood: "Flatiron" },
+      { name: "Bar Calico", address: "23 Lexington Ave, NY", lat: 40.7415, lng: -73.9874, website: "https://barcaliconyc.com", brand: "Ritual Zero Proof", neighborhood: "Flatiron" },
+      { name: "Lobby Bar at The Edition", address: "5 Madison Ave, NY", lat: 40.742, lng: -73.987, website: "https://www.editionhotels.com/new-york/restaurants-and-bars/lobby-bar/", brand: "Lyre's", neighborhood: "Flatiron" },
+      { name: "L'Americana", address: "51 Irving Place, NY", lat: 40.7375, lng: -73.9854, website: "https://www.lamericana-nyc.com", brand: "Seedlip", neighborhood: "Gramercy" },
+    ];
+
+    /* =========================
+       B) MAP INIT
+       ========================= */
+    const map = L.map("map", {
+      zoomControl: true,
+      scrollWheelZoom: true,
+    }).setView([40.77, -73.97], 12.6);
+
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+      {
+        maxZoom: 20,
+        subdomains: "abcd",
+        attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
+      }
+    ).addTo(map);
+
+    const manhattanBounds = L.latLngBounds(
+      [40.5, -74.3], // SW
+      [40.98, -73.6] // NE
+    );
+
+    map.fitBounds(manhattanBounds);
+    map.panBy([0, 120]); // shift pins up visually
+
+    map.setMaxBounds(manhattanBounds);
+    map.options.maxBoundsViscosity = 0.1;
+    map.setMinZoom(11.5);
+
+    let markersLayer = L.layerGroup().addTo(map);
+
+    /* =========================
+       C) ICONS
+       ========================= */
+    function makePinIconSVG(hex = "#202329", size = [28, 38]) {
+      const [w, h] = size;
+      return `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 28 38">
+          <path fill="${hex}" d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"/>
+          <circle cx="14" cy="13" r="5.2" fill="#fff"/>
+        </svg>`;
+    }
+
+    function makeIcon(size = [28, 38], color = "#202329") {
+      return L.icon({
+        iconUrl:
+          "data:image/svg+xml;utf8," +
+          encodeURIComponent(makePinIconSVG(color, size)),
+        iconSize: size,
+        iconAnchor: [Math.floor(size[0] / 2), size[1]],
+        popupAnchor: [0, -Math.floor(size[1] * 0.84)],
+      });
+    }
+
+    let currentIcon = makeIcon([28, 38], "#202329");
+
+    L.Marker.prototype.options.icon = currentIcon;
+
+    const __origMarkerFactory = L.marker;
+    L.marker = function (latlng, options) {
+      const opts = options || {};
+      if (!opts.icon) opts.icon = currentIcon;
+      return __origMarkerFactory.call(this, latlng, opts);
+    };
+
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    function applyIconForViewport() {
+      const isMobile = mobileQuery.matches;
+      const size = isMobile ? [18, 26] : [28, 38];
+      currentIcon = makeIcon(size, "#202329");
+      L.Marker.prototype.options.icon = currentIcon;
+      if (markersLayer && markersLayer.eachLayer) {
+        markersLayer.eachLayer((layer) => {
+          if (layer && typeof layer.setIcon === "function")
+            layer.setIcon(currentIcon);
+        });
+      }
+    }
+    applyIconForViewport();
+    mobileQuery.addEventListener("change", applyIconForViewport);
+
+    /* =========================
+       D) UI HELPERS
+       ========================= */
+    function closeAllMenus() {
+      document
+        .querySelectorAll(".dropdown")
+        .forEach((dd) => dd.classList.remove("open"));
+      document
+        .querySelectorAll(".dropdown > button")
+        .forEach((btn) => btn.setAttribute("aria-expanded", "false"));
+    }
+
+    function openMarkerAt(lat, lng) {
+      let found = null;
+      markersLayer.eachLayer((layer) => {
+        const p = layer.getLatLng();
+        if (Math.abs(p.lat - lat) < 1e-6 && Math.abs(p.lng - lng) < 1e-6) {
+          found = layer;
+        }
+      });
+      if (found) {
+        found.openPopup();
+      }
+    }
+
+    /* =========================
+       E) RENDERERS
+       ========================= */
+    function renderMarkers(data) {
+      markersLayer.clearLayers();
+      const bounds = L.latLngBounds([]);
+      data.forEach((loc) => {
+        const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
+        m.bindPopup(
+          `
+          <div style="min-width:200px">
+            <div style="font-weight:600">${loc.name}</div>
+            <div class="meta">${loc.address}</div>
+            <div><a href="${loc.website}" target="_blank" rel="noopener">Website</a></div>
+            <div class="meta">Brand: ${loc.brand || ""}</div>
+            <div class="meta">Neighborhood: ${loc.neighborhood || ""}</div>
+          </div>
+        `
+        );
+        bounds.extend([loc.lat, loc.lng]);
+      });
+      return { count: data.length, bounds: data.length ? bounds : null };
+    }
+
+    function renderList(data) {
+      const results = document.getElementById("results");
+      results.innerHTML = "";
+      data.forEach((loc) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+        <span class="card-name" onclick="map.setView([${loc.lat}, ${loc.lng}], 16); openMarkerAt(${loc.lat}, ${loc.lng});">${loc.name}</span>
+        <div class="meta">${loc.address}</div>
+        <a href="${loc.website}" target="_blank" rel="noopener">Website</a>
+        <div class="meta">Brand: ${loc.brand || ""}</div>
+        <div class="meta">Neighborhood: ${loc.neighborhood || ""}</div>
+        `;
+        results.appendChild(card);
+      });
+    }
+
+    /* =========================
+       ACTIVE FILTER CHIPS
+       ========================= */
+    function updateActiveFilters(selectedBrands, selectedNeighborhoods) {
+      const container = document.getElementById("active-filters");
+      if (!container) return;
+
+      container.innerHTML = "";
+
+      const hasAny =
+        selectedBrands.length || selectedNeighborhoods.length;
+      container.style.display = hasAny ? "flex" : "none";
+      if (!hasAny) return;
+
+      function makePill(type, value) {
+        const pill = document.createElement("span");
+        pill.className = "filter-pill";
+
+        const x = document.createElement("span");
+        x.className = "filter-pill-x";
+        x.textContent = "×";
+
+        const label = document.createElement("span");
+        label.textContent = value;
+
+        x.addEventListener("click", () => {
+          clearSingleFilter(type, value);
+        });
+
+        pill.appendChild(x);
+        pill.appendChild(label);
+        container.appendChild(pill);
+      }
+
+      selectedNeighborhoods.forEach((n) => makePill("neighborhood", n));
+      selectedBrands.forEach((b) => makePill("brand", b));
+    }
+
+    function clearSingleFilter(type, value) {
+      if (type === "brand") {
+        document
+          .querySelectorAll('input[id^="brand-"]')
+          .forEach((cb) => {
+            if (cb.value === value) cb.checked = false;
+          });
+      } else if (type === "neighborhood") {
+        document.querySelectorAll('input[id^="n-"]').forEach((cb) => {
+          if (cb.value === value) cb.checked = false;
+        });
+      }
+      applyFilters();
+    }
+
+    /* =========================
+       F) FILTER LOGIC
+       ========================= */
+    function getSelectedValues(prefix) {
+      return Array.from(
+        document.querySelectorAll(`input[id^="${prefix}-"]:checked`)
+      ).map((cb) => cb.value);
+    }
+
+    function applyFilters() {
+      closeAllMenus();
+
+      const selectedBrands = getSelectedValues("brand");
+      const selectedNeighborhoods = getSelectedValues("n");
+
+      const filtered = locations.filter((loc) => {
+        const brandOK = selectedBrands.length
+          ? selectedBrands.some(
+              (b) =>
+                loc.brand &&
+                loc.brand.toLowerCase().includes(b.toLowerCase())
+            )
+          : true;
+        const hoodOK = selectedNeighborhoods.length
+          ? selectedNeighborhoods.includes(loc.neighborhood)
+          : true;
+        return brandOK && hoodOK;
+      });
+
+      renderList(filtered);
+      const { count, bounds } = renderMarkers(filtered);
+      updateActiveFilters(selectedBrands, selectedNeighborhoods);
+
+      if (count > 0 && bounds) {
+        map.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
+      }
+
+      window.filteredBounds = bounds;
+
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        const panelEl = document.getElementById("bottom-panel");
+        if (panelEl) {
+          setTimeout(
+            () =>
+              panelEl.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              }),
+            60
+          );
+        }
+      }
+
+      setTimeout(() => map.invalidateSize(true), 120);
+    }
+
+    /* =========================
+       G) EVENT WIRING
+       ========================= */
+    document.addEventListener("click", (e) => {
+      const dd = e.target.closest(".dropdown");
+      const btn = e.target.closest(".dropdown > button");
+      if (btn) {
+        const parent = btn.parentElement;
+        const willOpen = !parent.classList.contains("open");
+        closeAllMenus();
+        if (willOpen) {
+          parent.classList.add("open");
+          btn.setAttribute("aria-expanded", "true");
+        }
+      } else if (!dd) {
+        closeAllMenus();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeAllMenus();
+    });
+
+    document.querySelectorAll(".dropdown > button").forEach((btn) => {
+      btn.setAttribute("aria-haspopup", "true");
+      const dd = btn.parentElement;
+      const menu = dd.querySelector(".menu");
+      if (dd && menu) {
+        const id = dd.id
+          ? dd.id + "-menu"
+          : "menu-" + Math.random().toString(36).slice(2);
+        menu.id = id;
+        btn.setAttribute("aria-controls", id);
+      }
+    });
+
+    document.getElementById("goBtn").addEventListener("click", applyFilters);
+
+    /* =========================
+       I) INITIALIZE
+       ========================= */
+    renderList(locations);
+    const initial = renderMarkers(locations);
+    if (initial.bounds) map.fitBounds(initial.bounds, { padding: [30, 30] });
+
+    setTimeout(() => map.invalidateSize(), 150);
+  </script>
+
+  <!-- Service worker still commented out for now -->
+  <!--
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("/sipsoberleaflet/sw.js", { scope: "/sipsoberleaflet/" })
+          .catch(console.error);
+      });
+    }
+  </script>
+  -->
+</body>
+</html>
