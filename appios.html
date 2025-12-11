@@ -30,10 +30,14 @@
        ========================= */
 
     :root {
-      /* mobile panel heights (used for dynamic map resizing) */
-      --panel-collapsed: 28vh;   /* collapsed height on mobile */
-      --panel-expanded: 68vh;    /* expanded height on mobile */
-    }
+  --header-height: 64px;
+  --bottom-nav-height: 70px;
+
+  /* mobile panel heights (used for dynamic map resizing) */
+  --panel-collapsed: 28vh;
+  --panel-expanded: 68vh;
+}
+
 
     html,
     body {
@@ -107,7 +111,7 @@
       top: 0; /* ✅ map goes all the way to the top; filters float above */
       left: 0;
       right: 0;
-      bottom: var(--panel-collapsed);
+      bottom: calc(var(--panel-collapsed) + var(--bottom-nav-height));
       height: auto;
       z-index: 1;
     }
@@ -152,7 +156,7 @@
       position: fixed;
       left: 12px;
       right: 12px;
-      bottom: 0;
+      bottom: var(--bottom-nav-height);
 
       height: var(--panel-collapsed);
       background: rgba(255, 255, 255, 0.94);
@@ -258,18 +262,110 @@
     }
 
     .filter-pill-x {
-      margin-left: 6px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+  margin-left: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
 
-    /* Small tweak for phones only (optional) */
-    @media (max-width: 720px) {
-      #filters {
-        top: 10px;
-      }
-    }
-  </style>
+/* === NEW APP HEADER + BOTTOM NAV (for appios.html) === */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: #202239;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2100;
+}
+
+.app-header-inner {
+  max-width: 1080px;
+  width: 100%;
+  padding-inline: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-logo {
+  font-family: "Playfair Display", serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+}
+
+/* Bottom nav bar with icons */
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--bottom-nav-height);
+  background: #202239;
+  z-index: 2100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-nav-inner {
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+}
+
+.nav-btn-active {
+  background: #ffffff;
+  color: #202239;
+}
+
+/* adjust map + panel to respect header + bottom nav */
+#map {
+  position: absolute;
+  top: var(--header-height); 
+  left: 0;
+  right: 0;
+  bottom: calc(var(--panel-collapsed) + var(--bottom-nav-height));
+  height: auto;
+  z-index: 1;
+}
+
+#bottom-panel {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: var(--bottom-nav-height); /* sits above nav bar */
+  height: var(--panel-collapsed);
+  /* keep your existing background, shadow, etc here */
+}
+
+/* Small tweak for phones only (optional) */
+@media (max-width: 720px) {
+  #filters {
+    top: 10px;
+  }
+}
+</style>
+
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-W6LRN7EDH7"></script>
@@ -286,8 +382,14 @@
 </head>
 
 <body>
-  <!-- ✅ NO WEBSITE HEADER HERE – app-only version -->
-
+  
+  <!-- APP HEADER (native-style top banner) -->
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div class="app-title">SIP SOBER</div>
+    </div>
+  </header>
+  
   <!-- TOP CONTROLS (filters + Go) -->
   <div id="filters" class="topbar filterbar">
     <div class="dropdown" id="brandDD">
@@ -753,5 +855,21 @@
     }
   </script>
   -->
+
+  <!-- BOTTOM NAV BAR (app-style) -->
+<nav class="bottom-nav">
+  <button class="nav-btn" onclick="navigateHome()">
+    <span class="nav-icon">🏠</span>
+  </button>
+
+  <button class="nav-btn nav-center" onclick="navigateMap()">
+    <span class="nav-icon">📍</span>
+  </button>
+
+  <button class="nav-btn" onclick="navigateProfile()">
+    <span class="nav-icon">👤</span>
+  </button>
+</nav>
+  
 </body>
 </html>
