@@ -298,44 +298,56 @@
   color: #ffffff;
 }
 
-/* Bottom nav bar with icons */
-.bottom-nav {
+/* --- Bottom iOS-style tab bar --- */
+#bottom-nav{
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: var(--bottom-nav-height);
-  background: #202239;
-  z-index: 2100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  left: 0; right: 0; bottom: 0;
+  z-index: 4000;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  padding: 8px 14px calc(8px + env(safe-area-inset-bottom));
+
+  background: rgba(32, 34, 57, 0.98); /* your navy vibe */
+  backdrop-filter: blur(10px);
 }
 
-.bottom-nav-inner {
-  max-width: 420px;
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.nav-btn {
+.tab-btn{
+  appearance: none;
+  border: 0;
   background: transparent;
-  border: none;
-  color: #ffffff;
-  font-size: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 999px;
+
+  display: grid;
+  place-items: center;
+  gap: 4px;
+
+  padding: 8px 0;
+  border-radius: 12px;
+
+  color: rgba(255,255,255,0.75);
+  -webkit-tap-highlight-color: transparent;
 }
 
-.nav-btn-active {
-  background: #ffffff;
-  color: #202239;
+.tab-ic{
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.tab-label{
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.tab-btn.is-active{
+  color: #fff;
+  background: rgba(255,255,255,0.10);
+}
+
+.tab-btn:active{
+  transform: scale(0.98);
 }
 
 /* adjust map + panel to respect header + bottom nav */
@@ -854,6 +866,24 @@
     if (initial.bounds) map.fitBounds(initial.bounds, { padding: [30, 30] });
 
     setTimeout(() => map.invalidateSize(), 150);
+  
+    /* =========================
+   Bottom Tab Bar Logic
+   ========================= */
+(() => {
+  const nav = document.getElementById('bottom-nav');
+  if (!nav) return;
+
+  const btns = nav.querySelectorAll('.tab-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+})();
+
+
   </script>
 
   <!-- Service worker still commented out for now -->
@@ -870,17 +900,29 @@
   -->
 
   <!-- BOTTOM NAV BAR (app-style) -->
-<nav class="bottom-nav">
-  <button class="nav-btn" onclick="navigateHome()">
-    <span class="nav-icon">🏠</span>
+<nav id="bottom-nav" aria-label="Bottom navigation">
+  <button class="tab-btn is-active" data-tab="home" aria-label="Home">
+    <!-- Home -->
+    <svg class="tab-ic" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 3.2 3.5 10.2v10.1c0 .9.7 1.6 1.6 1.6h4.8v-7.1h4.2v7.1h4.8c.9 0 1.6-.7 1.6-1.6V10.2L12 3.2z"/>
+    </svg>
+    <span class="tab-label">Home</span>
   </button>
 
-  <button class="nav-btn nav-center" onclick="navigateMap()">
-    <span class="nav-icon">📍</span>
+  <button class="tab-btn" data-tab="map" aria-label="Map">
+    <!-- Map -->
+    <svg class="tab-ic" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15.5 5.1 9 3 3.8 5v15.9L9 19l6.5 2.1L20.2 19V3.1L15.5 5.1zM9 17.2 5.8 18.4V6.2L9 5v12.2zm1.8.2V5.1l3.9 1.3v12.3l-3.9-1.3zm8.6-.6-3.2 1.2V5.8l3.2-1.2v12.2z"/>
+    </svg>
+    <span class="tab-label">Map</span>
   </button>
 
-  <button class="nav-btn" onclick="navigateProfile()">
-    <span class="nav-icon">👤</span>
+  <button class="tab-btn" data-tab="favorites" aria-label="Favorites">
+    <!-- Star -->
+    <svg class="tab-ic" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 17.3 6.8 20l1.1-6.1-4.4-4.2 6.1-.9L12 3.2l2.7 5.6 6.1.9-4.4 4.2 1.1 6.1L12 17.3z"/>
+    </svg>
+    <span class="tab-label">Favorites</span>
   </button>
 </nav>
   
