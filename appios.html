@@ -31,7 +31,6 @@
 
     :root {
   --header-height: 64px;
-  --bottom-nav-height: 70px;
 
   /* mobile panel heights (used for dynamic map resizing) */
   --panel-collapsed: 28vh;
@@ -298,65 +297,13 @@
   color: #ffffff;
 }
 
-/* --- Bottom iOS-style tab bar --- */
-#bottom-nav{
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  z-index: 4000;
-
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-
-  padding: 8px 14px calc(8px + env(safe-area-inset-bottom));
-
-  background: rgba(32, 34, 57, 0.98); /* your navy vibe */
-  backdrop-filter: blur(10px);
-}
-
-.tab-btn{
-  appearance: none;
-  border: 0;
-  background: transparent;
-
-  display: grid;
-  place-items: center;
-  gap: 4px;
-
-  padding: 8px 0;
-  border-radius: 12px;
-
-  color: rgba(255,255,255,0.75);
-  -webkit-tap-highlight-color: transparent;
-}
-
-.tab-ic{
-  width: 22px;
-  height: 22px;
-  fill: currentColor;
-}
-
-.tab-label{
-  font-size: 11px;
-  line-height: 1;
-  letter-spacing: 0.01em;
-}
-
-.tab-btn.is-active{
-  color: #fff;
-  background: rgba(255,255,255,0.10);
-}
-
-.tab-btn:active{
-  transform: scale(0.98);
-}
-
 /* adjust map + panel to respect header + bottom nav */
 #map {
   position: absolute;
-  top: var(--header-height); 
+  top: var(--header-height);
   left: 0;
   right: 0;
-  bottom: calc(var(--panel-collapsed) + var(--bottom-nav-height));
+  bottom: var(--panel-collapsed);
   height: auto;
   z-index: 1;
 }
@@ -365,7 +312,7 @@
   position: fixed;
   left: 12px;
   right: 12px;
-  bottom: var(--bottom-nav-height); /* sits above nav bar */
+  bottom: 0;
   height: var(--panel-collapsed);
   /* keep your existing background, shadow, etc here */
 }
@@ -898,33 +845,6 @@
     }
   </script>
   -->
-
-  <!-- BOTTOM NAV BAR (app-style) -->
-<nav id="bottom-nav" aria-label="Bottom navigation">
-  <button class="tab-btn is-active" data-tab="home" aria-label="Home">
-    <!-- Home -->
-    <svg class="tab-ic" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 3.2 3.5 10.2v10.1c0 .9.7 1.6 1.6 1.6h4.8v-7.1h4.2v7.1h4.8c.9 0 1.6-.7 1.6-1.6V10.2L12 3.2z"/>
-    </svg>
-    <span class="tab-label">Home</span>
-  </button>
-
-  <button class="tab-btn" data-tab="map" aria-label="Map">
-    <!-- Map -->
-    <svg class="tab-ic" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M15.5 5.1 9 3 3.8 5v15.9L9 19l6.5 2.1L20.2 19V3.1L15.5 5.1zM9 17.2 5.8 18.4V6.2L9 5v12.2zm1.8.2V5.1l3.9 1.3v12.3l-3.9-1.3zm8.6-.6-3.2 1.2V5.8l3.2-1.2v12.2z"/>
-    </svg>
-    <span class="tab-label">Map</span>
-  </button>
-
-  <button class="tab-btn" data-tab="favorites" aria-label="Favorites">
-    <!-- Star -->
-    <svg class="tab-ic" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 17.3 6.8 20l1.1-6.1-4.4-4.2 6.1-.9L12 3.2l2.7 5.6 6.1.9-4.4 4.2 1.1 6.1L12 17.3z"/>
-    </svg>
-    <span class="tab-label">Favorites</span>
-  </button>
-</nav>
   
 </body>
 </html>
