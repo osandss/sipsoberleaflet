@@ -155,7 +155,7 @@
       position: fixed;
       left: 12px;
       right: 12px;
-      bottom: var(--bottom-nav-height);
+      bottom: 0;
 
       height: var(--panel-collapsed);
       background: rgba(255, 255, 255, 0.94);
@@ -163,7 +163,7 @@
       border-radius: 18px 18px 0 0;
       box-shadow: 0 -8px 26px rgba(0, 0, 0, 0.2);
 
-      padding: 10px 18px 14px;
+      padding: 10px 18px calc(14px + env(safe-area-inset-bottom));
       overflow-y: auto;
       z-index: 2001;
     }
@@ -314,7 +314,7 @@
   right: 12px;
   bottom: 0;
   height: var(--panel-collapsed);
-  /* keep your existing background, shadow, etc here */
+  padding-bottom: calc(14px + env(safe-area-inset-bottom));
 }
 
 /* Small tweak for phones only (optional) */
