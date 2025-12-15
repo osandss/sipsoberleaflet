@@ -70,55 +70,6 @@ h2, h3, h4, h5, h6 {
 }
 
 
-/* Keep the hero using Playfair Display */
-h1.hero-title {
-  font-family: "Playfair Display", serif;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-    /* HERO */
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 32px;
-      margin-top: 32px;
-      align-items: center;
-    }
-
-    .hero-kicker {
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--ss-text-muted);
-      margin-bottom: 10px;
-    }
-
-    .hero-title {
-      font-family: "Playfair Display", serif;
-      font-size: clamp(30px, 4vw, 40px);
-      line-height: 1.15;
-      margin-bottom: 14px;
-    }
-
-    .hero-title span {
-      color: var(--ss-accent);
-    }
-
-    .hero-subtitle {
-      font-size: 14px;
-      color: var(--ss-text-muted);
-      max-width: 440px;
-      margin-bottom: 20px;
-    }
-
-    .hero-ctas {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
 .hero {
   position: relative;
   margin-top: 0;
@@ -141,6 +92,7 @@ h1.hero-title {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  gap: 48px;              /* ✅ ADD THIS */
   padding-left: 8vw;
   padding-right: 8vw;
   box-sizing: border-box;
@@ -154,6 +106,20 @@ h1.hero-title {
   color: #ffffff;
 }
 
+/* Right-side hero image */
+.hero-media {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-media img {
+  max-width: 340px;
+  width: 100%;
+  height: auto;
+}
+    
 .hero-brand {
   font-family: "Playfair Display", serif;
   font-size: clamp(36px, 4.5vw, 56px); /* smaller + calmer */
@@ -187,16 +153,17 @@ h1.hero-title {
   font-size: 14px;
   color: #f7f7ff;
   max-width: 520px;
-  margin: 0 auto 22px;
+  margin: 0 0 22px;          /* ✅ change from 0 auto 22px */
 }
 
 .hero-ctas {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start; /* ✅ change from center */
   gap: 12px;
   margin-bottom: 10px;
 }
+
 
 .hero-note {
   font-size: 11px;
@@ -416,7 +383,7 @@ h1.hero-title {
   }
 
   .hero-title {
-    font-size: 23px;
+    font-size: 21px;
     line-height: 1.1;
   }
 
@@ -587,18 +554,17 @@ h1.hero-title {
   <div class="page">
   
 
-   <!-- HERO (full width, no container) -->
-<section class="hero">
+  <section class="hero">
   <div class="hero-overlay">
+
     <div class="hero-content-centered">
       <h1 class="hero-brand">SIP SOBER</h1>
 
-<div class="hero-kicker">NYC · ZERO–PROOF GUIDE</div>
+      <div class="hero-kicker">NYC · ZERO–PROOF GUIDE</div>
 
-<h2 class="hero-title">
-  Discover NYC's best zero-proof cocktails – <span>mapped.</span>
-</h2>
-
+      <h2 class="hero-title">
+        Discover NYC's best zero-proof cocktails – <span>mapped.</span>
+      </h2>
 
       <p class="hero-subtitle">
         Sip Sober helps you find NYC bars and restaurants serving real alcohol-free options — not just soda and seltzer. Filter by neighborhood, see which brands are on the menu, and save the spots you love.
@@ -608,8 +574,14 @@ h1.hero-title {
         <a class="btn-primary" href="app.html">Launch The Map</a>
       </div>
     </div>
+
+    <div class="hero-media">
+      <img src="phone-mockup.png" alt="Sip Sober app preview" />
+    </div>
+
   </div>
 </section>
+
 
 <!-- APP PREVIEW SECTION -->
 <section class="app-preview">
