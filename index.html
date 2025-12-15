@@ -56,54 +56,6 @@
       width: 100%;
     }
 
-    /* HEADER BAR */
-    .site-header {
-      background: #202239;
-      color: #ffffff;
-      padding: 18px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .header-inner {
-      max-width: 1080px;
-      margin: 0 auto;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand {
-      font-family: "Playfair Display", serif;
-      font-size: 26px;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: 1px;
-    }
-
-
-    /* Match app header text style */
-.nav {
-  display: flex;
-  gap: 28px; /* same spacing as app */
-}
-
-.nav a {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 11px;        /* exact match */
-  font-weight: 400;       /* NOT bold */
-  letter-spacing: 0.12em; /* exact match */
-  text-transform: uppercase;
-  font-family: inherit !important; /* prevents serif Playfair */
-}
-
-.nav a:hover {
-  opacity: 0.75;
-}
 
 /* Section headings — smaller + tighter spacing */
 h2, h3, h4, h5, h6 {
@@ -426,34 +378,6 @@ h1.hero-title {
 
 /* MOBILE */
 @media (max-width: 720px) {
-
-  /* Header */
-  .site-header {
-    padding: 12px 0 10px;          /* shorter header */
-  }
-
-  .header-inner {
-    max-width: 100%;
-    padding-inline: 18px;          /* a little side padding */
-    flex-direction: column;        /* logo on top, nav under */
-    align-items: center;           /* center everything */
-    gap: 6px;                      /* tight space between logo and nav */
-  }
-
-  .brand {
-    font-size: 24px;               /* slightly smaller logo text */
-  }
-
-  .nav {
-    gap: 16px;                     /* tighter spacing between items */
-    flex-wrap: nowrap;             /* keep them on one line if possible */
-    justify-content: center;       /* center nav items */
-  }
-
-  .nav a {
-    font-size: 11px;               /* smaller than desktop */
-    letter-spacing: 0.12em;        /* same vibe, just not huge */
-  }
 
   /* Layout sections */
   .feature-grid {
