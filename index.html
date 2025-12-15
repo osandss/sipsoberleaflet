@@ -167,24 +167,20 @@ h1.hero-title {
       margin-bottom: 10px;
     }
 
-
-    /* HERO — full-width background image with overlayed text */
 .hero {
   position: relative;
-  margin-top: 0;              /* sit right under the header */
+  margin-top: 0;
   height: 45vh;
   min-height: 450px;
-  background-image:
-    linear-gradient(to bottom, rgba(12, 14, 24, 0.25), rgba(12, 14, 24, 0.70)),
-    url("heromapss.png");
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
+
+  /* SOLID BRAND BACKGROUND */
+  background-color: #202239;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: grayscale(50%) brightness(0.9) contrast(1.05);
 }
+
 
 /* Overlay container to center content */
 .hero-overlay {
@@ -192,16 +188,20 @@ h1.hero-title {
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-left: 8vw;
+  padding-right: 8vw;
+  box-sizing: border-box;
 }
 
 /* Centered text block on top of image */
 .hero-content-centered {
-  text-align: center;
-  max-width: 720px;
-  padding: 24px;
+  text-align: left;
+  max-width: 620px;
+  padding: 0;
   color: #ffffff;
 }
+
 
 .hero-kicker {
   font-size: 11px;
