@@ -304,6 +304,29 @@
     top: calc(var(--header-height) + 10px);
   }
 }
+
+/* Favorite star */
+.fav-btn{
+  background: none;
+  border: 0;
+  padding: 6px;
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+  color: #b9b9b9;
+}
+
+.fav-btn.is-fav{
+  color: #202239;
+}
+
+    .card-top{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+    
 </style>
 
 
@@ -629,15 +652,51 @@
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-        <span class="card-name" onclick="map.setView([${loc.lat}, ${loc.lng}], 16); openMarkerAt(${loc.lat}, ${loc.lng});">${loc.name}</span>
-        <div class="meta">${loc.address}</div>
-        <a href="${loc.website}" target="_blank" rel="noopener">Website</a>
-        <div class="meta">Brand: ${loc.brand || ""}</div>
-        <div class="meta">Neighborhood: ${loc.neighborhood || ""}</div>
-        `;
+  <div class="card-top">
+    <span class="card-name" onclick="map.setView([${loc.lat}, ${loc.lng}], 16); openMarkerAt(${loc.lat}, ${loc.lng});">${loc.name}</span>
+    <button class="fav-btn" data-id="${(loc.name + "|" + loc.address).toLowerCase()}" aria-label="Favorite">★</button>
+  </div>
+
+  <div class="meta">${loc.address}</div>
+  <a href="${loc.website}" target="_blank" rel="noopener">Website</a>
+  <div class="meta">Brand: ${loc.brand || ""}</div>
+  <div class="meta">Neighborhood: ${loc.neighborhood || ""}</div>
+`;
+
         results.appendChild(card);
       });
     }
+
+    document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const venueId = btn.dataset.id;
+
+  // Find matching venue (same id logic used in renderList)
+  const v = locations.find(x => String((x.name + "|" + x.address).toLowerCase()) === String(venueId));
+  if (!v) return;
+
+  // Toggle UI
+  btn.classList.toggle("is-fav");
+
+  // Send to iOS app
+  window.webkit?.messageHandlers?.favorites?.postMessage({
+    action: "toggle",
+    venue: {
+      venueId: String(venueId),
+      name: v.name || "",
+      address: v.address || "",
+      url: v.website || "",
+      neighborhood: v.neighborhood || "",
+      brands: v.brand || ""
+    }
+  });
+});
+
 
     /* =========================
        ACTIVE FILTER CHIPS
