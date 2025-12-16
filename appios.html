@@ -353,11 +353,11 @@
     </div>
   </header>
   
-  <!-- TOP CONTROLS (filters + Go) -->
+ <!-- TOP CONTROLS (filters + Go) -->
 <div id="filters" class="topbar filterbar">
+
   <div class="dropdown" id="brandDD">
     <button type="button" aria-expanded="false">Brands ▾</button>
-
     <div class="menu" role="menu">
 
       <div class="row">
@@ -401,69 +401,64 @@
       </div>
 
       <div class="row">
-        <input
-          id="brand-athletic"
-          type="checkbox"
-          value="Athletic Brewing Co."
-        />
+        <input id="brand-athletic" type="checkbox" value="Athletic Brewing Co." />
         <label for="brand-athletic">Athletic Brewing Co.</label>
       </div>
 
     </div>
   </div>
-</div>
 
-    <div class="dropdown" id="neighborhoodDD">
-  <button type="button" aria-expanded="false">Neighborhoods ▾</button>
+  <div class="dropdown" id="neighborhoodDD">
+    <button type="button" aria-expanded="false">Neighborhoods ▾</button>
+    <div class="menu" role="menu">
 
-  <div class="menu" role="menu">
+      <div class="row">
+        <input id="n-ues" type="checkbox" value="Upper East Side" />
+        <label for="n-ues">Upper East Side</label>
+      </div>
 
-    <div class="row">
-      <input id="n-ues" type="checkbox" value="Upper East Side" />
-      <label for="n-ues">Upper East Side</label>
+      <div class="row">
+        <input id="n-midtown" type="checkbox" value="Midtown" />
+        <label for="n-midtown">Midtown</label>
+      </div>
+
+      <div class="row">
+        <input id="n-gramercy" type="checkbox" value="Gramercy" />
+        <label for="n-gramercy">Gramercy</label>
+      </div>
+
+      <div class="row">
+        <input id="n-chelsea" type="checkbox" value="Chelsea" />
+        <label for="n-chelsea">Chelsea</label>
+      </div>
+
+      <div class="row">
+        <input id="n-uws" type="checkbox" value="Upper West Side" />
+        <label for="n-uws">Upper West Side</label>
+      </div>
+
+      <div class="row">
+        <input id="n-flatiron" type="checkbox" value="Flatiron" />
+        <label for="n-flatiron">Flatiron</label>
+      </div>
+
+      <div class="row">
+        <input id="n-west-village" type="checkbox" value="West Village" />
+        <label for="n-west-village">West Village</label>
+      </div>
+
+      <div class="row">
+        <input id="n-east-village" type="checkbox" value="East Village" />
+        <label for="n-east-village">East Village</label>
+      </div>
+
     </div>
-
-    <div class="row">
-      <input id="n-midtown" type="checkbox" value="Midtown" />
-      <label for="n-midtown">Midtown</label>
-    </div>
-
-    <div class="row">
-      <input id="n-gramercy" type="checkbox" value="Gramercy" />
-      <label for="n-gramercy">Gramercy</label>
-    </div>
-
-    <div class="row">
-      <input id="n-chelsea" type="checkbox" value="Chelsea" />
-      <label for="n-chelsea">Chelsea</label>
-    </div>
-
-    <div class="row">
-      <input id="n-uws" type="checkbox" value="Upper West Side" />
-      <label for="n-uws">Upper West Side</label>
-    </div>
-
-    <div class="row">
-      <input id="n-flatiron" type="checkbox" value="Flatiron" />
-      <label for="n-flatiron">Flatiron</label>
-    </div>
-
-    <div class="row">
-      <input id="n-west-village" type="checkbox" value="West Village" />
-      <label for="n-west-village">West Village</label>
-    </div>
-
-    <div class="row">
-      <input id="n-east-village" type="checkbox" value="East Village" />
-      <label for="n-east-village">East Village</label>
-    </div>
-
   </div>
+
+  <button id="goBtn" type="button">Go</button>
+
 </div>
-
-
-    <button id="goBtn" type="button">Go</button>
-  </div>
+ 
 
   <!-- Fullscreen Map -->
   <div id="map"></div>
