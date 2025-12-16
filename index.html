@@ -335,63 +335,80 @@ h2, h3, h4, h5, h6 {
     .footer-links a:hover {
       color: var(--ss-text-main);
     }
-
-    /* RESPONSIVE */
-@media (max-width: 860px) {
-  .hero {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
+    
 
 /* MOBILE */
 @media (max-width: 720px) {
 
   /* Layout sections */
-  .feature-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .cta-panel {
-    align-items: flex-start;
-  }
+  .feature-grid { grid-template-columns: minmax(0, 1fr); }
+  .cta-panel { align-items: flex-start; }
 
   /* Section headings */
   h2, h3, h4, h5, h6 {
-    font-size: 16px;               /* smaller mobile size */
-    letter-spacing: -0.15px;       /* slightly tighter */
+    font-size: 16px;
+    letter-spacing: -0.15px;
   }
 
   .section-title {
-    font-size: 18px;               /* adjust as you like */
-    letter-spacing: -0.25px;       /* tighter spacing */
+    font-size: 18px;
+    letter-spacing: -0.25px;
     line-height: 1.2;
   }
 
-  /* SHRINK HERO ON MOBILE */
+  /* HERO — MOBILE (keeps phone image visible) */
   .hero {
-    height: 58vh;                  /* <— main change */
-    min-height: 400px;             /* override 520px min-height */
-    padding-top: 40px;
-    padding-bottom: 40px;
-    gap: 20px;
-    background-position: center top;  /* crop a bit more of the bottom */
+    height: auto;
+    min-height: 0;
+    padding: 56px 0 64px;
   }
 
   .hero-overlay {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 18px;
+    gap: 28px;
+  }
+
+  .hero-content-centered {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .hero-brand {
+    font-size: 30px;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+
+  .hero-kicker {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    margin-bottom: 14px;
   }
 
   .hero-title {
-    font-size: 21px;
-    line-height: 1.1;
+    font-size: 28px;
+    line-height: 1.15;
+    margin-bottom: 16px;
   }
 
   .hero-subtitle {
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 20px;
   }
-}
 
+  .hero-ctas { justify-content: flex-start; }
+
+  .hero-media { width: 100%; justify-content: center; }
+
+  .hero-media img { max-width: 260px; }
+
+} /* ✅ IMPORTANT: close the 720px media query */
+
+    
 /* ⭐ Override ONLY the hero Launch Map button */
 .hero-ctas .btn-primary {
   background: #ffffff !important;
@@ -405,136 +422,6 @@ h2, h3, h4, h5, h6 {
   opacity: 1;
 }
 
-/* FINAL — Clean banner under hero */
-.app-preview {
-  background: #f7f8fb;       /* grey band */
-  padding: 40px 0;           /* tight height */
-}
-
-.app-preview-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 24px;
-
-  display: flex;
-  align-items: center;       /* centers text + phone vertically */
-  justify-content: center;   /* centers BOTH in the middle of page */
-  gap: 48px;                 /* spacing between phone + text */
-}
-
-.app-preview-image img {
-  width: 200px;              /* slightly bigger phone */
-  height: auto;
-  border-radius: 28px;
-  border: 8px solid #f3f3f3;
-  background: #f8f8f8;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
-}
-
-.app-preview-text {
-  max-width: 420px;
-}
-
-.app-preview-title {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #202239;
-}
-
-.app-preview-subtitle {
-  font-size: 16px;
-  line-height: 1.65;
-  margin-bottom: 24px;
-  color: #4a4a4a;
-}
-
-.btn-preview {
-  display: inline-block;
-  padding: 13px 28px;
-  background: #202239;
-  color: #ffffff;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  letter-spacing: 0.02em;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.btn-preview:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-/* Phone hover – tiny float */
-.app-preview-image:hover img {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
-}
-
-/* Mobile layout */
-@media (max-width: 800px) {
-  .app-preview {
-    padding: 24px 0;
-  }
-
-  .app-preview-inner {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    text-align: left;
-  }
-
-  .app-preview-image img {
-    width: 140px;
-  }
-
-  .app-preview-text {
-    max-width: 55%;
-  }
-
-  /* MOBILE text sizes — this is the part you were missing */
-  .app-preview-title {
-    font-size: 18px;       /* smaller title on mobile */
-    margin-bottom: 8px;
-  }
-
-  .app-preview-subtitle {
-    font-size: 14px;       /* smaller subtitle on mobile */
-    line-height: 1.45;
-    margin-bottom: 16px;
-  }
-}
-
-
-/* Fade-up on load */
-@keyframes fadeUpSoft {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.app-preview-image,
-.app-preview-text {
-  opacity: 0;
-  animation: fadeUpSoft 0.6s ease-out forwards;
-}
-
-.app-preview-image {
-  animation-delay: 0.05s;
-}
-
-.app-preview-text {
-  animation-delay: 0.18s;
-}
-    
   </style>
 
 <!-- Google tag (gtag.js) -->
