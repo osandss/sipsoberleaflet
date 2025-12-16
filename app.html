@@ -424,6 +424,10 @@ html, body {
       <div class="row"><input id="brand-lyres" type="checkbox" value="Lyre's" /><label for="brand-lyres">Lyre's</label></div>
       <div class="row"><input id="brand-agrestis" type="checkbox" value="St. Agrestis" /><label for="brand-agrestis">St. Agrestis</label></div>
       <div class="row"><input id="brand-aplos" type="checkbox" value="Aplós" /><label for="brand-aplos">Aplós</label></div>
+      <div class="row"><input id="brand-pathfinder" type="checkbox" value="Pathfinder" /><label for="brand-pathfinder">Pathfinder</label></div>
+      <div class="row"><input id="brand-curious" type="checkbox" value="Curious Elixirs" /><label for="brand-curious">Curious Elixirs</label></div>
+      <div class="row"><input id="brand-goodtime" type="checkbox" value="Good Time Brewing" /><label for="brand-goodtime">Good Time Brewing</label></div>
+      <div class="row"><input id="brand-athletic" type="checkbox" value="Athletic Brewing Co." /><label for="brand-athletic">Athletic Brewing Co.</label></div>
     </div>
   </div>
 
@@ -436,6 +440,8 @@ html, body {
       <div class="row"><input id="n-chelsea" type="checkbox" value="Chelsea" /><label for="n-chelsea">Chelsea</label></div>
       <div class="row"><input id="n-uws" type="checkbox" value="Upper West Side" /><label for="n-uws">Upper West Side</label></div>
       <div class="row"><input id="n-flatiron" type="checkbox" value="Flatiron" /><label for="n-flatiron">Flatiron</label></div>
+      <div class="row"><input id="n-west-village" type="checkbox" value="West Village" /><label for="n-west-village">West Village</label></div>
+      <div class="row"><input id="n-east-village" type="checkbox" value="East Village" /><label for="n-east-village">East Village</label></div>
     </div>
   </div>
 
@@ -461,20 +467,20 @@ html, body {
     /* =========================
        A) DATA
        ========================= */
-    const locations = [
-      { name: "Bemelman's Bar", address: "35 E 76th St, NY", lat: 40.7740, lng: -73.9636, website: "https://www.rosewoodhotels.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side" },
+     const locations = [
+      { name: "Bemelman's Bar", address: "35 E 76th St, NY", lat: 40.774, lng: -73.9636, website: "https://www.rosewoodhotels.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side" },
       { name: "Bar Avant (Olly Olly Market)", address: "601 W 26th St, NY", lat: 40.7498, lng: -74.0075, website: "https://ollyollymarket.com", brand: "Seedlip, St. Agrestis", neighborhood: "Chelsea" },
       { name: "Fumo", address: "198 8th Ave, NY", lat: 40.7448, lng: -73.9809, website: "https://fumonyc.com", brand: "Seedlip", neighborhood: "Chelsea" },
       { name: "Miriam", address: "300 Amsterdam Ave, NY", lat: 40.7809, lng: -73.9797, website: "https://miriamrestaurant.com", brand: "Seedlip, Lyre's", neighborhood: "Upper West Side" },
-      { name: "Sarabeth's", address: "423 Amsterdam Ave, NY", lat: 40.7860, lng: -73.9770, website: "https://sarabethsrestaurants.com", brand: "Lyre's", neighborhood: "Upper West Side" },
-      { name: "Bondurants", address: "303 E 85th St, NY", lat: 40.7770, lng: -73.9518, website: "https://bondurantsnyc.com", brand: "Seedlip, Lyre's", neighborhood: "Upper East Side" },
+      { name: "Sarabeth's", address: "423 Amsterdam Ave, NY", lat: 40.786, lng: -73.977, website: "https://sarabethsrestaurants.com", brand: "Lyre's", neighborhood: "Upper West Side" },
+      { name: "Bondurants", address: "303 E 85th St, NY", lat: 40.777, lng: -73.9518, website: "https://bondurantsnyc.com", brand: "Seedlip, Lyre's", neighborhood: "Upper East Side" },
       { name: "Sfoglia", address: "1402 Lexington Ave, NY", lat: 40.7835, lng: -73.9529, website: "https://sfogliarestaurant.com", brand: "Lyre's, Ritual Zero Proof, St. Agrestis", neighborhood: "Upper East Side" },
       { name: "The Blasket", address: "1085 2nd Ave, NY", lat: 40.7579, lng: -73.9635, website: "https://theblasketnyc.com", brand: "Lyre's, St. Agrestis", neighborhood: "Midtown" },
       { name: "Rosemary's Midtown", address: "825 3rd Ave, NY", lat: 40.7559, lng: -73.9701, website: "https://rosemarysnyc.com", brand: "Lyre's", neighborhood: "Midtown" },
       { name: "Hutong NYC", address: "731 Lexington Ave, NY", lat: 40.761812, lng: -73.968178, website: "https://hutong-nyc.com", brand: "Seedlip, St. Agrestis", neighborhood: "Midtown" },
       { name: "The Penrose", address: "1590 2nd Ave, NY", lat: 40.7763, lng: -73.9498, website: "https://penrosebar.com", brand: "Seedlip, Lyre's", neighborhood: "Upper East Side" },
       { name: "Orsay", address: "1057 Lexington Ave, NY", lat: 40.7731, lng: -73.9599, website: "https://orsayrestaurant.com", brand: "Seedlip", neighborhood: "Upper East Side" },
-      { name: "Boqueria", address: "1460 2nd Ave, NY", lat: 40.7728, lng: -73.9530, website: "https://boqueriarestaurant.com", brand: "Ritual Zero Proof, Seedlip", neighborhood: "Upper East Side" },
+      { name: "Boqueria", address: "1460 2nd Ave, NY", lat: 40.7728, lng: -73.953, website: "https://boqueriarestaurant.com", brand: "Ritual Zero Proof, Seedlip", neighborhood: "Upper East Side" },
       { name: "Crave Fishbar", address: "945 2nd Ave, NY", lat: 40.7544, lng: -73.9685, website: "https://cravefishbar.com", brand: "Seedlip", neighborhood: "Midtown" },
       { name: "UVA", address: "1486 2nd Ave, NY", lat: 40.7726, lng: -73.9541, website: "https://uvanyc.com", brand: "Lyre's", neighborhood: "Upper East Side" },
       { name: "Sefton", address: "510 E 117th St, NY", lat: 40.7969, lng: -73.9304, website: "https://seftonnyc.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side" },
@@ -482,9 +488,9 @@ html, body {
       { name: "Monkey Bar", address: "60 E 54th St, NY", lat: 40.7598, lng: -73.9732, website: "https://www.nycmonkeybar.com", brand: "Ritual Zero Proof, St. Agrestis", neighborhood: "Midtown" },
       { name: "Gramercy Tavern", address: "42 E 20th St, NY", lat: 40.7386, lng: -73.9882, website: "https://www.gramercytavern.com", brand: "Lyre's, St. Agrestis", neighborhood: "Gramercy" },
       { name: "Handcraft Kitchen & Cocktails", address: "367 3rd Avenue, NY", lat: 40.7427, lng: -73.9805, website: "https://www.handcraftnyc.com", brand: "Lyre's, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
-      { name: "The Junction", address: "329 Lexington Ave, NY", lat: 40.7470, lng: -73.9760, website: "https://www.thejunctionnyc.com", brand: "Lyre's, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "The Junction", address: "329 Lexington Ave, NY", lat: 40.747, lng: -73.976, website: "https://www.thejunctionnyc.com", brand: "Lyre's, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
       { name: "Broken Shaker", address: "23 Lexington Ave, NY", lat: 40.7395, lng: -73.9845, website: "https://www.brokenshaker.com", brand: "Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
-      { name: "Wildflower", address: "505 W 23 St A, NY", lat: 40.7440, lng: -73.9988, website: "https://www.wildflowernyc.com", brand: "Seedlip, St. Agrestis", neighborhood: "Chelsea" },
+      { name: "Wildflower", address: "505 W 23 St A, NY", lat: 40.744, lng: -73.9988, website: "https://www.wildflowernyc.com", brand: "Seedlip, St. Agrestis", neighborhood: "Chelsea" },
       { name: "The Campbell", address: "15 Vanderbilt Ave, NY", lat: 40.7525, lng: -73.9778, website: "https://www.thecampbellnyc.com", brand: "St. Agrestis", neighborhood: "Midtown" },
       { name: "Jungle Bird", address: "174 8th Ave, NY", lat: 40.7429, lng: -74.0011, website: "https://junglebirdnyc.com", brand: "St. Agrestis, Ritual Zero Proof, Seedlip", neighborhood: "Chelsea" },
       { name: "Sempre Oggi", address: "164 W 75th St, NY", lat: 40.7803, lng: -73.9799, website: "https://www.semprenyc.com", brand: "St. Agrestis", neighborhood: "Upper West Side" },
@@ -492,13 +498,24 @@ html, body {
       { name: "Elea", address: "217 W 85th St, NY", lat: 40.7893, lng: -73.9766, website: "https://eleanyc.com", brand: "Ritual Zero Proof", neighborhood: "Upper West Side" },
       { name: "Friend of a Farmer", address: "68 W 71st St, NY", lat: 40.7782, lng: -73.9791, website: "https://www.friendofafarmer.com", brand: "Seedlip", neighborhood: "Upper West Side" },
       { name: "Bar Pendry", address: "438 W 33rd St, NY", lat: 40.7536, lng: -73.9934, website: "https://www.pendry.com/manhattan-west/", brand: "Lyre's", neighborhood: "Midtown" },
-      { name: "The Portrait Bar", address: "1 W 28th St, NY", lat: 40.7450, lng: -73.9886, website: "https://www.theportraitbar.com", brand: "Aplós, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "The Portrait Bar", address: "1 W 28th St, NY", lat: 40.745, lng: -73.9886, website: "https://www.theportraitbar.com", brand: "Aplós, Seedlip, Ritual Zero Proof", neighborhood: "Midtown" },
       { name: "Clemente Bar", address: "11 Madison Ave, NY", lat: 40.7417, lng: -73.9872, website: "https://www.clementebar.com", brand: "Seedlip", neighborhood: "Flatiron" },
-      { name: "Del Frisco's Grille", address: "50 Rockefeller Plaza, NY", lat: 40.7590, lng: -73.9799, website: "https://www.delfriscosgrille.com", brand: "Aplós, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "Del Frisco's Grille", address: "50 Rockefeller Plaza, NY", lat: 40.759, lng: -73.9799, website: "https://www.delfriscosgrille.com", brand: "Aplós, Ritual Zero Proof", neighborhood: "Midtown" },
       { name: "Cosme", address: "35 E 21st St, NY", lat: 40.7396, lng: -73.9884, website: "https://cosmenyc.com", brand: "Seedlip", neighborhood: "Flatiron" },
       { name: "Bar Calico", address: "23 Lexington Ave, NY", lat: 40.7415, lng: -73.9874, website: "https://barcaliconyc.com", brand: "Ritual Zero Proof", neighborhood: "Flatiron" },
-      { name: "Lobby Bar at The Edition", address: "5 Madison Ave, NY", lat: 40.7420, lng: -73.9870, website: "https://www.editionhotels.com/new-york/restaurants-and-bars/lobby-bar/", brand: "Lyre's", neighborhood: "Flatiron" },
+      { name: "Lobby Bar at The Edition", address: "5 Madison Ave, NY", lat: 40.742, lng: -73.987, website: "https://www.editionhotels.com/new-york/restaurants-and-bars/lobby-bar/", brand: "Lyre's", neighborhood: "Flatiron" },
       { name: "L'Americana", address: "51 Irving Place, NY", lat: 40.7375, lng: -73.9854, website: "https://www.lamericana-nyc.com", brand: "Seedlip", neighborhood: "Gramercy" },
+      { name: "Handcraft Kitchen & Cocktails", address: "367 3rd Ave, NY", lat: 40.7429, lng: -73.9796, website: "https://www.handcraftnyc.com", brand: "Seedlip, Lyre's, Ritual Zero Proof", neighborhood: "Midtown" },
+      { name: "Decoy", address: "529 Hudson St, NY", lat: 40.7348, lng: -74.0061, website: "https://www.decoynyc.com", brand: "Seedlip", neighborhood: "West Village" },
+      { name: "Dante West Village", address: "551 Hudson St, NY", lat: 40.7353, lng: -74.0054, website: "https://www.dante-nyc.com/wv/", brand: "Seedlip, Lyre's", neighborhood: "West Village" },
+      { name: "Hudson Hound", address: "575 Hudson St, NY", lat: 40.7361, lng: -74.0063, website: "https://hudsonhoundnyc.com", brand: "Lyre's", neighborhood: "West Village" },
+      { name: "Wilfie & Nell", address: "228 W 4th St, NY", lat: 40.7338, lng: -74.0028, website: "https://www.wilfieandnell.com", brand: "Seedlip", neighborhood: "West Village" },
+      { name: "Fiddlesticks Pub", address: "56 Greenwich Ave, NY", lat: 40.7359, lng: -74.0021, website: "https://www.fiddlesticksnyc.net", brand: "St. Agrestis, Seedlip", neighborhood: "West Village" },
+      { name: "Death & Co", address: "433 E 6th St, NY", lat: 40.7275, lng: -73.9846, website: "https://www.deathandcompany.com", brand: "Pathfinder, Ritual Zero Proof, Lyre's", neighborhood: "East Village" },
+      { name: "Pineapple Club", address: "509 E 6th St, NY", lat: 40.7268, lng: -73.9789, website: "http://pineappleclub.com", brand: "St. Agrestis", neighborhood: "East Village" },
+      { name: "Hard to Explain", address: "224 E 10th St, NY", lat: 40.7299, lng: -73.9831, website: "https://www.hardtoexplain.co", brand: "Good Time Brewing", neighborhood: "East Village" },
+      { name: "The Cabinet Mezcal Bar", address: "649 E 9th St, NY", lat: 40.72546, lng: -73.97816, website: "https://www.thecabinetnyc.com", brand: "Athletic Brewing Co.", neighborhood: "East Village" },
+      { name: "Superbueno", address: "13 1st Ave, NY", lat: 40.7273, lng: -73.9896, website: "https://www.superbuenonyc.com", brand: "Pathfinder, Curious Elixirs, Aplós, Good Time Brewing", neighborhood: "East Village" }
     ];
 
     /* =========================
