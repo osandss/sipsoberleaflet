@@ -706,7 +706,7 @@
       venueId: String(venueId),
       name: v.name || "",
       address: v.address || "",
-      url: v.website || "",
+      website: v.website || "",
       neighborhood: v.neighborhood || "",
       brands: v.brand || ""
     }
@@ -886,6 +886,19 @@
   });
 })();
 
+// ================================
+// Swift → JS sync (keep stars filled)
+// ================================
+window.SipSober = window.SipSober || {};
+
+window.SipSober.setFavorites = function (payload) {
+  const ids = new Set((payload && payload.ids) || []);
+
+  document.querySelectorAll(".fav-btn[data-id]").forEach(btn => {
+    const id = btn.dataset.id;
+    btn.classList.toggle("is-fav", ids.has(id));
+  });
+};
 
   </script>
 
