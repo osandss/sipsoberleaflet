@@ -345,54 +345,45 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-.ss-popup-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 7px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  text-decoration: none;
-  border: 1px solid #e2e4ec;
-  background: #f2f2f7;
-  color: #202239;
-}
 
-.ss-popup-btn:active {
-  transform: translateY(1px);
-}
-
-/* Popup action hierarchy */
+/* Popup action hierarchy — subtle, not heavy */
 .ss-popup-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
+  padding: 7px 12px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   text-decoration: none;
-  background: #202239;
-  color: #fff;
+
+  background: #f2f2f7;
+  color: #202239;
+  border: 1px solid #e2e4ec;
+  -webkit-tap-highlight-color: transparent;
 }
 
+.ss-popup-primary:active { transform: translateY(1px); }
+
 .ss-popup-secondary {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: #6b6f82;
+  color: #202239 !important;          /* stop iOS “link blue” */
   text-decoration: none;
-  padding: 6px 0;
+  opacity: 0.72;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.ss-popup-secondary:active { opacity: 0.9; }
 
     
 .ss-popup-pills {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .ss-pill {
@@ -404,6 +395,8 @@
   color: #202239;
   border: 1px solid #e2e4ec;
 }
+
+.ss-pill { width: fit-content; }
 
   /* Popup tag hierarchy */
 .ss-pill-brand {
