@@ -177,6 +177,16 @@
       padding: 10px;
     }
 
+    /* --- Results count (under active filters) --- */
+    #results-count {
+      font-size: 13px;
+      font-weight: 500;
+      color: #5f6368;
+      margin: 6px 10px 6px;   /* left aligns with #results padding */
+      letter-spacing: 0.01em;
+    }
+
+
     /* --- Bottom panel card styling --- */
     .card {
       padding: 8px 6px;
@@ -294,6 +304,92 @@
   justify-content: space-between;
   gap: 12px;
 }
+
+    
+/* =========================
+   MAP POPUP (Leaflet)
+   ========================= */
+
+.leaflet-popup-content-wrapper {
+  border-radius: 18px !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.18) !important;
+  padding: 0 !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+}
+
+.ss-popup {
+  padding: 14px 14px 12px;
+  min-width: 220px;
+  max-width: 280px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  color: #1c1c1e;
+}
+
+.ss-popup-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.ss-popup-meta {
+  font-size: 13px;
+  color: #5f6368;
+  line-height: 1.35;
+  margin-bottom: 10px;
+}
+
+.ss-popup-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ss-popup-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #e2e4ec;
+  background: #f2f2f7;
+  color: #202239;
+}
+
+.ss-popup-btn:active {
+  transform: translateY(1px);
+}
+
+.ss-popup-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ss-pill {
+  display: inline-flex;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: #f2f2f7;
+  color: #202239;
+  border: 1px solid #e2e4ec;
+}
+
+/* Make the popup close "x" cleaner */
+.leaflet-container a.leaflet-popup-close-button {
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 22px !important;
+  line-height: 32px !important;
+  color: #7a7a86 !important;
+}
+
     
 </style>
 
@@ -428,6 +524,7 @@
   <!-- Sliding Bottom Results Panel -->
   <div id="bottom-panel">
     <div id="active-filters" class="active-filters"></div>
+    <div id="results-count" class="results-count"></div>
     <div id="results"></div>
   </div>
 
@@ -607,17 +704,32 @@
       const bounds = L.latLngBounds([]);
       data.forEach((loc) => {
         const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
-        m.bindPopup(
-          `
-          <div style="min-width:200px">
-            <div style="font-weight:600">${loc.name}</div>
-            <div class="meta">${loc.address}</div>
-            <div><a href="${loc.website}" target="_blank" rel="noopener">Website</a></div>
-            <div class="meta">Brand: ${loc.brand || ""}</div>
-            <div class="meta">Neighborhood: ${loc.neighborhood || ""}</div>
-          </div>
-        `
-        );
+        
+        m.bindPopup(`
+  <div class="ss-popup">
+    <div class="ss-popup-title">${loc.name || ""}</div>
+    <div class="ss-popup-meta">${loc.address || ""}</div>
+
+    <div class="ss-popup-actions">
+      ${
+        loc.website
+          ? `<a class="ss-popup-btn" href="${loc.website}" target="_blank" rel="noopener">Website</a>`
+          : ""
+      }
+      <a class="ss-popup-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        (loc.name || "") + " " + (loc.address || "")
+      )}" target="_blank" rel="noopener">Directions</a>
+    </div>
+
+    <div class="ss-popup-pills">
+      ${loc.brand ? `<span class="ss-pill">${loc.brand}</span>` : ""}
+      ${loc.neighborhood ? `<span class="ss-pill">${loc.neighborhood}</span>` : ""}
+    </div>
+  </div>
+`);
+
+
+        
         bounds.extend([loc.lat, loc.lng]);
       });
       return { count: data.length, bounds: data.length ? bounds : null };
@@ -625,7 +737,18 @@
 
     function renderList(data) {
       const results = document.getElementById("results");
+      const resultsCount = document.getElementById("results-count");
+      
       results.innerHTML = "";
+
+      // ✅ update results count
+  if (resultsCount) {
+    resultsCount.textContent =
+      data.length === 0
+        ? "No places found"
+        : `${data.length} place${data.length === 1 ? "" : "s"}`;
+  }
+      
       data.forEach((loc) => {
         const card = document.createElement("div");
         card.className = "card";
