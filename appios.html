@@ -145,7 +145,7 @@
       gap: 8px;
       padding: 3px 0;
       margin: 0;
-      font-size: 14px;
+      font-size: 12px;
       color: #1c1c1e;
     }
 
@@ -343,7 +343,8 @@
 
 .ss-popup-actions {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 10px;
 }
 
@@ -365,6 +366,29 @@
   transform: translateY(1px);
 }
 
+/* Popup action hierarchy */
+.ss-popup-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  background: #202239;
+  color: #fff;
+}
+
+.ss-popup-secondary {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b6f82;
+  text-decoration: none;
+  padding: 6px 0;
+}
+
+    
 .ss-popup-pills {
   display: flex;
   flex-wrap: wrap;
@@ -381,13 +405,28 @@
   border: 1px solid #e2e4ec;
 }
 
+  /* Popup tag hierarchy */
+.ss-pill-brand {
+  background: #eef0f6;
+  border-color: #e2e4ec;
+  font-weight: 600;
+}
+
+.ss-neighborhood {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b6f82;
+  padding: 5px 2px;
+}
+
+    
 /* Make the popup close "x" cleaner */
 .leaflet-container a.leaflet-popup-close-button {
   width: 32px !important;
   height: 32px !important;
-  font-size: 22px !important;
+  font-size: 20px !important;
   line-height: 32px !important;
-  color: #7a7a86 !important;
+  color: #9aa0b5 !important;
 }
 
     
@@ -711,20 +750,21 @@
     <div class="ss-popup-meta">${loc.address || ""}</div>
 
     <div class="ss-popup-actions">
-      ${
-        loc.website
-          ? `<a class="ss-popup-btn" href="${loc.website}" target="_blank" rel="noopener">Website</a>`
-          : ""
-      }
-      <a class="ss-popup-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        (loc.name || "") + " " + (loc.address || "")
-      )}" target="_blank" rel="noopener">Directions</a>
-    </div>
+  ${
+    loc.website
+      ? `<a class="ss-popup-primary" href="${loc.website}" target="_blank" rel="noopener">Visit website</a>`
+      : ""
+  }
+  <a class="ss-popup-secondary" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    (loc.name || "") + " " + (loc.address || "")
+  )}" target="_blank" rel="noopener">Directions</a>
+</div>
 
     <div class="ss-popup-pills">
-      ${loc.brand ? `<span class="ss-pill">${loc.brand}</span>` : ""}
-      ${loc.neighborhood ? `<span class="ss-pill">${loc.neighborhood}</span>` : ""}
-    </div>
+  ${loc.brand ? `<span class="ss-pill ss-pill-brand">${loc.brand}</span>` : ""}
+  ${loc.neighborhood ? `<span class="ss-neighborhood">${loc.neighborhood}</span>` : ""}
+</div>
+
   </div>
 `);
 
