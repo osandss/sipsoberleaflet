@@ -320,48 +320,35 @@
   margin: 0 !important;
 }
 
-/* Simple popup (text-first, like your reference) */
-.ss-popup--simple {
-  padding: 14px 16px 14px;
-  min-width: 240px;
-  max-width: 300px;
+/* Quick popup (action-first, minimal) */
+.ss-popup--quick {
+  padding: 12px 14px;
+  min-width: 220px;
+  max-width: 280px;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   color: #1c1c1e;
 }
 
-.ss-popup--simple .ss-popup-title {
-  font-size: 14px;
+.ss-popup--quick .ss-popup-title {
+  font-size: 15px;
   font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.ss-popup--simple .ss-popup-meta {
-  font-size: 13px;
-  color: #6b6f82;
-  line-height: 1.35;
   margin-bottom: 10px;
 }
 
-.ss-popup--simple .ss-popup-tags {
-  font-size: 13px;
-  color: #6b6f82;
-  margin-bottom: 10px;
-}
-
-.ss-popup--simple .ss-popup-links {
+.ss-popup-quick-actions {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  gap: 18px;
 }
 
-.ss-popup--simple .ss-popup-link {
+.ss-quick-link {
   font-size: 14px;
+  font-weight: 600;
   color: #6b6f82;
   text-decoration: underline;
   -webkit-tap-highlight-color: transparent;
 }
 
-.ss-popup--simple .ss-popup-link:active {
+.ss-quick-link:active {
   opacity: 0.8;
 }
 
@@ -691,19 +678,12 @@
         const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
         
       m.bindPopup(`
-  <div class="ss-popup ss-popup--simple">
+  <div class="ss-popup ss-popup--quick">
     <div class="ss-popup-title">${loc.name || ""}</div>
 
-    <div class="ss-popup-meta">${loc.address || ""}</div>
-
-    <div class="ss-popup-tags">
-      ${loc.brand ? `<span>${loc.brand}</span>` : ""}
-      ${loc.neighborhood ? `<span>${loc.brand ? " • " : ""}${loc.neighborhood}</span>` : ""}
-    </div>
-
-    <div class="ss-popup-links">
-      ${loc.website ? `<a class="ss-popup-link" href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ""}
-      <a class="ss-popup-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    <div class="ss-popup-quick-actions">
+      ${loc.website ? `<a class="ss-quick-link" href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ""}
+      <a class="ss-quick-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
         (loc.name || "") + " " + (loc.address || "")
       )}" target="_blank" rel="noopener">Directions</a>
     </div>
