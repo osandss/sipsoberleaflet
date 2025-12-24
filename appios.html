@@ -492,11 +492,6 @@
         Got it
       </button>
 
-      <button id="ss-onboard-more"
-        class="ss-onboard__btn ss-onboard__btn--ghost"
-        type="button">
-        Learn more
-      </button>
     </div>
   </div>
 </div>
@@ -1088,7 +1083,6 @@ window.SipSober.setFavorites = function (payload) {
       requestAnimationFrame(() => el.classList.add("is-visible"));
 
       const okBtn = document.getElementById("ss-onboard-ok");
-      const moreLink = document.getElementById("ss-onboard-more");
 
       function dismiss() {
         localStorage.setItem(KEY, "true");
@@ -1101,24 +1095,7 @@ window.SipSober.setFavorites = function (payload) {
 
       okBtn?.addEventListener("click", dismiss);
 
-      // Optional: "Learn more" just dismisses + nudges attention to filters
-      moreLink?.addEventListener("click", function (e) {
-        e.preventDefault();
-        dismiss();
-
-        // tiny hint: briefly pulse filters bar if it exists
-        const filters = document.getElementById("filters");
-        if (filters) {
-          filters.style.transition = "transform 180ms ease, box-shadow 180ms ease";
-          filters.style.transform = "scale(1.01)";
-          filters.style.boxShadow = "0 8px 22px rgba(0,0,0,0.12)";
-          setTimeout(() => {
-            filters.style.transform = "";
-            filters.style.boxShadow = "";
-          }, 260);
-        }
-      });
-
+      
       // Auto-hide after 10s (still marks as seen)
       setTimeout(() => {
         if (!el.hidden) dismiss();
