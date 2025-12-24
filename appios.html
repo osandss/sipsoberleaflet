@@ -1085,14 +1085,19 @@ window.SipSober.setFavorites = function (payload) {
       if (!el) return;
 
       el.hidden = false;
+      requestAnimationFrame(() => el.classList.add("is-visible"));
 
       const okBtn = document.getElementById("ss-onboard-ok");
       const moreLink = document.getElementById("ss-onboard-more");
 
       function dismiss() {
         localStorage.setItem(KEY, "true");
-        el.hidden = true;
+        el.classList.remove("is-visible");
+        setTimeout(() => {
+          el.hidden = true;
+        }, 240);
       }
+
 
       okBtn?.addEventListener("click", dismiss);
 
