@@ -382,10 +382,20 @@
   position: fixed;
   left: 12px;
   right: 12px;
-  top: 110px;
-  bottom: auto;
+  top: 140px; /* keep where it is now */
   z-index: 5000;
+
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 220ms ease, transform 220ms ease;
+
   pointer-events: none;
+}
+
+.ss-onboard.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .ss-onboard[hidden] {
@@ -482,9 +492,11 @@
         Got it
       </button>
 
-      <a id="ss-onboard-more" class="ss-onboard__btn ss-onboard__btn--ghost" href="#" rel="noopener">
+      <button id="ss-onboard-more"
+        class="ss-onboard__btn ss-onboard__btn--ghost"
+        type="button">
         Learn more
-      </a>
+      </button>
     </div>
   </div>
 </div>
