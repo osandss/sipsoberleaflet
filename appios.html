@@ -374,6 +374,80 @@
   color: #9aa0b5 !important;
 }
 
+/* =========================
+   SIP SOBER — MAP ONBOARDING BANNER
+   ========================= */
+
+.ss-onboard {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 92px;
+  z-index: 5000;
+  pointer-events: none;
+}
+
+.ss-onboard[hidden] {
+  display: none !important;
+}
+
+.ss-onboard__content {
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(32, 34, 57, 0.12);
+  border-radius: 18px;
+  padding: 12px 14px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+}
+
+.ss-onboard__title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #202239;
+  margin-bottom: 4px;
+}
+
+.ss-onboard__text {
+  font-size: 13px;
+  line-height: 1.3;
+  color: rgba(0,0,0,0.65);
+  margin-bottom: 10px;
+}
+
+.ss-onboard__actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.ss-onboard__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ss-onboard__btn--primary {
+  border: 0;
+  color: #fff;
+  background: #202239;
+}
+
+.ss-onboard__btn--ghost {
+  border: 1px solid rgba(32, 34, 57, 0.18);
+  color: #202239;
+  background: rgba(255,255,255,0.65);
+}
     
 </style>
 
@@ -393,7 +467,27 @@
 </head>
 
 <body>
-  
+
+<!-- ===== Sip Sober: one-time onboarding banner ===== -->
+<div id="ss-onboard" class="ss-onboard" role="status" aria-live="polite" hidden>
+  <div class="ss-onboard__content">
+    <div class="ss-onboard__title">Explore &amp; save</div>
+    <div class="ss-onboard__text">
+      Filter by <b>brand</b> or <b>neighborhood</b>, then tap <b>★</b> to save favorites.
+    </div>
+
+    <div class="ss-onboard__actions">
+      <button id="ss-onboard-ok" class="ss-onboard__btn ss-onboard__btn--primary" type="button">
+        Got it
+      </button>
+
+      <a id="ss-onboard-more" class="ss-onboard__btn ss-onboard__btn--ghost" href="#" rel="noopener">
+        Learn more
+      </a>
+    </div>
+  </div>
+</div>
+
   
  <!-- TOP CONTROLS (filters + Go) -->
 <div id="filters" class="topbar filterbar">
@@ -968,6 +1062,62 @@ window.SipSober.setFavorites = function (payload) {
 
   </script>
 
+  <!-- ===== Sip Sober: one-time onboarding banner JS ===== -->
+  <script>
+  (function () {
+    const KEY = "ss_seen_map_onboarding_v1";
+
+    function showOnboarding() {
+      const el = document.getElementById("ss-onboard");
+      if (!el) return;
+
+      // Only show once
+      const seen = localStorage.getItem(KEY) === "true";
+      if (seen) return;
+
+      el.hidden = false;
+
+      const okBtn = document.getElementById("ss-onboard-ok");
+      const moreLink = document.getElementById("ss-onboard-more");
+
+      function dismiss() {
+        localStorage.setItem(KEY, "true");
+        el.hidden = true;
+      }
+
+      okBtn?.addEventListener("click", dismiss);
+
+      // Optional: "Learn more" just dismisses + nudges attention to filters
+      moreLink?.addEventListener("click", function (e) {
+        e.preventDefault();
+        dismiss();
+
+        // tiny hint: briefly pulse filters bar if it exists
+        const filters = document.getElementById("filters");
+        if (filters) {
+          filters.style.transition = "transform 180ms ease, box-shadow 180ms ease";
+          filters.style.transform = "scale(1.01)";
+          filters.style.boxShadow = "0 8px 22px rgba(0,0,0,0.12)";
+          setTimeout(() => {
+            filters.style.transform = "";
+            filters.style.boxShadow = "";
+          }, 260);
+        }
+      });
+
+      // Auto-hide after 10s (still marks as seen)
+      setTimeout(() => {
+        if (!el.hidden) dismiss();
+      }, 10000);
+    }
+
+    // Show after the page paints
+    window.addEventListener("load", () => {
+      setTimeout(showOnboarding, 450);
+    });
+  })();
+</script>
+
   <!-- Service worker still commented out for now -->
   <!--
   <script>
@@ -978,7 +1128,7 @@ window.SipSober.setFavorites = function (payload) {
           .catch(console.error);
       });
     }
-  </script>
+ </script>
   -->
   
 </body>
