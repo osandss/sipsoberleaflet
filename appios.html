@@ -149,34 +149,69 @@
       color: #1c1c1e;
     }
 
-    /* --- Bottom results panel floats above the map --- */
-    #bottom-panel {
-      position: fixed;
-      left: 12px;
-      right: 12px;
-      bottom: 0;
+   /* --- Bottom results panel floats above the map --- */
+#bottom-panel {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
 
-      height: var(--panel-collapsed);
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(12px); /* nice iOS glass effect */
-      border-radius: 18px 18px 0 0;
-      box-shadow: 0 -8px 26px rgba(0, 0, 0, 0.2);
+  /* collapsed by default (peek) */
+  height: var(--panel-collapsed);
 
-      padding: 10px 18px calc(14px + env(safe-area-inset-bottom));
-      overflow-y: auto;
-      z-index: 2001;
-    }
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px); /* iOS glass effect */
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -8px 26px rgba(0, 0, 0, 0.2);
 
-    #bottom-panel.expanded {
-      height: var(--panel-expanded);
-    }
+  padding: 1px 18px calc(14px + env(safe-area-inset-bottom));
+  z-index: 2001;
 
-    #results {
-      overflow-y: auto;
-      max-height: calc(100% - 20px);
-      padding: 10px;
-    }
+  /* animation + behavior */
+  transition: height 220ms ease;
+  overflow-y: hidden; /* prevent scroll when collapsed */
+}
 
+/* expanded state */
+#bottom-panel.expanded {
+  height: var(--panel-expanded);
+  overflow-y: auto;
+}
+
+/* results list inside the panel */
+#results {
+  overflow-y: auto;
+  max-height: calc(100% - 20px);
+  padding: 10px;
+}
+
+/* --- Panel toggle handle (tap to expand/collapse) --- */
+#panel-toggle {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 6px 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#panel-toggle .handle {
+  width: 44px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+#panel-toggle .label {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.6;
+}
+    
     /* --- Results count (under active filters) --- */
     #results-count {
       font-size: 13px;
@@ -609,10 +644,19 @@
 
   <!-- Sliding Bottom Results Panel -->
   <div id="bottom-panel">
+
+    <!-- Panel toggle handle -->
+    <button id="panel-toggle" type="button" aria-expanded="false">
+      <span class="handle" aria-hidden="true"></span>
+      <span class="label">Show</span>
+    </button>
+
     <div id="active-filters" class="active-filters"></div>
     <div id="results-count" class="results-count"></div>
     <div id="results"></div>
+
   </div>
+
 
   <!-- Leaflet JS (latest CDN) -->
   <script
@@ -1028,6 +1072,37 @@
     });
 
     document.getElementById("goBtn").addEventListener("click", applyFilters);
+
+// =========================
+// Bottom panel expand / collapse toggle
+// =========================
+(function () {
+  const panel = document.getElementById("bottom-panel");
+  const toggle = document.getElementById("panel-toggle");
+  const label = toggle?.querySelector(".label");
+
+  if (!panel || !toggle) return;
+
+  function syncLabel() {
+    const expanded = panel.classList.contains("expanded");
+    toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+    if (label) label.textContent = expanded ? "Hide" : "Show";
+  }
+
+  // Toggle on tap
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation(); // important: prevents scrollIntoView interference
+    panel.classList.toggle("expanded");
+    syncLabel();
+  });
+
+  // Optional: auto-expand on mobile when results update
+  if (window.matchMedia("(max-width: 768px)").matches) {
+    panel.classList.add("expanded");
+  }
+
+  syncLabel();
+})();
 
     /* =========================
        I) INITIALIZE
