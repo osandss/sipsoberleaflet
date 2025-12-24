@@ -1084,10 +1084,6 @@ window.SipSober.setFavorites = function (payload) {
       const el = document.getElementById("ss-onboard");
       if (!el) return;
 
-      // Only show once
-      const seen = localStorage.getItem(KEY) === "true";
-      if (seen) return;
-
       el.hidden = false;
 
       const okBtn = document.getElementById("ss-onboard-ok");
