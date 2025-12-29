@@ -245,18 +245,19 @@ h2, h3, h4, h5, h6 {
     }
 
     .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 18px;
-    }
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px; /* slightly more air between, less inside */
+  margin-top: 24px;
+}
+
 
     .feature-card {
-      background: var(--ss-card);
-      border-radius: var(--ss-radius);
-      border: 1px solid var(--ss-border);
-      padding: 16px 16px 14px;
-    }
+  background: transparent;
+  border: none;
+  padding: 8px;
+}
+
 
     .feature-kicker {
       font-size: 10px;
@@ -283,13 +284,14 @@ h2, h3, h4, h5, h6 {
 }
 
 .feature-img {
-  width: 100%;
-  max-width: 260px;   /* 👈 controls size */
-  height: auto;
   display: block;
-  margin: 0 auto 10px; /* centers image */
-  border-radius: 12px;
+  width: 100%;
+  max-width: 240px; /* key control */
+  height: auto;
+  margin: 0 auto 10px;
+  border-radius: 18px;
 }
+
 
     .cta-panel {
       background: var(--ss-card);
