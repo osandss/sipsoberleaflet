@@ -277,6 +277,19 @@ h2, h3, h4, h5, h6 {
       color: var(--ss-text-muted);
     }
 
+    /* Image-based feature cards */
+.feature-card--image {
+  overflow: hidden;
+}
+
+.feature-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
     .cta-panel {
       background: var(--ss-card);
       border-radius: var(--ss-radius);
@@ -496,30 +509,27 @@ h2, h3, h4, h5, h6 {
         </div>
 
         <div class="feature-grid">
-          <article class="feature-card">
-            <div class="feature-kicker">Feature</div>
-            <div class="feature-title">Browse by neighborhood</div>
-            <p class="feature-text">
-              Start in the Upper East Side, Midtown East, or Gramercy. The map stays locked on Manhattan so you’re never zooming in from outer space.
-            </p>
-          </article>
 
-          <article class="feature-card">
-            <div class="feature-kicker">Feature</div>
-            <div class="feature-title">See which brands are pouring</div>
-            <p class="feature-text">
-              Look for venues pouring Seedlip, Ritual Zero Proof, Lyre’s, and more — so you know what kind of zero-proof experience to expect before you arrive.
-            </p>
-          </article>
+  <article class="feature-card feature-card--image">
+    <img class="feature-img" src="feature-map.png" alt="Sip Sober map preview" loading="lazy">
+    <div class="feature-title">NYC’s Zero-Proof Map</div>
+    <p class="feature-text">Bars & restaurants with real zero-proof menus.</p>
+  </article>
 
-          <article class="feature-card">
-            <div class="feature-kicker">Feature</div>
-            <div class="feature-title">Save your go-to spots</div>
-            <p class="feature-text">
-              Create an account to favorite venues and build your own list of places you trust for zero-proof drinks, from date-night spots to casual neighborhood hangs.
-            </p>
-          </article>
-        </div>
+  <article class="feature-card feature-card--image">
+    <img class="feature-img" src="feature-filters.png" alt="Filter by brand and neighborhood" loading="lazy">
+    <div class="feature-title">Filter by Brand & Neighborhood</div>
+    <p class="feature-text">Because details matter.</p>
+  </article>
+
+  <article class="feature-card feature-card--image">
+    <img class="feature-img" src="feature-favorites.png" alt="Save favorite zero-proof spots" loading="lazy">
+    <div class="feature-title">Save Your Go-To Spots</div>
+    <p class="feature-text">Your zero-proof list, all in one place.</p>
+  </article>
+
+</div>
+
       </section>
 
     
