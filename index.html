@@ -396,71 +396,81 @@ h2, h3, h4, h5, h6 {
     line-height: 1.2;
   }
 
-  /* HERO — MOBILE (keeps phone image visible) */
-  .hero {
-    height: auto;
-    min-height: 0;
-    padding: 56px 0 64px;
-  }
+  /* HERO — MOBILE (stack + readable) */
+.hero {
+  height: auto;
+  min-height: 0;
+  padding: 64px 0 44px;
+}
 
-  .hero-overlay {
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0 18px;
-    gap: 28px;
-  }
+/* hero-overlay is GRID on desktop, so mobile must also be grid */
+.hero-overlay {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: start;
+  justify-content: center;
+  padding: 0 18px;
+}
 
-  .hero-content-centered {
-    max-width: 100%;
-    text-align: left;
-  }
+/* Text block */
+.hero-content-centered {
+  max-width: 520px;
+  text-align: left;
+}
 
-  .hero-brand {
-    font-size: 27px;
-    letter-spacing: 0.04em;
-    margin-bottom: 10px;
-  }
+/* Brand + type sizing (prevents single-word wrapping) */
+.hero-brand {
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
 
-  .hero-kicker {
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    margin-bottom: 14px;
-  }
+/* You removed this in HTML, so keep it hidden */
+.hero-kicker {
+  display: none;
+}
 
-  .hero-title {
-    font-size: 24px;
-    line-height: 1.15;
-    margin-bottom: 16px;
-  }
+.hero-title {
+  font-size: 40px;
+  line-height: 1.08;
+  margin-bottom: 12px;
+}
 
-  .hero-subtitle {
-    font-size: 13px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-  }
+.hero-subtitle {
+  font-size: 16px;
+  line-height: 1.4;
+  max-width: 34ch;
+  margin-bottom: 18px;
+}
 
-  .hero-ctas { justify-content: flex-start; }
+/* Media stack: phone then CTA */
+.hero-media {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+}
 
-  .hero-media { width: 100%; justify-content: center; }
+.hero-media img {
+  width: min(320px, 78vw);
+  max-width: none;
+  height: auto;
+}
 
-  .hero-media img { max-width: 260px; }
+.hero-cta {
+  text-align: center;
+}
+
+.app-store-button {
+  font-size: 18px;
+  max-width: none;
+}
+
 
 } /* ✅ IMPORTANT: close the 720px media query */
 
-    
-/* ⭐ Override ONLY the hero Launch Map button */
-.hero-ctas .btn-primary {
-  background: #ffffff !important;
-  color: #202329 !important;
-  border: 2px solid #202329 !important;
-}
-
-.hero-ctas .btn-primary:hover {
-  background: #f1f1f1 !important;
-  color: #202329 !important;
-  opacity: 1;
-}
 
   </style>
 
