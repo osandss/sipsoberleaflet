@@ -92,6 +92,19 @@
       color: #2f3b69;
     }
 
+    /* =========================
+   Dropdown menus: show ~4 items + scroll
+   ========================= */
+
+.dropdown .menu {
+  max-height: 220px;          /* ~4 rows */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+    
     #goBtn {
       background: #202329;
       color: white;
