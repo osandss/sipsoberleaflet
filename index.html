@@ -93,10 +93,10 @@ h2, h3, h4, h5, h6 {
 
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  gap: 56px;
+  gap: 40px;
   align-items: center;
 
-  padding: 0 8vw;
+  padding: 0 22px;
   box-sizing: border-box;
 }
 
@@ -109,20 +109,21 @@ h2, h3, h4, h5, h6 {
   color: #ffffff;
 }
 
-/* Right-side hero image */
 .hero-media {
   display: grid;
-  grid-template-columns: auto 1fr; /* phone | CTA */
-  gap: 28px;
+  justify-items: end;
   align-items: center;
-  justify-content: start;  /* ✅ change from center */
 }
 
+
 .hero-media img {
-  width: 260px;        /* ✅ match the reference */
-  max-width: 260px;
+  width: 280px;
+  max-width: 280px;
   height: auto;
+  box-shadow: none;
+  filter: none;
 }
+
 
 /* HERO CTA (right of phone) */
 .hero-cta {
@@ -497,26 +498,25 @@ h2, h3, h4, h5, h6 {
     <div class="hero-content-centered">
       <h1 class="hero-brand">SIP SOBER</h1>
 
+      <h2 class="hero-title">
+        NYC’s Zero-Proof Map
+      </h2>
 
-     <h2 class="hero-title">
-  NYC’s Zero-Proof Map
-</h2>
+      <p class="hero-subtitle">
+        Bars & restaurants with real zero-proof menus.
+      </p>
 
-
-     <p class="hero-subtitle">
-  Bars & restaurants with real zero-proof menus.
-</p>
-
+      <!-- ✅ CTA belongs with the text -->
+      <div class="hero-cta">
+        <a class="cta-button" href="#" target="_blank" rel="noopener">
+          Download on the App Store
+        </a>
+      </div>
     </div>
 
+    <!-- ✅ hero-media is now ONLY the phone -->
     <div class="hero-media">
       <img src="phone-mockup.png" alt="Sip Sober app preview" />
-      <div class="hero-cta">
-  <a href="https://apps.apple.com" class="app-store-button">
-    Download on the App Store
-  </a>
-</div>
-
     </div>
 
   </div>
