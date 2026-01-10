@@ -382,7 +382,45 @@ h2, h3, h4, h5, h6 {
 @media (max-width: 720px) {
 
   /* Layout sections */
-  .feature-grid { grid-template-columns: minmax(0, 1fr); }
+  section {
+    margin-top: 32px;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 18px;
+  }
+
+.feature-card {
+  padding: 0;
+}
+
+.feature-img-wrap {
+  padding: 14px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.feature-img {
+  max-width: 280px;   /* adjust 260–300 if needed */
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+.feature-title {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.feature-text {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
   .cta-panel { align-items: flex-start; }
 
   /* Section headings */
@@ -445,24 +483,19 @@ h2, h3, h4, h5, h6 {
   margin-bottom: 18px;
 }
 
-/* Media stack: phone then CTA */
 .hero-media {
-  grid-template-columns: 1fr;
-  justify-items: center;
-  justify-content: center;
-  gap: 14px;
+  display: grid;
+  justify-items: start; /* feels more like a landing page */
   width: 100%;
+  margin-top: 6px;
 }
 
-.hero-media img {
-  width: 200px;
-  max-width: 200px;
-  height: auto;
+/* CTA now lives in the text column */
+.hero-content-centered .hero-cta {
+  text-align: left;
+  margin-top: 12px;
 }
 
-.hero-cta {
-  text-align: center;
-}
 
 .app-store-button {
   font-size: 15px;
