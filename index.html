@@ -441,14 +441,14 @@ h2, h3, h4, h5, h6 {
 .hero {
   height: auto;
   min-height: 0;
-  padding: 34px 0 22px;
+  padding: 22px 0 16px;
 }
 
 /* hero-overlay is GRID on desktop, so mobile must also be grid */
 .hero-overlay {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 18px;
+  gap: 14px;
   align-items: start;
   justify-content: center;
   padding: 0 18px;
@@ -501,21 +501,15 @@ h2, h3, h4, h5, h6 {
 
 /* CTA now lives in the text column */
 .hero-content-centered .hero-cta {
-  text-align: center;
+  text-align: left;
   margin-top: 12px;
 }
 
-
-/* CTA button — mobile */
-.cta-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.hero-content-centered .btn-ghost-light {
   width: 100%;
   max-width: 320px;
-  font-size: 15px;
+  justify-content: center;
 }
-
 
 } /* ✅ IMPORTANT: close the 720px media query */
 
@@ -555,7 +549,7 @@ h2, h3, h4, h5, h6 {
 
       <!-- ✅ CTA belongs with the text -->
       <div class="hero-cta">
-        <a class="cta-button" href="#" target="_blank" rel="noopener">
+        <a class="btn-ghost-light" href="#" target="_blank" rel="noopener">
           Download on the App Store
         </a>
       </div>
