@@ -171,6 +171,33 @@ h2, h3, h4, h5, h6 {
   margin: 0 0 26px;          /* ✅ change from 0 auto 22px */
 }
 
+.hero-platform{
+  margin: 10px 0 0;
+  font-size: 13px;
+  opacity: 0.78;
+  letter-spacing: 0.02em;
+}
+
+.hero-bullets{
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0;
+  display: grid;
+  gap: 10px;
+  opacity: 0.92;
+}
+
+.hero-bullets li{
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.hero-bullets li::before{
+  content: "✓";
+  margin-right: 10px;
+  opacity: 0.9;
+}
+    
 .hero-ctas {
   display: flex;
   flex-wrap: wrap;
@@ -178,7 +205,6 @@ h2, h3, h4, h5, h6 {
   gap: 12px;
   margin-bottom: 10px;
 }
-
 
 .hero-note {
   font-size: 11px;
@@ -443,76 +469,83 @@ h2, h3, h4, h5, h6 {
   }
 
   /* HERO — MOBILE (clean app landing) */
-.hero{
-  height: auto;
-  min-height: 0;
-  padding: 56px 0 40px;
-}
+  .hero{
+    height: auto;
+    min-height: 0;
+    padding: 56px 0 40px;
+  }
 
-.hero-overlay{
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 22px;
-  padding: 0 18px;
-}
+  .hero-overlay{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 0 18px;
+  }
 
-.hero-inner{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  .hero-inner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   
-.hero-content-centered{
-  max-width: 520px;
-  margin: 0 auto;
-  text-align: center;
-}
+  .hero-content-centered{
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: center;
+  }
 
-.hero-brand{
-  font-size: 20px;
-  letter-spacing: 0.14em;
-  margin-bottom: 14px;
-  white-space: nowrap;
-}
+  .hero-brand{
+    font-size: 20px;
+    letter-spacing: 0.14em;
+    margin-bottom: 14px;
+    white-space: nowrap;
+  }
 
-.hero-title {
-  font-size: 26px;
-  line-height: 1.12;
-  text-align: center;
-  max-width: 22ch;
-  margin: 0 auto 10px;
-}
+  .hero-title {
+    font-size: 26px;
+    line-height: 1.12;
+    text-align: center;
+    max-width: 22ch;
+    margin: 0 auto 10px;
+  }
 
-.hero-subtitle{
-  font-size: 15px;
-  line-height: 1.5;
-  margin: 0 auto 16px;
-  max-width: 34ch;
-  opacity: 0.92;
-}
+  .hero-subtitle{
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 0 auto 16px;
+    max-width: 34ch;
+    opacity: 0.92;
+  }
 
-.hero-cta{
-  margin-top: 6px;
-}
+  .hero-cta{
+    margin-top: 6px;
+  }
 
-.appstore-badge img{
-  height: 44px;
-  width: auto;
-  display: block;
-}
+  .appstore-badge img{
+    height: 44px;
+    width: auto;
+    display: block;
+  }
 
-.hero-media{
-  display: flex;
-  justify-content: center;
-  padding-top: 10px;
-}
+  .hero-media{
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+  }
 
-.hero-media img{
-  width: 240px;
-  max-width: 72vw;
-  height: auto;
-  box-shadow: none;
-}
+  .hero-media img{
+    width: 240px;
+    max-width: 72vw;
+    height: auto;
+    box-shadow: none;
+  }
+
+  /* Hero bullets — mobile only */
+  .hero-bullets{
+    max-width: 30ch;
+    margin: 16px auto 0;
+    text-align: left;
+  }
 
 } /* ✅ IMPORTANT: close the 720px media query */
 
@@ -535,40 +568,48 @@ h2, h3, h4, h5, h6 {
 <body>
   <div class="page">
   
-  <section class="hero">
-    <div class="hero-overlay">
-      <div class="container">
-        <div class="hero-inner">
+ <section class="hero">
+  <div class="hero-overlay">
+    <div class="container">
+      <div class="hero-inner">
 
-          <div class="hero-content-centered">
-            <h1 class="hero-brand">SIP SOBER</h1>
+        <div class="hero-content-centered">
+          <h1 class="hero-brand">SIP SOBER</h1>
 
-            <h2 class="hero-title">
-              See what non-alcoholic drinks are actually available — before you go out.
-            </h2>
+          <h2 class="hero-title">
+            See what non-alcoholic drinks are actually available — before you go out.
+          </h2>
 
-            <p class="hero-subtitle">
-              A map of NYC bars and restaurants with real zero-proof options.
-            </p>
+          <p class="hero-subtitle">
+            A map of NYC bars and restaurants with real zero-proof options.
+          </p>
 
-            <div class="hero-cta">
-              <a class="appstore-badge"
-                href="https://apps.apple.com/us/app/sip-sober/id6756894415"
-                target="_blank" rel="noopener">
-                <img src="appstore-badge.svg" alt="Download on the App Store">
-              </a>
-            </div>
+          <p class="hero-platform">Available on iPhone • NYC</p>
+
+          <div class="hero-cta">
+            <a class="appstore-badge"
+              href="https://apps.apple.com/us/app/sip-sober/id6756894415"
+              target="_blank" rel="noopener">
+              <img src="appstore-badge.svg" alt="Download on the App Store">
+            </a>
           </div>
 
-
-          <div class="hero-media">
-            <img src="phone-mockup.png" alt="Sip Sober app preview" />
-          </div>
-
+          <ul class="hero-bullets">
+            <li>Filter by neighborhood & brand</li>
+            <li>See what’s actually on the menu</li>
+            <li>Save your favorite spots</li>
+          </ul>
         </div>
+
+        <div class="hero-media">
+          <img src="phone-mockup.png" alt="Sip Sober app preview" />
+        </div>
+
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <div class="page-divider"></div>
 
