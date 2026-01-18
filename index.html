@@ -261,6 +261,18 @@ h2, h3, h4, h5, h6 {
       padding: 56px 0;
     }
 
+    /* Fix giant gap between hero and first section */
+    .hero + .page-divider {
+      height: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .hero + .page-divider + main > section:first-of-type {
+      padding-top: 32px; /* reduce space above "What is Sip Sober?" */
+    }
+
+
     .section-heading {
       margin-bottom: 18px;
       max-width: 760px;
