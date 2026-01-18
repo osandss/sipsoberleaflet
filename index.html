@@ -73,33 +73,25 @@ h2, h3, h4, h5, h6 {
 .hero {
   position: relative;
   margin-top: 0;
-  height: 72vh;
-  min-height: 620px;
-  max-height: 760px;
-
-  /* SOLID BRAND BACKGROUND */
+  height: auto;
+  min-height: 0;
+  padding: 92px 0;
   background-color: #202239;
-
-  display: flex;
-  align-items: center;
+  display: block;
 }
 
 
 /* Overlay container to center content */
 .hero-overlay {
   width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
+}
 
+.hero-inner {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: 64px;
   align-items: center;
-
-  padding: 0 18px;
-  box-sizing: border-box;
 }
-
 
 /* Centered text block on top of image */
 .hero-content-centered {
@@ -110,8 +102,8 @@ h2, h3, h4, h5, h6 {
 }
 
 .hero-media {
-  display: grid;
-  justify-items: end;
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
 }
 
