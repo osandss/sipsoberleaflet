@@ -52,7 +52,7 @@
     .container {
       max-width: 1080px;
       margin: 0 auto;
-      padding: 24px 18px 60px;
+      padding: 0 18px;
       width: 100%;
     }
 
@@ -73,15 +73,15 @@ h2, h3, h4, h5, h6 {
 .hero {
   position: relative;
   margin-top: 0;
-  height: 65vh;
-  min-height: 600px;
+  height: 72vh;
+  min-height: 620px;
+  max-height: 760px;
 
   /* SOLID BRAND BACKGROUND */
   background-color: #202239;
 
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 
@@ -92,11 +92,11 @@ h2, h3, h4, h5, h6 {
   margin: 0 auto;
 
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 40px;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 64px;
   align-items: center;
 
-  padding: 0 22px;
+  padding: 0 18px;
   box-sizing: border-box;
 }
 
@@ -117,8 +117,8 @@ h2, h3, h4, h5, h6 {
 
 
 .hero-media img {
-  width: 280px;
-  max-width: 280px;
+  width: 420px;
+  max-width: 100%;
   height: auto;
   box-shadow: none;
   filter: none;
@@ -155,10 +155,11 @@ h2, h3, h4, h5, h6 {
 
 .hero-title {
   font-family: "Playfair Display", serif;
-  font-size: 50;
-  line-height: 1.2;
-  margin-bottom: 16px;
+  font-size: 44px;
+  line-height: 1.15;
+  margin-bottom: 14px;
   color: #ffffff;
+  max-width: 42ch;
 }
 
 .hero-title span {
@@ -168,7 +169,7 @@ h2, h3, h4, h5, h6 {
 .hero-subtitle {
   font-size: 15px;
   color: #f7f7ff;
-  max-width: 520px;
+  max-width: 52ch;
   margin: 0 0 22px;          /* ✅ change from 0 auto 22px */
 }
 
@@ -232,11 +233,13 @@ h2, h3, h4, h5, h6 {
 
     /* SECTION BLOCKS */
     section {
-      margin-top: 48px;
+      margin-top: 0;
+      padding: 84px 0;
     }
 
     .section-heading {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
+      max-width: 760px;
     }
 
     .section-title {
@@ -254,24 +257,26 @@ h2, h3, h4, h5, h6 {
     }
 
     .about-body {
-      font-size: 14px;
-      max-width: 640px;
+      font-size: 15px;
+      max-width: 760px;
       margin-top: 10px;
       color: var(--ss-text-main);
+      line-height: 1.75;
     }
 
     .feature-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px; /* slightly more air between, less inside */
-  margin-top: 24px;
+  gap: 44px;
+  margin-top: 34px;
+  align-items: start;
 }
 
 
     .feature-card {
   background: transparent;
   border: none;
-  padding: 4px;
+  padding: 0;
 }
 
 
@@ -284,15 +289,16 @@ h2, h3, h4, h5, h6 {
     }
 
     .feature-title {
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 4px;
-      margin-top: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      margin: 10px 0 6px;
     }
 
     .feature-text {
       font-size: 13px;
       color: var(--ss-text-muted);
+      line-height: 1.6;
+      max-width: 42ch;
     }
 
     /* Image-based feature cards */
@@ -302,20 +308,20 @@ h2, h3, h4, h5, h6 {
 
     /* Image well inside feature cards */
 .feature-img-wrap {
-  background: #ffffff;
-  padding: 12px;
-  border-radius: 18px;
-  margin-bottom: 12px;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  margin-bottom: 14px;
 }
 
 .feature-img {
   display: block;
   width: 100%;
-  max-width: 220px;
+  max-width: 320px;
   height: auto;
-  margin: 0 auto;
-  border-radius: 14px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+  margin: 0 auto 22px auto;
+  border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
 }
 
 
@@ -535,93 +541,100 @@ h2, h3, h4, h5, h6 {
 <body>
   <div class="page">
   
-
   <section class="hero">
-  <div class="hero-overlay">
+    <div class="hero-overlay">
+      <div class="container">
+        <div class="hero-inner">
 
-    <div class="hero-content-centered">
-      <h1 class="hero-brand">SIP SOBER</h1>
+          <div class="hero-content-centered">
+            <h1 class="hero-brand">SIP SOBER</h1>
 
-      <h2 class="hero-title">
-        See what non-alcoholic drinks are actually available — before you go out.
-      </h2>
+            <h2 class="hero-title">
+              See what non-alcoholic drinks are actually available — before you go out.
+            </h2>
 
-      <p class="hero-subtitle">
-        A map of NYC bars and restaurants with real zero-proof options.
-      </p>
+            <p class="hero-subtitle">
+              A map of NYC bars and restaurants with real zero-proof options.
+            </p>
 
-      <!-- ✅ CTA belongs with the text -->
-      <div class="hero-cta">
-        <a class="btn-ghost-light" href="https://apps.apple.com/us/app/sip-sober/id6756894415" target="_blank" rel="noopener">
-          Download on the App Store
-        </a>
+            <div class="hero-cta">
+              <a class="btn-ghost-light"
+                href="https://apps.apple.com/us/app/sip-sober/id6756894415"
+                target="_blank" rel="noopener">
+              Download on the App Store
+              </a>
+            </div>
+          </div>
+
+          <div class="hero-media">
+            <img src="phone-mockup.png" alt="Sip Sober app preview" />
+          </div>
+
+        </div>
       </div>
     </div>
+  </section>
 
-    <!-- ✅ hero-media is now ONLY the phone -->
-    <div class="hero-media">
-      <img src="phone-mockup.png" alt="Sip Sober app preview" />
-    </div>
-
-  </div>
-</section>
+  <div class="page-divider"></div>
 
 
 <!-- START PAGE CONTENT -->
-<main class="container">
+<main>
   
       <!-- ABOUT -->
-<section id="about">
-  <div class="section-heading">
-    <h2 class="section-title">What is Sip Sober?</h2>
-    <p class="section-intro">
-      Sip Sober was built for nights out when you're not drinking - but still want a great experience.
+<section id="about" class="section">
+  <div class="container">
+    <div class="section-heading">
+      <h2 class="section-title">What is Sip Sober?</h2>
+      <p class="section-intro">
+        Sip Sober was built for nights out when you're not drinking — but still want a great experience.
+      </p>
+    </div>
+
+    <p class="about-body">
+      Menus rarely show non-alcoholic options clearly, which makes choosing where to go surprisingly hard. Sip Sober solves that by showing what’s actually available at bars and restaurants across NYC.
+      <br><br>
+      Filter by neighborhood or brand, see what’s on the menu, and save the spots you want to come back to.
     </p>
   </div>
-
-  <p class="about-body">
-    Menus rarely show non-alcoholic options clearly, which makes choosing where to go surprisingly hard. Sip Sober solves that by showing what’s actually available at bars and restaurants across NYC.
-    <br><br>
-    Filter by neighborhood or brand, see what’s on the menu, and save the spots you want to come back to.
-  </p>
 </section>
 
       <!-- FEATURES -->
-      <section id="features">
-        <div class="section-heading">
-          <h2 class="section-title">Features</h2>
-          <p class="section-intro">
-            Everything you need to choose where to go — without guessing.
-          </p>
-        </div>
+<section id="features" class="section">
+  <div class="container">
+    <div class="section-heading">
+      <h2 class="section-title">Features</h2>
+      <p class="section-intro">
+        Everything you need to choose where to go — without guessing.
+      </p>
+    </div>
 
-        <div class="feature-grid">
+    <div class="feature-grid">
 
-  <article class="feature-card feature-card--image">
-    <img class="feature-img" src="feature-map.png" alt="Sip Sober map preview" loading="lazy">
-    <div class="feature-title">NYC’s Zero-Proof Map</div>
-    <p class="feature-text">Bars and restaurants with real zero-proof menus—clearly marked and easy to explore.</p>
-  </article>
+      <article class="feature-card feature-card--image">
+        <img class="feature-img" src="feature-map.png" alt="Sip Sober map preview" loading="lazy">
+        <div class="feature-title">NYC’s Zero-Proof Map</div>
+        <p class="feature-text">Bars and restaurants with real zero-proof menus—clearly marked and easy to explore.</p>
+      </article>
 
-  <article class="feature-card feature-card--image">
-    <img class="feature-img" src="feature-filters.png" alt="Filter by brand and neighborhood" loading="lazy">
-    <div class="feature-title">Filter by Brand & Neighborhood</div>
-    <p class="feature-text">Because details matter.</p>
-  </article>
+      <article class="feature-card feature-card--image">
+        <img class="feature-img" src="feature-filters.png" alt="Filter by brand and neighborhood" loading="lazy">
+        <div class="feature-title">Filter by Brand & Neighborhood</div>
+        <p class="feature-text">Find spots based on what you actually want to drink — and where you want to be.</p>
+      </article>
 
-  <article class="feature-card feature-card--image">
-    <img class="feature-img" src="feature-favorites.png" alt="Save favorite zero-proof spots" loading="lazy">
-    <div class="feature-title">Save Your Go-To Spots</div>
-    <p class="feature-text">Your zero-proof list, all in one place.</p>
-  </article>
+      <article class="feature-card feature-card--image">
+        <img class="feature-img" src="feature-favorites.png" alt="Save favorite zero-proof spots" loading="lazy">
+        <div class="feature-title">Save Your Go-To Spots</div>
+        <p class="feature-text">Your zero-proof list, all in one place.</p>
+      </article>
 
-</div>
+    </div> <!-- /.feature-grid -->
+  </div> <!-- /.container -->
+</section>
 
-      </section>
-
+</main>
     
-    </main>
-
     <footer>
       <div class="footer-inner">
         <div>© <span id="year"></span> Sip Sober NYC.</div>
