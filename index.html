@@ -442,80 +442,69 @@ h2, h3, h4, h5, h6 {
     line-height: 1.2;
   }
 
-  /* HERO — MOBILE (stack + readable) */
-.hero {
+  /* HERO — MOBILE (clean app landing) */
+.hero{
   height: auto;
   min-height: 0;
-  padding: 22px 0 16px;
+  padding: 56px 0 40px;
 }
 
-/* hero-overlay is GRID on desktop, so mobile must also be grid */
-.hero-overlay {
+.hero-overlay{
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
-  align-items: start;
-  justify-content: center;
+  gap: 22px;
   padding: 0 18px;
 }
 
-/* Text block */
-.hero-content-centered {
+.hero-content-centered{
   max-width: 520px;
-  text-align: center;
+  margin: 0 auto;
+  text-align: left;
 }
 
-/* Brand + type sizing (prevents single-word wrapping) */
-.hero-brand {
-  font-size: 27px;
-  letter-spacing: 0.12em;
-  margin-bottom: 12px;
-}
-
-/* You removed this in HTML, so keep it hidden */
-.hero-kicker {
-  display: none;
-}
-
-.hero-title {
-  font-size: 24px;
-  line-height: 1.08;
-  margin-bottom: 10px;
-}
-
-.hero-subtitle {
-  font-size: 15px;
-  line-height: 1.4;
+.hero-brand{
+  font-size: 20px;
+  letter-spacing: 0.14em;
   margin-bottom: 14px;
+  white-space: nowrap;
 }
 
-.hero-media {
-  display: grid;
-  justify-items: center;
-  width: 100%;
+.hero-title{
+  font-size: 34px;
+  line-height: 1.08;
+  margin-bottom: 14px;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle{
+  font-size: 15px;
+  line-height: 1.55;
+  margin-bottom: 16px;
+  max-width: 34ch;
+  opacity: 0.92;
+}
+
+.hero-cta{
   margin-top: 6px;
 }
 
-/* Phone mockup in hero — mobile */
-.hero-media img {
-  width: 170px;
-  max-width: 170px;
-  height: auto;
-}
-
-
-/* CTA now lives in the text column */
-.hero-content-centered .hero-cta {
-  text-align: center;
-  margin-top: 12px;
-}
-
-.hero-content-centered .btn-ghost-light {
+.appstore-badge img{
+  height: 44px;
   width: auto;
-  max-width: none;
-  padding: 10px 18px;
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  display: block;
+}
+
+.hero-media{
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.hero-media img{
+  width: 240px;
+  max-width: 72vw;
+  height: auto;
+  box-shadow: none;
 }
 
 } /* ✅ IMPORTANT: close the 720px media query */
