@@ -107,13 +107,12 @@ h2, h3, h4, h5, h6 {
   align-items: center;
 }
 
-
-.hero-media img {
-  width: 420px;
+.hero-media img{
+  width: 430px;
   max-width: 100%;
   height: auto;
-  box-shadow: none;
-  filter: none;
+  transform: translateY(6px);
+  box-shadow: 0 28px 90px rgba(0,0,0,0.35);
 }
 
 
@@ -122,6 +121,13 @@ h2, h3, h4, h5, h6 {
   text-align: left;
 }
 
+ /* App Store badge (hero CTA) */
+.appstore-badge img {
+  height: 44px;
+  width: auto;
+  display: block;
+}
+   
 /* App Store text CTA */
 .app-store-button {
   display: inline-block;
@@ -135,10 +141,10 @@ h2, h3, h4, h5, h6 {
 
 .hero-brand {
   font-family: "Playfair Display", serif;
-  font-size: 40px;       /* ✅ small brand label */
-  letter-spacing: 0.12em;
+  font-size: 34px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
   color: #ffffff;
   opacity: 0.95;
 }
@@ -147,11 +153,11 @@ h2, h3, h4, h5, h6 {
 
 .hero-title {
   font-family: "Playfair Display", serif;
-  font-size: 44px;
-  line-height: 1.15;
-  margin-bottom: 14px;
+  font-size: 52px;
+  line-height: 1.08;
+  margin-bottom: 16px;
   color: #ffffff;
-  max-width: 42ch;
+  max-width: 20ch;
 }
 
 .hero-title span {
@@ -159,10 +165,10 @@ h2, h3, h4, h5, h6 {
 }
 
 .hero-subtitle {
-  font-size: 15px;
+  font-size: 16px;
   color: #f7f7ff;
-  max-width: 52ch;
-  margin: 0 0 22px;          /* ✅ change from 0 auto 22px */
+  max-width: 48ch;
+  margin: 0 0 26px;          /* ✅ change from 0 auto 22px */
 }
 
 .hero-ctas {
@@ -550,13 +556,14 @@ h2, h3, h4, h5, h6 {
             </p>
 
             <div class="hero-cta">
-              <a class="btn-ghost-light"
+              <a class="appstore-badge"
                 href="https://apps.apple.com/us/app/sip-sober/id6756894415"
                 target="_blank" rel="noopener">
-              Download on the App Store
+                <img src="appstore-badge.svg" alt="Download on the App Store">
               </a>
             </div>
           </div>
+
 
           <div class="hero-media">
             <img src="phone-mockup.png" alt="Sip Sober app preview" />
