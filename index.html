@@ -75,7 +75,7 @@ h2, h3, h4, h5, h6 {
   margin-top: 0;
   height: auto;
   min-height: 0;
-  padding: 64px 0 56px;
+  padding: 88px 0 88px;
   background-color: #202239;
   display: block;
 }
@@ -108,7 +108,7 @@ h2, h3, h4, h5, h6 {
 }
 
 .hero-media img{
-  width: 430px;
+  width: 400px;
   max-width: 100%;
   height: auto;
   transform: none;
@@ -121,6 +121,10 @@ h2, h3, h4, h5, h6 {
   text-align: left;
 }
 
+.hero-cta .hero-platform {
+  margin: 0;
+}
+    
  /* App Store badge (hero CTA) */
 .appstore-badge img {
   height: 44px;
@@ -154,10 +158,10 @@ h2, h3, h4, h5, h6 {
 .hero-title {
   font-family: "Playfair Display", serif;
   font-size: 46px;
-  line-height: 1.08;
-  margin-bottom: 16px;
+  line-height: 1.05;
+  margin-bottom: 18px;
   color: #ffffff;
-  max-width: 20ch;
+  max-width: 22ch;
 }
 
 .hero-title span {
@@ -168,7 +172,7 @@ h2, h3, h4, h5, h6 {
   font-size: 16px;
   color: #f7f7ff;
   max-width: 48ch;
-  margin: 0 0 26px;          /* ✅ change from 0 auto 22px */
+  margin: 0 0 22px;          /* ✅ change from 0 auto 22px */
 }
 
 .hero-platform{
@@ -181,10 +185,10 @@ h2, h3, h4, h5, h6 {
 .hero-bullets{
   list-style: none;
   padding: 0;
-  margin: 18px 0 0;
+  margin: 26px 0 0;
   display: grid;
   gap: 10px;
-  opacity: 0.92;
+  opacity: 0.78;
 }
 
 .hero-bullets li{
@@ -204,6 +208,8 @@ h2, h3, h4, h5, h6 {
   justify-content: flex-start; /* ✅ change from center */
   gap: 12px;
   margin-bottom: 10px;
+  margin-top: 18px;
+  align-items: center;
 }
 
 .hero-note {
@@ -591,16 +597,18 @@ h2, h3, h4, h5, h6 {
           <h1 class="hero-brand">SIP SOBER</h1>
 
           <h2 class="hero-title">
-            See what non-alcoholic drinks are actually available — before you go out.
+            See what non-alcoholic drinks<br>
+            are actually available —<br>
+            before you go out.
           </h2>
 
           <p class="hero-subtitle">
             A map of NYC bars and restaurants with real zero-proof options.
           </p>
 
-          <p class="hero-platform">Available on iPhone • NYC</p>
+           <div class="hero-cta">
+            <p class="hero-platform">Available on iPhone • NYC</p>
 
-          <div class="hero-cta">
             <a class="appstore-badge"
               href="https://apps.apple.com/us/app/sip-sober/id6756894415"
               target="_blank" rel="noopener">
