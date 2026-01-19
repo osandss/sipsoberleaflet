@@ -271,6 +271,17 @@ h2, h3, h4, h5, h6 {
       padding: 56px 0;
     }
 
+    /* Prevent double padding between consecutive sections */
+    section + section {
+      padding-top: 28px;
+    }
+
+    /* Remove extra bottom gap caused by last paragraph margin */
+    section p:last-of-type {
+      margin-bottom: 0;
+    }
+
+
     /* Fix giant gap between hero and first section */
     .hero + .page-divider {
       height: 0;
