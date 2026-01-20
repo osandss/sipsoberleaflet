@@ -702,13 +702,16 @@ h2, h3, h4, h5, h6 {
   }
 
   .hero-inner{
-    display: block;      /* ✅ no flex centering */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+
   
   .hero-content-centered{
     max-width: 560px;
     margin: 0 auto;
-    text-align: left;    /* ✅ more natural on mobile */
+    text-align: center;    /* ✅ more natural on mobile */
   }
 
   .hero-brand{
@@ -723,13 +726,13 @@ h2, h3, h4, h5, h6 {
     line-height: 1.15;
     max-width: 26ch;
     margin: 0 0 10px;
-    text-align: left;
+    text-align: center;
   }
 
   .hero-subtitle{
     font-size: 14px;
     line-height: 1.55;
-    margin: 0 0 14px;
+    margin: 0 auto 14px;
     max-width: 42ch;
     opacity: 0.92;
   }
@@ -739,8 +742,8 @@ h2, h3, h4, h5, h6 {
     margin-bottom: 0;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* ✅ left aligned */
-    text-align: left;
+    align-items: center;
+    text-align: center;
   }
 
   .appstore-badge img{
