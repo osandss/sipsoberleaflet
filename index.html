@@ -69,56 +69,59 @@ h2, h3, h4, h5, h6 {
   margin-bottom: 16px;
 }
 
-
 .hero {
   position: relative;
   margin-top: 0;
   height: auto;
   min-height: 0;
   padding: 88px 0 88px;
-  background-color: #202239;
   display: block;
+  overflow: hidden;
 }
 
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      rgba(32, 34, 57, 0.78),
+      rgba(32, 34, 57, 0.78)
+    ),
+    url("hero-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
 
-/* Overlay container to center content */
 .hero-overlay {
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
-.hero-inner {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 64px;
+.hero-inner{
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 18px;
+  min-height: 78vh; /* optional: gives the "hero" height like examples */
 }
 
-/* Centered text block on top of image */
-.hero-content-centered {
-  text-align: left;
-  max-width: 620px;
+.hero-content-centered{
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
   padding: 0;
   color: #ffffff;
-}
-
-.hero-media {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.hero-media img{
-  width: 400px;
-  max-width: 100%;
-  height: auto;
-  transform: none;
-  box-shadow: none;
 }
 
 
 /* HERO CTA (right of phone) */
 .hero-cta {
-  text-align: left;
+  text-align: center;
   margin-top: 18px;
 }
 
@@ -130,10 +133,11 @@ h2, h3, h4, h5, h6 {
 }
     
  /* App Store badge (hero CTA) */
-.appstore-badge img {
+.appstore-badge img{
   height: 44px;
   width: auto;
   display: block;
+  margin: 0 auto; /* ✅ centers badge */
 }
    
 /* App Store text CTA */
@@ -159,13 +163,15 @@ h2, h3, h4, h5, h6 {
 
 .hero-kicker { display: none; }
 
-.hero-title {
+.hero-title{
   font-family: "Playfair Display", serif;
   font-size: 44px;
   line-height: 1.05;
   margin-bottom: 18px;
   color: #ffffff;
-  max-width: 18ch;
+  max-width: 22ch;  /* ✅ more natural */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hero-title span {
@@ -637,10 +643,7 @@ h2, h3, h4, h5, h6 {
           </div>
         </div>
         
-        <div class="hero-media">
-          <img src="phone-mockup.png" alt="Sip Sober app preview" />
-        </div>
-
+        
       </div>
     </div>
   </div>
