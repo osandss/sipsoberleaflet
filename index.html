@@ -470,7 +470,7 @@ h2, h3, h4, h5, h6 {
 .feature-row{
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  gap: 24px;
   align-items: center;
 }
 
@@ -479,25 +479,26 @@ h2, h3, h4, h5, h6 {
 
 .feature-media img{
   width: 100%;
-  max-width: 320px;
+  max-width: 280px;
   height: auto;
   display: block;
   margin: 0 auto;
-  border-radius: 16px;
+  border-radius: 14px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
 }
 
 .feature-copy h2{
-  font-size: 26px;
-  line-height: 1.15;
-  margin: 0 0 12px;
+  font-size: 22px;
+  line-height: 1.25;
+  margin: 0 0 8px;
+  font-weight: 600;
 }
 
 .feature-copy p{
-  font-size: 16px;
-  line-height: 1.65;
-  max-width: 52ch;
-  opacity: 0.85;
-  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 46ch;
+  color: var(--ss-text-muted);
 }
 
 .feature-copy ul{
