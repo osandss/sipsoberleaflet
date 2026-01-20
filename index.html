@@ -420,6 +420,164 @@ h2, h3, h4, h5, h6 {
       gap: 10px;
     }
 
+    /* ===== Landing sections (Aaptiv-style layout) ===== */
+
+.band{
+  padding: 84px 0;
+  background: #ffffff;
+}
+
+.band-alt{
+  background: #f3f4f6;
+}
+
+.band-cta{
+  background: #ffffff;
+  text-align: center;
+}
+
+.band-inner{
+  max-width: 820px;
+}
+
+.band-title{
+  font-size: 14px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.band-lede{
+  font-size: 22px;
+  line-height: 1.35;
+  max-width: 46ch;
+  margin: 0 0 14px;
+  opacity: 0.9;
+}
+
+.band-body{
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 68ch;
+  opacity: 0.85;
+}
+
+/* Feature rows */
+.feature-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.feature-row--reverse .feature-media{ order: 2; }
+.feature-row--reverse .feature-copy{ order: 1; }
+
+.feature-media img{
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 18px;
+}
+
+.feature-copy h2{
+  font-size: 34px;
+  line-height: 1.15;
+  margin: 0 0 12px;
+}
+
+.feature-copy p{
+  font-size: 16px;
+  line-height: 1.65;
+  max-width: 52ch;
+  opacity: 0.85;
+  margin: 0 0 16px;
+}
+
+.feature-copy ul{
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 10px;
+  opacity: 0.9;
+}
+
+/* How it works */
+.how-title{
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.how-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.how-card{
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 18px;
+  padding: 22px;
+}
+
+.how-card h3{
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.how-card p{
+  margin: 0;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+/* Final CTA */
+.cta{
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.cta-title{
+  font-size: 34px;
+  margin: 0;
+}
+
+.cta-note{
+  margin: 0;
+  opacity: 0.75;
+  font-size: 13px;
+}
+
+/* Responsive */
+@media (max-width: 860px){
+  .band{ padding: 64px 0; }
+
+  .feature-row{
+    grid-template-columns: 1fr;
+    gap: 26px;
+    text-align: center;
+  }
+
+  .feature-copy p{
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .feature-copy ul{
+    text-align: left;
+    display: inline-grid;
+  }
+
+  .how-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+
     /* FOOTER */
     footer {
       border-top: 1px solid #dddfee;
@@ -656,60 +814,116 @@ h2, h3, h4, h5, h6 {
 
 <!-- START PAGE CONTENT -->
 <main>
-  
-      <!-- ABOUT -->
-<section id="about" class="section">
-  <div class="container">
-    <div class="section-heading">
-      <h2 class="section-title">What is Sip Sober?</h2>
-      <p class="section-intro">
-        Sip Sober was built for nights out when you're not drinking — but still want a great experience.
+
+  <!-- SECTION 1: What is Sip Sober (shorter, more “landing page” style) -->
+  <section id="about" class="band">
+    <div class="container band-inner">
+      <h2 class="band-title">What is Sip Sober?</h2>
+      <p class="band-lede">
+        NYC’s zero-proof discovery app for finding bars and restaurants with real non-alcoholic options.
+      </p>
+
+      <p class="band-body">
+        Menus rarely show non-alcoholic options clearly, which makes choosing where to go surprisingly hard.
+        Sip Sober solves that by showing what’s actually available—before you get there.
       </p>
     </div>
+  </section>
 
-    <p class="about-body">
-      Menus rarely show non-alcoholic options clearly, which makes choosing where to go surprisingly hard. Sip Sober solves that by showing what’s actually available at bars and restaurants across NYC.
-      <br><br>
-      Filter by neighborhood or brand, see what’s on the menu, and save the spots you want to come back to.
-    </p>
-  </div>
-</section>
+  <!-- SECTION 2: Feature row (image left, text right) -->
+  <section class="band band-alt">
+    <div class="container feature-row">
+      <div class="feature-media">
+        <img src="feature-map.png" alt="Sip Sober map preview" loading="lazy">
+      </div>
 
-      <!-- FEATURES -->
-<section id="features" class="section">
-  <div class="container">
-    <div class="section-heading">
-      <h2 class="section-title">Features</h2>
-      <p class="section-intro">
-        Everything you need to choose where to go — without guessing.
-      </p>
+      <div class="feature-copy">
+        <h2>All the benefits. None of the guessing.</h2>
+        <p>See real zero-proof options at bars and restaurants across NYC.</p>
+        <ul>
+          <li>Curated map of real menu options</li>
+          <li>Designed for quick decisions on the go</li>
+          <li>Built for nights out when you’re not drinking</li>
+        </ul>
+      </div>
     </div>
+  </section>
 
-    <div class="feature-grid">
+  <!-- SECTION 3: Feature row (text left, image right) -->
+  <section class="band">
+    <div class="container feature-row feature-row--reverse">
+      <div class="feature-media">
+        <img src="feature-filters.png" alt="Filter by brand and neighborhood" loading="lazy">
+      </div>
 
-      <article class="feature-card feature-card--image">
-        <img class="feature-img" src="feature-map.png" alt="Sip Sober map preview" loading="lazy">
-        <div class="feature-title">NYC’s Zero-Proof Map</div>
-        <p class="feature-text">Bars and restaurants with real zero-proof menus—clearly marked and easy to explore.</p>
-      </article>
+      <div class="feature-copy">
+        <h2>Filter by neighborhood and brand.</h2>
+        <p>Find spots based on what you actually want to drink—and where you want to be.</p>
+        <ul>
+          <li>Neighborhood-first browsing</li>
+          <li>Brand filtering (so you can find your favorites)</li>
+          <li>Clear, simple results</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-      <article class="feature-card feature-card--image">
-        <img class="feature-img" src="feature-filters.png" alt="Filter by brand and neighborhood" loading="lazy">
-        <div class="feature-title">Filter by Brand & Neighborhood</div>
-        <p class="feature-text">Find spots based on what you actually want to drink — and where you want to be.</p>
-      </article>
+  <!-- SECTION 4: Feature row (image left, text right) -->
+  <section class="band band-alt">
+    <div class="container feature-row">
+      <div class="feature-media">
+        <img src="feature-favorites.png" alt="Save favorite zero-proof spots" loading="lazy">
+      </div>
 
-      <article class="feature-card feature-card--image">
-        <img class="feature-img" src="feature-favorites.png" alt="Save favorite zero-proof spots" loading="lazy">
-        <div class="feature-title">Save Your Go-To Spots</div>
-        <p class="feature-text">Your zero-proof list, all in one place.</p>
-      </article>
+      <div class="feature-copy">
+        <h2>Save your go-to spots.</h2>
+        <p>Your zero-proof list, all in one place.</p>
+        <ul>
+          <li>Save venues you want to return to</li>
+          <li>Keep a personal shortlist for plans</li>
+          <li>Always know where to go next</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-    </div> <!-- /.feature-grid -->
-  </div> <!-- /.container -->
-</section>
+  <!-- SECTION 5: How it works -->
+  <section class="band">
+    <div class="container how">
+      <h2 class="how-title">How it works</h2>
+
+      <div class="how-grid">
+        <div class="how-card">
+          <h3>Choose a neighborhood</h3>
+          <p>Start where you are (or where you’re going).</p>
+        </div>
+
+        <div class="how-card">
+          <h3>Filter by brand</h3>
+          <p>Find places serving what you actually want.</p>
+        </div>
+
+        <div class="how-card">
+          <h3>Save favorites</h3>
+          <p>Keep a list for next time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: Final CTA -->
+  <section class="band band-cta">
+    <div class="container cta">
+      <h2 class="cta-title">Download Sip Sober</h2>
+      <a class="appstore-badge" href="https://apps.apple.com/us/app/sip-sober/id6756894415" target="_blank" rel="noopener">
+        <img src="appstore-badge.svg" alt="Download on the App Store">
+      </a>
+      <p class="cta-note">Available on iPhone • NYC</p>
+    </div>
+  </section>
 
 </main>
+
     
     <footer>
       <div class="footer-inner">
