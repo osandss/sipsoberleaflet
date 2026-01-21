@@ -649,11 +649,12 @@ h2, h3, h4, h5, h6 {
   margin-bottom: 12px;
 }
 
-.feature-img-wrap {
-  padding: 6px;
-  border-radius: 14px;
-  margin-bottom: 4px;
-}
+
+  /* MOBILE — collapse feature row spacing */
+  .feature-row{
+    gap: 16px;
+    align-items: flex-start;
+  }
 
 .feature-img {
   max-width: 140px;   /* 🔑 this is the key change */
@@ -663,6 +664,13 @@ h2, h3, h4, h5, h6 {
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.05);
 }
+
+  /* MOBILE — reduce image container height */
+  .feature-img-wrap{
+    padding: 4px;
+    margin-bottom: 6px;
+    border-radius: 14px;
+  }
 
 .feature-title {
   font-size: 15px;
@@ -674,6 +682,19 @@ h2, h3, h4, h5, h6 {
   font-size: 14px;
   line-height: 1.45;
 }
+
+  /* MOBILE — tighten bands */
+  .band{
+    padding: 20px 0;
+  }
+
+  /* MOBILE — shrink feature phone images */
+  .feature-media img{
+    max-width: 140px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 8px;
+  }
 
   .cta-panel { align-items: flex-start; }
 
