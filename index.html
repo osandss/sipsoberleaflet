@@ -82,17 +82,28 @@ h2, h3, h4, h5, h6 {
 .hero::before {
   content: "";
   position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      rgba(32, 34, 57, 0.78),
-      rgba(32, 34, 57, 0.78)
-    ),
-    url("hero-bg.jpg");
-  background-size: cover;
-  background-position: center;
+  inset: -40%;
   z-index: 0;
+
+  background:
+    radial-gradient(800px 520px at 20% 30%, rgba(241,167,197,0.14), transparent 60%),
+    radial-gradient(900px 620px at 80% 20%, rgba(120,140,255,0.16), transparent 55%),
+    radial-gradient(700px 520px at 60% 80%, rgba(60,200,190,0.12), transparent 55%),
+    linear-gradient(135deg, #060a14 0%, #121a34 45%, #070b17 100%);
+
+  filter: blur(18px) saturate(115%);
+  transform: translate3d(0,0,0);
+  animation: ss-heroGradient 16s ease-in-out infinite alternate;
 }
+
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0; /* keep it behind content, same layer as before */
+    background: radial-gradient(1200px 700px at 50% 40%, rgba(0,0,0,0.10), rgba(0,0,0,0.55));
+    pointer-events: none;
+  }
 
 .hero-overlay {
   width: 100%;
@@ -553,6 +564,20 @@ h2, h3, h4, h5, h6 {
   font-size: 13px;
 }
 
+/* =========================
+   HERO GRADIENT ANIMATION
+   ========================= */
+
+@keyframes ss-heroGradient {
+  0%   { transform: translate(-2%, -1%) scale(1.02); }
+  50%  { transform: translate(2%, 1%) scale(1.05); }
+  100% { transform: translate(-1%, 2%) scale(1.03); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before { animation: none; }
+}
+    
 /* Responsive */
 @media (max-width: 860px){
   .band{ padding: 36px 0; }
