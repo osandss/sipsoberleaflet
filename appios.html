@@ -163,8 +163,16 @@
 
     /* --- Search bar inside bottom panel --- */
     .ss-search {
-      padding: 10px 0 6px;
-     }
+    padding: 10px 0 6px;
+
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
 
   #searchInput {
     width: 100%;
