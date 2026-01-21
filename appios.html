@@ -36,7 +36,6 @@
   --panel-expanded: 38vh;
 }
 
-
     html,
     body {
       margin: 0;
@@ -162,6 +161,32 @@
       color: #1c1c1e;
     }
 
+    /* --- Search bar inside bottom panel --- */
+    .ss-search {
+      padding: 10px 0 6px;
+     }
+
+  #searchInput {
+    width: 100%;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: rgba(255,255,255,0.60);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);  
+    font-size: 16px;
+    outline: none;
+  }
+
+  #searchInput::placeholder {
+    opacity: 0.65;
+  }
+
+  #searchInput:focus {
+    border-color: rgba(0,0,0,0.12);
+  }
+
    /* --- Bottom results panel floats above the map --- */
 #bottom-panel {
   position: fixed;
@@ -194,8 +219,8 @@
 
 /* results list inside the panel */
 #results {
-  overflow-y: auto;
-  max-height: calc(100% - 20px);
+  overflow: visible;
+  max-height: none;
   padding: 10px;
 }
 
@@ -690,6 +715,15 @@
       <span class="label">Show</span>
     </button>
 
+    <div class="ss-search">
+      <input
+      id="searchInput"
+      type="search"
+      placeholder="Search places"
+      autocomplete="off"
+    />
+  </div>
+    
     <div id="active-filters" class="active-filters"></div>
     <div id="results-count" class="results-count"></div>
     <div id="results"></div>
