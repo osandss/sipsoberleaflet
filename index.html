@@ -111,22 +111,39 @@ h2, h3, h4, h5, h6 {
   z-index: 1;
 }
 
-.hero-inner{
-  display: flex;
-  flex-direction: column;
+/* HERO LAYOUT: 2-column app landing */
+.hero-inner.hero-two-col{
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
   align-items: center;
+  gap: 56px;
+  min-height: 72vh;
+  padding: 12px 0;
+}
+
+/* Left column */
+.hero-copy{
+  text-align: left;
+  max-width: 560px;
+  color: #ffffff;
+}
+
+/* Right column */
+.hero-media{
+  display: flex;
   justify-content: center;
-  text-align: center;
-  gap: 14px;
-  min-height: 52vh; /* optional: gives the "hero" height like examples */
+  align-items: center;
+}
+
+.hero-phone{
+  width: min(420px, 42vw);
+  height: auto;
+  filter: drop-shadow(0 28px 70px rgba(0,0,0,0.45));
+  transform: translateY(18px);
 }
 
 .hero-content-centered{
-  text-align: center;
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 0;
-  color: #ffffff;
+  display: none; /* no longer used (old centered hero) */
 }
 
 
@@ -577,8 +594,37 @@ h2, h3, h4, h5, h6 {
 @media (prefers-reduced-motion: reduce) {
   .hero::before { animation: none; }
 }
+
+    /* HERO: stack on tablet + mobile */
+@media (max-width: 900px){
+  .hero-inner.hero-two-col{
+    grid-template-columns: 1fr;
+    gap: 26px;
+    min-height: auto;
+    padding: 54px 0 22px;
+  }
+
+  .hero-copy{
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .hero-cta{
+    text-align: center;
+  }
+
+  .appstore-badge img{
+    margin: 0 auto;
+  }
+
+  .hero-phone{
+    width: min(360px, 78vw);
+    transform: translateY(0);
+  }
+}
+
     
-/* Responsive */
+    /* Responsive */
 @media (max-width: 860px){
   .band{ padding: 36px 0; }
 
@@ -787,76 +833,52 @@ h2, h3, h4, h5, h6 {
     text-align: left;
   }
 
-  /* HERO — MOBILE (clean app landing) */
-  .hero{
-    height: auto;
-    min-height: 0;
-    padding: 34px 0 24px;
-  }
+  /* HERO — MOBILE (2-col hero stacks) */
+.hero{
+  padding: 34px 0 18px;
+}
 
-  .hero-overlay{
-    display: block;      /* ✅ no grid needed */
-    padding: 0 18px;
-  }
+.hero-inner.hero-two-col{
+  grid-template-columns: 1fr;
+  gap: 22px;
+  min-height: auto;
+  padding: 36px 0 10px;
+}
 
-  .hero-inner{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+.hero-copy{
+  text-align: center;
+  margin: 0 auto;
+}
 
-  
-  .hero-content-centered{
-    max-width: 560px;
-    margin: 0 auto;
-    text-align: center;    /* ✅ more natural on mobile */
-  }
+.hero-title{
+  font-size: 28px;
+  line-height: 1.12;
+  max-width: 24ch;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  .hero-brand{
-    font-size: 16px;
-    letter-spacing: 0.14em;
-    margin-bottom: 10px;
-    white-space: nowrap;
-  }
+.hero-subtitle{
+  font-size: 14px;
+  line-height: 1.55;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 42ch;
+}
 
-  .hero-title{
-    font-size: 22px;
-    line-height: 1.15;
-    max-width: 26ch;
-    margin: 0 0 10px;
-    text-align: center;
-  }
+.hero-cta{
+  text-align: center;
+}
 
-  .hero-subtitle{
-    font-size: 14px;
-    line-height: 1.55;
-    margin: 0 auto 14px;
-    max-width: 42ch;
-    opacity: 0.92;
-  }
+.appstore-badge img{
+  height: 42px;
+  margin: 0 auto;
+}
 
-  .hero-cta{
-    margin-top: 0;
-    margin-bottom: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .appstore-badge img{
-    height: 40px;
-    width: auto;
-    display: inline-block;
-  }
-
-
-  /* Hero bullets — mobile only */
-  .hero-bullets{
-    max-width: 30ch;
-    margin: 0 auto 16px;
-    text-align: left;
-  }
+.hero-phone{
+  width: min(330px, 84vw);
+  transform: translateY(0);
+}
 
 } /* ✅ IMPORTANT: close the 720px media query */
 
@@ -879,22 +901,21 @@ h2, h3, h4, h5, h6 {
 <body>
   <div class="page">
   
- <section class="hero">
+<section class="hero">
   <div class="hero-overlay">
     <div class="container">
-      <div class="hero-inner">
+      <div class="hero-inner hero-two-col">
 
-        <div class="hero-content-centered">
+        <!-- LEFT: Copy -->
+        <div class="hero-copy">
           <h1 class="hero-brand">SIP SOBER</h1>
 
           <h2 class="hero-title">
-            See what non-alcoholic drinks are actually available — before you go out.
+            See what’s actually available — before you go out.
           </h2>
 
-
-
           <p class="hero-subtitle">
-            A map of NYC bars and restaurants with real zero-proof options.
+            NYC’s zero-proof map for bars and restaurants.
           </p>
 
           <div class="hero-cta">
@@ -907,8 +928,18 @@ h2, h3, h4, h5, h6 {
             <p class="hero-platform">Available on iPhone • NYC</p>
           </div>
         </div>
-        
-        
+
+        <!-- RIGHT: Phone -->
+        <div class="hero-media">
+          <!-- Option A: use a PNG with transparent background -->
+          <img
+            class="hero-phone"
+            src="hero-phone.png"
+            alt="Sip Sober app preview"
+            loading="eager"
+          />
+        </div>
+
       </div>
     </div>
   </div>
