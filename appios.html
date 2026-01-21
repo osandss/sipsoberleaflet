@@ -1143,19 +1143,21 @@
 
       window.filteredBounds = bounds;
 
-      if (window.matchMedia("(max-width: 768px)").matches) {
-        const panelEl = document.getElementById("bottom-panel");
-        if (panelEl) {
-          setTimeout(
-            () =>
-              panelEl.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              }),
-            60
-          );
-        }
-      }
+      // ✅ Disabled: causes the bottom panel to jump when the keyboard opens on iOS
+      // if (window.matchMedia("(max-width: 768px)").matches) {
+      //   const panelEl = document.getElementById("bottom-panel");
+      //   if (panelEl) {
+      //     setTimeout(
+      //       () =>
+      //         panelEl.scrollIntoView({
+      //           behavior: "smooth",
+      //           block: "start",
+      //         }),
+      //       60
+      //     );
+      //   }
+      // }
+
 
       setTimeout(() => map.invalidateSize(true), 120);
     }
