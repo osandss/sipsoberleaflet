@@ -632,6 +632,34 @@ h2, h3, h4, h5, h6 {
   max-width: 100%;
 }
 
+
+/* MOBILE — stack every feature row: image then text */
+.feature-row{
+  grid-template-columns: 1fr; /* stack */
+  text-align: center;
+}
+
+/* Ignore desktop "reverse" swapping on mobile */
+.feature-media{ order: 1; }
+.feature-copy{ order: 2; }
+
+.feature-row--reverse .feature-media{ order: 1; }
+.feature-row--reverse .feature-copy{ order: 2; }
+
+/* Make phone mockups smaller on mobile */
+.feature-media img{
+  width: 100%;
+  max-width: 220px; /* try 200–240 */
+  height: auto;
+  margin: 0 auto 10px;
+}
+
+/* Keep bullets readable */
+.feature-copy ul{
+  display: inline-grid;
+  text-align: left;
+}
+
   
   /* Layout sections */
   section {
