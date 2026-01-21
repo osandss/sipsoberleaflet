@@ -161,41 +161,7 @@
       color: #1c1c1e;
     }
 
-    /* --- Search bar inside bottom panel --- */
-    .ss-search {
-      padding: 10px 18px 6px;   /* ✅ match panel padding */
-      position: sticky;
-      top: 0;
-      z-index: 10;
-
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-
-
-  #searchInput {
-    width: 100%;
-    height: 40px;
-    padding: 0 14px;
-    border-radius: 16px;
-    border: 1px solid rgba(0,0,0,0.08);
-    background: rgba(255,255,255,0.60);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);  
-    font-size: 16px;
-    outline: none;
-  }
-
-  #searchInput::placeholder {
-    opacity: 0.65;
-  }
-
-  #searchInput:focus {
-    border-color: rgba(0,0,0,0.12);
-  }
-
-
+   
     /* --- Bottom results panel floats above the map --- */
 #bottom-panel {
   position: fixed;
@@ -725,14 +691,7 @@
       <span class="label">Show</span>
     </button>
 
-    <div class="ss-search">
-      <input
-      id="searchInput"
-      type="search"
-      placeholder="Search places"
-      autocomplete="off"
-    />
-  </div>
+
     
     <div id="active-filters" class="active-filters"></div>
     <div id="results-count" class="results-count"></div>
@@ -1200,31 +1159,7 @@
 
     document.getElementById("goBtn").addEventListener("click", applyFilters);
 
-  // =========================
-  // Search (filters visible list items)
-  // =========================
-  (function () {
-    const input = document.getElementById("searchInput");
-    const results = document.getElementById("results");
-    if (!input || !results) return;
-
-    function applySearch() {
-      const q = input.value.trim().toLowerCase();
-
-      // Your list items are .card (created in renderList)
-      results.querySelectorAll(".card").forEach((card) => {
-        const text = (card.textContent || "").toLowerCase();
-        card.style.display = text.includes(q) ? "" : "none";
-      });
-    }
-
-    input.addEventListener("input", applySearch);
-
-    // If renderList re-renders, keep applying search
-    const observer = new MutationObserver(applySearch);
-    observer.observe(results, { childList: true });
-  })();
-
+  
 // =========================
 // Bottom panel expand / collapse toggle
 // =========================
@@ -1319,9 +1254,7 @@ window.SipSober.setFavorites = function (payload) {
         }, 240);
       }
 
-
       okBtn?.addEventListener("click", dismiss);
-
       
       // Auto-hide after 10s (still marks as seen)
       setTimeout(() => {
@@ -1333,31 +1266,6 @@ window.SipSober.setFavorites = function (payload) {
   window.addEventListener("load", () => {
     setTimeout(showOnboarding, 450);
   });
-
-  /* --- Keep bottom panel visible when iOS keyboard opens --- */
-  (function () {
-    const root = document.documentElement;
-    const vv = window.visualViewport;
-    if (!vv) return;
-
-    function updateKeyboardOffset() {
-      const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-      root.style.setProperty("--kb", kb + "px");
-    }
-
-    vv.addEventListener("resize", updateKeyboardOffset);
-    vv.addEventListener("scroll", updateKeyboardOffset);
-    updateKeyboardOffset();
-
-    const input = document.getElementById("searchInput");
-    if (input) {
-      input.addEventListener("focus", () => {
-        setTimeout(() => {
-          input.scrollIntoView({ block: "center", behavior: "smooth" });
-        }, 50);
-      });
-    }
-  })();
 
 })();
 </script>  
