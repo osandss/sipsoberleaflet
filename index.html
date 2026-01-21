@@ -146,6 +146,24 @@ h2, h3, h4, h5, h6 {
   display: none; /* no longer used (old centered hero) */
 }
 
+/* HERO — desktop polish */
+.hero-inner.hero-two-col{
+  column-gap: 56px;        /* nicer spacing */
+  padding: 70px 0 54px;    /* slightly more premium */
+}
+
+.hero-copy{
+  max-width: 520px;        /* keeps headline from feeling too wide */
+}
+
+.hero-title{
+  max-width: 18ch;         /* makes it feel more “designed” */
+}
+
+.hero-phone{
+  width: min(430px, 42vw); /* a touch bigger */
+  transform: translateY(10px);
+}
 
 /* HERO CTA (right of phone) */
 .hero-cta {
@@ -599,14 +617,20 @@ h2, h3, h4, h5, h6 {
 @media (max-width: 900px){
   .hero-inner.hero-two-col{
     grid-template-columns: 1fr;
-    gap: 26px;
+    gap: 22px;
     min-height: auto;
-    padding: 54px 0 22px;
+    padding: 44px 0 18px;
   }
 
   .hero-copy{
     text-align: center;
     margin: 0 auto;
+  }
+
+  .hero-title,
+  .hero-subtitle{
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .hero-cta{
@@ -618,7 +642,7 @@ h2, h3, h4, h5, h6 {
   }
 
   .hero-phone{
-    width: min(360px, 78vw);
+    width: min(360px, 82vw);
     transform: translateY(0);
   }
 }
@@ -833,51 +857,34 @@ h2, h3, h4, h5, h6 {
     text-align: left;
   }
 
-  /* HERO — MOBILE (2-col hero stacks) */
+  /* HERO — MOBILE polish (sizes only; layout handled at 900px) */
 .hero{
   padding: 34px 0 18px;
 }
 
 .hero-inner.hero-two-col{
-  grid-template-columns: 1fr;
-  gap: 22px;
-  min-height: auto;
-  padding: 36px 0 10px;
-}
-
-.hero-copy{
-  text-align: center;
-  margin: 0 auto;
+  padding: 36px 0 10px; /* slightly tighter than tablet */
+  gap: 18px;
 }
 
 .hero-title{
-  font-size: 28px;
+  font-size: 26px;
   line-height: 1.12;
   max-width: 24ch;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .hero-subtitle{
   font-size: 14px;
   line-height: 1.55;
-  margin-left: auto;
-  margin-right: auto;
   max-width: 42ch;
-}
-
-.hero-cta{
-  text-align: center;
 }
 
 .appstore-badge img{
   height: 42px;
-  margin: 0 auto;
 }
 
 .hero-phone{
-  width: min(330px, 84vw);
-  transform: translateY(0);
+  width: min(330px, 86vw);
 }
 
 } /* ✅ IMPORTANT: close the 720px media query */
