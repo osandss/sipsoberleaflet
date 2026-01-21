@@ -163,16 +163,16 @@
 
     /* --- Search bar inside bottom panel --- */
     .ss-search {
-    padding: 10px 0 6px;
+      padding: 10px 18px 6px;   /* ✅ match panel padding */
+      position: sticky;
+      top: 0;
+      z-index: 10;
 
-    position: sticky;
-    top: 0;
-    z-index: 10;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
 
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
 
   #searchInput {
     width: 100%;
@@ -195,14 +195,13 @@
     border-color: rgba(0,0,0,0.12);
   }
 
-  :root { --kb: 0px; }
 
     /* --- Bottom results panel floats above the map --- */
 #bottom-panel {
   position: fixed;
   left: 12px;
   right: 12px;
-  bottom: var(--kb);
+  bottom: 0;
 
   /* collapsed by default (peek) */
   height: var(--panel-collapsed);
@@ -213,7 +212,7 @@
   border-radius: 22px 22px 0 0;
   box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.10);
 
-  padding: 10px 18px calc(14px + env(safe-area-inset-bottom) + var(--kb));
+  padding: 10px 18px calc(14px + env(safe-area-inset-bottom));
   z-index: 2001;
 
   /* animation + behavior */
@@ -229,10 +228,11 @@
 
 /* results list inside the panel */
 #results {
-  overflow: visible;
-  max-height: none;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 10px;
 }
+
 
 /* --- Panel toggle handle (tap to expand/collapse) --- */
 #panel-toggle {
