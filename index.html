@@ -111,22 +111,6 @@ h2, h3, h4, h5, h6 {
   z-index: 1;
 }
 
-/* HERO LAYOUT: 2-column app landing */
-.hero-inner.hero-two-col{
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  align-items: center;
-  gap: 56px;
-  min-height: 72vh;
-  padding: 12px 0;
-}
-
-/* Left column */
-.hero-copy{
-  text-align: left;
-  max-width: 560px;
-  color: #ffffff;
-}
 
 /* Right column */
 .hero-media{
@@ -135,39 +119,30 @@ h2, h3, h4, h5, h6 {
   align-items: center;
 }
 
-.hero-phone{
-  width: min(420px, 42vw);
-  height: auto;
-  filter: drop-shadow(0 28px 70px rgba(0,0,0,0.45));
-  transform: translateY(18px);
-}
-
 .hero-content-centered{
   display: none; /* no longer used (old centered hero) */
 }
 
-/* HERO — desktop polish */
+/* HERO LAYOUT: 2-column app landing (desktop) */
 .hero-inner.hero-two-col{
-  column-gap: 56px;        /* nicer spacing */
-  padding: 70px 0 54px;    /* slightly more premium */
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  column-gap: 56px;
+  min-height: 72vh;
+  padding: 70px 0 54px;
 }
 
 .hero-copy{
-  max-width: 520px;        /* keeps headline from feeling too wide */
+  text-align: left;
+  max-width: 520px;
+  color: #ffffff;
 }
 
-.hero-title{
-  max-width: 18ch;         /* makes it feel more “designed” */
-}
-
-.hero-phone{
-  width: min(430px, 42vw); /* a touch bigger */
-  transform: translateY(10px);
-}
 
 /* HERO CTA (right of phone) */
 .hero-cta {
-  text-align: center;
+  text-align: left;
   margin-top: 18px;
 }
 
@@ -183,7 +158,7 @@ h2, h3, h4, h5, h6 {
   height: 52px;
   width: auto;
   display: block;
-  margin: 0 auto; /* ✅ centers badge */
+  margin: 0;
 }
    
 /* App Store text CTA */
@@ -213,12 +188,12 @@ h2, h3, h4, h5, h6 {
   font-family: "Playfair Display", serif;
   font-size: 32px;
   line-height: 1.06;
-  margin-bottom: 18px;
+  margin: 0 0 18px;
   color: #ffffff;
-  max-width: 20ch;  /* ✅ more natural */
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 20ch;
+  text-align: left;
 }
+
 
 .hero-title span {
   color: #f1a7c5; /* your accent pink */
@@ -228,9 +203,10 @@ h2, h3, h4, h5, h6 {
   font-size: 16px;
   color: #f7f7ff;
   max-width: 48ch;
-  margin: 0 auto 22px;
-  text-align: center;
+  margin: 0 0 22px;
+  text-align: left;
 }
+
 
 .hero-platform{
   margin: 10px 0 0;
