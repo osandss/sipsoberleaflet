@@ -416,7 +416,6 @@ h2, h3, h4, h5, h6 {
     width: min(360px, 82vw);
     transform: translateY(0);
   }
-}
     
     /* Responsive */
 @media (max-width: 860px){
@@ -480,6 +479,15 @@ h2, h3, h4, h5, h6 {
   max-width: 100%;
 }
 
+/* How it works — mobile: stack cards so they aren’t skinny */
+.how-grid{
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.how-card{
+  padding: 22px 20px;
+}
+  
   /* HERO — MOBILE polish (sizes only) */
   .hero{
     padding: 34px 0 18px;
