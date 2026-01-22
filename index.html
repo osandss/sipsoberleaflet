@@ -68,35 +68,23 @@ h2, h3, h4, h5, h6 {
   margin-bottom: 16px;
 }
 
-.hero {
+.hero{
   position: relative;
   margin-top: 0;
-  height: auto;
-  min-height: 0;
-  padding: 48px 0;
-  display: block;
-  overflow: hidden;
+  padding: 56px 0 40px;
   background: #fff;
+  overflow: visible; /* ✅ IMPORTANT: don’t clip the phones/shadows */
 }
 
-.hero-overlay {
+.hero-overlay{
   width: 100%;
   position: relative;
   z-index: 1;
 }
 
-/* Right column */
-.hero-media{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+.hero-content-centered{ display: none; }
 
-.hero-content-centered{
-  display: none; /* no longer used (old centered hero) */
-}
-
-/* HERO LAYOUT: centered stacked hero (NEW) */
+/* Centered stacked hero */
 .hero-inner.hero-two-col{
   display: block;
   text-align: center;
@@ -106,51 +94,18 @@ h2, h3, h4, h5, h6 {
 
 .hero-copy{
   text-align: center;
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
   color: #202239;
-}
-
-/* HERO CTA (right of phone) */
-.hero-cta {
-  text-align: center;
-  margin-top: 18px;
-}
-
-.hero-cta .hero-platform {
-  margin: 10px 0 0;
-  font-size: 12px;
-  opacity: 0.7;
-  letter-spacing: 0.02em;
-}
-    
- /* App Store badge (hero CTA) */
-.appstore-badge img{
-  height: 52px;
-  width: auto;
-  display: block;
-  margin: 0 auto;
-}
-   
-/* App Store text CTA */
-.app-store-button {
-  display: inline-block;
-  color: rgba(255, 255, 255, 0.92);
-  font-weight: 600;
-  font-size: 22px;
-  line-height: 1.15;
-  text-decoration: none;
-  max-width: 220px;
 }
 
 .hero-brand{
   font-family: "Playfair Display", serif;
   font-weight: 600;
-  font-size: 42px;          /* bigger */
-  letter-spacing: 0.22em;  /* tighter = more product-like */
+  font-size: 42px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  margin-bottom: 20px;
-  opacity: 1;
+  margin-bottom: 18px;
 }
 
 .hero-brand::after{
@@ -159,170 +114,87 @@ h2, h3, h4, h5, h6 {
   width: 36px;
   height: 1px;
   background: rgba(32,34,57,0.18);
-  margin-top: 10px;
+  margin: 10px auto 0;
 }
-
-.hero-kicker { display: none; }
 
 .hero-title{
   font-family: "Playfair Display", serif;
-  font-size: 36px;
-  line-height: 1.06;
-  margin: 0 0 18px;
+  font-size: 40px;
+  line-height: 1.08;
+  margin: 0 auto 14px;
   color: #202239;
   max-width: 26ch;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.hero-brand + .hero-title{
-  margin-top: 0;
-}
-
-.hero-title span {
-  color: #f1a7c5; /* your accent pink */
 }
 
 .hero-subtitle{
   font-size: 16px;
   color: rgba(32,34,57,0.85);
-  max-width: 52ch;
-  margin: 0 auto 22px;
+  max-width: 56ch;
+  margin: 0 auto 18px;
+}
+
+/* CTA */
+.hero-cta{
   text-align: center;
+  margin-top: 14px;
+}
+
+.appstore-badge img{
+  height: 52px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .hero-platform{
   margin: 10px auto 0;
   font-size: 13px;
-  color: rgba(32,34,57,0.72); /* navy, subtle */
+  color: rgba(32,34,57,0.72);
   letter-spacing: 0.02em;
-  text-align: center;
 }
 
 /* =========================
-   HERO PHONES (3D layered)
+   HERO PHONES (layered)
    ========================= */
-
 .hero-phones{
-  margin-top: 28px;
+  margin-top: 30px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   gap: 0;
-  perspective: 1200px;
+  position: relative;     /* ✅ enable z-index stacking */
+  padding-bottom: 8px;
 }
 
 .hero-phones .phone{
-  width: 230px;
+  width: 240px;
   height: auto;
   display: block;
   border-radius: 30px;
-  transform-style: preserve-3d;
   box-shadow:
     0 26px 60px rgba(0,0,0,0.18),
     0 10px 22px rgba(0,0,0,0.10);
+  position: relative;     /* ✅ needed for z-index to work */
 }
 
-/* Left phone */
 .hero-phones .phone-left{
-  transform: rotateY(16deg) translateY(16px) scale(0.96);
-  margin-right: -70px;
-  opacity: 0.92;
+  transform: translateX(-44px) translateY(18px) scale(0.96);
+  z-index: 1;
+  opacity: 0.96;
 }
 
-/* Center phone */
 .hero-phones .phone-center{
-  transform: translateY(4px) scale(1.08);
+  transform: translateY(6px) scale(1.08);
   z-index: 2;
 }
 
-/* Right phone */
 .hero-phones .phone-right{
-  transform: rotateY(-16deg) translateY(16px) scale(0.96);
-  margin-left: -70px;
-  opacity: 0.92;
+  transform: translateX(44px) translateY(18px) scale(0.96);
+  z-index: 1;
+  opacity: 0.96;
 }
-
-.hero-bullets{
-  list-style: none;
-  padding: 0;
-  margin: 26px 0 0;
-  display: grid;
-  gap: 10px;
-  opacity: 0.78;
-}
-
-.hero-bullets li{
-  font-size: 14px;
-  line-height: 1.35;
-}
-
-.hero-bullets li::before{
-  content: "✓";
-  margin-right: 10px;
-  opacity: 0.9;
-}
+  
     
-.hero-ctas {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start; /* ✅ change from center */
-  gap: 12px;
-  margin-bottom: 10px;
-  margin-top: 18px;
-  align-items: center;
-}
-
-.hero-note {
-  font-size: 11px;
-  color: #f7f7ff;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  margin-top: 8px;
-}
-    
-/* ⭐ PRIMARY BUTTON (dark navy pill) */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 11px 22px;
-  border-radius: 999px;
-  border: none;
-  background: #202239;
-  color: #ffffff;
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-}
-
-/* ⭐ HERO BUTTON — white outline */
-.btn-ghost-light {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 20px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  background: transparent;
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #ffffff;
-  cursor: pointer;
-}
-
-.btn-ghost-light:hover {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-
     /* SECTION BLOCKS */
     section {
       margin-top: 0;
@@ -604,41 +476,6 @@ h2, h3, h4, h5, h6 {
   font-size: 13px;
 }
 
-/* =========================
-   HERO GRADIENT ANIMATION
-   ========================= */
-
-@keyframes ss-heroGradient {
-  0%   { transform: translate(-2%, -1%) scale(1.02); }
-  50%  { transform: translate(2%, 1%) scale(1.05); }
-  100% { transform: translate(-1%, 2%) scale(1.03); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero::before { animation: none; }
-}
-
-    /* HERO: stack on tablet + mobile */
-@media (max-width: 900px){
-  .hero-inner.hero-two-col{
-    grid-template-columns: 1fr;
-    gap: 22px;
-    min-height: auto;
-    padding: 44px 0 18px;
-  }
-
-  .hero-copy{
-    text-align: center;
-    margin: 0 auto;
-  }
-
-  .hero-brand,
-  .hero-platform{
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
   .hero-title,
   .hero-subtitle,
   .hero-platform{
@@ -659,7 +496,6 @@ h2, h3, h4, h5, h6 {
     transform: translateY(0);
   }
 }
-
     
     /* Responsive */
 @media (max-width: 860px){
@@ -969,9 +805,7 @@ h2, h3, h4, h5, h6 {
   </div>
 </section>
 
-
   <div class="page-divider"></div>
-
 
 <!-- START PAGE CONTENT -->
 <main>
