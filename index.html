@@ -174,29 +174,41 @@ h2, h3, h4, h5, h6 {
 
 .hero-brand{
   font-family: "Playfair Display", serif;
-  font-weight: 600;               /* gives it brand authority */
-  font-size: 22px;                /* matches app masthead scale */
-  letter-spacing: 0.30em;         /* intentional, editorial */
+  font-weight: 500;               
+  font-size: 26px;                
+  letter-spacing: 0.32em;         
   text-transform: uppercase;
   line-height: 1;
-  margin: 0 0 10px;               /* tighter to headline */
+  margin: 0 0 12px;               
   color: #ffffff;
-  opacity: 0.92;
-  display: inline-block;          /* behaves like a wordmark */
+  opacity: 0.95;
+  display: inline-block;          
+}
+
+.hero-brand::after{
+  content: "";
+  display: block;
+  width: 34px;
+  height: 1px;
+  background: rgba(255,255,255,0.35);
+  margin-top: 10px;
 }
 
 .hero-kicker { display: none; }
 
 .hero-title{
   font-family: "Playfair Display", serif;
-  font-size: 32px;
+  font-size: 34px;
   line-height: 1.06;
   margin: 0 0 18px;
   color: #ffffff;
-  max-width: 20ch;
+  max-width: 22ch;
   text-align: left;
 }
 
+.hero-brand + .hero-title{
+  margin-top: 0;
+}
 
 .hero-title span {
   color: #f1a7c5; /* your accent pink */
@@ -209,7 +221,6 @@ h2, h3, h4, h5, h6 {
   margin: 0 0 22px;
   text-align: left;
 }
-
 
 .hero-platform{
   margin: 10px 0 0;
