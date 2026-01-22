@@ -171,6 +171,16 @@ h2, h3, h4, h5, h6 {
   padding-bottom: 8px;
 }
 
+/* Hero subtitle + CTA (below phones) */
+.hero-subtitle--below{
+  margin-top: 22px;
+  margin-bottom: 14px;
+}
+
+.hero-cta--below{
+  margin-top: 6px;
+}
+    
 /* (optional) wrap each phone if you have a wrapper element */
 .hero-phones .phone-wrap{
   position: relative;
@@ -536,20 +546,27 @@ h2, h3, h4, h5, h6 {
         <!-- LEFT: Copy -->
         <div class="hero-copy">
 
-          <!-- Brand label (NOT an H1 anymore) -->
-          <div class="hero-brand">SIP SOBER</div>
+  <!-- Brand label (NOT an H1 anymore) -->
+  <div class="hero-brand">SIP SOBER</div>
 
-          <!-- Main value prop -->
-          <h1 class="hero-title">
-            NYC’s zero-proof map for bars and restaurants.
-          </h1>
+  <!-- Main value prop -->
+  <h1 class="hero-title">
+    NYC’s zero-proof map for bars and restaurants.
+  </h1>
 
-  <!-- Supporting outcome -->
-  <p class="hero-subtitle">
+  <!-- Phones FIRST (hero visual moment) -->
+  <div class="hero-phones">
+    <img src="feature-map.png" class="phone phone-left" alt="Sip Sober map view">
+    <img src="feature-filters.png" class="phone phone-center" alt="Sip Sober filters view">
+    <img src="feature-favorites.png" class="phone phone-right" alt="Sip Sober favorites view">
+  </div>
+
+  <!-- Supporting outcome (NOW below phones) -->
+  <p class="hero-subtitle hero-subtitle--below">
     See what’s actually available — before you go out.
   </p>
 
-  <div class="hero-cta">
+  <div class="hero-cta hero-cta--below">
     <a class="appstore-badge"
        href="https://apps.apple.com/us/app/sip-sober/id6756894415"
        target="_blank" rel="noopener">
@@ -559,12 +576,6 @@ h2, h3, h4, h5, h6 {
     <p class="hero-platform">Available on iPhone • NYC</p>
   </div>
 
-  <div class="hero-phones">
-    <img src="feature-map.png" class="phone phone-left" alt="Sip Sober map view">
-    <img src="feature-filters.png" class="phone phone-center" alt="Sip Sober filters view">
-    <img src="feature-favorites.png" class="phone phone-right" alt="Sip Sober favorites view">
-  </div>
-      
 </div>
 
       </div>
@@ -572,7 +583,6 @@ h2, h3, h4, h5, h6 {
   </div>
 </section>
 
-  <div class="page-divider"></div>
 
 <!-- START PAGE CONTENT -->
 <main>
