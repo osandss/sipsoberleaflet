@@ -154,45 +154,63 @@ h2, h3, h4, h5, h6 {
 }
 
 /* =========================
-   HERO PHONES (layered)
+   HERO PHONES (Seen-style 3D)
    ========================= */
+
 .hero-phones{
   margin-top: 30px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   gap: 0;
-  position: relative;     /* ✅ enable z-index stacking */
+  position: relative;
+
+  /* 3D space */
+  perspective: 1400px;
+  transform-style: preserve-3d;
   padding-bottom: 8px;
 }
 
+/* (optional) wrap each phone if you have a wrapper element */
+.hero-phones .phone-wrap{
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* main phone image */
 .hero-phones .phone{
-  width: 240px;
+  width: clamp(220px, 22vw, 300px);
   height: auto;
   display: block;
-  border-radius: 30px;
-  box-shadow:
-    0 26px 60px rgba(0,0,0,0.18),
-    0 10px 22px rgba(0,0,0,0.10);
-  position: relative;     /* ✅ needed for z-index to work */
+  transform-style: preserve-3d;
+
+  /* depth */
+  filter:
+    drop-shadow(0 28px 56px rgba(10, 12, 30, 0.18))
+    drop-shadow(0 10px 22px rgba(10, 12, 30, 0.10));
 }
 
-.hero-phones .phone-left{
-  transform: translateX(-44px) translateY(18px) scale(0.96);
-  z-index: 1;
-  opacity: 0.96;
-}
-
+/* Center phone: biggest + forward */
 .hero-phones .phone-center{
-  transform: translateY(6px) scale(1.08);
-  z-index: 2;
+  width: clamp(245px, 26vw, 350px);
+  transform: translateZ(70px);
+  z-index: 3;
 }
 
+/* Left: angled inward */
+.hero-phones .phone-left{
+  transform: translateX(54px) rotateY(26deg) rotateZ(-3deg) translateY(10px);
+  z-index: 2;
+  opacity: 0.96;
+}
+
+/* Right: angled inward */
 .hero-phones .phone-right{
-  transform: translateX(44px) translateY(18px) scale(0.96);
+  transform: translateX(-54px) rotateY(-26deg) rotateZ(3deg) translateY(10px);
   z-index: 1;
   opacity: 0.96;
 }
+
   
     
     /* SECTION BLOCKS */
