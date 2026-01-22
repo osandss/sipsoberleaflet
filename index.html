@@ -160,39 +160,6 @@ h2, h3, h4, h5, h6 {
   transform-style: preserve-3d;
   padding-bottom: 12px; 
 }
-
-/* Phone animation wrappers */
-.phone-wrap{
-  position: relative;
-  transform-style: preserve-3d;
-  opacity: 0;
-  transform: translateY(60px) scale(0.98);
-  animation: phoneRise 0.9s ease-out forwards;
-}
-
-/* Stagger timing (Seen-style) */
-.phone-left   { animation-delay: 0.05s; }
-.phone-center { animation-delay: 0.18s; }
-.phone-right  { animation-delay: 0.32s; }
-
-/* Phone image styling */
-.phone-img{
-  width: 200px;           /* tweak: 190–220 */
-  height: auto;
-  display: block;
-  border-radius: 28px;
-  box-shadow:
-    0 26px 60px rgba(0,0,0,0.18),
-    0 10px 22px rgba(0,0,0,0.10);
-}
-
-/* Rise-up animation */
-@keyframes phoneRise{
-  to{
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
     
 /* Hero subtitle + CTA (below phones) */
 .hero-subtitle--below{
@@ -203,14 +170,7 @@ h2, h3, h4, h5, h6 {
 .hero-cta--below{
   margin-top: 6px;
 }
-    
-/* (optional) wrap each phone if you have a wrapper element */
-.hero-phones .phone-wrap{
-  position: relative;
-  transform-style: preserve-3d;
-}
 
-/* main phone image */
 .hero-phones .phone{
   width: clamp(190px, 20vw, 260px);
   height: auto;
@@ -221,27 +181,37 @@ h2, h3, h4, h5, h6 {
   filter:
     drop-shadow(0 28px 56px rgba(10, 12, 30, 0.18))
     drop-shadow(0 10px 22px rgba(10, 12, 30, 0.10));
-}
 
-/* Center phone: biggest + forward */
+  /* animation (Seen-style rise) */
+  opacity: 0;
+  transform: var(--pose) translateY(46px);
+  animation: phoneRise 900ms cubic-bezier(.2,.8,.2,1) forwards;
+}
+    
 .hero-phones .phone-center{
   width: clamp(215px, 23vw, 300px);
-  transform: translateZ(80px);
+  --pose: translateZ(80px);
   z-index: 3;
+  animation-delay: 180ms;
 }
 
-/* Left: angled inward */
 .hero-phones .phone-left{
-  transform: translateX(54px) rotateY(26deg) rotateZ(-3deg) translateY(10px);
+  --pose: translateX(54px) rotateY(26deg) rotateZ(-3deg) translateY(10px);
   z-index: 2;
-  opacity: 0.96;
+  animation-delay: 60ms;
 }
 
-/* Right: angled inward */
 .hero-phones .phone-right{
-  transform: translateX(-54px) rotateY(-26deg) rotateZ(3deg) translateY(10px);
+  --pose: translateX(-54px) rotateY(-26deg) rotateZ(3deg) translateY(10px);
   z-index: 1;
-  opacity: 0.96;
+  animation-delay: 320ms;
+}
+
+@keyframes phoneRise{
+  to{
+    opacity: 1;
+    transform: var(--pose) translateY(0);
+  }
 }
  
     /* SECTION BLOCKS */
@@ -417,7 +387,7 @@ h2, h3, h4, h5, h6 {
 }
 
 .cta-title{
-  font-size: 34px;
+  font-size: 28px;
   margin: 0;
 }
 
@@ -587,18 +557,11 @@ h2, h3, h4, h5, h6 {
 
   <!-- Phones FIRST (hero visual moment) -->
   <div class="hero-phones">
-  <div class="phone-wrap phone-left">
-    <img src="feature-map.png" class="phone-img" alt="Sip Sober map view">
+    <img src="feature-map.png" class="phone phone-left" alt="Sip Sober map view">
+    <img src="feature-filters.png" class="phone phone-center" alt="Sip Sober filters view">
+    <img src="feature-favorites.png" class="phone phone-right" alt="Sip Sober favorites view">
   </div>
 
-  <div class="phone-wrap phone-center">
-    <img src="feature-filters.png" class="phone-img" alt="Sip Sober filters view">
-  </div>
-
-  <div class="phone-wrap phone-right">
-    <img src="feature-favorites.png" class="phone-img" alt="Sip Sober favorites view">
-  </div>
-</div>
 
   <!-- Supporting outcome (NOW below phones) -->
   <p class="hero-subtitle hero-subtitle--below">
