@@ -108,7 +108,6 @@ h2, h3, h4, h5, h6 {
   margin-bottom: 16px;
 }
 
-
 .hero-title{
   font-family: "Playfair Display", serif;
   font-size: 40px;
@@ -150,7 +149,7 @@ h2, h3, h4, h5, h6 {
    ========================= */
 
 .hero-phones{
-  margin-top: 48px;   /* was 30px */
+  margin-top: 48px;   
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -159,10 +158,42 @@ h2, h3, h4, h5, h6 {
 
   perspective: 1400px;
   transform-style: preserve-3d;
-  padding-bottom: 12px; /* was 8px */
+  padding-bottom: 12px; 
 }
 
+/* Phone animation wrappers */
+.phone-wrap{
+  position: relative;
+  transform-style: preserve-3d;
+  opacity: 0;
+  transform: translateY(60px) scale(0.98);
+  animation: phoneRise 0.9s ease-out forwards;
+}
 
+/* Stagger timing (Seen-style) */
+.phone-left   { animation-delay: 0.05s; }
+.phone-center { animation-delay: 0.18s; }
+.phone-right  { animation-delay: 0.32s; }
+
+/* Phone image styling */
+.phone-img{
+  width: 200px;           /* tweak: 190–220 */
+  height: auto;
+  display: block;
+  border-radius: 28px;
+  box-shadow:
+    0 26px 60px rgba(0,0,0,0.18),
+    0 10px 22px rgba(0,0,0,0.10);
+}
+
+/* Rise-up animation */
+@keyframes phoneRise{
+  to{
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+    
 /* Hero subtitle + CTA (below phones) */
 .hero-subtitle--below{
   margin-top: 32px;
@@ -556,10 +587,18 @@ h2, h3, h4, h5, h6 {
 
   <!-- Phones FIRST (hero visual moment) -->
   <div class="hero-phones">
-    <img src="feature-map.png" class="phone phone-left" alt="Sip Sober map view">
-    <img src="feature-filters.png" class="phone phone-center" alt="Sip Sober filters view">
-    <img src="feature-favorites.png" class="phone phone-right" alt="Sip Sober favorites view">
+  <div class="phone-wrap phone-left">
+    <img src="feature-map.png" class="phone-img" alt="Sip Sober map view">
   </div>
+
+  <div class="phone-wrap phone-center">
+    <img src="feature-filters.png" class="phone-img" alt="Sip Sober filters view">
+  </div>
+
+  <div class="phone-wrap phone-right">
+    <img src="feature-favorites.png" class="phone-img" alt="Sip Sober favorites view">
+  </div>
+</div>
 
   <!-- Supporting outcome (NOW below phones) -->
   <p class="hero-subtitle hero-subtitle--below">
