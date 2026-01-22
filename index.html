@@ -211,7 +211,6 @@ h2, h3, h4, h5, h6 {
   opacity: 0.96;
 }
 
-  
     
     /* SECTION BLOCKS */
     section {
@@ -237,7 +236,6 @@ h2, h3, h4, h5, h6 {
       padding: 0;
     }
 
-    
     .section-heading {
       margin-bottom: 18px;
       max-width: 760px;
@@ -265,71 +263,7 @@ h2, h3, h4, h5, h6 {
       line-height: 1.75;
     }
 
-    .feature-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 44px;
-  margin-top: 34px;
-  align-items: start;
-}
-
-
-    .feature-card {
-  background: transparent;
-  border: none;
-  padding: 0;
-
-  max-width: 260px;   /* 👈 caps how wide each card can be */
-  margin: 0 auto;     /* 👈 centers cards inside grid columns */
-  text-align: center; /* 👈 editorial / press-style layout */
-}
-
-
-    .feature-kicker {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--ss-text-muted);
-      margin-bottom: 4px;
-    }
-
-    .feature-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin: 10px 0 6px;
-    }
-
-    .feature-text {
-      font-size: 13px;
-      color: var(--ss-text-muted);
-      line-height: 1.6;
-      max-width: 42ch;
-    }
-
-    /* Image-based feature cards */
-.feature-card--image {
-  overflow: hidden;
-}
-
-    /* Image well inside feature cards */
-.feature-img-wrap {
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
-  margin-bottom: 14px;
-}
-
-.feature-img {
-  display: block;
-  width: 100%;
-  max-width: 200px;
-  height: auto;
-  margin: 0 auto 14px auto;
-  border-radius: 14px;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
-}
-
-
+  
     .cta-panel {
       background: var(--ss-card);
       border-radius: var(--ss-radius);
@@ -403,48 +337,6 @@ h2, h3, h4, h5, h6 {
   opacity: 0.85;
 }
 
-/* Feature rows */
-.feature-row{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  align-items: center;
-}
-
-.feature-row--reverse .feature-media{ order: 2; }
-.feature-row--reverse .feature-copy{ order: 1; }
-
-.feature-media img{
-  width: 100%;
-  max-width: 280px;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-  border-radius: 14px;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
-}
-
-.feature-copy h2{
-  font-size: 22px;
-  line-height: 1.25;
-  margin: 0 0 8px;
-  font-weight: 600;
-}
-
-.feature-copy p{
-  font-size: 14px;
-  line-height: 1.6;
-  max-width: 46ch;
-  color: var(--ss-text-muted);
-}
-
-.feature-copy ul{
-  margin: 0;
-  padding-left: 18px;
-  display: grid;
-  gap: 10px;
-  opacity: 0.9;
-}
 
 /* How it works */
 .how-title{
@@ -519,27 +411,10 @@ h2, h3, h4, h5, h6 {
 @media (max-width: 860px){
   .band{ padding: 36px 0; }
 
-  .feature-row{
-    grid-template-columns: 1fr;
-    gap: 26px;
-    text-align: center;
-  }
-
-  .feature-copy p{
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .feature-copy ul{
-    text-align: left;
-    display: inline-grid;
-  }
-
   .how-grid{
     grid-template-columns: 1fr;
   }
 }
-
 
     /* FOOTER */
     footer {
@@ -593,134 +468,6 @@ h2, h3, h4, h5, h6 {
   margin: 0;
   max-width: 100%;
 }
-
-
-/* MOBILE — stack every feature row: image then text */
-.feature-row{
-  grid-template-columns: 1fr; /* stack */
-  text-align: center;
-}
-
-/* Ignore desktop "reverse" swapping on mobile */
-.feature-media{ order: 1; }
-.feature-copy{ order: 2; }
-
-.feature-row--reverse .feature-media{ order: 1; }
-.feature-row--reverse .feature-copy{ order: 2; }
-
-/* Make phone mockups smaller on mobile */
-.feature-media img{
-  width: 100%;
-  max-width: 220px; /* try 200–240 */
-  height: auto;
-  margin: 0 auto 10px;
-}
-
-/* Keep bullets readable */
-.feature-copy ul{
-  display: inline-grid;
-  text-align: left;
-}
-
-  /* Layout sections */
-  section {
-    margin-top: 0px;
-  }
-
-  .feature-grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-    margin-top: 18px;
-  }
-
-.feature-card {
-  padding: 0;
-  margin-bottom: 12px;
-}
-
-  /* MOBILE — collapse feature row spacing */
-  .feature-row{
-    gap: 16px;
-    align-items: flex-start;
-  }
-
-.feature-img {
-  max-width: 140px;   /* 🔑 this is the key change */
-  width: 100%;
-  height: auto;
-  margin: 0 auto 10px;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-}
-
-  /* MOBILE — reduce image container height */
-  .feature-img-wrap{
-    padding: 4px;
-    margin-bottom: 6px;
-    border-radius: 14px;
-  }
-
-.feature-title {
-  font-size: 15px;
-  margin-bottom: 10px;
-  margin-top: 6px;
-}
-
-.feature-text {
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-  /* MOBILE — tighten bands */
-  .band{
-    padding: 20px 0;
-  }
-
-  /* MOBILE — shrink feature phone images */
-  .feature-media img{
-    max-width: 140px;
-    width: 100%;
-    height: auto;
-    margin: 0 auto 8px;
-  }
-
-  .cta-panel { align-items: flex-start; }
-
-  /* Section headings */
-  h2, h3, h4, h5, h6 {
-    font-size: 15px;
-    letter-spacing: -0.15px;
-  }
-
-  .section-title {
-    font-size: 17px;
-    letter-spacing: -0.25px;
-    line-height: 1.2;
-  }
-
-
-  /* FEATURE ROW TEXT (ex: "All the benefits") — mobile */
-  .feature-copy h2{
-    font-size: 18px;
-    line-height: 1.2;
-    margin-bottom: 8px;
-  }
-
-  .feature-copy p{
-    font-size: 13px;
-    line-height: 1.55;
-    max-width: 34ch;
-    margin: 0 auto 10px;
-  }
-
-  .feature-copy ul{
-    font-size: 13px;
-    line-height: 1.5;
-    gap: 6px;
-    margin: 0 auto;
-    display: inline-grid;
-    text-align: left;
-  }
 
   /* HERO — MOBILE polish (sizes only) */
   .hero{
@@ -845,63 +592,7 @@ h2, h3, h4, h5, h6 {
     </div>
   </section>
 
-  <!-- SECTION 2: Feature row (image left, text right) -->
-  <section class="band band-alt">
-    <div class="container feature-row">
-      <div class="feature-media">
-        <img src="feature-map.png" alt="Sip Sober map preview" loading="lazy">
-      </div>
-
-      <div class="feature-copy">
-        <h2>All the benefits. None of the guessing.</h2>
-        <p>See real zero-proof options at bars and restaurants across NYC.</p>
-        <ul>
-          <li>Curated map of real menu options</li>
-          <li>Designed for quick decisions on the go</li>
-          <li>Built for nights out when you’re not drinking</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 3: Feature row (text left, image right) -->
-  <section class="band">
-    <div class="container feature-row feature-row--reverse">
-      <div class="feature-media">
-        <img src="feature-filters.png" alt="Filter by brand and neighborhood" loading="lazy">
-      </div>
-
-      <div class="feature-copy">
-        <h2>Filter by neighborhood and brand.</h2>
-        <p>Find spots based on what you actually want to drink—and where you want to be.</p>
-        <ul>
-          <li>Neighborhood-first browsing</li>
-          <li>Brand filtering (so you can find your favorites)</li>
-          <li>Clear, simple results</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 4: Feature row (image left, text right) -->
-  <section class="band band-alt">
-    <div class="container feature-row">
-      <div class="feature-media">
-        <img src="feature-favorites.png" alt="Save favorite zero-proof spots" loading="lazy">
-      </div>
-
-      <div class="feature-copy">
-        <h2>Save your go-to spots.</h2>
-        <p>Your zero-proof list, all in one place.</p>
-        <ul>
-          <li>Save venues you want to return to</li>
-          <li>Keep a personal shortlist for plans</li>
-          <li>Always know where to go next</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
+ 
   <!-- SECTION 5: How it works -->
   <section class="band">
     <div class="container how">
