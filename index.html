@@ -172,14 +172,17 @@ h2, h3, h4, h5, h6 {
   max-width: 220px;
 }
 
-.hero-brand {
+.hero-brand{
   font-family: "Playfair Display", serif;
-  font-size: 22px;         
-  letter-spacing: 0.28em;   
+  font-weight: 600;               /* gives it brand authority */
+  font-size: 22px;                /* matches app masthead scale */
+  letter-spacing: 0.30em;         /* intentional, editorial */
   text-transform: uppercase;
-  margin-bottom: 18px;     
+  line-height: 1;
+  margin: 0 0 10px;               /* tighter to headline */
   color: #ffffff;
-  opacity: 0.9;          
+  opacity: 0.92;
+  display: inline-block;          /* behaves like a wordmark */
 }
 
 .hero-kicker { display: none; }
