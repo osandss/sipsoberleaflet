@@ -129,7 +129,7 @@ h2, h3, h4, h5, h6 {
   height: 52px;
   width: auto;
   display: block;
-  margin: 0;
+  margin: 0 auto;
 }
    
 /* App Store text CTA */
@@ -198,6 +198,50 @@ h2, h3, h4, h5, h6 {
   color: rgba(32,34,57,0.72); /* navy, subtle */
   letter-spacing: 0.02em;
   text-align: center;
+}
+
+/* =========================
+   HERO PHONES (3D layered)
+   ========================= */
+
+.hero-phones{
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 0;
+  perspective: 1200px;
+}
+
+.hero-phones .phone{
+  width: 230px;
+  height: auto;
+  display: block;
+  border-radius: 30px;
+  transform-style: preserve-3d;
+  box-shadow:
+    0 26px 60px rgba(0,0,0,0.18),
+    0 10px 22px rgba(0,0,0,0.10);
+}
+
+/* Left phone */
+.hero-phones .phone-left{
+  transform: rotateY(16deg) translateY(16px) scale(0.96);
+  margin-right: -70px;
+  opacity: 0.92;
+}
+
+/* Center phone */
+.hero-phones .phone-center{
+  transform: translateY(4px) scale(1.08);
+  z-index: 2;
+}
+
+/* Right phone */
+.hero-phones .phone-right{
+  transform: rotateY(-16deg) translateY(16px) scale(0.96);
+  margin-left: -70px;
+  opacity: 0.92;
 }
 
 .hero-bullets{
