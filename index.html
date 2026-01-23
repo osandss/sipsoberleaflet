@@ -241,6 +241,16 @@ h2, h3, h4, h5, h6 {
   padding-bottom: 0;
   transform: translateY(36px);  /* ✅ stronger bottom crop */
 }
+
+/* Smooth iOS Safari rendering (reduces flicker) */
+.hero-phones,
+.hero-phones .phone{
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
     
 /* Hero subtitle + CTA (below phones) */
 .hero-subtitle--below{
@@ -276,7 +286,7 @@ h2, h3, h4, h5, h6 {
   transform: var(--pose) translateY(0);
   
   animation: phoneFloatIn 2000ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 220ms;
+  animation-delay: 0ms;
 
   will-change: transform, opacity;
   backface-visibility: hidden;
