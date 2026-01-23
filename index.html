@@ -565,10 +565,9 @@ h2, h3, h4, h5, h6 {
     padding: 34px 0 18px;
   }
 
-  .hero-inner.hero-two-col{
-    display: grid;
-    gap: 18px;
-    padding: 36px 0 10px;
+  .hero-inner{
+    display: block;
+    padding: 0;
   }
 
   .hero-title{
@@ -596,6 +595,34 @@ h2, h3, h4, h5, h6 {
   }
   .hero-phones .phone-center{
     width: min(230px, 34vw);
+  }
+
+  /* Mobile: anchor the whole bottom stack (phones + subtitle + CTA) */
+  .hero-copy{
+    min-height: calc(100svh - 92px); /* full screen minus topbar space */
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 18px;            /* breathing room at very bottom */
+  }
+
+  /* Keep phones big, but don’t let them crush the CTA */
+  .hero-phones{
+    margin-top: auto;                /* pushes the entire bottom stack down */
+    transform: translateY(18px);     /* keep a little crop */
+  }
+
+  /* Make sure the CTA is always below and on top */
+  .hero-subtitle--below{
+    margin-top: 18px;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .hero-cta--below{
+    position: relative;
+    z-index: 10;
+    margin-bottom: 0;
   }
 
 } /* ✅ IMPORTANT: close the 720px media query */
