@@ -147,10 +147,13 @@ h2, h3, h4, h5, h6 {
   margin: 0 auto;
   color: #202239;
 
-  min-height: calc(100svh - 92px); /* full screen minus topbar space */
+  height: calc(100svh - 92px);
+  box-sizing: border-box;
+  
   display: flex;
   flex-direction: column;
-  padding-bottom: 140px;
+  
+  padding-bottom: 72px;
 }
 
 .hero-brand{
@@ -219,15 +222,15 @@ h2, h3, h4, h5, h6 {
     
 /* Hero subtitle + CTA (below phones) */
 .hero-subtitle--below{
-  margin-top: 72px;
-  margin-bottom: 28px;
+  margin-top: 96px;
+  margin-bottom: 22px;
 }
 
 .hero-cta--below{
-  margin-top: 12px;
+  margin-top: 10px;
   position: relative;
   z-index: 10;          
-  margin-bottom: 48px;
+  margin-bottom: 0;
 }
 
 .hero-phones .phone{
