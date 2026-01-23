@@ -600,6 +600,12 @@ h2, h3, h4, h5, h6 {
   /* HERO — MOBILE polish (sizes only) */
   .hero{
     padding: 34px 0 18px;
+    overflow: hidden;
+  }
+
+  .hero-phones{
+    margin-top: 28px;
+    transform: translateY(60px);
   }
 
   .hero-inner{
@@ -631,10 +637,11 @@ h2, h3, h4, h5, h6 {
   }
 
   .hero-phones .phone{
-    width: min(200px, 30vw);
+    width: 62vw;
   }
   .hero-phones .phone-center{
-    width: min(230px, 34vw);
+    width: 72vw;
+    z-index: 3;
   }
 
   .hero-copy{
