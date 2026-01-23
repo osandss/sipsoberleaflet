@@ -147,6 +147,10 @@ h2, h3, h4, h5, h6 {
   max-width: 760px;
   margin: 0 auto;
   color: #202239;
+
+  min-height: calc(100svh - 92px); /* full screen minus topbar space */
+  display: flex;
+  flex-direction: column;
 }
 
 .hero-brand{
@@ -199,7 +203,7 @@ h2, h3, h4, h5, h6 {
    ========================= */
 
 .hero-phones{
-  margin-top: auto;   
+  margin-top: auto;             /* ✅ pushes phones downward */
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -208,9 +212,9 @@ h2, h3, h4, h5, h6 {
 
   perspective: 1400px;
   transform-style: preserve-3d;
-  
-  padding-bottom: 0; 
-  transform: translateY(22px);
+
+  padding-bottom: 0;
+  transform: translateY(52px);  /* ✅ stronger bottom crop */
 }
     
 /* Hero subtitle + CTA (below phones) */
@@ -224,7 +228,7 @@ h2, h3, h4, h5, h6 {
 }
 
 .hero-phones .phone{
-  width: clamp(190px, 20vw, 260px);
+  width: clamp(220px, 26vw, 300px);
   height: auto;
   display: block;
   transform-style: preserve-3d;
@@ -241,7 +245,7 @@ h2, h3, h4, h5, h6 {
 }
     
 .hero-phones .phone-center{
-  width: clamp(215px, 23vw, 300px);
+  width: clamp(250px, 30vw, 360px);
   --pose: translateZ(80px);
   z-index: 3;
   animation-delay: 180ms;
