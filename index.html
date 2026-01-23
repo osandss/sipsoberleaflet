@@ -85,11 +85,56 @@ h2, h3, h4, h5, h6 {
 .hero-content-centered{ display: none; }
 
 /* Centered stacked hero */
-.hero-inner.hero-two-col{
+.hero-inner{
   display: block;
   text-align: center;
   min-height: 0;
   padding: 0;
+  padding-top: 92px;
+}
+
+/* Top-left brand + menu inside hero */
+.hero-topbar{
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+}
+
+.hero-logo{
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  font-size: 38px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #202239;
+}
+
+.hero-menu{
+  width: 52px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.hero-menu span{
+  display: block;
+  width: 34px;
+  height: 2px;
+  background: rgba(32,34,57,0.55);
+  border-radius: 999px;
+}
+
+.hero-menu span:last-child{
+  margin-top: 8px;
+  width: 28px;
+  margin-left: auto;
 }
 
 .hero-copy{
@@ -548,15 +593,22 @@ h2, h3, h4, h5, h6 {
   <div class="page">
   
 <section class="hero">
+
+  <div class="hero-topbar">
+    <a class="hero-logo" href="/">Sip Sober</a>
+
+    <button class="hero-menu" aria-label="Open menu" type="button">
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
   <div class="hero-overlay">
     <div class="container">
-      <div class="hero-inner hero-two-col">
+      <div class="hero-inner">
 
         <!-- LEFT: Copy -->
         <div class="hero-copy">
-
-  <!-- Brand label (NOT an H1 anymore) -->
-  <div class="hero-brand">SIP SOBER</div>
 
   <!-- Main value prop -->
   <h1 class="hero-title">
