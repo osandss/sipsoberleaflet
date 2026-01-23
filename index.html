@@ -239,50 +239,46 @@ h2, h3, h4, h5, h6 {
   display: block;
   transform-style: preserve-3d;
 
+  transform-origin: center bottom;
+  
   /* depth */
   filter:
     drop-shadow(0 28px 56px rgba(10, 12, 30, 0.18))
     drop-shadow(0 10px 22px rgba(10, 12, 30, 0.10));
 
-  /* animation (Seen-style rise) */
+  /* animation (Seen-style rise — smoother) */
   opacity: 0;
-  transform: var(--pose) translateY(90px);
-  animation: phoneRise 1400ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  transform: var(--pose) translateY(70px);
+  animation: phoneFloatIn 1700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
+  backface-visibility: hidden;
 
-  }
+}
     
 .hero-phones .phone-center{
   width: clamp(250px, 30vw, 360px);
   --pose: translateZ(80px);
   z-index: 3;
-  animation-delay: 180ms;
+  animation-delay: 300ms;
 }
 
 .hero-phones .phone-left{
   --pose: translateX(54px) rotateY(26deg) rotateZ(-3deg) translateY(10px);
   z-index: 2;
-  animation-delay: 60ms;
+  animation-delay: 220ms;
 }
 
 .hero-phones .phone-right{
   --pose: translateX(-54px) rotateY(-26deg) rotateZ(3deg) translateY(10px);
   z-index: 1;
-  animation-delay: 320ms;
+  animation-delay: 380ms;
 }
 
-@keyframes phoneRise{
-  0%{
-    opacity: 0;
-    transform: var(--pose) translateY(90px);
-  }
-  60%{
-    opacity: 1;
-  }
-  100%{
-    opacity: 1;
-    transform: var(--pose) translateY(0);
-  }
+@keyframes phoneFloatIn{
+  0%{ opacity: 0; transform: var(--pose) translateY(70px); }
+  35%{ opacity: 0; }
+  70%{ opacity: 1; }
+  100%{ opacity: 1; transform: var(--pose) translateY(0); }
 }
  
     /* SECTION BLOCKS */
@@ -663,10 +659,11 @@ h2, h3, h4, h5, h6 {
         <!-- LEFT: Copy -->
         <div class="hero-copy">
 
-  <!-- Main value prop -->
+  <div class="hero-rise hero-rise--title">
   <h1 class="hero-title">
     NYC’s zero-proof map for bars and restaurants.
   </h1>
+</div>
 
   <!-- Phones FIRST (hero visual moment) -->
   <div class="hero-phones">
