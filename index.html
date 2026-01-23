@@ -71,27 +71,32 @@ h2, h3, h4, h5, h6 {
 .hero{
   position: relative;
   margin-top: 0;
-  padding: 56px 0 40px;
+  min-height: 100svh;
+  padding: 18px 0 0;
   background: #fff;
-  overflow: visible; /* ✅ IMPORTANT: don’t clip the phones/shadows */
+  overflow: hidden;
 }
 
 .hero-overlay{
   width: 100%;
   position: relative;
   z-index: 1;
+  min-height: 100svh;
 }
 
 .hero-content-centered{ display: none; }
 
-/* Centered stacked hero */
 .hero-inner{
-  display: block;
+  min-height: 100svh;          
+  display: flex;               
+  flex-direction: column;     
+  align-items: center;        
   text-align: center;
-  min-height: 0;
   padding: 0;
-  padding-top: 92px;
+  padding-top: 92px;        
+  padding-bottom: 0;     
 }
+
 
 /* Top-left brand + menu inside hero */
 .hero-topbar{
@@ -194,7 +199,7 @@ h2, h3, h4, h5, h6 {
    ========================= */
 
 .hero-phones{
-  margin-top: 48px;   
+  margin-top: auto;   
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -203,7 +208,9 @@ h2, h3, h4, h5, h6 {
 
   perspective: 1400px;
   transform-style: preserve-3d;
-  padding-bottom: 12px; 
+  
+  padding-bottom: 0; 
+  transform: translateY(22px);
 }
     
 /* Hero subtitle + CTA (below phones) */
