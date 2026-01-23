@@ -609,9 +609,12 @@ h2, h3, h4, h5, h6 {
   }
 
   .hero-inner{
-    display: block;
-    padding: 0;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 86px 0 0; /* IMPORTANT: space for topbar */
+}
 
   .hero-title{
     font-size: 26px;
@@ -640,23 +643,21 @@ h2, h3, h4, h5, h6 {
     width: min(230px, 34vw);
   }
 
-  /* Mobile: anchor the whole bottom stack (phones + subtitle + CTA) */
   .hero-copy{
-    min-height: calc(100svh - 92px); /* full screen minus topbar space */
+    min-height: auto;     /* removes giant gap */
     display: flex;
     flex-direction: column;
-    padding-bottom: 18px;            /* breathing room at very bottom */
+    padding-bottom: 18px;
   }
 
-  /* Keep phones big, but don’t let them crush the CTA */
   .hero-phones{
-    margin-top: auto;                /* pushes the entire bottom stack down */
-    transform: translateY(18px);     /* keep a little crop */
+    margin-top: 18px;     /* normal spacing */
+    transform: translateY(10px);
   }
 
   /* Make sure the CTA is always below and on top */
   .hero-subtitle--below{
-    margin-top: 18px;
+    margin-top: 64px;
     margin-bottom: 14px;
     position: relative;
     z-index: 10;
