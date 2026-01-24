@@ -379,6 +379,16 @@
   color: #1c1c1e;
 }
 
+/* Popup venue image */
+.ss-popup-img{
+  width: 100%;
+  height: 132px;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+  margin-bottom: 12px;
+}
+
 .ss-popup--simple .ss-popup-title {
   font-size: 14px;
   font-weight: 800;
@@ -691,7 +701,6 @@
       <span class="label">Show</span>
     </button>
 
-
     
     <div id="active-filters" class="active-filters"></div>
     <div id="results-count" class="results-count"></div>
@@ -916,35 +925,43 @@
        E) RENDERERS
        ========================= */
     function renderMarkers(data) {
-      markersLayer.clearLayers();
-      const bounds = L.latLngBounds([]);
-      data.forEach((loc) => {
-        const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
-        
-      m.bindPopup(`
-  <div class="ss-popup ss-popup--simple">
-    <div class="ss-popup-title">${loc.name || ""}</div>
+  markersLayer.clearLayers();
+  const bounds = L.latLngBounds([]);
 
-    <div class="ss-popup-meta">${loc.address || ""}</div>
+  data.forEach((loc) => {
+    const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
 
-    <div class="ss-popup-tags">
-      ${loc.brand ? loc.brand : ""}
-      ${loc.neighborhood ? ` • ${loc.neighborhood}` : ""}
-    </div>
+    const imgHtml = loc.imageUrl
+      ? `<img class="ss-popup-img" src="${loc.imageUrl}" alt="${loc.name || ""}" loading="lazy"
+             onerror="this.style.display='none'">`
+      : "";
 
-    <div class="ss-popup-links">
-      ${loc.website ? `<a class="ss-popup-link" href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ""}
-      <a class="ss-popup-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        (loc.name || "") + " " + (loc.address || "")
-      )}" target="_blank" rel="noopener">Directions</a>
-    </div>
-  </div>
-`);
-        
-        bounds.extend([loc.lat, loc.lng]);
-      });
-      return { count: data.length, bounds: data.length ? bounds : null };
-    }
+    m.bindPopup(`
+      <div class="ss-popup ss-popup--simple">
+        ${imgHtml}
+
+        <div class="ss-popup-title">${loc.name || ""}</div>
+        <div class="ss-popup-meta">${loc.address || ""}</div>
+
+        <div class="ss-popup-tags">
+          ${loc.brand ? loc.brand : ""}
+          ${loc.neighborhood ? ` • ${loc.neighborhood}` : ""}
+        </div>
+
+        <div class="ss-popup-links">
+          ${loc.website ? `<a class="ss-popup-link" href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ""}
+          <a class="ss-popup-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+            (loc.name || "") + " " + (loc.address || "")
+          )}" target="_blank" rel="noopener">Directions</a>
+        </div>
+      </div>
+    `);
+
+    bounds.extend([loc.lat, loc.lng]);
+  });
+
+  return { count: data.length, bounds: data.length ? bounds : null };
+}
 
     function renderList(data) {
       const results = document.getElementById("results");
