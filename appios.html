@@ -368,6 +368,8 @@
 
 .leaflet-popup-content {
   margin: 0 !important;
+  width: auto !important;
+  max-width: none !important;
 }
 
 /* Simple popup (text-first) */
@@ -407,9 +409,8 @@
   color: #6b6f82;
   margin-bottom: 8px;
   
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  line-height: 1.25;
+  max-height: calc(1.25em * 2);
   overflow: hidden;
 }
 
@@ -943,26 +944,29 @@
              onerror="this.style.display='none'">`
       : "";
 
-    m.bindPopup(`
-      <div class="ss-popup ss-popup--simple">
-        ${imgHtml}
+    m.bindPopup(
+  `
+  <div class="ss-popup ss-popup--simple">
+    ${imgHtml}
 
-        <div class="ss-popup-title">${loc.name || ""}</div>
-        <div class="ss-popup-meta">${loc.address || ""}</div>
+    <div class="ss-popup-title">${loc.name || ""}</div>
+    <div class="ss-popup-meta">${loc.address || ""}</div>
 
-        <div class="ss-popup-tags">
-          ${loc.brand ? loc.brand : ""}
-          ${loc.neighborhood ? ` • ${loc.neighborhood}` : ""}
-        </div>
+    <div class="ss-popup-tags">
+      ${loc.brand ? loc.brand : ""}
+      ${loc.neighborhood ? ` • ${loc.neighborhood}` : ""}
+    </div>
 
-        <div class="ss-popup-links">
-          ${loc.website ? `<a class="ss-popup-link" href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ""}
-          <a class="ss-popup-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-            (loc.name || "") + " " + (loc.address || "")
-          )}" target="_blank" rel="noopener">Directions</a>
-        </div>
-      </div>
-    `);
+    <div class="ss-popup-links">
+      ${loc.website ? `<a class="ss-popup-link" href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ""}
+      <a class="ss-popup-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        (loc.name || "") + " " + (loc.address || "")
+      )}" target="_blank" rel="noopener">Directions</a>
+    </div>
+  </div>
+  `,
+  { minWidth: 220, maxWidth: 280, autoPanPadding: [18, 18], closeButton: true }
+);
 
     bounds.extend([loc.lat, loc.lng]);
   });
