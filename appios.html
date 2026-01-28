@@ -109,10 +109,14 @@
       outline: none;
       background: transparent;
       width: 100%;
-      font-size: 12px;
+      font-size: 16px;
       min-width: 60px;
     }
 
+    #searchTopInput::-webkit-search-cancel-button{
+      -webkit-appearance: none;
+    }
+    
     #searchTopClear{
       border: 0;
       background: transparent;
@@ -138,7 +142,7 @@
    ========================= */
 
 .dropdown .menu {
-  max-height: 200px;          
+  max-height: 180px;          
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -1163,6 +1167,7 @@
       const selectedNeighborhoods = getSelectedValues("n");
 
       const q = (document.getElementById("searchTopInput")?.value || "").trim();
+      const hasSearch = q.length > 0;
 
       const filtered = locations.filter((loc) => {
         const brandOK = selectedBrands.length
@@ -1187,7 +1192,7 @@
       const { count, bounds } = renderMarkers(filtered);
       updateActiveFilters(selectedBrands, selectedNeighborhoods);
 
-      if (count > 0 && bounds) {
+      if (count > 0 && bounds && !hasSearch) {
         map.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
       }
 
@@ -1273,6 +1278,7 @@ searchInput?.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
     applyFilters();
+    searchInput.blur(); // ✅ closes keyboard + exits focus zoom state
   }
 });
 
