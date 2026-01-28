@@ -1162,6 +1162,8 @@
       const selectedBrands = getSelectedValues("brand");
       const selectedNeighborhoods = getSelectedValues("n");
 
+      const q = (document.getElementById("searchTopInput")?.value || "").trim();
+
       const filtered = locations.filter((loc) => {
         const brandOK = selectedBrands.length
           ? selectedBrands.some(
@@ -1170,11 +1172,16 @@
                 loc.brand.toLowerCase().includes(b.toLowerCase())
             )
           : true;
+
         const hoodOK = selectedNeighborhoods.length
           ? selectedNeighborhoods.includes(loc.neighborhood)
           : true;
-        return brandOK && hoodOK;
+
+        const searchOK = matchesSearch(loc, q); // ✅ ADD THIS
+
+        return brandOK && hoodOK && searchOK;   // ✅ CHANGE THIS
       });
+
 
       renderList(filtered);
       const { count, bounds } = renderMarkers(filtered);
@@ -1247,8 +1254,6 @@
 // TOP SEARCH (after Go button)
 // ==============================
 
-let searchQuery = "";
-
 function matchesSearch(loc, q) {
   if (!q) return true;
   const hay = [
@@ -1260,34 +1265,20 @@ function matchesSearch(loc, q) {
   return hay.includes(q.toLowerCase());
 }
 
-function debounce(fn, wait = 120){
-  let t;
-  return (...args) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn(...args), wait);
-  };
-}
-
 const searchInput = document.getElementById("searchTopInput");
 const searchClear = document.getElementById("searchTopClear");
 
-searchInput?.addEventListener("input", debounce(() => {
-  searchQuery = (searchInput.value || "").trim();
-  applyFilters();
-}, 120));
-
-
+// Enter key = apply filters
 searchInput?.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
-    searchQuery = (searchInput.value || "").trim();
     applyFilters();
   }
 });
 
+// Clear (×)
 searchClear?.addEventListener("click", () => {
   if (searchInput) searchInput.value = "";
-  searchQuery = "";
   applyFilters();
 });
 
