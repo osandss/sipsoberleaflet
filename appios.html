@@ -71,6 +71,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
 
       padding: 6px 8px;
       background: rgba(255, 255, 255, 0.98);
@@ -81,6 +82,47 @@
       backdrop-filter: none;
     }
 
+    /* --- Top bar search (after Go) --- */
+    .ss-searchTop{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      height: 32px;
+      padding: 0 10px;
+
+      background: #f2f2f7;
+      border: 1px solid #ccc;
+      border-radius: 999px;
+
+      font-size: 12px;
+      min-width: 140px;
+    }
+
+    .ss-searchIcon{
+      font-size: 12px;
+      opacity: 0.6;
+    }
+
+    #searchTopInput{
+      border: 0;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 12px;
+      min-width: 60px;
+    }
+
+    #searchTopClear{
+      border: 0;
+      background: transparent;
+      font-size: 16px;
+      line-height: 1;
+      opacity: 0.6;
+      cursor: pointer;
+      padding: 0;
+    }
+    
     .dropdown > button {
       background: #f2f2f7;
       border: 1px solid #ccc;
@@ -96,7 +138,7 @@
    ========================= */
 
 .dropdown .menu {
-  max-height: 220px;          /* ~4 rows */
+  max-height: 200px;          
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -692,6 +734,22 @@
 
   <button id="goBtn" type="button">Go</button>
 
+  <!-- 🔍 Search (TOP BAR) -->
+  <div class="ss-searchTop">
+    <span class="ss-searchIcon" aria-hidden="true">⌕</span>
+    <input
+      id="searchTopInput"
+      type="search"
+      placeholder="Search a venue…"
+      autocomplete="off"
+    />
+    <button
+      id="searchTopClear"
+      type="button"
+      aria-label="Clear search"
+    >×</button>
+  </div>
+  
 </div>
  
 
@@ -837,7 +895,6 @@
         attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
       }
     ).addTo(map);
-
 
 
     const manhattanBounds = L.latLngBounds(
@@ -1185,6 +1242,54 @@
     });
 
     document.getElementById("goBtn").addEventListener("click", applyFilters);
+
+    // ==============================
+// TOP SEARCH (after Go button)
+// ==============================
+
+let searchQuery = "";
+
+function matchesSearch(loc, q) {
+  if (!q) return true;
+  const hay = [
+    loc.name,
+    loc.address,
+    loc.brand,
+    loc.neighborhood
+  ].filter(Boolean).join(" ").toLowerCase();
+  return hay.includes(q.toLowerCase());
+}
+
+function debounce(fn, wait = 120){
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), wait);
+  };
+}
+
+const searchInput = document.getElementById("searchTopInput");
+const searchClear = document.getElementById("searchTopClear");
+
+searchInput?.addEventListener("input", debounce(() => {
+  searchQuery = (searchInput.value || "").trim();
+  applyFilters();
+}, 120));
+
+
+searchInput?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    searchQuery = (searchInput.value || "").trim();
+    applyFilters();
+  }
+});
+
+searchClear?.addEventListener("click", () => {
+  if (searchInput) searchInput.value = "";
+  searchQuery = "";
+  applyFilters();
+});
 
   
 // =========================
