@@ -126,6 +126,34 @@
       cursor: pointer;
       padding: 0;
     }
+
+    /* =========================
+   TOP SEARCH TOGGLE
+   ========================= */
+
+  #searchToggle{
+    border: 1px solid #ccc;
+    background: #f2f2f7;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #2f3b69;
+  }
+
+  /* collapsible row */
+  #searchTopRow{
+    display: none;
+    width: 100%;
+  }
+
+  #searchTopRow.is-open{
+    display: block;
+  }
+
+  .ss-searchTop{
+    width: 100%;
+  }
     
     .dropdown > button {
       background: #f2f2f7;
@@ -738,24 +766,32 @@
 
   <button id="goBtn" type="button">Go</button>
 
-  <!-- 🔍 Search (TOP BAR) -->
-  <div class="ss-searchTop">
-    <span class="ss-searchIcon" aria-hidden="true">⌕</span>
-    <input
-      id="searchTopInput"
-      type="search"
-      placeholder="Search a venue…"
-      autocomplete="off"
-    />
-    <button
-      id="searchTopClear"
-      type="button"
-      aria-label="Clear search"
-    >×</button>
-  </div>
+  <button
+    id="searchToggle"
+    type="button"
+    aria-label="Search"
+    aria-expanded="false"
+  >
+    🔍
+  </button>
   
-</div>
- 
+  <!-- 🔍 Search (TOP BAR) -->
+  <div id="searchTopRow">
+    <div class="ss-searchTop">
+      <span class="ss-searchIcon" aria-hidden="true">◦</span>
+      <input
+        id="searchTopInput"
+        type="search"
+        placeholder="Search a venue…"
+        autocomplete="off"
+      />
+      <button
+        id="searchTopClear"
+        type="button"
+        aria-label="Clear search"
+      >×</button>
+    </div>
+  </div>
 
   <!-- Fullscreen Map -->
   <div id="map"></div>
@@ -1231,7 +1267,7 @@
           parent.classList.add("open");
           btn.setAttribute("aria-expanded", "true");
         }
-      } else if (!dd) {
+      } else if (!dd && !e.target.closest("#searchTopRow") && !e.target.closest("#searchToggle")) {
         closeAllMenus();
       }
     });
@@ -1254,6 +1290,46 @@
     });
 
     document.getElementById("goBtn").addEventListener("click", applyFilters);
+
+// ==============================
+// TOP SEARCH TOGGLE
+// ==============================
+(() => {
+  const toggleBtn = document.getElementById("searchToggle");
+  const row = document.getElementById("searchTopRow");
+  const input = document.getElementById("searchTopInput");
+
+  if (!toggleBtn || !row) return;
+
+  function openRow() {
+    row.classList.add("is-open");
+    toggleBtn.setAttribute("aria-expanded", "true");
+    setTimeout(() => input?.focus(), 50);
+  }
+
+  function closeRow() {
+    row.classList.remove("is-open");
+    toggleBtn.setAttribute("aria-expanded", "false");
+    input?.blur();
+  }
+
+  toggleBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    row.classList.contains("is-open") ? closeRow() : openRow();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!row.classList.contains("is-open")) return;
+    if (e.target.closest("#searchTopRow") || e.target.closest("#searchToggle")) return;
+    closeRow();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeRow();
+  });
+})();
+
 
     // ==============================
 // TOP SEARCH (after Go button)
@@ -1278,7 +1354,9 @@ searchInput?.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
     applyFilters();
-    searchInput.blur(); // ✅ closes keyboard + exits focus zoom state
+    document.getElementById("searchTopRow")?.classList.remove("is-open");
+    document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");
+    searchInput.blur();
   }
 });
 
