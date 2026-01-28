@@ -29,12 +29,15 @@
        APP-ONLY MAP LAYOUT
        ========================= */
 
+    /* Subtle darkening — original Positron, just moodier */
+      .leaflet-tile {
+        filter: brightness(0.90) contrast(1.08) saturate(0.90);
+      }
     :root {
-
-  /* mobile panel heights (used for dynamic map resizing) */
-  --panel-collapsed: 18vh;
-  --panel-expanded: 38vh;
-}
+    /* mobile panel heights (used for dynamic map resizing) */
+    --panel-collapsed: 18vh;
+    --panel-expanded: 38vh;
+    }
 
     html,
     body {
@@ -928,7 +931,7 @@
     }).setView([40.77, -73.97], 12.6);
 
     L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
       {
         maxZoom: 20,
         subdomains: "abcd",
