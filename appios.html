@@ -87,21 +87,25 @@
 
     /* --- Top bar search (after Go) --- */
     .ss-searchTop{
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 
-      height: 32px;
-      padding: 0 10px;
+    height: 32px;
+    padding: 0 10px;
 
-      background: #f2f2f7;
-      border: 1px solid #ccc;
-      border-radius: 999px;
+    background: #f2f2f7;
+    border: 1px solid #ccc;
+    border-radius: 999px;
 
-      font-size: 12px;
-      width: 72px
-      min-width: unset;
-    }
+    font-size: 12px;
+
+    width: 160px;
+    min-width: 160px;
+    max-width: 160px;
+    flex: 0 0 160px;
+  }
+
 
     .ss-searchIcon{
       font-size: 12px;
@@ -153,13 +157,6 @@
 
   #searchTopRow.is-open{
     display: block;
-  }
-
-  .ss-searchTop{
-    width: 70px;      /* ~half / compact */
-    min-width: 70px;
-    max-width: 70px;
-    flex: 0 0 70px;
   }
 
     .dropdown > button {
