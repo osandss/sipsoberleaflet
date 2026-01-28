@@ -102,6 +102,7 @@
     min-width: 160px;
     max-width: 160px;
     flex: 0 0 160px;
+    overflow: hidden;
   }
 
     .ss-searchIcon{
@@ -114,9 +115,12 @@
       outline: none;
       background: transparent;
       width: 100%;
-      font-size: 13px;
-      min-width: 60px;
+      font-size: 16px;
+      min-width: 0;
       line-height: 1;
+      
+      transform: scale(0.82);          /* makes it LOOK smaller */
+      transform-origin: left center;   /* keep it aligned */
     }
 
     #searchTopInput::-webkit-search-cancel-button{
