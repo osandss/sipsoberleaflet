@@ -928,14 +928,13 @@
     }).setView([40.77, -73.97], 12.6);
 
     L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
       {
         maxZoom: 20,
         subdomains: "abcd",
         attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
       }
     ).addTo(map);
-
 
     const manhattanBounds = L.latLngBounds(
       [40.5, -74.3], // SW
