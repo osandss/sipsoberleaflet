@@ -1445,6 +1445,31 @@ window.SipSober.setFavorites = function (payload) {
   });
 };
 
+// ================================
+// Swift → JS: focus a venue (zoom + open popup)
+// ================================
+window.SipSober.focusVenue = function (payload) {
+  const venueId = typeof payload === "string" ? payload : payload?.venueId;
+  if (!venueId) return;
+
+  const v = locations.find(x =>
+    String((x.name + "|" + x.address).toLowerCase()) === String(venueId).toLowerCase()
+  );
+  if (!v) return;
+
+  // Zoom + center map
+  map.setView([v.lat, v.lng], 16, { animate: true });
+
+  // Open popup
+  setTimeout(() => {
+    openMarkerAt(v.lat, v.lng);
+  }, 250);
+
+  // Expand results panel (nice UX)
+  const panel = document.getElementById("bottom-panel");
+  if (panel) panel.classList.add("expanded");
+};
+
   </script>
 
   <!-- ===== Sip Sober: one-time onboarding banner JS ===== -->
