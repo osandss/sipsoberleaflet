@@ -1453,6 +1453,9 @@ window.SipSober.setFavorites = function (payload) {
     const KEY = "ss_seen_map_onboarding_v1";
 
     function showOnboarding() {
+      // ✅ If they’ve already seen it before, never show again
+      if (localStorage.getItem(KEY) === "true") return;
+
       const el = document.getElementById("ss-onboard");
       if (!el) return;
 
@@ -1470,13 +1473,7 @@ window.SipSober.setFavorites = function (payload) {
       }
 
       okBtn?.addEventListener("click", dismiss);
-      
-      // Auto-hide after 10s (still marks as seen)
-      setTimeout(() => {
-        if (!el.hidden) dismiss();
-      }, 10000);
-    }
-
+    
   // Show after the page paints
   window.addEventListener("load", () => {
     setTimeout(showOnboarding, 450);
