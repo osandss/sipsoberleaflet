@@ -1038,7 +1038,7 @@
     /* =========================
        E) RENDERERS
        ========================= */
-    let markersById = {};
+    var markersById = {};
 
     function renderMarkers(data) {
   markersLayer.clearLayers();
@@ -1469,26 +1469,36 @@ window.SipSober.focusVenue = function (payload) {
   const id = String(venueId).trim();
   if (!id) return;
 
-  // ✅ Use markersById (created in renderMarkers)
-  const marker = markersById?.[id];
-  if (!marker) {
-    console.warn("❌ focusVenue: marker not found for id:", id);
-    return;
-  }
+  let tries = 0;
 
-  // ✅ Zoom/center to the marker
-  const ll = marker.getLatLng();
-  map.invalidateSize(true);
-  map.setView([ll.lat, ll.lng], 16, { animate: true });
+  (function attempt() {
+    const marker = markersById?.[id];
 
-  // ✅ Open its popup
-  setTimeout(() => {
-    marker.openPopup();
-  }, 200);
+    if (!marker) {
+      tries += 1;
 
-  // ✅ Expand results panel (nice UX)
-  const panel = document.getElementById("bottom-panel");
-  if (panel) panel.classList.add("expanded");
+      // ⏳ markers not ready yet → retry
+      if (tries <= 25) {
+        setTimeout(attempt, 120);
+        return;
+      }
+
+      console.warn("❌ focusVenue: marker not found after retries for id:", id);
+      return;
+    }
+
+    // ✅ marker found — zoom + popup
+    const ll = marker.getLatLng();
+    map.invalidateSize(true);
+    map.setView([ll.lat, ll.lng], 16, { animate: true });
+
+    setTimeout(() => {
+      marker.openPopup();
+    }, 200);
+
+    const panel = document.getElementById("bottom-panel");
+    if (panel) panel.classList.add("expanded");
+  })();
 };
 
   </script>
