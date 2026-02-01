@@ -1037,12 +1037,17 @@
     /* =========================
        E) RENDERERS
        ========================= */
+    const markersById = {};
+
     function renderMarkers(data) {
   markersLayer.clearLayers();
   const bounds = L.latLngBounds([]);
 
   data.forEach((loc) => {
     const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
+    
+    const vid = (loc.id || (loc.name + "|" + loc.address).toLowerCase());
+    markersById[vid] = m;
 
     const imgHtml = loc.imageUrl
       ? `<img class="ss-popup-img" src="${loc.imageUrl}" alt="${loc.name || ""}" loading="lazy"
@@ -1449,23 +1454,27 @@ window.SipSober.setFavorites = function (payload) {
 // Swift → JS: focus a venue (zoom + open popup)
 // ================================
 window.SipSober.focusVenue = function (payload) {
-  const venueId = typeof payload === "string" ? payload : payload?.venueId;
-  if (!venueId) return;
+  const venueId = (typeof payload === "string" ? payload : payload?.venueId) || "";
+  const key = String(venueId).toLowerCase().trim();
+  if (!key) return;
 
-  const v = locations.find(x =>
-    String((x.name + "|" + x.address).toLowerCase()) === String(venueId).toLowerCase()
-  );
-  if (!v) return;
+  // ✅ Use markersById (created in renderMarkers)
+  const marker = markersById?.[key];
+  if (!marker) {
+    console.warn("❌ focusVenue: marker not found for id:", key);
+    return;
+  }
 
-  // Zoom + center map
-  map.setView([v.lat, v.lng], 16, { animate: true });
+  // ✅ Zoom/center to the marker
+  const ll = marker.getLatLng();
+  map.setView([ll.lat, ll.lng], 16, { animate: true });
 
-  // Open popup
+  // ✅ Open its popup
   setTimeout(() => {
-    openMarkerAt(v.lat, v.lng);
-  }, 250);
+    marker.openPopup();
+  }, 200);
 
-  // Expand results panel (nice UX)
+  // ✅ Expand results panel (nice UX)
   const panel = document.getElementById("bottom-panel");
   if (panel) panel.classList.add("expanded");
 };
