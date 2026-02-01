@@ -787,7 +787,7 @@
   <!-- 🔍 Search (TOP BAR) -->
   <div id="searchTopRow">
     <div class="ss-searchTop">
-      <span class="ss-searchIcon" aria-hidden="true">◦</span>
+      <span class="ss-searchIcon" aria-hidden="true">🔍</span>
       <input
         id="searchTopInput"
         type="search"
@@ -879,7 +879,6 @@
       { id: "deathco", name: "Death & Co", address: "433 E 6th St, NY", lat: 40.7275, lng: -73.9846, website: "https://www.deathandcompany.com", brand: "Pathfinder, Seedlip, Ritual Zero Proof, Lyre's", neighborhood: "East Village", imageUrl: "venue-images/deathco.jpeg" },
       { id: "pineappleclub", name: "Pineapple Club", address: "509 E 6th St, NY", lat: 40.7268, lng: -73.9789, website: "http://pineappleclub.com", brand: "St. Agrestis", neighborhood: "East Village", imageUrl: "venue-images/pineappleclub.jpeg" },
       { id: "hardtoexplain", name: "Hard to Explain", address: "224 E 10th St, NY", lat: 40.7299, lng: -73.9831, website: "https://www.hardtoexplain.co", brand: "Good Time Brewing", neighborhood: "East Village", imageUrl: "venue-images/hardtoexplain.jpeg" },
-      { id: "cabinet", name: "The Cabinet Mezcal Bar", address: "649 E 9th St, NY", lat: 40.72546, lng: -73.97816, website: "https://www.thecabinetnyc.com", brand: "Athletic Brewing Co.", neighborhood: "East Village", imageUrl: "venue-images/thecabinet.jpeg" },
       { id: "superbueno", name: "Superbueno", address: "13 1st Ave, NY", lat: 40.7273, lng: -73.9896, website: "https://www.superbuenonyc.com", brand: "Pathfinder, Curious Elixirs, Aplós, Good Time Brewing", neighborhood: "East Village", imageUrl: "venue-images/superbueno.jpeg" },
       { id: "donna", name: "Donna", address: "7 Cornelia St, NY", lat: 40.7316, lng: -74.0035, website: "https://www.donnanyc.com", brand: "Ritual Zero Proof, St. Agrestis, Pathfinder", neighborhood: "West Village", imageUrl: "venue-images/donna.jpeg" },
       { id: "entwine", name: "Entwine Cocktail Bar", address: "765 Washington St, NY", lat: 40.7342, lng: -74.0062, website: "https://www.entwinenyc.com", brand: "Athletic Brewing Co., St. Agrestis", neighborhood: "West Village", imageUrl: "venue-images/entwine.jpeg" },
@@ -927,6 +926,8 @@
       { id: "carnemare", name: "Carne Mare", address: "89 South St, NY", lat: 40.7062, lng: -74.0034, website: "https://www.carnemare.com", brand: "Athletic Brewing Co., Pentire, Lyre's", neighborhood: "FiDi", imageUrl: "venue-images/carnemare.jpeg" },
 
     ];
+
+    window.SipSober = window.SipSober || {};
 
     /* =========================
        B) MAP INIT
@@ -1103,12 +1104,12 @@
         card.className = "card";
         card.innerHTML = `
   <div class="card-top">
-    <span class="card-name" onclick="map.setView([${loc.lat}, ${loc.lng}], 16); openMarkerAt(${loc.lat}, ${loc.lng});">${loc.name}</span>
+    <span class="card-name" data-focus-id="${loc.id}">${loc.name}</span>
     <button class="fav-btn" data-id="${loc.id}" aria-label="Favorite">★</button>
   </div>
 
   <div class="meta">${loc.address}</div>
-  <a href="${loc.website}" target="_blank" rel="noopener">Website</a>
+  ${loc.website ? `<a href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ``}
   <div class="meta">Brand: ${loc.brand || ""}</div>
   <div class="meta">Neighborhood: ${loc.neighborhood || ""}</div>
 `;
@@ -1118,34 +1119,48 @@
     }
 
     document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".fav-btn");
-  if (!btn) return;
+  
+      // 🚫 Ignore all anchor/link clicks (prevents iOS ghost taps)
+  if (e.target.closest("a")) return;
+
+    // ⭐ Favorite button
+  const favBtn = e.target.closest(".fav-btn");
+  if (favBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const venueId = favBtn.dataset.id;
+    const v = locations.find((x) => String(x.id) === String(venueId));
+    if (!v) return;
+
+    favBtn.classList.toggle("is-fav");
+
+    window.webkit?.messageHandlers?.favorites?.postMessage({
+      action: "toggle",
+      venue: {
+        venueId: String(v.id),
+        name: v.name || "",
+        address: v.address || "",
+        website: v.website || "",
+        neighborhood: v.neighborhood || "",
+        brands: v.brand || "",
+      },
+    });
+
+    return; // ⛔ stops name-click logic
+  }
+
+  // 📍 Venue name → focus + zoom
+  const nameEl = e.target.closest(".card-name[data-focus-id]");
+  if (!nameEl) return;
 
   e.preventDefault();
   e.stopPropagation();
 
-  const venueId = btn.dataset.id;
-
-  // Find matching venue (same id logic used in renderList)
-  const v = locations.find(x => String(x.id) === String(venueId));
-  if (!v) return;
-
-  // Toggle UI
-  btn.classList.toggle("is-fav");
-
-  // Send to iOS app
-  window.webkit?.messageHandlers?.favorites?.postMessage({
-    action: "toggle",
-    venue: {
-      venueId: String(v.id),
-      name: v.name || "",
-      address: v.address || "",
-      website: v.website || "",
-      neighborhood: v.neighborhood || "",
-      brands: v.brand || ""
-    }
-  });
+  const id = nameEl.dataset.focusId;
+  window.SipSober?.focusVenue(id);
 });
+
 
     /* =========================
        ACTIVE FILTER CHIPS
@@ -1209,6 +1224,14 @@
       ).map((cb) => cb.value);
     }
 
+    function matchesSearch(loc, q) {
+      if (!q) return true;
+        const hay = [loc.name, loc.address, loc.brand, loc.neighborhood]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        return hay.includes(q.toLowerCase());
+      }
     function applyFilters() {
       closeAllMenus();
 
@@ -1348,17 +1371,6 @@
 // TOP SEARCH (after Go button)
 // ==============================
 
-function matchesSearch(loc, q) {
-  if (!q) return true;
-  const hay = [
-    loc.name,
-    loc.address,
-    loc.brand,
-    loc.neighborhood
-  ].filter(Boolean).join(" ").toLowerCase();
-  return hay.includes(q.toLowerCase());
-}
-
 const searchInput = document.getElementById("searchTopInput");
 const searchClear = document.getElementById("searchTopClear");
 
@@ -1415,10 +1427,9 @@ searchClear?.addEventListener("click", () => {
        I) INITIALIZE
        ========================= */
     renderList(locations);
-    const initial = renderMarkers(locations);
-    if (initial.bounds) map.fitBounds(initial.bounds, { padding: [30, 30] });
-
+    renderMarkers(locations);
     setTimeout(() => map.invalidateSize(), 150);
+
   
     /* =========================
    Bottom Tab Bar Logic
@@ -1467,6 +1478,7 @@ window.SipSober.focusVenue = function (payload) {
 
   // ✅ Zoom/center to the marker
   const ll = marker.getLatLng();
+  map.invalidateSize(true);
   map.setView([ll.lat, ll.lng], 16, { animate: true });
 
   // ✅ Open its popup
@@ -1483,37 +1495,33 @@ window.SipSober.focusVenue = function (payload) {
 
   <!-- ===== Sip Sober: one-time onboarding banner JS ===== -->
   <script>
-  (function () {
-    const KEY = "ss_seen_map_onboarding_v1";
+(function () {
+  const KEY = "ss_seen_map_onboarding_v1";
 
-    function showOnboarding() {
-      // ✅ If they’ve already seen it before, never show again
-      if (localStorage.getItem(KEY) === "true") return;
+  function showOnboarding() {
+    if (localStorage.getItem(KEY) === "true") return;
 
-      const el = document.getElementById("ss-onboard");
-      if (!el) return;
+    const el = document.getElementById("ss-onboard");
+    if (!el) return;
 
-      el.hidden = false;
-      requestAnimationFrame(() => el.classList.add("is-visible"));
+    el.hidden = false;
+    requestAnimationFrame(() => el.classList.add("is-visible"));
 
-      const okBtn = document.getElementById("ss-onboard-ok");
+    const okBtn = document.getElementById("ss-onboard-ok");
 
-      function dismiss() {
-        localStorage.setItem(KEY, "true");
-        el.classList.remove("is-visible");
-        setTimeout(() => {
-          el.hidden = true;
-        }, 240);
-      }
+    function dismiss() {
+      localStorage.setItem(KEY, "true");
+      el.classList.remove("is-visible");
+      setTimeout(() => (el.hidden = true), 240);
+    }
 
-      okBtn?.addEventListener("click", dismiss);
-    
-  // Show after the page paints
+    okBtn?.addEventListener("click", dismiss);
+  }
+
   window.addEventListener("load", () => {
     setTimeout(showOnboarding, 450);
   });
-
 })();
-</script>  
+</script>
 </body>
 </html>
