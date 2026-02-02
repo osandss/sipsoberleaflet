@@ -938,6 +938,139 @@
 
     window.SipSober = window.SipSober || {};
 
+    // ================================
+// Near Me (Swift → JS)
+// ================================
+let _nearMeActive = false;
+let _nearMeCenter = null;
+let _nearMeRadiusMiles = 2;
+
+// snapshot of the "normal" dataset so Clear can restore
+let _baseLocationsSnapshot = null;
+
+// Haversine distance (meters)
+function distanceMeters(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const toRad = (x) => (x * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) ** 2;
+
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// Core: re-render using current filters/search, then optionally apply Near Me
+function applyFiltersWithNearMe() {
+  closeAllMenus();
+
+  const selectedBrands = getSelectedValues("brand");
+  const selectedNeighborhoods = getSelectedValues("n");
+
+  const q = (document.getElementById("searchTopInput")?.value || "").trim();
+  const hasSearch = q.length > 0;
+
+  // 1) Apply your existing filters/search
+  let filtered = locations.filter((loc) => {
+    const brandOK = selectedBrands.length
+      ? selectedBrands.some(
+          (b) => loc.brand && loc.brand.toLowerCase().includes(b.toLowerCase())
+        )
+      : true;
+
+    const hoodOK = selectedNeighborhoods.length
+      ? selectedNeighborhoods.includes(loc.neighborhood)
+      : true;
+
+    const searchOK = matchesSearch(loc, q);
+
+    return brandOK && hoodOK && searchOK;
+  });
+
+  // 2) If Near Me is active, apply distance filter + sort
+  if (_nearMeActive && _nearMeCenter) {
+    const radiusMeters = (_nearMeRadiusMiles || 2) * 1609.34;
+
+    filtered = filtered
+      .map((v) => ({
+        ...v,
+        _dist: distanceMeters(_nearMeCenter.lat, _nearMeCenter.lng, v.lat, v.lng),
+      }))
+      .filter((v) => Number.isFinite(v._dist) && v._dist <= radiusMeters)
+      .sort((a, b) => a._dist - b._dist);
+  }
+
+  // 3) Render
+  renderList(filtered);
+  const { count, bounds } = renderMarkers(filtered);
+  updateActiveFilters(selectedBrands, selectedNeighborhoods);
+
+  // 4) Zoom behavior
+  const panel = document.getElementById("bottom-panel");
+  const panelH = panel ? panel.getBoundingClientRect().height : 0;
+
+  // If Near Me is active, fit to results + user location (best UX)
+  if (_nearMeActive && _nearMeCenter) {
+    if (filtered.length) {
+      const b = L.latLngBounds(filtered.map((v) => [v.lat, v.lng]));
+      b.extend([_nearMeCenter.lat, _nearMeCenter.lng]);
+      map.fitBounds(b, {
+        paddingTopLeft: [16, 110],
+        paddingBottomRight: [16, panelH + 16],
+        maxZoom: 16,
+      });
+    } else {
+      map.setView([_nearMeCenter.lat, _nearMeCenter.lng], 15, { animate: true });
+    }
+  } else if (count > 0 && bounds && !hasSearch) {
+    map.fitBounds(bounds, {
+      paddingTopLeft: [16, 110],
+      paddingBottomRight: [16, panelH + 16],
+      maxZoom: 16,
+    });
+  }
+
+  window.filteredBounds = bounds;
+  setTimeout(() => map.invalidateSize(true), 120);
+}
+
+// Swift calls this: window.SipSober.setUserLocation(lat, lng, miles)
+window.SipSober.setUserLocation = function (lat, lng, radiusMiles) {
+  // store "near me state"
+  _nearMeActive = true;
+  _nearMeCenter = { lat: Number(lat), lng: Number(lng) };
+  _nearMeRadiusMiles = Number(radiusMiles || 2);
+
+  // snapshot base locations once (so Clear restores the original master list)
+  if (!_baseLocationsSnapshot) _baseLocationsSnapshot = locations.slice();
+
+  applyFiltersWithNearMe();
+
+  // auto-expand bottom panel so results are visible
+  const panel = document.getElementById("bottom-panel");
+  if (panel) panel.classList.add("expanded");
+};
+
+// Swift calls this: window.SipSober.clearUserLocation()
+window.SipSober.clearUserLocation = function () {
+  _nearMeActive = false;
+  _nearMeCenter = null;
+
+  // restore the master list snapshot (in case you ever mutate locations later)
+  if (_baseLocationsSnapshot) {
+    // if you want to fully restore, uncomment:
+    // locations.length = 0;
+    // _baseLocationsSnapshot.forEach(x => locations.push(x));
+  }
+
+  applyFiltersWithNearMe();
+};
+
+
     /* =========================
    B) MAP INIT
    ========================= */
@@ -1236,7 +1369,8 @@ let markersLayer = L.layerGroup().addTo(map);
           if (cb.value === value) cb.checked = false;
         });
       }
-      applyFilters();
+        applyFiltersWithNearMe();
+
     }
 
     /* =========================
@@ -1355,7 +1489,7 @@ let markersLayer = L.layerGroup().addTo(map);
       }
     });
 
-    document.getElementById("goBtn").addEventListener("click", applyFilters);
+    document.getElementById("goBtn").addEventListener("click", applyFiltersWithNearMe);
 
 // ==============================
 // TOP SEARCH TOGGLE
@@ -1408,7 +1542,7 @@ const searchClear = document.getElementById("searchTopClear");
 searchInput?.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
-    applyFilters();
+    applyFiltersWithNearMe();
     document.getElementById("searchTopRow")?.classList.remove("is-open");
     document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");
     searchInput.blur();
@@ -1418,7 +1552,7 @@ searchInput?.addEventListener("keydown", (e) => {
 // Clear (×)
 searchClear?.addEventListener("click", () => {
   if (searchInput) searchInput.value = "";
-  applyFilters();
+  applyFiltersWithNearMe();
 });
 
   
