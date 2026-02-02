@@ -946,17 +946,25 @@
       }
     ).addTo(map);
 
-    const manhattanBounds = L.latLngBounds(
-      [40.5, -74.3], // SW
-      [40.98, -73.6] // NE
-    );
+    const manhattanLockBounds = L.latLngBounds(
+  [40.5, -74.3],   // SW (keep your current lock)
+  [40.98, -73.6]   // NE
+);
 
-    map.fitBounds(manhattanBounds);
-    map.panBy([0, 120]); // shift pins up visually
+// ✅ INITIAL view bounds (tighter, so the map loads zoomed in more)
+const manhattanInitialBounds = L.latLngBounds(
+  [40.70, -74.05],  // SW
+  [40.88, -73.90]   // NE
+);
 
-    map.setMaxBounds(manhattanBounds);
-    map.options.maxBoundsViscosity = 0.1;
-    map.setMinZoom(11.5);
+// Use tighter bounds ONLY to set the starting zoom/framing
+map.fitBounds(manhattanInitialBounds);
+map.panBy([0, 120]); // keep your visual shift
+
+// Use looser bounds ONLY for the lock
+map.setMaxBounds(manhattanLockBounds);
+map.options.maxBoundsViscosity = 0.1;
+map.setMinZoom(11.5);
 
     let markersLayer = L.layerGroup().addTo(map);
 
