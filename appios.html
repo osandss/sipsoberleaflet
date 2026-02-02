@@ -939,43 +939,50 @@
     window.SipSober = window.SipSober || {};
 
     /* =========================
-       B) MAP INIT
-       ========================= */
-    const map = L.map("map", {
-      zoomControl: true,
-      scrollWheelZoom: true,
-    }).setView([40.77, -73.97], 12.6);
+   B) MAP INIT
+   ========================= */
+const map = L.map("map", {
+  zoomControl: true,
+  scrollWheelZoom: true,
+}).setView([40.77, -73.97], 12.6);
 
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-      {
-        maxZoom: 20,
-        subdomains: "abcd",
-        attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-      }
-    ).addTo(map);
+L.tileLayer(
+  "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+  {
+    maxZoom: 20,
+    subdomains: "abcd",
+    attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
+  }
+).addTo(map);
 
-    const manhattanLockBounds = L.latLngBounds(
-  [40.5, -74.3],   // SW (keep your current lock)
-  [40.98, -73.6]   // NE
+const manhattanLockBounds = L.latLngBounds(
+  [40.5, -74.3],
+  [40.98, -73.6]
 );
 
-// ✅ INITIAL view bounds (tighter, so the map loads zoomed in more)
+// ✅ INITIAL view bounds (tighter, for startup framing)
 const manhattanInitialBounds = L.latLngBounds(
-  [40.70, -74.05],  // SW
-  [40.88, -73.90]   // NE
+  [40.70, -74.05],
+  [40.88, -73.90]
 );
 
-// Use tighter bounds ONLY to set the starting zoom/framing
-map.fitBounds(manhattanInitialBounds);
-map.panBy([0, 40]); // keep your visual shift
+// ✅ HELPER GOES HERE
+function fitInitialView() {
+  const panel = document.getElementById("bottom-panel");
+  const panelH = panel ? panel.getBoundingClientRect().height : 0;
 
-// Use looser bounds ONLY for the lock
+  map.fitBounds(manhattanInitialBounds, {
+    paddingTopLeft: [16, 110],            // space under header / pills
+    paddingBottomRight: [16, panelH + 16] // space above bottom panel
+  });
+}
+
+// Lock + limits (DO NOT fit here)
 map.setMaxBounds(manhattanLockBounds);
 map.options.maxBoundsViscosity = 0.1;
 map.setMinZoom(11.5);
 
-    let markersLayer = L.layerGroup().addTo(map);
+let markersLayer = L.layerGroup().addTo(map);
 
     /* =========================
        C) ICONS
@@ -1282,9 +1289,15 @@ map.setMinZoom(11.5);
       updateActiveFilters(selectedBrands, selectedNeighborhoods);
 
       if (count > 0 && bounds && !hasSearch) {
-        map.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
-      }
+  const panel = document.getElementById("bottom-panel");
+  const panelH = panel ? panel.getBoundingClientRect().height : 0;
 
+  map.fitBounds(bounds, {
+    paddingTopLeft: [16, 110],
+    paddingBottomRight: [16, panelH + 16],
+    maxZoom: 16
+  });
+}
       window.filteredBounds = bounds;
 
       // ✅ Disabled: causes the bottom panel to jump when the keyboard opens on iOS
@@ -1444,9 +1457,14 @@ searchClear?.addEventListener("click", () => {
        I) INITIALIZE
        ========================= */
     renderList(locations);
-    renderMarkers(locations);
-    setTimeout(() => map.invalidateSize(), 150);
+renderMarkers(locations);
 
+// ✅ Correct order for WKWebView:
+// invalidateSize first, then fit after layout is final
+setTimeout(() => {
+  map.invalidateSize(true);
+  fitInitialView();
+}, 200);
   
     /* =========================
    Bottom Tab Bar Logic
