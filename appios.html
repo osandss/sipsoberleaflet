@@ -893,7 +893,7 @@
       { id: "entwine", name: "Entwine Cocktail Bar", address: "765 Washington St, NY", lat: 40.7342, lng: -74.0062, website: "https://www.entwinenyc.com", brand: "Athletic Brewing Co., St. Agrestis", neighborhood: "West Village", imageUrl: "venue-images/entwine.jpeg" },
       { id: "onewhite", name: "One White Street", address: "1 White St, NY", lat: 40.7167, lng: -74.0081, website: "https://www.onewhitestreetnyc.com", brand: "Seedlip, Pathfinder, St. Agrestis, Athletic Brewing Co.", neighborhood: "Tribeca", imageUrl: "venue-images/onewhite.jpeg" },
       { id: "macao", name: "Macao Trading Company", address: "311 Church St, NY", lat: 40.7178, lng: -74.0092, website: "https://www.macaonyc.com", brand: "Pathfinder, Athletic Brewing Co.", neighborhood: "Tribeca", imageUrl: "venue-images/macao.jpeg" },
-      { id: "sainttuesday", name: "Saint Tuesday", address: "24 Cortlandt Alley, NY", lat: 40.7174, lng: -74.0060, website: "https://www.sainttuesdaynyc.com", brand: "Lyre's, Pathfinder, Ghia", neighborhood: "Tribeca", imageUrl: "venue-images/sanittuesday.jpeg" },
+      { id: "sainttuesday", name: "Saint Tuesday", address: "24 Cortlandt Alley, NY", lat: 40.7174, lng: -74.0060, website: "https://www.sainttuesdaynyc.com", brand: "Lyre's, Pathfinder, Ghia", neighborhood: "Tribeca", imageUrl: "venue-images/sainttuesday.jpeg" },
       { id: "northbar", name: "North Bar", address: "458 Greenwich St, NY", lat: 40.7204, lng: -74.0097, website: "http://northbartribeca.com", brand: "Athletic Brewing Co.", neighborhood: "Tribeca", imageUrl: "venue-images/northbar.jpeg" },
       { id: "bridges", name: "Bridges", address: "9 Chatham Sq, NY", lat: 40.7135, lng: -73.9981, website: "https://www.bridges-nyc.com", brand: "Lyre's, Pathfinder, Good Time Brewing", neighborhood: "Tribeca", imageUrl: "venue-images/bridges.jpeg" },
       { id: "trinity", name: "Trinity Place", address: "115 Broadway, NY", lat: 40.7070, lng: -74.0112, website: "https://www.trinityplacenyc.com", brand: "Lyre's, Athletic Brewing Co.", neighborhood: "FiDi", imageUrl: "venue-images/trinity.jpeg" },
@@ -1143,6 +1143,33 @@ function resetToDefaultMapState() {
   }, 80);
 }
 
+  // ✅ Used when jumping to a single venue from Discover
+function resetForFocusOnly() {
+  // Turn off Near Me
+  _nearMeActive = false;
+  _nearMeCenter = null;
+
+  // Close menus / search UI
+  closeAllMenus();
+  document.getElementById("searchTopRow")?.classList.remove("is-open");
+  document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
+
+  // Clear filters
+  document
+    .querySelectorAll('input[id^="brand-"], input[id^="n-"]')
+    .forEach(cb => cb.checked = false);
+
+  // Clear search
+  const searchInput = document.getElementById("searchTopInput");
+  if (searchInput) searchInput.value = "";
+
+  // IMPORTANT: re-render full dataset so marker exists
+  renderList(locations);
+  renderMarkers(locations);
+
+  updateActiveFilters([], []);
+}
+
 // Lock + limits (DO NOT fit here)
 map.setMaxBounds(manhattanLockBounds);
 map.options.maxBoundsViscosity = 0.1;
@@ -1308,50 +1335,6 @@ let markersLayer = L.layerGroup().addTo(map);
       });
     }
 
-    document.addEventListener("click", (e) => {
-  
-      // 🚫 Ignore all anchor/link clicks (prevents iOS ghost taps)
-  if (e.target.closest("a")) return;
-
-    // ⭐ Favorite button
-  const favBtn = e.target.closest(".fav-btn");
-  if (favBtn) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const venueId = favBtn.dataset.id;
-    const v = locations.find((x) => String(x.id) === String(venueId));
-    if (!v) return;
-
-    favBtn.classList.toggle("is-fav");
-
-    window.webkit?.messageHandlers?.favorites?.postMessage({
-      action: "toggle",
-      venue: {
-        venueId: String(v.id),
-        name: v.name || "",
-        address: v.address || "",
-        website: v.website || "",
-        neighborhood: v.neighborhood || "",
-        brands: v.brand || "",
-      },
-    });
-
-    return; // ⛔ stops name-click logic
-  }
-
-  // 📍 Venue name → focus + zoom
-  const nameEl = e.target.closest(".card-name[data-focus-id]");
-  if (!nameEl) return;
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  const id = nameEl.dataset.focusId;
-  window.SipSober?.focusVenue(id);
-});
-
-
     /* =========================
        ACTIVE FILTER CHIPS
        ========================= */
@@ -1487,42 +1470,107 @@ let markersLayer = L.layerGroup().addTo(map);
     }
 
     /* =========================
-       G) EVENT WIRING
-       ========================= */
-    document.addEventListener("click", (e) => {
-      const dd = e.target.closest(".dropdown");
-      const btn = e.target.closest(".dropdown > button");
-      if (btn) {
-        const parent = btn.parentElement;
-        const willOpen = !parent.classList.contains("open");
-        closeAllMenus();
-        if (willOpen) {
-          parent.classList.add("open");
-          btn.setAttribute("aria-expanded", "true");
-        }
-      } else if (!dd && !e.target.closest("#searchTopRow") && !e.target.closest("#searchToggle")) {
-        closeAllMenus();
-      }
+   G) EVENT WIRING
+   ========================= */
+
+// ESC closes dropdowns
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeAllMenus();
+});
+
+// ✅ ONE unified click handler (favorites + venue focus + dropdown open/close + search row close)
+document.addEventListener("click", (e) => {
+
+  // If a link was clicked, allow navigation but still close menus/search
+if (e.target.closest("a")) {
+  closeAllMenus();
+  document.getElementById("searchTopRow")?.classList.remove("is-open");
+  document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
+  return;
+}
+
+  // 1) ⭐ Favorite button
+  const favBtn = e.target.closest(".fav-btn");
+  if (favBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const venueId = favBtn.dataset.id;
+    const v = locations.find((x) => String(x.id) === String(venueId));
+    if (!v) return;
+
+    favBtn.classList.toggle("is-fav");
+
+    window.webkit?.messageHandlers?.favorites?.postMessage({
+      action: "toggle",
+      venue: {
+        venueId: String(v.id),
+        name: v.name || "",
+        address: v.address || "",
+        website: v.website || "",
+        neighborhood: v.neighborhood || "",
+        brands: v.brand || "",
+      },
     });
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeAllMenus();
-    });
+    return; // stop here so name-click logic doesn't run
+  }
 
-    document.querySelectorAll(".dropdown > button").forEach((btn) => {
-      btn.setAttribute("aria-haspopup", "true");
-      const dd = btn.parentElement;
-      const menu = dd.querySelector(".menu");
-      if (dd && menu) {
-        const id = dd.id
-          ? dd.id + "-menu"
-          : "menu-" + Math.random().toString(36).slice(2);
-        menu.id = id;
-        btn.setAttribute("aria-controls", id);
-      }
-    });
+  // 2) 📍 Venue name → focus + zoom
+  const nameEl = e.target.closest(".card-name[data-focus-id]");
+  if (nameEl) {
+    e.preventDefault();
+    e.stopPropagation();
+    window.SipSober?.focusVenue(nameEl.dataset.focusId);
+    return;
+  }
 
-    document.getElementById("goBtn").addEventListener("click", applyFiltersWithNearMe);
+  // 3) Dropdown button toggle
+  const btn = e.target.closest(".dropdown > button");
+  if (btn) {
+    const parent = btn.parentElement;
+    const willOpen = !parent.classList.contains("open");
+
+    closeAllMenus();
+    if (willOpen) {
+      parent.classList.add("open");
+      btn.setAttribute("aria-expanded", "true");
+    }
+    return;
+  }
+
+  // 4) Click outside → close dropdowns
+  const clickedInsideDropdown = !!e.target.closest(".dropdown");
+  if (!clickedInsideDropdown) closeAllMenus();
+
+  // 5) Click outside search → close search row if open
+  const clickedInsideSearch =
+    !!e.target.closest("#searchTopRow") || !!e.target.closest("#searchToggle");
+
+  if (!clickedInsideSearch) {
+    const row = document.getElementById("searchTopRow");
+    if (row?.classList.contains("is-open")) {
+      row.classList.remove("is-open");
+      document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
+      document.getElementById("searchTopInput")?.blur();
+    }
+  }
+});
+
+// Keep aria wiring for menus
+document.querySelectorAll(".dropdown > button").forEach((btn) => {
+  btn.setAttribute("aria-haspopup", "true");
+  const dd = btn.parentElement;
+  const menu = dd.querySelector(".menu");
+  if (dd && menu) {
+    const id = dd.id ? dd.id + "-menu" : "menu-" + Math.random().toString(36).slice(2);
+    menu.id = id;
+    btn.setAttribute("aria-controls", id);
+  }
+});
+
+// Go button applies filters + Near Me logic
+document.getElementById("goBtn").addEventListener("click", applyFiltersWithNearMe);
 
 // ==============================
 // TOP SEARCH TOGGLE
@@ -1546,20 +1594,15 @@ let markersLayer = L.layerGroup().addTo(map);
     input?.blur();
   }
 
+  // expose for the unified click handler (optional but clean)
+  window.SipSober = window.SipSober || {};
+  window.SipSober._openSearchRow = openRow;
+  window.SipSober._closeSearchRow = closeRow;
+
   toggleBtn.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
     row.classList.contains("is-open") ? closeRow() : openRow();
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!row.classList.contains("is-open")) return;
-    if (e.target.closest("#searchTopRow") || e.target.closest("#searchToggle")) return;
-    closeRow();
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeRow();
   });
 })();
 
@@ -1703,6 +1746,12 @@ window.SipSober.focusVenue = function (payload) {
     if (panel) panel.classList.add("expanded");
   })();
 };
+
+  // ✅ Alias so Swift can call focusVenueById(id)
+window.SipSober.focusVenueById = function (id) {
+  window.SipSober.focusVenue(id);
+};
+
 
   </script>
 
