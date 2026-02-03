@@ -1110,6 +1110,39 @@ function fitInitialView() {
   });
 }
 
+function resetToDefaultMapState() {
+  // 1) Turn off Near Me
+  _nearMeActive = false;
+  _nearMeCenter = null;
+
+  // 1.5) Close any open UI (dropdowns + search)
+  closeAllMenus();
+  document.getElementById("searchTopRow")?.classList.remove("is-open");
+  document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
+
+  // 2) Clear filters
+  document.querySelectorAll('input[id^="brand-"], input[id^="n-"]').forEach(cb => {
+    cb.checked = false;
+  });
+
+  // 3) Clear search
+  const searchInput = document.getElementById("searchTopInput");
+  if (searchInput) searchInput.value = "";
+
+  // 4) Render full dataset
+  renderList(locations);
+  renderMarkers(locations);
+
+  // 5) Reset UI chips
+  updateActiveFilters([], []);
+
+  // 6) Reset map view
+  setTimeout(() => {
+    map.invalidateSize(true);
+    fitInitialView();
+  }, 80);
+}
+
 // Lock + limits (DO NOT fit here)
 map.setMaxBounds(manhattanLockBounds);
 map.options.maxBoundsViscosity = 0.1;
@@ -1634,9 +1667,14 @@ window.SipSober.setFavorites = function (payload) {
 // Swift → JS: focus a venue (zoom + open popup)
 // ================================
 window.SipSober.focusVenue = function (payload) {
-  const venueId = (typeof payload === "string" ? payload : payload?.venueId) || "";
+  const venueId =
+    (typeof payload === "string" ? payload : payload?.venueId) || "";
+
   const id = String(venueId).trim();
   if (!id) return;
+
+  // ✅ KEY: ensure we're not stuck in Near Me / filtered state
+  resetForFocusOnly();
 
   let tries = 0;
 
@@ -1645,18 +1683,14 @@ window.SipSober.focusVenue = function (payload) {
 
     if (!marker) {
       tries += 1;
-
-      // ⏳ markers not ready yet → retry
       if (tries <= 25) {
         setTimeout(attempt, 120);
         return;
       }
-
       console.warn("❌ focusVenue: marker not found after retries for id:", id);
       return;
     }
 
-    // ✅ marker found — zoom + popup
     const ll = marker.getLatLng();
     map.invalidateSize(true);
     map.setView([ll.lat, ll.lng], 16, { animate: true });
