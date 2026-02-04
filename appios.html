@@ -476,7 +476,7 @@
 /* Popup venue image */
 .ss-popup-img{
   width: 90%;
-  max-height: 85px;
+  max-height: 96px;
   object-fit: cover;
   border-radius: 12px;
   display: block;
@@ -1289,10 +1289,11 @@ let markersLayer = L.layerGroup().addTo(map);
     <div class="ss-popup-title">${loc.name || ""}</div>
     <div class="ss-popup-meta">${loc.address || ""}</div>
 
-    <div class="ss-popup-tags">
-      ${loc.brand ? loc.brand : ""}
-      ${loc.neighborhood ? ` • ${loc.neighborhood}` : ""}
-    </div>
+    ${loc.neighborhood ? `
+      <div class="ss-popup-tags">
+        ${loc.neighborhood}
+      </div>
+    ` : ""}
 
     <div class="ss-popup-links">
       ${loc.website ? `<a class="ss-popup-link" href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ""}
