@@ -464,62 +464,79 @@
   max-width: none !important;
 }
 
-/* Simple popup (text-first) */
+/* Simple popup (structured, map-first) */
 .ss-popup--simple {
-  padding: 12px 14px;
-  min-width: 220px;
-  max-width: 280px;
+  padding: 12px;
+  min-width: 240px;
+  max-width: 300px;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   color: #1c1c1e;
 }
 
-/* Popup venue image */
+/* Top row: thumb + text */
+.ss-popup-top{
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* Text column */
+.ss-popup-text{
+  flex: 1;
+  min-width: 0;
+}
+
+/* Thumbnail */
+.ss-popup-img-wrap{
+  margin: 0;
+  flex: 0 0 104px;
+  display: block;
+}
+
 .ss-popup-img{
-  width: 90%;
-  max-height: 96px;
+  width: 104px;
+  height: 78px;
+  max-height: none;
   object-fit: cover;
   border-radius: 12px;
   display: block;
 }
 
-.ss-popup-img-wrap{
-  display: flex;
-  justify-content: center;
-  margin: 8px 0 10px;
-}
-
+/* Title */
 .ss-popup--simple .ss-popup-title {
-  font-size: 12px;
-  font-weight: 800;
-  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 4px;
 }
 
-.ss-popup--simple .ss-popup-meta {
-  font-size: 11px;
-  color: #6b6f82;
-  line-height: 1.3;
-  margin-bottom: 6px;
-}
-
+/* Neighborhood */
 .ss-popup--simple .ss-popup-tags {
   font-size: 11px;
-  color: #6b6f82;
-  margin-bottom: 8px;
-  
-  line-height: 1.25;
-  max-height: calc(1.25em * 2);
-  overflow: hidden;
+  color: rgba(28, 28, 30, 0.55);
+  line-height: 1.2;
+  margin: 0 0 6px;
 }
 
+/* Address */
+.ss-popup--simple .ss-popup-meta {
+  font-size: 11px;
+  color: rgba(28, 28, 30, 0.65);
+  line-height: 1.25;
+  margin: 0 0 8px;
+}
+
+/* Links */
 .ss-popup--simple .ss-popup-links {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .ss-popup--simple .ss-popup-link {
   font-size: 11px;
-  color: #6b6f82;
+  color: rgba(28, 28, 30, 0.70);
   text-decoration: underline;
   -webkit-tap-highlight-color: transparent;
 }
@@ -527,14 +544,16 @@
 .ss-popup--simple .ss-popup-link:active {
   opacity: 0.8;
 }
-    
-/* Make the popup close "x" cleaner */
+
+/* Smaller, cleaner close "x" */
 .leaflet-container a.leaflet-popup-close-button {
-  width: 32px !important;
-  height: 32px !important;
-  font-size: 20px !important;
-  line-height: 32px !important;
-  color: #9aa0b5 !important;
+  width: 26px !important;
+  height: 26px !important;
+  font-size: 18px !important;
+  line-height: 26px !important;
+  color: rgba(28, 28, 30, 0.45) !important;
+  right: 6px !important;
+  top: 6px !important;
 }
 
 /* =========================
@@ -1268,46 +1287,47 @@ let markersLayer = L.layerGroup().addTo(map);
   const bounds = L.latLngBounds([]);
 
   data.forEach((loc) => {
-    const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
-    
-    if (loc.id) markersById[String(loc.id)] = m;
+  const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
 
-    const imgHtml = loc.imageUrl
-      ? `
-        <div class="ss-popup-img-wrap">
-          <img class="ss-popup-img" src="${loc.imageUrl}" alt="${loc.name || ""}" loading="lazy"
-            onerror="this.closest('.ss-popup-img-wrap')?.remove()">
-        </div>
-      `
-      : "";
+  if (loc.id) markersById[String(loc.id)] = m;
 
-    m.bindPopup(
-  `
-  <div class="ss-popup ss-popup--simple">
-    ${imgHtml}
-
-    <div class="ss-popup-title">${loc.name || ""}</div>
-    <div class="ss-popup-meta">${loc.address || ""}</div>
-
-    ${loc.neighborhood ? `
-      <div class="ss-popup-tags">
-        ${loc.neighborhood}
+  const imgHtml = loc.imageUrl
+    ? `
+      <div class="ss-popup-img-wrap">
+        <img class="ss-popup-img" src="${loc.imageUrl}" alt="${loc.name || ""}" loading="lazy"
+          onerror="this.closest('.ss-popup-img-wrap')?.remove()">
       </div>
-    ` : ""}
+    `
+    : "";
 
-    <div class="ss-popup-links">
-      ${loc.website ? `<a class="ss-popup-link" href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ""}
-      <a class="ss-popup-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        (loc.name || "") + " " + (loc.address || "")
-      )}" target="_blank" rel="noopener">Directions</a>
+  m.bindPopup(
+    `
+    <div class="ss-popup ss-popup--simple">
+      <div class="ss-popup-top">
+        ${imgHtml}
+
+        <div class="ss-popup-text">
+          <div class="ss-popup-title">${loc.name || ""}</div>
+
+          ${loc.neighborhood ? `<div class="ss-popup-tags">${loc.neighborhood}</div>` : ""}
+
+          <div class="ss-popup-meta">${loc.address || ""}</div>
+
+          <div class="ss-popup-links">
+            ${loc.website ? `<a class="ss-popup-link" href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ""}
+            <a class="ss-popup-link"
+               href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}"
+               target="_blank" rel="noopener">Directions</a>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  `,
-  { minWidth: 220, maxWidth: 280, autoPanPadding: [18, 18], closeButton: true }
-);
+    `,
+    { minWidth: 220, maxWidth: 280, autoPanPadding: [18, 18], closeButton: true }
+  );
 
-    bounds.extend([loc.lat, loc.lng]);
-  });
+  bounds.extend([loc.lat, loc.lng]);
+});
 
   return { count: data.length, bounds: data.length ? bounds : null };
 }
