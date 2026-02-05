@@ -1748,14 +1748,11 @@ searchClear?.addEventListener("click", () => {
        I) INITIALIZE
        ========================= */
     renderList(locations);
-renderMarkers(locations);
-
-// ✅ Correct order for WKWebView:
-// invalidateSize first, then fit after layout is final
-setTimeout(() => {
-  map.invalidateSize(true);
-  fitInitialView();
-}, 200);
+    renderMarkers(locations);
+  
+    setTimeout(() => {
+      map.invalidateSize(true);
+    }, 200);
   
     /* =========================
    Bottom Tab Bar Logic
