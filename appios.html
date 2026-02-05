@@ -530,14 +530,9 @@
 .ss-popup--simple .ss-popup-actions{
   display: flex;
   gap: 8px;
-  flex-wrap: nowrap;        /* keep on one row */
+  flex-wrap: nowrap;       /* keep on one row */
   align-items: center;
   margin-top: 6px;
-}
-
-/* If only one pill (no website), keep it neat */
-.ss-popup--simple .ss-popup-actions:has(.ss-pill:only-child){
-  justify-content: flex-start;
 }
 
 .ss-popup--simple .ss-pill{
@@ -549,7 +544,7 @@
   font-weight: 600;
   line-height: 1;
 
-  padding: 6px 10px;        /* smaller pill */
+  padding: 5px 9px;
   border-radius: 999px;
 
   color: #1c1c1e;
@@ -558,28 +553,20 @@
   background: rgba(28, 28, 30, 0.06);
   border: 1px solid rgba(28, 28, 30, 0.08);
 
-  white-space: nowrap;      /* prevents wrapping inside button */
+  white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
 
   transition: background 0.15s ease, transform 0.15s ease;
 }
 
-/* Secondary style (Directions) */
 .ss-popup--simple .ss-pill.secondary{
   background: rgba(28, 28, 30, 0.03);
 }
 
-/* Press feedback */
 .ss-popup--simple .ss-pill:active{
   background: rgba(28, 28, 30, 0.12);
   transform: scale(0.97);
 }
-
-/* If the popup gets tight, allow pills to shrink gracefully */
-.ss-popup--simple .ss-pill{
-  min-width: 0;
-}
-
 
 /* Smaller, cleaner close "x" */
 .leaflet-container a.leaflet-popup-close-button {
