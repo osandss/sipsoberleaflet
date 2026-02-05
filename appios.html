@@ -1111,7 +1111,7 @@ window.SipSober.clearUserLocation = function () {
 const map = L.map("map", {
   zoomControl: true,
   scrollWheelZoom: true,
-});
+}).setView([40.77, -73.97], 12.6);
 
 L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
@@ -1745,22 +1745,17 @@ searchClear?.addEventListener("click", () => {
 })();
 
     /* =========================
-   I) INITIALIZE
-   ========================= */
-renderList(locations);
+       I) INITIALIZE
+       ========================= */
+    renderList(locations);
 renderMarkers(locations);
 
-// ✅ WKWebView-safe: invalidate after layout is stable, then fit
-map.whenReady(() => {
-  setTimeout(() => {
-    try {
-      map.invalidateSize();     // ✅ safest signature
-      fitInitialView();         // ✅ your padded Manhattan framing
-    } catch (e) {
-      console.error("INIT FAILED:", e);
-    }
-  }, 250);
-});
+// ✅ Correct order for WKWebView:
+// invalidateSize first, then fit after layout is final
+setTimeout(() => {
+  map.invalidateSize(true);
+  fitInitialView();
+}, 200);
   
     /* =========================
    Bottom Tab Bar Logic
