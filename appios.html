@@ -526,34 +526,60 @@
   margin: 0 0 8px;
 }
 
-/* Action pills */
-.ss-popup--simple .ss-popup-links {
+/* Action pills (Option A: smaller, inline, not stacked) */
+.ss-popup--simple .ss-popup-actions{
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 2px;
+  flex-wrap: nowrap;        /* keep on one row */
+  align-items: center;
+  margin-top: 6px;
 }
 
-.ss-popup--simple .ss-popup-link {
+/* If only one pill (no website), keep it neat */
+.ss-popup--simple .ss-popup-actions:has(.ss-pill:only-child){
+  justify-content: flex-start;
+}
+
+.ss-popup--simple .ss-pill{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   font-size: 11px;
   font-weight: 600;
+  line-height: 1;
+
+  padding: 6px 10px;        /* smaller pill */
+  border-radius: 999px;
+
   color: #1c1c1e;
   text-decoration: none;
-
-  padding: 6px 10px;
-  border-radius: 999px;
 
   background: rgba(28, 28, 30, 0.06);
   border: 1px solid rgba(28, 28, 30, 0.08);
 
-  transition: background 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;      /* prevents wrapping inside button */
   -webkit-tap-highlight-color: transparent;
+
+  transition: background 0.15s ease, transform 0.15s ease;
 }
 
-.ss-popup--simple .ss-popup-link:active {
+/* Secondary style (Directions) */
+.ss-popup--simple .ss-pill.secondary{
+  background: rgba(28, 28, 30, 0.03);
+}
+
+/* Press feedback */
+.ss-popup--simple .ss-pill:active{
   background: rgba(28, 28, 30, 0.12);
   transform: scale(0.97);
 }
+
+/* If the popup gets tight, allow pills to shrink gracefully */
+.ss-popup--simple .ss-pill{
+  min-width: 0;
+}
+
 
 /* Smaller, cleaner close "x" */
 .leaflet-container a.leaflet-popup-close-button {
@@ -1334,24 +1360,24 @@ let markersLayer = L.layerGroup().addTo(map);
           ${loc.neighborhood ? `<div class="ss-popup-tags">${loc.neighborhood}</div>` : ""}
 
           <div class="ss-popup-meta">${loc.address || ""}</div>
-
-          <div class="ss-popup-links">
-            ${normalizeUrl(loc.website)
-              ? `
-                <a
-                  class="ss-popup-link"
-                  href="${normalizeUrl(loc.website)}"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  Website
-                </a>
-              `
+          <div class="ss-popup-actions">
+            ${
+              normalizeUrl(loc.website)
+                ? `
+                  <a
+                    class="ss-pill"
+                    href="${normalizeUrl(loc.website)}"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Website
+                  </a>
+                `
               : ""
             }
-            
+
             <a
-              class="ss-popup-link"
+              class="ss-pill secondary"
               href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                 (loc.name || "") + " " + (loc.address || "")
               )}"
