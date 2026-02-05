@@ -1113,6 +1113,11 @@ const map = L.map("map", {
   scrollWheelZoom: true,
 }).setView([40.755, -73.985], 12.1);
 
+window.SipSober = window.SipSober || {};
+window.SipSober.closePopup = function () {
+  try { map.closePopup(); } catch (e) {}
+};
+    
 L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
   {
@@ -1787,6 +1792,20 @@ window.SipSober.setFavorites = function (payload) {
 // ================================
 // Swift → JS: focus a venue (zoom + open popup)
 // ================================
+let _lastFocusedVenueId = null;
+
+// Clear the "lock" whenever a popup closes
+(function attachPopupCloseReset() {
+  if (typeof map === "undefined" || !map || !map.on) {
+    // map not ready yet — try again shortly
+    setTimeout(attachPopupCloseReset, 200);
+    return;
+  }
+  map.on("popupclose", () => {
+    _lastFocusedVenueId = null;
+  });
+})();
+
 window.SipSober.focusVenue = function (payload) {
   const venueId =
     (typeof payload === "string" ? payload : payload?.venueId) || "";
@@ -1794,7 +1813,11 @@ window.SipSober.focusVenue = function (payload) {
   const id = String(venueId).trim();
   if (!id) return;
 
-  // ✅ KEY: ensure we're not stuck in Near Me / filtered state
+  // ✅ PREVENT "CLOSE X" BUG: if we already focused this same venue, ignore repeats
+  if (_lastFocusedVenueId === id) return;
+  _lastFocusedVenueId = id;
+
+  // ✅ ensure we're not stuck in Near Me / filtered state
   resetForFocusOnly();
 
   let tries = 0;
@@ -1809,6 +1832,7 @@ window.SipSober.focusVenue = function (payload) {
         return;
       }
       console.warn("❌ focusVenue: marker not found after retries for id:", id);
+      _lastFocusedVenueId = null; // allow retry later
       return;
     }
 
@@ -1818,6 +1842,18 @@ window.SipSober.focusVenue = function (payload) {
 
     setTimeout(() => {
       marker.openPopup();
+
+      // If Leaflet doesn't fire popupclose for some reason, also unlock when X is tapped
+      const closer = document.querySelector(".leaflet-popup-close-button");
+      if (closer) {
+        closer.addEventListener(
+          "click",
+          () => {
+            _lastFocusedVenueId = null;
+          },
+          { once: true }
+        );
+      }
     }, 200);
 
     const panel = document.getElementById("bottom-panel");
@@ -1825,11 +1861,10 @@ window.SipSober.focusVenue = function (payload) {
   })();
 };
 
-  // ✅ Alias so Swift can call focusVenueById(id)
+// ✅ Alias so Swift can call focusVenueById(id)
 window.SipSober.focusVenueById = function (id) {
   window.SipSober.focusVenue(id);
 };
-
 
   </script>
 
