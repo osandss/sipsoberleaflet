@@ -1291,6 +1291,13 @@ let markersLayer = L.layerGroup().addTo(map);
        ========================= */
     var markersById = {};
 
+    function normalizeUrl(u) {
+      u = String(u || "").trim();
+      if (!u || u.toLowerCase() === "n/a") return "";
+      if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+      return u;
+    }
+
     function renderMarkers(data) {
   markersLayer.clearLayers();
   markersById = {};
@@ -1324,10 +1331,30 @@ let markersLayer = L.layerGroup().addTo(map);
           <div class="ss-popup-meta">${loc.address || ""}</div>
 
           <div class="ss-popup-links">
-            ${loc.website ? `<a class="ss-popup-link" href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ""}
-            <a class="ss-popup-link"
-               href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}"
-               target="_blank" rel="noopener">Directions</a>
+            ${normalizeUrl(loc.website)
+              ? `
+                <a
+                  class="ss-popup-link"
+                  href="${normalizeUrl(loc.website)}"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  Website
+                </a>
+              `
+              : ""
+            }
+            
+            <a
+              class="ss-popup-link"
+              href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                (loc.name || "") + " " + (loc.address || "")
+              )}"
+              target="_blank"
+              rel="noopener"
+            >
+              Directions
+            </a>
           </div>
         </div>
       </div>
