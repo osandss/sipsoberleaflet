@@ -526,23 +526,33 @@
   margin: 0 0 8px;
 }
 
-/* Links */
+/* Action pills */
 .ss-popup--simple .ss-popup-links {
   display: flex;
-  flex-direction: row;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
+  margin-top: 2px;
 }
 
 .ss-popup--simple .ss-popup-link {
   font-size: 11px;
-  color: rgba(28, 28, 30, 0.70);
-  text-decoration: underline;
+  font-weight: 600;
+  color: #1c1c1e;
+  text-decoration: none;
+
+  padding: 6px 10px;
+  border-radius: 999px;
+
+  background: rgba(28, 28, 30, 0.06);
+  border: 1px solid rgba(28, 28, 30, 0.08);
+
+  transition: background 0.15s ease, transform 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .ss-popup--simple .ss-popup-link:active {
-  opacity: 0.8;
+  background: rgba(28, 28, 30, 0.12);
+  transform: scale(0.97);
 }
 
 /* Smaller, cleaner close "x" */
@@ -1323,7 +1333,21 @@ let markersLayer = L.layerGroup().addTo(map);
       </div>
     </div>
     `,
-    { minWidth: 220, maxWidth: 280, autoPanPadding: [18, 18], closeButton: true }
+    {
+  minWidth: 220,
+  maxWidth: 280,
+  closeButton: true,
+
+  autoPan: true,
+  keepInView: true,
+
+  // Avoid your top controls + bottom sheet
+  autoPanPaddingTopLeft: [18, 160],
+  autoPanPaddingBottomRight: [18, 260],
+
+  // Lift popup slightly
+  offset: [0, -18]
+}
   );
 
   bounds.extend([loc.lat, loc.lng]);
