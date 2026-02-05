@@ -1750,12 +1750,16 @@ searchClear?.addEventListener("click", () => {
 renderList(locations);
 renderMarkers(locations);
 
-// ✅ One-time: fix sizing + set initial framing (no “zoom-out” snap)
+// ✅ WKWebView-safe: invalidate after layout is stable, then fit
 map.whenReady(() => {
-  requestAnimationFrame(() => {
-    map.invalidateSize({ pan: false, zoom: false });
-    fitInitialView();
-  });
+  setTimeout(() => {
+    try {
+      map.invalidateSize();     // ✅ safest signature
+      fitInitialView();         // ✅ your padded Manhattan framing
+    } catch (e) {
+      console.error("INIT FAILED:", e);
+    }
+  }, 250);
 });
   
     /* =========================
