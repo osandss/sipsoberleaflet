@@ -1111,7 +1111,7 @@ window.SipSober.clearUserLocation = function () {
 const map = L.map("map", {
   zoomControl: true,
   scrollWheelZoom: true,
-}).setView([40.77, -73.97], 12.6);
+});
 
 L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
@@ -1745,17 +1745,18 @@ searchClear?.addEventListener("click", () => {
 })();
 
     /* =========================
-       I) INITIALIZE
-       ========================= */
-    renderList(locations);
+   I) INITIALIZE
+   ========================= */
+renderList(locations);
 renderMarkers(locations);
 
-// ✅ Correct order for WKWebView:
-// invalidateSize first, then fit after layout is final
-setTimeout(() => {
-  map.invalidateSize(true);
-  fitInitialView();
-}, 200);
+// ✅ One-time: fix sizing + set initial framing (no “zoom-out” snap)
+map.whenReady(() => {
+  requestAnimationFrame(() => {
+    map.invalidateSize({ pan: false, zoom: false });
+    fitInitialView();
+  });
+});
   
     /* =========================
    Bottom Tab Bar Logic
