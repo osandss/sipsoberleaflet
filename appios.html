@@ -423,7 +423,15 @@
     top: 10px;
   }
 }
-
+    
+/* =========================
+   EMBED MODE (iOS app)
+   Hide web top controls when ?embed=1
+   ========================= */
+body.ss-embed #filters {
+  display: none !important;
+}
+    
 /* Favorite star */
 .fav-btn{
   background: none;
@@ -985,6 +993,21 @@
 
     window.SipSober = window.SipSober || {};
 
+    // =========================
+// Embed mode flag (?embed=1)
+// =========================
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const isEmbed = params.get("embed") === "1";
+
+  window.SipSober = window.SipSober || {};
+  window.SipSober.isEmbed = isEmbed;
+
+  if (isEmbed) {
+    document.body.classList.add("ss-embed");
+  }
+})();
+
     // ================================
 // Near Me (Swift → JS)
 // ================================
@@ -1066,7 +1089,7 @@ function applyFiltersWithNearMe() {
       const b = L.latLngBounds(filtered.map((v) => [v.lat, v.lng]));
       b.extend([_nearMeCenter.lat, _nearMeCenter.lng]);
       map.fitBounds(b, {
-        paddingTopLeft: [16, 110],
+        paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
         paddingBottomRight: [16, panelH + 16],
         maxZoom: 16,
       });
@@ -1075,7 +1098,7 @@ function applyFiltersWithNearMe() {
     }
   } else if (count > 0 && bounds && !hasSearch) {
     map.fitBounds(bounds, {
-      paddingTopLeft: [16, 110],
+      paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
       paddingBottomRight: [16, panelH + 16],
       maxZoom: 16,
     });
@@ -1157,7 +1180,7 @@ function fitInitialView() {
   const panelH = panel ? panel.getBoundingClientRect().height : 0;
 
   map.fitBounds(manhattanInitialBounds, {
-    paddingTopLeft: [16, 110],            // space under header / pills
+    paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],            
     paddingBottomRight: [16, panelH + 16] // space above bottom panel
   });
 }
@@ -1542,7 +1565,7 @@ let markersLayer = L.layerGroup().addTo(map);
   const panelH = panel ? panel.getBoundingClientRect().height : 0;
 
   map.fitBounds(bounds, {
-    paddingTopLeft: [16, 110],
+    paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
     paddingBottomRight: [16, panelH + 16],
     maxZoom: 16
   });
@@ -1800,6 +1823,27 @@ window.SipSober.setFavorites = function (payload) {
     const id = btn.dataset.id;
     btn.classList.toggle("is-fav", ids.has(id));
   });
+};
+
+// ================================
+// Swift → JS: set filters (brands + neighborhoods)
+// ================================
+window.SipSober.setFilters = function (payload) {
+  const brands = Array.isArray(payload?.brands) ? payload.brands : [];
+  const neighborhoods = Array.isArray(payload?.neighborhoods) ? payload.neighborhoods : [];
+
+  // Brand checkboxes
+  document.querySelectorAll('input[id^="brand-"]').forEach(cb => {
+    cb.checked = brands.includes(cb.value);
+  });
+
+  // Neighborhood checkboxes
+  document.querySelectorAll('input[id^="n-"]').forEach(cb => {
+    cb.checked = neighborhoods.includes(cb.value);
+  });
+
+  // Apply using your unified logic (keeps Near Me consistent)
+  applyFiltersWithNearMe();
 };
 
 // ================================
