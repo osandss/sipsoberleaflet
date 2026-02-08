@@ -1529,67 +1529,8 @@ let markersLayer = L.layerGroup().addTo(map);
         return hay.includes(q.toLowerCase());
       }
     function applyFilters() {
-      closeAllMenus();
-
-      const selectedBrands = getSelectedValues("brand");
-      const selectedNeighborhoods = getSelectedValues("n");
-
-      const q = (document.getElementById("searchTopInput")?.value || "").trim();
-      const hasSearch = q.length > 0;
-
-      const filtered = locations.filter((loc) => {
-        const brandOK = selectedBrands.length
-          ? selectedBrands.some(
-              (b) =>
-                loc.brand &&
-                loc.brand.toLowerCase().includes(b.toLowerCase())
-            )
-          : true;
-
-        const hoodOK = selectedNeighborhoods.length
-          ? selectedNeighborhoods.includes(loc.neighborhood)
-          : true;
-
-        const searchOK = matchesSearch(loc, q); // ✅ ADD THIS
-
-        return brandOK && hoodOK && searchOK;   // ✅ CHANGE THIS
-      });
-
-
-      renderList(filtered);
-      const { count, bounds } = renderMarkers(filtered);
-      updateActiveFilters(selectedBrands, selectedNeighborhoods);
-
-      if (count > 0 && bounds && !hasSearch) {
-  const panel = document.getElementById("bottom-panel");
-  const panelH = panel ? panel.getBoundingClientRect().height : 0;
-
-  map.fitBounds(bounds, {
-    paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
-    paddingBottomRight: [16, panelH + 16],
-    maxZoom: 16
-  });
+  applyFiltersWithNearMe();
 }
-      window.filteredBounds = bounds;
-
-      // ✅ Disabled: causes the bottom panel to jump when the keyboard opens on iOS
-      // if (window.matchMedia("(max-width: 768px)").matches) {
-      //   const panelEl = document.getElementById("bottom-panel");
-      //   if (panelEl) {
-      //     setTimeout(
-      //       () =>
-      //         panelEl.scrollIntoView({
-      //           behavior: "smooth",
-      //           block: "start",
-      //         }),
-      //       60
-      //     );
-      //   }
-      // }
-
-
-      setTimeout(() => map.invalidateSize(true), 120);
-    }
 
     /* =========================
    G) EVENT WIRING
