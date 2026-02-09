@@ -29,10 +29,47 @@
        APP-ONLY MAP LAYOUT
        ========================= */
 
-    /* Higher-end, crisper, still moody */
-    .leaflet-tile {
-      filter: brightness(0.94) contrast(1.14) saturate(0.82);
-    }
+   /* Higher-end, crisper, still moody (applied at pane level) */
+.leaflet-tile-pane {
+  position: relative;
+  filter: brightness(0.98) contrast(1.08) saturate(0.86);
+}
+
+/* ✅ NAVY BRAND TINT (premium mood) */
+.leaflet-tile-pane::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background: rgba(32, 34, 57, 0.11);
+  mix-blend-mode: multiply;
+
+  z-index: 200; /* 👈 ensures tint sits above tiles */
+}
+
+/* Container must also be positioned for vignette */
+.leaflet-container {
+  position: relative;
+}
+
+/* ✅ Subtle vignette depth (native / premium feel) */
+.leaflet-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background: radial-gradient(
+    circle at 50% 30%,
+    rgba(255, 255, 255, 0.00) 0%,
+    rgba(32, 34, 57, 0.06) 70%,
+    rgba(32, 34, 57, 0.10) 100%
+  );
+
+  opacity: 0.9;
+  z-index: 300; /* 👈 above tint, below UI */
+}
 
     :root {
     /* mobile panel heights (used for dynamic map resizing) */
