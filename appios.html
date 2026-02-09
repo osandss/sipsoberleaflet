@@ -1108,34 +1108,48 @@ function applyFiltersWithNearMe() {
   setTimeout(() => map.invalidateSize(true), 120);
 }
 
+let _lastSetUserLocationAt = 0;
+
 // Swift calls this: window.SipSober.setUserLocation(lat, lng, miles)
 window.SipSober.setUserLocation = function (lat, lng, radiusMiles) {
-  // store "near me state"
+  _lastSetUserLocationAt = Date.now();
+
+  console.log("📍 setUserLocation()", {
+    lat, lng, radiusMiles,
+    before: { _nearMeActive, _nearMeCenter, _nearMeRadiusMiles }
+  });
+
   _nearMeActive = true;
   _nearMeCenter = { lat: Number(lat), lng: Number(lng) };
   _nearMeRadiusMiles = Number(radiusMiles || 2);
 
-  // snapshot base locations once (so Clear restores the original master list)
   if (!_baseLocationsSnapshot) _baseLocationsSnapshot = locations.slice();
 
   applyFiltersWithNearMe();
 
-  // auto-expand bottom panel so results are visible
   const panel = document.getElementById("bottom-panel");
   if (panel) panel.classList.add("expanded");
 };
 
 // Swift calls this: window.SipSober.clearUserLocation()
 window.SipSober.clearUserLocation = function () {
+  const dt = Date.now() - _lastSetUserLocationAt;
+
+  console.log("🧹 clearUserLocation()", {
+    dtMsSinceSet: dt,
+    before: { _nearMeActive, _nearMeCenter, _nearMeRadiusMiles }
+  });
+
+  // ✅ Flicker killer:
+  // If a "clear" arrives immediately after a "set", ignore it.
+  // (This protects you from SwiftUI updateUIView briefly sending clear.)
+  if (dt >= 0 && dt < 1200) {
+    console.log("🧯 clearUserLocation ignored (debounced)");
+    return;
+  }
+
   _nearMeActive = false;
   _nearMeCenter = null;
-
-  // restore the master list snapshot (in case you ever mutate locations later)
-  if (_baseLocationsSnapshot) {
-    // if you want to fully restore, uncomment:
-    // locations.length = 0;
-    // _baseLocationsSnapshot.forEach(x => locations.push(x));
-  }
 
   applyFiltersWithNearMe();
 };
