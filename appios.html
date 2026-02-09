@@ -1829,8 +1829,9 @@ window.SipSober.focusVenue = function (payload) {
   if (_lastFocusedVenueId === id) return;
   _lastFocusedVenueId = id;
 
-  // ✅ ensure we're not stuck in Near Me / filtered state
+  if (!_nearMeActive) {
   resetForFocusOnly();
+  }
 
   let tries = 0;
 
