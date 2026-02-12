@@ -1029,24 +1029,29 @@ body.ss-embed #filters {
 
     ];
 
-    window.SipSober = window.SipSober || {};
-
-    // =========================
+// =========================
 // Embed mode flag (?embed=1)
 // =========================
+window.SipSober = window.SipSober || {};
+
 (function () {
   const params = new URLSearchParams(window.location.search);
   const isEmbed = params.get("embed") === "1";
 
-  window.SipSober = window.SipSober || {};
   window.SipSober.isEmbed = isEmbed;
 
   if (isEmbed) {
     document.body.classList.add("ss-embed");
   }
 })();
-
-    // ================================
+    
+// ======================================
+// Near Me safety: ensure map is ready
+// ======================================
+let _mapReady = false;
+let _pendingNearMe = null;
+    
+// ================================
 // Near Me (Swift → JS)
 // ================================
 let _nearMeActive = false;
@@ -1152,6 +1157,11 @@ let _lastSetUserLocationAt = 0;
 window.SipSober.setUserLocation = function (lat, lng, radiusMiles) {
   _lastSetUserLocationAt = Date.now();
 
+  if (!_mapReady) {
+    _pendingNearMe = { lat, lng, radiusMiles };
+    return;
+  }
+
   console.log("📍 setUserLocation()", {
     lat, lng, radiusMiles,
     before: { _nearMeActive, _nearMeCenter, _nearMeRadiusMiles }
@@ -1186,12 +1196,16 @@ window.SipSober.clearUserLocation = function () {
     return;
   }
 
+  if (!_mapReady) {
+    _pendingNearMe = null;
+    return;
+  }
+  
   _nearMeActive = false;
   _nearMeCenter = null;
 
   applyFiltersWithNearMe();
 };
-
 
     /* =========================
    B) MAP INIT
@@ -1302,7 +1316,19 @@ map.setMaxBounds(manhattanLockBounds);
 map.options.maxBoundsViscosity = 0.1;
 map.setMinZoom(11.5);
 
-let markersLayer = L.layerGroup().addTo(map);
+markersLayer = L.layerGroup().addTo(map);
+
+// ✅ Near Me safety: mark map ready + flush any queued Near Me call
+_mapReady = true;
+
+if (_pendingNearMe) {
+  window.SipSober.setUserLocation(
+    _pendingNearMe.lat,
+    _pendingNearMe.lng,
+    _pendingNearMe.radiusMiles
+  );
+    _pendingNearMe = null;
+}
 
     /* =========================
    C) ICONS (default + active)
@@ -1443,6 +1469,61 @@ map.on("popupclose", () => {
       return u;
     }
 
+   // =====================================
+// 3A) Web → Swift: send venues for native Search
+// =====================================
+window.SipSober = window.SipSober || {};
+let _didSendVenuesToNative = false;
+
+function _brandsArrayFromString(s) {
+  return String(s || "")
+    .split(",")
+    .map(x => x.trim())
+    .filter(Boolean);
+}
+
+function _venueForNative(loc) {
+  return {
+    id: String(loc.id || ""),
+    name: String(loc.name || ""),
+    address: String(loc.address || ""),
+    neighborhood: String(loc.neighborhood || ""),
+    brands: _brandsArrayFromString(loc.brand),
+    website: normalizeUrl(loc.website || ""),
+    lat: Number(loc.lat || 0),
+    lng: Number(loc.lng || 0),
+    imageUrl: String(loc.imageUrl || "")
+  };
+}
+
+window.SipSober.sendVenuesToNative = function (force = false) {
+  try {
+    if (_didSendVenuesToNative && !force) return;
+
+    const venues = (locations || [])
+      .map(_venueForNative)
+      .filter(v => v.id && v.name);
+
+    if (window.webkit?.messageHandlers?.sipSober) {
+      window.webkit.messageHandlers.sipSober.postMessage({
+        type: "venues",
+        venues
+      });
+      _didSendVenuesToNative = true;
+      console.log("✅ sent venues to native:", venues.length);
+    } else {
+      console.log("sipSober handler not available");
+    }
+  } catch (e) {
+    console.log("sendVenuesToNative error", e);
+  }
+};
+
+// Send once after load (safety)
+window.addEventListener("load", () => {
+  setTimeout(() => window.SipSober.sendVenuesToNative(), 400);
+});
+
     function renderMarkers(data) {
   markersLayer.clearLayers();
   clearActiveMarker();
@@ -1532,37 +1613,47 @@ map.on("popupclose", () => {
 }
 
     function renderList(data) {
-      const results = document.getElementById("results");
-      const resultsCount = document.getElementById("results-count");
-      
-      results.innerHTML = "";
+  const results = document.getElementById("results");
+  const resultsCount = document.getElementById("results-count");
 
-      // ✅ update results count
+  if (!results) return;
+
+  results.innerHTML = "";
+
+  // ✅ update results count
   if (resultsCount) {
     resultsCount.textContent =
       data.length === 0
         ? "No places found"
         : `${data.length} place${data.length === 1 ? "" : "s"}`;
   }
-      
-      data.forEach((loc) => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-  <div class="card-top">
-    <span class="card-name" data-focus-id="${loc.id}">${loc.name}</span>
-    <button class="fav-btn" data-id="${loc.id}" aria-label="Favorite">★</button>
-  </div>
 
-  <div class="meta">${loc.address}</div>
-  ${loc.website ? `<a href="${loc.website}" target="_blank" rel="noopener">Website</a>` : ``}
-  <div class="meta">Brand: ${loc.brand || ""}</div>
-  <div class="meta">Neighborhood: ${loc.neighborhood || ""}</div>
-`;
+  data.forEach((loc) => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-        results.appendChild(card);
-      });
-    }
+    card.innerHTML = `
+      <div class="card-top">
+        <span class="card-name" data-focus-id="${loc.id}">${loc.name}</span>
+        <button class="fav-btn" data-id="${loc.id}" aria-label="Favorite">★</button>
+      </div>
+
+      <div class="meta">${loc.address || ""}</div>
+      ${
+        loc.website
+          ? `<a href="${loc.website}" target="_blank" rel="noopener">Website</a>`
+          : ``
+      }
+      <div class="meta">Brand: ${loc.brand || ""}</div>
+      <div class="meta">Neighborhood: ${loc.neighborhood || ""}</div>
+    `;
+
+    results.appendChild(card);
+  });
+
+  // ✅ Web → Swift: keep native Search list in sync
+  window.SipSober?.sendVenuesToNative?.(data);
+}
 
     /* =========================
        ACTIVE FILTER CHIPS
@@ -1838,7 +1929,9 @@ searchClear?.addEventListener("click", () => {
        ========================= */
     renderList(locations);
     renderMarkers(locations);
-  
+
+    window.SipSober?.sendVenuesToNative?.();
+
     setTimeout(() => {
       map.invalidateSize(true);
     }, 200);
