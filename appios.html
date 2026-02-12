@@ -1496,11 +1496,17 @@ function _venueForNative(loc) {
   };
 }
 
-window.SipSober.sendVenuesToNative = function (force = false) {
+window.SipSober.sendVenuesToNative = function (arg) {
   try {
-    if (_didSendVenuesToNative && !force) return;
+    // ✅ Allow both usages:
+    // 1) sendVenuesToNative(true)            -> force full send
+    // 2) sendVenuesToNative(filteredData)    -> send exactly what's rendered
+    const force = (typeof arg === "boolean") ? arg : false;
+    const source = Array.isArray(arg) ? arg : (locations || []);
 
-    const venues = (locations || [])
+    if (_didSendVenuesToNative && !force && !Array.isArray(arg)) return;
+
+    const venues = source
       .map(_venueForNative)
       .filter(v => v.id && v.name);
 
