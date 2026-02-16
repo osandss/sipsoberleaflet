@@ -1080,9 +1080,7 @@ function distanceMeters(lat1, lon1, lat2, lon2) {
 }
 
 // Core: re-render using current filters/search, then optionally apply Near Me
-function applyFiltersWithNearMe(opts = {}) {
-  const skipFit = !!opts.skipFit;
-
+function applyFiltersWithNearMe() {
   closeAllMenus();
 
   const selectedBrands = getSelectedValues("brand");
@@ -1150,7 +1148,7 @@ function applyFiltersWithNearMe(opts = {}) {
     } else {
       map.setView([_nearMeCenter.lat, _nearMeCenter.lng], 15, { animate: true });
     }
-  } else if (!skipFit && count > 0 && bounds && !hasSearch) {
+  } else if (count > 0 && bounds && !hasSearch) {
     map.fitBounds(bounds, {
       paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
       paddingBottomRight: [16, panelH + 16],
@@ -1281,8 +1279,9 @@ function resetToDefaultMapState() {
   const searchInput = document.getElementById("searchTopInput");
   if (searchInput) searchInput.value = "";
 
-  // 4) Render full dataset (A–Z default)
-  applyFiltersWithNearMe();
+  // 4) Render full dataset
+  renderList(locations);
+  renderMarkers(locations);
 
   // 5) Reset UI chips
   updateActiveFilters([], []);
@@ -1314,8 +1313,11 @@ function resetForFocusOnly() {
   const searchInput = document.getElementById("searchTopInput");
   if (searchInput) searchInput.value = "";
 
-  // IMPORTANT: re-render full dataset so marker exists (A–Z default)
-  applyFiltersWithNearMe();
+  // IMPORTANT: re-render full dataset so marker exists
+  renderList(locations);
+  renderMarkers(locations);
+
+  updateActiveFilters([], []);
 }
 
 // Lock + limits (DO NOT fit here)
@@ -1334,11 +1336,7 @@ if (_pendingNearMe) {
     _pendingNearMe.lng,
     _pendingNearMe.radiusMiles
   );
-  _pendingNearMe = null;
-} else {
-  // ✅ Initial render (A–Z default) but keep your preferred framing
-  applyFiltersWithNearMe({ skipFit: true });
-  fitInitialView();
+    _pendingNearMe = null;
 }
 
   /* =========================
