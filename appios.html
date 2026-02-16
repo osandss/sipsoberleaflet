@@ -425,29 +425,20 @@
     }
 
     /* ============================
-   ACTIVE FILTERS ABOVE RESULTS (FIXED)
-   ============================ */
+       ACTIVE FILTERS ABOVE RESULTS
+       ============================ */
 
-  #active-filters.active-filters {
-    display: none;
-    flex-wrap: wrap;
-    gap: 6px;
-
-    position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
-
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    padding: 10px 12px 8px;
-    margin: 0 0 10px;
-
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-  }
+    .active-filters {
+      display: none; /* JS switches to flex when filters are active */
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 10px;
+      padding: 4px 4px 6px;
+      position: sticky; /* stays visible while panel scrolls */
+      top: 0;
+      z-index: 2;
+      background: transparent;
+    }
 
     .filter-pill {
       display: inline-flex;
