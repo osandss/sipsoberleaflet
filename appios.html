@@ -425,20 +425,29 @@
     }
 
     /* ============================
-       ACTIVE FILTERS ABOVE RESULTS
-       ============================ */
+   ACTIVE FILTERS ABOVE RESULTS (FIXED)
+   ============================ */
 
-    .active-filters {
-      display: none; /* JS switches to flex when filters are active */
-      flex-wrap: wrap;
-      gap: 6px;
-      margin: 0 0 10px;
-      padding: 4px 4px 6px;
-      position: sticky; /* stays visible while panel scrolls */
-      top: 0;
-      z-index: 2;
-      background: transparent;
-    }
+  #active-filters.active-filters {
+    display: none;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    padding: 10px 12px 8px;
+    margin: 0 0 10px;
+
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
 
     .filter-pill {
       display: inline-flex;
@@ -1080,7 +1089,9 @@ function distanceMeters(lat1, lon1, lat2, lon2) {
 }
 
 // Core: re-render using current filters/search, then optionally apply Near Me
-function applyFiltersWithNearMe() {
+function applyFiltersWithNearMe(opts = {}) {
+  const skipFit = !!opts.skipFit;
+
   closeAllMenus();
 
   const selectedBrands = getSelectedValues("brand");
@@ -1148,7 +1159,7 @@ function applyFiltersWithNearMe() {
     } else {
       map.setView([_nearMeCenter.lat, _nearMeCenter.lng], 15, { animate: true });
     }
-  } else if (count > 0 && bounds && !hasSearch) {
+  } else if (!skipFit && count > 0 && bounds && !hasSearch) {
     map.fitBounds(bounds, {
       paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
       paddingBottomRight: [16, panelH + 16],
@@ -1279,9 +1290,8 @@ function resetToDefaultMapState() {
   const searchInput = document.getElementById("searchTopInput");
   if (searchInput) searchInput.value = "";
 
-  // 4) Render full dataset
-  renderList(locations);
-  renderMarkers(locations);
+  // 4) Render full dataset (A–Z default)
+  applyFiltersWithNearMe();
 
   // 5) Reset UI chips
   updateActiveFilters([], []);
@@ -1313,11 +1323,8 @@ function resetForFocusOnly() {
   const searchInput = document.getElementById("searchTopInput");
   if (searchInput) searchInput.value = "";
 
-  // IMPORTANT: re-render full dataset so marker exists
-  renderList(locations);
-  renderMarkers(locations);
-
-  updateActiveFilters([], []);
+  // IMPORTANT: re-render full dataset so marker exists (A–Z default)
+  applyFiltersWithNearMe();
 }
 
 // Lock + limits (DO NOT fit here)
@@ -1336,7 +1343,11 @@ if (_pendingNearMe) {
     _pendingNearMe.lng,
     _pendingNearMe.radiusMiles
   );
-    _pendingNearMe = null;
+  _pendingNearMe = null;
+} else {
+  // ✅ Initial render (A–Z default) but keep your preferred framing
+  applyFiltersWithNearMe({ skipFit: true });
+  fitInitialView();
 }
 
   /* =========================
