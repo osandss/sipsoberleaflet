@@ -284,50 +284,93 @@
     }
 
    
-    /* --- Bottom results panel floats above the map --- */
+/* --- Bottom results panel floats above the map --- */
 #bottom-panel {
   position: fixed;
   left: 12px;
   right: 12px;
   bottom: 0;
 
-  /* collapsed by default (peek) */
   height: var(--panel-collapsed);
 
   background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(12px); /* iOS glass effect */
+  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 22px 22px 0 0;
   box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.10);
 
-  padding: 10px 18px calc(14px + env(safe-area-inset-bottom));
+  /* ✅ IMPORTANT: header + body layout */
+  display: flex;
+  flex-direction: column;
+
+  /* tighter than before (less white space) */
+  padding: 8px 14px calc(10px + env(safe-area-inset-bottom));
   z-index: 2001;
 
-  /* animation + behavior */
   transition: height 220ms ease;
-  overflow-y: hidden; /* prevent scroll when collapsed */
+
+  /* ✅ panel itself should NOT scroll anymore */
+  overflow: hidden;
 }
 
 /* expanded state */
 #bottom-panel.expanded {
   height: var(--panel-expanded);
-  overflow-y: auto;
 }
 
-/* results list inside the panel */
-#results {
+/* Fixed header */
+#panel-header{
+  flex: 0 0 auto;
+  padding: 0 10px 6px; /* ✅ matches card inner padding */
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+    
+/* Scrollable body (only results scroll) */
+#panel-body{
+  flex: 1 1 auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 10px;
+  padding: 6px 0 10px; /* ✅ no side padding */
 }
 
+/* Results list padding is handled by panel-body now */
+#results{
+  padding: 0;
+}
 
+/* ✅ Filters + count live in ONE row */
+#panel-meta-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  /* brings row closer to Hide/Show */
+  margin-top: 2px;
+}
+
+/* ✅ Make chips behave like inline content on the left */
+#panel-meta-row .active-filters{
+  flex: 1 1 auto;
+  display: none;           /* JS toggles to flex */
+  flex-wrap: wrap;
+  gap: 6px;
+
+  /* remove old spacing that created white space */
+  margin: 0;
+  padding: 0;
+
+  position: static;
+  top: auto;
+  background: transparent;
+}
+    
 /* --- Panel toggle handle (tap to expand/collapse) --- */
 #panel-toggle {
   width: 100%;
   border: 0;
   background: transparent;
-  padding: 6px 0 10px;
+  padding: 6px 0 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -352,17 +395,19 @@
     
     /* --- Results count (under active filters) --- */
     #results-count {
+      flex: 0 0 auto;
+      margin: 0;
       font-size: 13px;
       font-weight: 500;
       color: #5f6368;
-      margin: 6px 10px 6px;   /* left aligns with #results padding */
       letter-spacing: 0.01em;
+      white-space: nowrap;
     }
 
 
     /* --- Bottom panel card styling --- */
     .card {
-      padding: 10px 10px;
+      padding: 8px 10px;
       border-bottom: 1px solid #eee;
       margin-bottom: 0;
       font-size: 12px;
@@ -379,8 +424,8 @@
       display: block;
       font-size: 14px;
       font-weight: 600;
-      margin: 0;
-      line-height: 1.15;
+      margin: 0 0 2px 0;
+      line-height: 1.2;
       color: #111;
       cursor: pointer;
     }
@@ -390,7 +435,7 @@
     }
 
     .card .meta{
-      margin: 2px 0;
+      margin: 0;
       line-height: 1.25;
     }
 
@@ -428,16 +473,8 @@
        ACTIVE FILTERS ABOVE RESULTS
        ============================ */
 
-    .active-filters {
-      display: none; /* JS switches to flex when filters are active */
-      flex-wrap: wrap;
-      gap: 6px;
-      margin: 0 0 10px;
-      padding: 4px 4px 6px;
-      position: sticky; /* stays visible while panel scrolls */
-      top: 0;
-      z-index: 2;
-      background: transparent;
+    .active-filters{
+      display: none;
     }
 
     .filter-pill {
@@ -908,11 +945,14 @@ body.ss-embed #filters {
 
 </div>
 
-  <!-- Fullscreen Map -->
-  <div id="map"></div>
+<!-- Fullscreen Map -->
+<div id="map"></div>
 
-  <!-- Sliding Bottom Results Panel -->
-  <div id="bottom-panel">
+<!-- Sliding Bottom Results Panel -->
+<div id="bottom-panel">
+
+  <!-- ✅ FIXED HEADER (does not scroll) -->
+  <div id="panel-header">
 
     <!-- Panel toggle handle -->
     <button id="panel-toggle" type="button" aria-expanded="false">
@@ -920,11 +960,20 @@ body.ss-embed #filters {
       <span class="label">Show</span>
     </button>
 
-    <div id="active-filters" class="active-filters"></div>
-    <div id="results-count" class="results-count"></div>
-    <div id="results"></div>
+    <!-- ✅ Filters + count in one row -->
+    <div id="panel-meta-row">
+      <div id="active-filters" class="active-filters"></div>
+      <div id="results-count" class="results-count"></div>
+    </div>
 
   </div>
+
+  <!-- ✅ SCROLL BODY (only results scroll) -->
+  <div id="panel-body">
+    <div id="results"></div>
+  </div>
+
+</div>
 
   <!-- Leaflet JS (latest CDN) -->
   <script
