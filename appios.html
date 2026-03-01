@@ -25,57 +25,56 @@
   />
 
   <style>
-    
     /* =========================
-   SOFT BRANDED MAP — BALANCED DEPTH
-   ========================= */
+       SOFT BRANDED MAP — BALANCED DEPTH
+       ========================= */
 
-/* Base tile adjustment (keep it crisp but not harsh) */
-.leaflet-tile-pane {
-  position: relative;
-  filter: brightness(0.96) contrast(1.06) saturate(0.85);
-}
+    /* Base tile adjustment (keep it crisp but not harsh) */
+    .leaflet-tile-pane {
+      position: relative;
+      filter: brightness(0.96) contrast(1.06) saturate(0.85);
+    }
 
-/* Very subtle navy brand wash */
-.leaflet-tile-pane::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+    /* Very subtle navy brand wash */
+    .leaflet-tile-pane::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
 
-  background: rgba(32, 34, 57, 0.10);
-  mix-blend-mode: multiply;
+      background: rgba(32, 34, 57, 0.10);
+      mix-blend-mode: multiply;
 
-  z-index: 200;
-}
+      z-index: 200;
+    }
 
-/* Container positioning */
-.leaflet-container {
-  position: relative;
-}
+    /* Container positioning */
+    .leaflet-container {
+      position: relative;
+    }
 
-/* Restore elegant vignette depth */
-.leaflet-container::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+    /* Restore elegant vignette depth */
+    .leaflet-container::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
 
-  background: radial-gradient(
-    circle at 50% 32%,
-    rgba(255,255,255,0) 0%,
-    rgba(32,34,57,0.06) 60%,
-    rgba(32,34,57,0.10) 100%
-  );
+      background: radial-gradient(
+        circle at 50% 32%,
+        rgba(255,255,255,0) 0%,
+        rgba(32,34,57,0.06) 60%,
+        rgba(32,34,57,0.10) 100%
+      );
 
-  opacity: 0.9;
-  z-index: 300;
-}
+      opacity: 0.9;
+      z-index: 300;
+    }
 
     :root {
-    /* mobile panel heights (used for dynamic map resizing) */
-    --panel-collapsed: 18vh;
-    --panel-expanded: 38vh;
+      /* mobile panel heights (used for dynamic map resizing) */
+      --panel-collapsed: 18vh;
+      --panel-expanded: 38vh;
     }
 
     html,
@@ -87,8 +86,7 @@
       overscroll-behavior: none;
 
       /* Cleaner, more modern iOS font stack */
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
-        sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
 
       /* Softer, professional text color */
       background: #ffffff;
@@ -126,23 +124,23 @@
 
     /* --- Top bar search (after Go) --- */
     .ss-searchTop{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 26px;
-    padding: 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 26px;
+      padding: 0 10px;
 
-    background: #f2f2f7;
-    border: 1px solid #ccc;
-    border-radius: 999px;
+      background: #f2f2f7;
+      border: 1px solid #ccc;
+      border-radius: 999px;
 
-    font-size: 12px;
-    width: 160px;
-    min-width: 160px;
-    max-width: 160px;
-    flex: 0 0 160px;
-    overflow: hidden;
-  }
+      font-size: 12px;
+      width: 160px;
+      min-width: 160px;
+      max-width: 160px;
+      flex: 0 0 160px;
+      overflow: hidden;
+    }
 
     .ss-searchIcon{
       font-size: 11px;
@@ -157,7 +155,7 @@
       font-size: 16px;
       min-width: 0;
       line-height: 1;
-      
+
       transform: scale(0.82);          /* makes it LOOK smaller */
       transform-origin: left center;   /* keep it aligned */
     }
@@ -165,7 +163,7 @@
     #searchTopInput::-webkit-search-cancel-button{
       -webkit-appearance: none;
     }
-    
+
     #searchTopClear{
       border: 0;
       background: transparent;
@@ -177,31 +175,31 @@
     }
 
     /* =========================
-   TOP SEARCH TOGGLE
-   ========================= */
+       TOP SEARCH TOGGLE
+       ========================= */
 
-  #searchToggle{
-    border: 1px solid #ccc;
-    background: #f2f2f7;
-    border-radius: 999px;
-    padding: 6px 10px;
-    font-size: 16px;
-    cursor: pointer;
-    color: #2f3b69;
-  }
+    #searchToggle{
+      border: 1px solid #ccc;
+      background: #f2f2f7;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #2f3b69;
+    }
 
-  /* collapsible row */
-  #searchTopRow{
-    display: none;
-    width: 100%;
-    margin-top: 4px;
+    /* collapsible row */
+    #searchTopRow{
+      display: none;
+      width: 100%;
+      margin-top: 4px;
 
-    padding-left: 6px; /* aligns search bar under pills */
-  }
+      padding-left: 6px; /* aligns search bar under pills */
+    }
 
-  #searchTopRow.is-open{
-    display: block;
-  }
+    #searchTopRow.is-open{
+      display: block;
+    }
 
     .dropdown > button {
       background: #f2f2f7;
@@ -213,19 +211,16 @@
       color: #2f3b69;
     }
 
-    /* =========================
-   Dropdown menus: show ~4 items + scroll
-   ========================= */
+    /* Dropdown menus: show ~4 items + scroll */
+    .dropdown .menu {
+      max-height: 160px;
+      overflow-y: auto;
+      overflow-x: hidden;
 
-.dropdown .menu {
-  max-height: 160px;          
-  overflow-y: auto;
-  overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
 
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-}
-    
     #goBtn {
       background: #202329;
       color: white;
@@ -240,7 +235,7 @@
     /* Main map area – fills behind filters and above bottom panel */
     #map {
       position: absolute;
-      top: 0; /* ✅ map goes all the way to the top; filters float above */
+      top: 0; /* map goes all the way to the top; filters float above */
       left: 0;
       right: 0;
       bottom: 0;
@@ -283,117 +278,108 @@
       color: #1c1c1e;
     }
 
-   
-/* --- Bottom results panel floats above the map --- */
-#bottom-panel {
-  position: fixed;
-  left: 12px;
-  right: 12px;
-  bottom: 0;
+    /* --- Bottom results panel floats above the map --- */
+    #bottom-panel {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 0;
 
-  height: var(--panel-collapsed);
+      height: var(--panel-collapsed);
 
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 22px 22px 0 0;
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.10);
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 22px 22px 0 0;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.10);
 
-  /* ✅ IMPORTANT: header + body layout */
-  display: flex;
-  flex-direction: column;
+      display: flex;
+      flex-direction: column;
 
-  /* tighter than before (less white space) */
-  padding: 8px 14px calc(10px + env(safe-area-inset-bottom));
-  z-index: 2001;
+      padding: 8px 14px calc(10px + env(safe-area-inset-bottom));
+      z-index: 2001;
 
-  transition: height 220ms ease;
+      transition: height 220ms ease;
 
-  /* ✅ panel itself should NOT scroll anymore */
-  overflow: hidden;
-}
+      overflow: hidden;
+    }
 
-/* expanded state */
-#bottom-panel.expanded {
-  height: var(--panel-expanded);
-}
+    /* expanded state */
+    #bottom-panel.expanded {
+      height: var(--panel-expanded);
+    }
 
-/* Fixed header */
-#panel-header{
-  flex: 0 0 auto;
-  padding: 0 10px 6px; /* ✅ matches card inner padding */
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-}
-    
-/* Scrollable body (only results scroll) */
-#panel-body{
-  flex: 1 1 auto;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 6px 0 10px; /* ✅ no side padding */
-}
+    /* Fixed header */
+    #panel-header{
+      flex: 0 0 auto;
+      padding: 0 10px 6px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
 
-/* Results list padding is handled by panel-body now */
-#results{
-  padding: 0;
-}
+    /* Scrollable body (only results scroll) */
+    #panel-body{
+      flex: 1 1 auto;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 6px 0 10px;
+    }
 
-/* ✅ Filters + count live in ONE row */
-#panel-meta-row{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+    #results{
+      padding: 0;
+    }
 
-  /* brings row closer to Hide/Show */
-  margin-top: 2px;
-}
+    /* Filters + count live in ONE row */
+    #panel-meta-row{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 2px;
+    }
 
-/* ✅ Make chips behave like inline content on the left */
-#panel-meta-row .active-filters{
-  flex: 1 1 auto;
-  display: none;           /* JS toggles to flex */
-  flex-wrap: wrap;
-  gap: 6px;
+    #panel-meta-row .active-filters{
+      flex: 1 1 auto;
+      display: none; /* JS toggles to flex */
+      flex-wrap: wrap;
+      gap: 6px;
 
-  /* remove old spacing that created white space */
-  margin: 0;
-  padding: 0;
+      margin: 0;
+      padding: 0;
 
-  position: static;
-  top: auto;
-  background: transparent;
-}
-    
-/* --- Panel toggle handle (tap to expand/collapse) --- */
-#panel-toggle {
-  width: 100%;
-  border: 0;
-  background: transparent;
-  padding: 6px 0 6px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
+      position: static;
+      top: auto;
+      background: transparent;
+    }
 
-#panel-toggle .handle {
-  width: 44px;
-  height: 5px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.18);
-}
+    /* Panel toggle handle */
+    #panel-toggle {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 6px 0 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-#panel-toggle .label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #202239;
-  opacity: 0.75;
-}
-    
-    /* --- Results count (under active filters) --- */
+    #panel-toggle .handle {
+      width: 44px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    #panel-toggle .label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #202239;
+      opacity: 0.75;
+    }
+
+    /* Results count */
     #results-count {
       flex: 0 0 auto;
       margin: 0;
@@ -404,8 +390,7 @@
       white-space: nowrap;
     }
 
-
-    /* --- Bottom panel card styling --- */
+    /* Bottom panel cards */
     .card {
       padding: 8px 10px;
       border-bottom: 1px solid #eee;
@@ -419,7 +404,6 @@
       border-bottom: none;
     }
 
-    /* Venue name */
     .card-name {
       display: block;
       font-size: 14px;
@@ -453,7 +437,7 @@
       text-decoration: underline;
     }
 
-    /* Move Leaflet zoom controls to bottom-right */
+    /* Move Leaflet zoom controls */
     .leaflet-control-zoom {
       bottom: 20px;
       right: 20px;
@@ -466,12 +450,8 @@
       left: auto !important;
       right: 16px !important;
       bottom: 24px !important;
-      z-index: 3200 !important; /* above filters */
+      z-index: 3200 !important;
     }
-
-    /* ============================
-       ACTIVE FILTERS ABOVE RESULTS
-       ============================ */
 
     .active-filters{
       display: none;
@@ -488,282 +468,255 @@
     }
 
     .filter-pill-x {
-  margin-left: 6px;
-  font-weight: 600;
-  cursor: pointer;
-}
+      margin-left: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
 
+    @media (max-width: 720px) {
+      #filters {
+        top: 10px;
+      }
+    }
 
-/* Small tweak for phones only (optional) */
-@media (max-width: 720px) {
-  #filters {
-    top: 10px;
-  }
-}
-    
-/* =========================
-   EMBED MODE (iOS app)
-   Hide web top controls when ?embed=1
-   ========================= */
-body.ss-embed #filters {
-  display: none !important;
-}
-    
-/* Favorite star */
-.fav-btn{
-  background: none;
-  border: 0;
-  padding: 6px;
-  cursor: pointer;
-  font-size: 22px;
-  line-height: 1;
-  color: #b9b9b9;
-}
+    /* EMBED MODE (iOS app) */
+    body.ss-embed #filters {
+      display: none !important;
+    }
 
-.fav-btn.is-fav{
-  color: #202239;
-}
+    /* Favorite star */
+    .fav-btn{
+      background: none;
+      border: 0;
+      padding: 6px;
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+      color: #b9b9b9;
+    }
+
+    .fav-btn.is-fav{
+      color: #202239;
+    }
 
     .card-top{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 4px;
-}
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
 
-    
-/* =========================
-   MAP POPUP (Leaflet)
-   ========================= */
+    /* MAP POPUP */
+    .leaflet-popup-content-wrapper {
+      border-radius: 18px !important;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18) !important;
+      padding: 0 !important;
+    }
 
-.leaflet-popup-content-wrapper {
-  border-radius: 18px !important;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.18) !important;
-  padding: 0 !important;
-}
+    .leaflet-popup-content {
+      margin: 0 !important;
+      width: auto !important;
+      max-width: none !important;
+    }
 
-.leaflet-popup-content {
-  margin: 0 !important;
-  width: auto !important;
-  max-width: none !important;
-}
+    .ss-popup--simple {
+      padding: 12px;
+      min-width: 240px;
+      max-width: 300px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+      color: #1c1c1e;
+    }
 
-/* Simple popup (structured, map-first) */
-.ss-popup--simple {
-  padding: 12px;
-  min-width: 240px;
-  max-width: 300px;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-  color: #1c1c1e;
-}
+    .ss-popup-top{
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
 
-/* Top row: thumb + text */
-.ss-popup-top{
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
+    .ss-popup-text{
+      flex: 1;
+      min-width: 0;
+    }
 
-/* Text column */
-.ss-popup-text{
-  flex: 1;
-  min-width: 0;
-}
+    .ss-popup-img-wrap{
+      margin: 0;
+      flex: 0 0 104px;
+      display: block;
+    }
 
-/* Thumbnail */
-.ss-popup-img-wrap{
-  margin: 0;
-  flex: 0 0 104px;
-  display: block;
-}
+    .ss-popup-img{
+      width: 104px;
+      height: 78px;
+      max-height: none;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+    }
 
-.ss-popup-img{
-  width: 104px;
-  height: 78px;
-  max-height: none;
-  object-fit: cover;
-  border-radius: 12px;
-  display: block;
-}
+    .ss-popup--simple .ss-popup-title {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 0 0 4px;
+    }
 
-/* Title */
-.ss-popup--simple .ss-popup-title {
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.2;
-  margin: 0 0 4px;
-}
+    .ss-popup--simple .ss-popup-tags {
+      font-size: 11px;
+      color: rgba(28, 28, 30, 0.55);
+      line-height: 1.2;
+      margin: 0 0 6px;
+    }
 
-/* Neighborhood */
-.ss-popup--simple .ss-popup-tags {
-  font-size: 11px;
-  color: rgba(28, 28, 30, 0.55);
-  line-height: 1.2;
-  margin: 0 0 6px;
-}
+    .ss-popup--simple .ss-popup-meta {
+      font-size: 11px;
+      color: rgba(28, 28, 30, 0.65);
+      line-height: 1.25;
+      margin: 0 0 8px;
+    }
 
-/* Address */
-.ss-popup--simple .ss-popup-meta {
-  font-size: 11px;
-  color: rgba(28, 28, 30, 0.65);
-  line-height: 1.25;
-  margin: 0 0 8px;
-}
+    .ss-popup--simple .ss-popup-actions{
+      display: flex;
+      gap: 8px;
+      flex-wrap: nowrap;
+      align-items: center;
+      margin-top: 6px;
+    }
 
-/* Action pills (Option A: smaller, inline, not stacked) */
-.ss-popup--simple .ss-popup-actions{
-  display: flex;
-  gap: 8px;
-  flex-wrap: nowrap;       /* keep on one row */
-  align-items: center;
-  margin-top: 6px;
-}
+    .ss-popup--simple .ss-pill{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
 
-.ss-popup--simple .ss-pill{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1;
 
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
+      padding: 5px 9px;
+      border-radius: 999px;
 
-  padding: 5px 9px;
-  border-radius: 999px;
+      color: #1c1c1e;
+      text-decoration: none;
 
-  color: #1c1c1e;
-  text-decoration: none;
+      background: rgba(28, 28, 30, 0.06);
+      border: 1px solid rgba(28, 28, 30, 0.08);
 
-  background: rgba(28, 28, 30, 0.06);
-  border: 1px solid rgba(28, 28, 30, 0.08);
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
 
-  white-space: nowrap;
-  -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
 
-  transition: background 0.15s ease, transform 0.15s ease;
-}
+    .ss-popup--simple .ss-pill.secondary{
+      background: rgba(28, 28, 30, 0.03);
+    }
 
-.ss-popup--simple .ss-pill.secondary{
-  background: rgba(28, 28, 30, 0.03);
-}
+    .ss-popup--simple .ss-pill:active{
+      background: rgba(28, 28, 30, 0.12);
+      transform: scale(0.97);
+    }
 
-.ss-popup--simple .ss-pill:active{
-  background: rgba(28, 28, 30, 0.12);
-  transform: scale(0.97);
-}
+    .leaflet-container a.leaflet-popup-close-button {
+      width: 26px !important;
+      height: 26px !important;
+      font-size: 18px !important;
+      line-height: 26px !important;
+      color: rgba(28, 28, 30, 0.45) !important;
+      right: 6px !important;
+      top: 6px !important;
+    }
 
-/* Smaller, cleaner close "x" */
-.leaflet-container a.leaflet-popup-close-button {
-  width: 26px !important;
-  height: 26px !important;
-  font-size: 18px !important;
-  line-height: 26px !important;
-  color: rgba(28, 28, 30, 0.45) !important;
-  right: 6px !important;
-  top: 6px !important;
-}
+    /* MAP ONBOARDING BANNER */
+    .ss-onboard {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      top: 140px;
+      z-index: 5000;
 
-/* =========================
-   SIP SOBER — MAP ONBOARDING BANNER
-   ========================= */
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 220ms ease, transform 220ms ease;
 
-.ss-onboard {
-  position: fixed;
-  left: 12px;
-  right: 12px;
-  top: 140px; /* keep where it is now */
-  z-index: 5000;
+      pointer-events: none;
+    }
 
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 220ms ease, transform 220ms ease;
+    .ss-onboard.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
 
-  pointer-events: none;
-}
+    .ss-onboard[hidden] {
+      display: none !important;
+    }
 
-.ss-onboard.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
+    .ss-onboard__content {
+      pointer-events: auto;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(32, 34, 57, 0.12);
+      border-radius: 18px;
+      padding: 12px 14px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    }
 
-.ss-onboard[hidden] {
-  display: none !important;
-}
+    .ss-onboard__title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #202239;
+      margin-bottom: 4px;
+    }
 
-.ss-onboard__content {
-  pointer-events: auto;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(32, 34, 57, 0.12);
-  border-radius: 18px;
-  padding: 12px 14px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-}
+    .ss-onboard__text {
+      font-size: 13px;
+      line-height: 1.3;
+      color: rgba(0,0,0,0.65);
+      margin-bottom: 10px;
+    }
 
-.ss-onboard__title {
-  font-size: 14px;
-  font-weight: 800;
-  color: #202239;
-  margin-bottom: 4px;
-}
+    .ss-onboard__actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
 
-.ss-onboard__text {
-  font-size: 13px;
-  line-height: 1.3;
-  color: rgba(0,0,0,0.65);
-  margin-bottom: 10px;
-}
+    .ss-onboard__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-.ss-onboard__actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
+    .ss-onboard__btn--primary {
+      border: 0;
+      color: #fff;
+      background: #202239;
+    }
 
-.ss-onboard__btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 34px;
-  padding: 0 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.ss-onboard__btn--primary {
-  border: 0;
-  color: #fff;
-  background: #202239;
-}
-
-.ss-onboard__btn--ghost {
-  border: 1px solid rgba(32, 34, 57, 0.18);
-  color: #202239;
-  background: rgba(255,255,255,0.65);
-}
-    
-</style>
-
+    .ss-onboard__btn--ghost {
+      border: 1px solid rgba(32, 34, 57, 0.18);
+      color: #202239;
+      background: rgba(255,255,255,0.65);
+    }
+  </style>
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-W6LRN7EDH7"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
+    function gtag() { dataLayer.push(arguments); }
     gtag("js", new Date());
-    gtag("config", "G-W6LRN7EDH7", {
-      send_page_view: true,
-    });
+    gtag("config", "G-W6LRN7EDH7", { send_page_view: true });
   </script>
 </head>
 
@@ -776,173 +729,63 @@ body.ss-embed #filters {
     <div class="ss-onboard__text">
       Filter by <b>brand</b> or <b>neighborhood</b>, then tap <b>★</b> to save favorites.
     </div>
-
     <div class="ss-onboard__actions">
       <button id="ss-onboard-ok" class="ss-onboard__btn ss-onboard__btn--primary" type="button">
         Got it
       </button>
-
     </div>
   </div>
 </div>
 
-  
- <!-- TOP CONTROLS (filters + Go) -->
+<!-- TOP CONTROLS (filters + Go) -->
 <div id="filters" class="topbar filterbar">
 
   <div class="dropdown" id="brandDD">
     <button type="button" aria-expanded="false">Brands ▾</button>
     <div class="menu" role="menu">
-
-      <div class="row">
-        <input id="brand-seedlip" type="checkbox" value="Seedlip" />
-        <label for="brand-seedlip">Seedlip</label>
-      </div>
-
-      <div class="row">
-        <input id="brand-ritual" type="checkbox" value="Ritual Zero Proof" />
-        <label for="brand-ritual">Ritual Zero Proof</label>
-      </div>
-
-      <div class="row">
-        <input id="brand-lyres" type="checkbox" value="Lyre's" />
-        <label for="brand-lyres">Lyre's</label>
-      </div>
-
-      <div class="row">
-        <input id="brand-agrestis" type="checkbox" value="St. Agrestis" />
-        <label for="brand-agrestis">St. Agrestis</label>
-      </div>
-
-      <div class="row">
-        <input id="brand-aplos" type="checkbox" value="Aplós" />
-        <label for="brand-aplos">Aplós</label>
-      </div>
-
-      <div class="row">
-        <input id="brand-pathfinder" type="checkbox" value="Pathfinder" />
-        <label for="brand-pathfinder">Pathfinder</label>
-      </div>
-
-      <div class="row">
-        <input id="brand-curious" type="checkbox" value="Curious Elixirs" />
-        <label for="brand-curious">Curious Elixirs</label>
-      </div>
-
-      <div class="row">
-        <input id="brand-goodtime" type="checkbox" value="Good Time Brewing" />
-        <label for="brand-goodtime">Good Time Brewing</label>
-      </div>
-
-      <div class="row">
-        <input id="brand-ghia" type="checkbox" value="Ghia" />
-        <label for="brand-ghia">Ghia</label>
-      </div>
-
-      <div class="row">
-        <input id="brand-pentire" type="checkbox" value="Pentire" />
-        <label for="brand-pentire">Pentire</label>
-      </div>
-
-      <div class="row">
-        <input id="brand-athletic" type="checkbox" value="Athletic Brewing Co." />
-        <label for="brand-athletic">Athletic Brewing Co.</label>
-      </div>
-
+      <div class="row"><input id="brand-seedlip" type="checkbox" value="Seedlip" /><label for="brand-seedlip">Seedlip</label></div>
+      <div class="row"><input id="brand-ritual" type="checkbox" value="Ritual Zero Proof" /><label for="brand-ritual">Ritual Zero Proof</label></div>
+      <div class="row"><input id="brand-lyres" type="checkbox" value="Lyre's" /><label for="brand-lyres">Lyre's</label></div>
+      <div class="row"><input id="brand-agrestis" type="checkbox" value="St. Agrestis" /><label for="brand-agrestis">St. Agrestis</label></div>
+      <div class="row"><input id="brand-aplos" type="checkbox" value="Aplós" /><label for="brand-aplos">Aplós</label></div>
+      <div class="row"><input id="brand-pathfinder" type="checkbox" value="Pathfinder" /><label for="brand-pathfinder">Pathfinder</label></div>
+      <div class="row"><input id="brand-curious" type="checkbox" value="Curious Elixirs" /><label for="brand-curious">Curious Elixirs</label></div>
+      <div class="row"><input id="brand-goodtime" type="checkbox" value="Good Time Brewing" /><label for="brand-goodtime">Good Time Brewing</label></div>
+      <div class="row"><input id="brand-ghia" type="checkbox" value="Ghia" /><label for="brand-ghia">Ghia</label></div>
+      <div class="row"><input id="brand-pentire" type="checkbox" value="Pentire" /><label for="brand-pentire">Pentire</label></div>
+      <div class="row"><input id="brand-athletic" type="checkbox" value="Athletic Brewing Co." /><label for="brand-athletic">Athletic Brewing Co.</label></div>
     </div>
   </div>
 
   <div class="dropdown" id="neighborhoodDD">
     <button type="button" aria-expanded="false">Neighborhoods ▾</button>
     <div class="menu" role="menu">
-
-      <div class="row">
-        <input id="n-ues" type="checkbox" value="Upper East Side" />
-        <label for="n-ues">Upper East Side</label>
-      </div>
-
-      <div class="row">
-        <input id="n-midtown" type="checkbox" value="Midtown" />
-        <label for="n-midtown">Midtown</label>
-      </div>
-
-      <div class="row">
-        <input id="n-gramercy" type="checkbox" value="Gramercy" />
-        <label for="n-gramercy">Gramercy</label>
-      </div>
-
-      <div class="row">
-        <input id="n-chelsea" type="checkbox" value="Chelsea" />
-        <label for="n-chelsea">Chelsea</label>
-      </div>
-
-      <div class="row">
-        <input id="n-uws" type="checkbox" value="Upper West Side" />
-        <label for="n-uws">Upper West Side</label>
-      </div>
-
-      <div class="row">
-        <input id="n-fidi" type="checkbox" value="FiDi" />
-        <label for="n-fidi">FiDi</label>
-      </div>
-
-      <div class="row">
-        <input id="n-flatiron" type="checkbox" value="Flatiron" />
-        <label for="n-flatiron">Flatiron</label>
-      </div>
-
-      <div class="row">
-        <input id="n-west-village" type="checkbox" value="West Village" />
-        <label for="n-west-village">West Village</label>
-      </div>
-      
-      <div class="row">
-        <input id="n-tribeca" type="checkbox" value="Tribeca" />
-        <label for="n-tribeca">Tribeca</label>
-      </div>
-
-      <div class="row">
-        <input id="n-soho" type="checkbox" value="SoHo" />
-        <label for="n-soho">SoHo</label>
-      </div>
-
-      <div class="row">
-        <input id="n-east-village" type="checkbox" value="East Village" />
-        <label for="n-east-village">East Village</label>
-      </div>
-
+      <div class="row"><input id="n-ues" type="checkbox" value="Upper East Side" /><label for="n-ues">Upper East Side</label></div>
+      <div class="row"><input id="n-midtown" type="checkbox" value="Midtown" /><label for="n-midtown">Midtown</label></div>
+      <div class="row"><input id="n-gramercy" type="checkbox" value="Gramercy" /><label for="n-gramercy">Gramercy</label></div>
+      <div class="row"><input id="n-chelsea" type="checkbox" value="Chelsea" /><label for="n-chelsea">Chelsea</label></div>
+      <div class="row"><input id="n-uws" type="checkbox" value="Upper West Side" /><label for="n-uws">Upper West Side</label></div>
+      <div class="row"><input id="n-fidi" type="checkbox" value="FiDi" /><label for="n-fidi">FiDi</label></div>
+      <div class="row"><input id="n-flatiron" type="checkbox" value="Flatiron" /><label for="n-flatiron">Flatiron</label></div>
+      <div class="row"><input id="n-west-village" type="checkbox" value="West Village" /><label for="n-west-village">West Village</label></div>
+      <div class="row"><input id="n-tribeca" type="checkbox" value="Tribeca" /><label for="n-tribeca">Tribeca</label></div>
+      <div class="row"><input id="n-soho" type="checkbox" value="SoHo" /><label for="n-soho">SoHo</label></div>
+      <div class="row"><input id="n-east-village" type="checkbox" value="East Village" /><label for="n-east-village">East Village</label></div>
     </div>
   </div>
 
   <button id="goBtn" type="button">Go</button>
 
-  <button
-    id="searchToggle"
-    type="button"
-    aria-label="Search"
-    aria-expanded="false"
-  >
-    🔍
-  </button>
-  
-  <!-- 🔍 Search (TOP BAR) -->
+  <button id="searchToggle" type="button" aria-label="Search" aria-expanded="false">🔍</button>
+
+  <!-- Search (TOP BAR) -->
   <div id="searchTopRow">
     <div class="ss-searchTop">
       <span class="ss-searchIcon" aria-hidden="true">🔍</span>
-      <input
-        id="searchTopInput"
-        type="search"
-        placeholder="Search a venue…"
-        autocomplete="off"
-      />
-      <button
-        id="searchTopClear"
-        type="button"
-        aria-label="Clear search"
-      >×</button>
+      <input id="searchTopInput" type="search" placeholder="Search a venue…" autocomplete="off" />
+      <button id="searchTopClear" type="button" aria-label="Clear search">×</button>
     </div>
   </div>
-
 </div>
 
 <!-- Fullscreen Map -->
@@ -951,39 +794,37 @@ body.ss-embed #filters {
 <!-- Sliding Bottom Results Panel -->
 <div id="bottom-panel">
 
-  <!-- ✅ FIXED HEADER (does not scroll) -->
   <div id="panel-header">
-
-    <!-- Panel toggle handle -->
     <button id="panel-toggle" type="button" aria-expanded="false">
       <span class="handle" aria-hidden="true"></span>
       <span class="label">Show</span>
     </button>
 
-    <!-- ✅ Filters + count in one row -->
     <div id="panel-meta-row">
       <div id="active-filters" class="active-filters"></div>
-      <div id="results-count" class="results-count"></div>
-    </div>
 
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button id="sortBtn" type="button">A–Z</button>
+        <div id="results-count" class="results-count"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- ✅ SCROLL BODY (only results scroll) -->
   <div id="panel-body">
     <div id="results"></div>
   </div>
 
 </div>
 
-  <!-- Leaflet JS (latest CDN) -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin="anonymous"
-  ></script>
+<!-- Leaflet JS -->
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin="anonymous"
+></script>
 
-  <script>
-    /* =========================
+<script>
+/* =========================
        A) DATA
        ========================= */
     const locations = [
@@ -1080,9 +921,9 @@ body.ss-embed #filters {
 
     ];
 
-// =========================
-// Embed mode flag (?embed=1)
-// =========================
+/* =========================
+   B) EMBED MODE FLAG (?embed=1)
+   ========================= */
 window.SipSober = window.SipSober || {};
 
 (function () {
@@ -1090,194 +931,17 @@ window.SipSober = window.SipSober || {};
   const isEmbed = params.get("embed") === "1";
 
   window.SipSober.isEmbed = isEmbed;
-
-  if (isEmbed) {
-    document.body.classList.add("ss-embed");
-  }
+  if (isEmbed) document.body.classList.add("ss-embed");
 })();
-    
-// ======================================
-// Near Me safety: ensure map is ready
-// ======================================
-let _mapReady = false;
-let _pendingNearMe = null;
-    
-// ================================
-// Near Me (Swift → JS)
-// ================================
-let _nearMeActive = false;
-let _nearMeCenter = null;
-let _nearMeRadiusMiles = 2;
 
-// snapshot of the "normal" dataset so Clear can restore
-let _baseLocationsSnapshot = null;
-
-// Haversine distance (meters)
-function distanceMeters(lat1, lon1, lat2, lon2) {
-  const R = 6371000;
-  const toRad = (x) => (x * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) ** 2;
-
-  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-// Core: re-render using current filters/search, then optionally apply Near Me
-function applyFiltersWithNearMe() {
-  closeAllMenus();
-
-  const selectedBrands = getSelectedValues("brand");
-  const selectedNeighborhoods = getSelectedValues("n");
-
-  const q = (document.getElementById("searchTopInput")?.value || "").trim();
-  const hasSearch = q.length > 0;
-
-  // 1) Apply your existing filters/search
-  let filtered = locations.filter((loc) => {
-    const brandOK = selectedBrands.length
-      ? selectedBrands.some(
-          (b) => loc.brand && loc.brand.toLowerCase().includes(b.toLowerCase())
-        )
-      : true;
-
-    const hoodOK = selectedNeighborhoods.length
-      ? selectedNeighborhoods.includes(loc.neighborhood)
-      : true;
-
-    const searchOK = matchesSearch(loc, q);
-
-    return brandOK && hoodOK && searchOK;
-  });
-
-    // ✅ Default sort: A–Z by venue name (when Near Me is OFF)
-  if (!(_nearMeActive && _nearMeCenter)) {
-    filtered.sort((a, b) =>
-      (a.name || "").localeCompare((b.name || ""), undefined, { sensitivity: "base" })
-    );
-  }
-
-  // 2) If Near Me is active, apply distance filter + sort
-  if (_nearMeActive && _nearMeCenter) {
-    const radiusMeters = (_nearMeRadiusMiles || 2) * 1609.34;
-
-    filtered = filtered
-      .map((v) => ({
-        ...v,
-        _dist: distanceMeters(_nearMeCenter.lat, _nearMeCenter.lng, v.lat, v.lng),
-      }))
-      .filter((v) => Number.isFinite(v._dist) && v._dist <= radiusMeters)
-      .sort((a, b) => a._dist - b._dist);
-  }
-
-  // 3) Render
-  renderList(filtered);
-  const { count, bounds } = renderMarkers(filtered);
-  updateActiveFilters(selectedBrands, selectedNeighborhoods);
-
-  // 4) Zoom behavior
-  const panel = document.getElementById("bottom-panel");
-  const panelH = panel ? panel.getBoundingClientRect().height : 0;
-
-  // If Near Me is active, fit to results + user location (best UX)
-  if (_nearMeActive && _nearMeCenter) {
-    if (filtered.length) {
-      const b = L.latLngBounds(filtered.map((v) => [v.lat, v.lng]));
-      b.extend([_nearMeCenter.lat, _nearMeCenter.lng]);
-      map.fitBounds(b, {
-        paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
-        paddingBottomRight: [16, panelH + 16],
-        maxZoom: 16,
-      });
-    } else {
-      map.setView([_nearMeCenter.lat, _nearMeCenter.lng], 15, { animate: true });
-    }
-  } else if (count > 0 && bounds && !hasSearch) {
-    map.fitBounds(bounds, {
-      paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
-      paddingBottomRight: [16, panelH + 16],
-      maxZoom: 16,
-    });
-  }
-
-  window.filteredBounds = bounds;
-  setTimeout(() => map.invalidateSize(true), 120);
-}
-
-let _lastSetUserLocationAt = 0;
-
-// Swift calls this: window.SipSober.setUserLocation(lat, lng, miles)
-window.SipSober.setUserLocation = function (lat, lng, radiusMiles) {
-  _lastSetUserLocationAt = Date.now();
-
-  if (!_mapReady) {
-    _pendingNearMe = { lat, lng, radiusMiles };
-    return;
-  }
-
-  console.log("📍 setUserLocation()", {
-    lat, lng, radiusMiles,
-    before: { _nearMeActive, _nearMeCenter, _nearMeRadiusMiles }
-  });
-
-  _nearMeActive = true;
-  _nearMeCenter = { lat: Number(lat), lng: Number(lng) };
-  _nearMeRadiusMiles = Number(radiusMiles || 2);
-
-  if (!_baseLocationsSnapshot) _baseLocationsSnapshot = locations.slice();
-
-  applyFiltersWithNearMe();
-
-  const panel = document.getElementById("bottom-panel");
-  if (panel) panel.classList.add("expanded");
-};
-
-// Swift calls this: window.SipSober.clearUserLocation()
-window.SipSober.clearUserLocation = function () {
-  const dt = Date.now() - _lastSetUserLocationAt;
-
-  console.log("🧹 clearUserLocation()", {
-    dtMsSinceSet: dt,
-    before: { _nearMeActive, _nearMeCenter, _nearMeRadiusMiles }
-  });
-
-  // ✅ Flicker killer:
-  // If a "clear" arrives immediately after a "set", ignore it.
-  // (This protects you from SwiftUI updateUIView briefly sending clear.)
-  if (dt >= 0 && dt < 1200) {
-    console.log("🧯 clearUserLocation ignored (debounced)");
-    return;
-  }
-
-  if (!_mapReady) {
-    _pendingNearMe = null;
-    return;
-  }
-  
-  _nearMeActive = false;
-  _nearMeCenter = null;
-
-  applyFiltersWithNearMe();
-};
-
-    /* =========================
-   B) MAP INIT
+/* =========================
+   C) MAP INIT
    ========================= */
 const map = L.map("map", {
   zoomControl: true,
   scrollWheelZoom: true,
 }).setView([40.755, -73.985], 12.1);
 
-window.SipSober = window.SipSober || {};
-window.SipSober.closePopup = function () {
-  try { map.closePopup(); } catch (e) {}
-};
-    
 L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
   {
@@ -1287,109 +951,21 @@ L.tileLayer(
   }
 ).addTo(map);
 
-const manhattanLockBounds = L.latLngBounds(
-  [40.5, -74.3],
-  [40.98, -73.6]
-);
+const manhattanLockBounds = L.latLngBounds([40.5, -74.3], [40.98, -73.6]);
 
-// ✅ INITIAL view bounds (tighter, for startup framing)
 const manhattanInitialBounds = L.latLngBounds(
   [40.70, -74.05],
   [40.88, -73.90]
 );
 
-// ✅ HELPER GOES HERE
-function fitInitialView() {
-  const panel = document.getElementById("bottom-panel");
-  const panelH = panel ? panel.getBoundingClientRect().height : 0;
-
-  map.fitBounds(manhattanInitialBounds, {
-    paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],            
-    paddingBottomRight: [16, panelH + 16] // space above bottom panel
-  });
-}
-
-function resetToDefaultMapState() {
-  // 1) Turn off Near Me
-  _nearMeActive = false;
-  _nearMeCenter = null;
-
-  // 1.5) Close any open UI (dropdowns + search)
-  closeAllMenus();
-  document.getElementById("searchTopRow")?.classList.remove("is-open");
-  document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
-
-  // 2) Clear filters
-  document.querySelectorAll('input[id^="brand-"], input[id^="n-"]').forEach(cb => {
-    cb.checked = false;
-  });
-
-  // 3) Clear search
-  const searchInput = document.getElementById("searchTopInput");
-  if (searchInput) searchInput.value = "";
-
-  // 4) Render full dataset
-  renderList(locations);
-  renderMarkers(locations);
-
-  // 5) Reset UI chips
-  updateActiveFilters([], []);
-
-  // 6) Reset map view
-  setTimeout(() => {
-    map.invalidateSize(true);
-    fitInitialView();
-  }, 80);
-}
-
-  // ✅ Used when jumping to a single venue from Discover
-function resetForFocusOnly() {
-  // Turn off Near Me
-  _nearMeActive = false;
-  _nearMeCenter = null;
-
-  // Close menus / search UI
-  closeAllMenus();
-  document.getElementById("searchTopRow")?.classList.remove("is-open");
-  document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
-
-  // Clear filters
-  document
-    .querySelectorAll('input[id^="brand-"], input[id^="n-"]')
-    .forEach(cb => cb.checked = false);
-
-  // Clear search
-  const searchInput = document.getElementById("searchTopInput");
-  if (searchInput) searchInput.value = "";
-
-  // IMPORTANT: re-render full dataset so marker exists
-  renderList(locations);
-  renderMarkers(locations);
-
-  updateActiveFilters([], []);
-}
-
-// Lock + limits (DO NOT fit here)
 map.setMaxBounds(manhattanLockBounds);
 map.options.maxBoundsViscosity = 0.1;
 map.setMinZoom(11.5);
 
-markersLayer = L.layerGroup().addTo(map);
+let markersLayer = L.layerGroup().addTo(map);
 
-// ✅ Near Me safety: mark map ready + flush any queued Near Me call
-_mapReady = true;
-
-if (_pendingNearMe) {
-  window.SipSober.setUserLocation(
-    _pendingNearMe.lat,
-    _pendingNearMe.lng,
-    _pendingNearMe.radiusMiles
-  );
-    _pendingNearMe = null;
-}
-
-  /* =========================
-   C) ICONS (default + active)
+/* =========================
+   D) ICONS
    ========================= */
 function makePinIconSVG(hex = "#1F2430", size = [28, 38], opts = {}) {
   const [w, h] = size;
@@ -1409,19 +985,15 @@ function makePinIconSVG(hex = "#1F2430", size = [28, 38], opts = {}) {
                fill="none" stroke="${ringColor}" stroke-width="${ringW}" />`
           : ""
       }
-
       <path d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"
             fill="${hex}" stroke="${stroke}" stroke-width="${strokeW}"/>
-
       <circle cx="14" cy="13" r="4.6" fill="#F5F6FA"/>
     </svg>`;
 }
 
 function makeIcon(size = [28, 38], color = "#1F2430", isActive = false) {
   return L.icon({
-    iconUrl:
-      "data:image/svg+xml;utf8," +
-      encodeURIComponent(makePinIconSVG(color, size, { ring: isActive })),
+    iconUrl: "data:image/svg+xml;utf8," + encodeURIComponent(makePinIconSVG(color, size, { ring: isActive })),
     iconSize: size,
     iconAnchor: [Math.floor(size[0] / 2), size[1]],
     popupAnchor: [0, -Math.floor(size[1] * 0.84)],
@@ -1430,7 +1002,6 @@ function makeIcon(size = [28, 38], color = "#1F2430", isActive = false) {
 
 let defaultIcon = makeIcon([28, 38], "#1F2430", false);
 let activeIcon  = makeIcon([28, 38], "#1F2430", true);
-
 let currentIcon = defaultIcon;
 
 L.Marker.prototype.options.icon = currentIcon;
@@ -1445,9 +1016,7 @@ L.marker = function (latlng, options) {
 let _activeMarker = null;
 
 function setActiveMarker(marker) {
-  if (_activeMarker && _activeMarker !== marker) {
-    _activeMarker.setIcon(defaultIcon);
-  }
+  if (_activeMarker && _activeMarker !== marker) _activeMarker.setIcon(defaultIcon);
   _activeMarker = marker || null;
   if (_activeMarker) _activeMarker.setIcon(activeIcon);
 }
@@ -1483,55 +1052,82 @@ map.on("popupclose", () => {
   _lastFocusedVenueId = null;
 });
 
+/* =========================
+   E) UI HELPERS
+   ========================= */
+function closeAllMenus() {
+  document.querySelectorAll(".dropdown").forEach((dd) => dd.classList.remove("open"));
+  document.querySelectorAll(".dropdown > button").forEach((btn) => btn.setAttribute("aria-expanded", "false"));
+}
 
-    /* =========================
-       D) UI HELPERS
-       ========================= */
-    function closeAllMenus() {
-      document
-        .querySelectorAll(".dropdown")
-        .forEach((dd) => dd.classList.remove("open"));
-      document
-        .querySelectorAll(".dropdown > button")
-        .forEach((btn) => btn.setAttribute("aria-expanded", "false"));
-    }
+function normalizeUrl(u) {
+  u = String(u || "").trim();
+  if (!u || u.toLowerCase() === "n/a") return "";
+  if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+  return u;
+}
 
-    function openMarkerAt(lat, lng) {
-      let found = null;
-      markersLayer.eachLayer((layer) => {
-        const p = layer.getLatLng();
-        if (Math.abs(p.lat - lat) < 1e-6 && Math.abs(p.lng - lng) < 1e-6) {
-          found = layer;
-        }
-      });
-      if (found) {
-        found.openPopup();
-      }
-    }
+function getSelectedValues(prefix) {
+  return Array.from(document.querySelectorAll(`input[id^="${prefix}-"]:checked`)).map((cb) => cb.value);
+}
 
-    /* =========================
-       E) RENDERERS
-       ========================= */
-    var markersById = {};
+function matchesSearch(loc, q) {
+  if (!q) return true;
+  const hay = [loc.name, loc.address, loc.brand, loc.neighborhood].filter(Boolean).join(" ").toLowerCase();
+  return hay.includes(q.toLowerCase());
+}
 
-    function normalizeUrl(u) {
-      u = String(u || "").trim();
-      if (!u || u.toLowerCase() === "n/a") return "";
-      if (!/^https?:\/\//i.test(u)) u = "https://" + u;
-      return u;
-    }
+/* =========================
+   F) ACTIVE FILTER CHIPS
+   ========================= */
+function updateActiveFilters(selectedBrands, selectedNeighborhoods) {
+  const container = document.getElementById("active-filters");
+  if (!container) return;
 
-   // =====================================
-// 3A) Web → Swift: send venues for native Search
-// =====================================
-window.SipSober = window.SipSober || {};
+  container.innerHTML = "";
+
+  const hasAny = selectedBrands.length || selectedNeighborhoods.length;
+  container.style.display = hasAny ? "flex" : "none";
+  if (!hasAny) return;
+
+  function makePill(type, value) {
+    const pill = document.createElement("span");
+    pill.className = "filter-pill";
+
+    const x = document.createElement("span");
+    x.className = "filter-pill-x";
+    x.textContent = "×";
+
+    const label = document.createElement("span");
+    label.textContent = value;
+
+    x.addEventListener("click", () => clearSingleFilter(type, value));
+
+    pill.appendChild(x);
+    pill.appendChild(label);
+    container.appendChild(pill);
+  }
+
+  selectedNeighborhoods.forEach((n) => makePill("neighborhood", n));
+  selectedBrands.forEach((b) => makePill("brand", b));
+}
+
+function clearSingleFilter(type, value) {
+  if (type === "brand") {
+    document.querySelectorAll('input[id^="brand-"]').forEach((cb) => { if (cb.value === value) cb.checked = false; });
+  } else if (type === "neighborhood") {
+    document.querySelectorAll('input[id^="n-"]').forEach((cb) => { if (cb.value === value) cb.checked = false; });
+  }
+  applyFiltersUnified();
+}
+
+/* =========================
+   G) WEB → SWIFT: send venues for native Search
+   ========================= */
 let _didSendVenuesToNative = false;
 
 function _brandsArrayFromString(s) {
-  return String(s || "")
-    .split(",")
-    .map(x => x.trim())
-    .filter(Boolean);
+  return String(s || "").split(",").map(x => x.trim()).filter(Boolean);
 }
 
 function _venueForNative(loc) {
@@ -1550,145 +1146,117 @@ function _venueForNative(loc) {
 
 window.SipSober.sendVenuesToNative = function (arg) {
   try {
-    // ✅ Allow both usages:
-    // 1) sendVenuesToNative(true)            -> force full send
-    // 2) sendVenuesToNative(filteredData)    -> send exactly what's rendered
     const force = (typeof arg === "boolean") ? arg : false;
     const source = Array.isArray(arg) ? arg : (locations || []);
 
     if (_didSendVenuesToNative && !force && !Array.isArray(arg)) return;
 
-    const venues = source
-      .map(_venueForNative)
-      .filter(v => v.id && v.name);
+    const venues = source.map(_venueForNative).filter(v => v.id && v.name);
 
     if (window.webkit?.messageHandlers?.sipSober) {
-      window.webkit.messageHandlers.sipSober.postMessage({
-        type: "venues",
-        venues
-      });
+      window.webkit.messageHandlers.sipSober.postMessage({ type: "venues", venues });
       _didSendVenuesToNative = true;
       console.log("✅ sent venues to native:", venues.length);
-    } else {
-      console.log("sipSober handler not available");
     }
   } catch (e) {
     console.log("sendVenuesToNative error", e);
   }
 };
 
-// Send once after load (safety)
 window.addEventListener("load", () => {
   setTimeout(() => window.SipSober.sendVenuesToNative(), 400);
 });
 
-    function renderMarkers(data) {
+/* =========================
+   H) RENDERERS
+   ========================= */
+let markersById = {};
+
+function renderMarkers(data) {
   markersLayer.clearLayers();
   clearActiveMarker();
   markersById = {};
+
   const bounds = L.latLngBounds([]);
 
   data.forEach((loc) => {
-  const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
-  m.on("click", () => setActiveMarker(m));
+    const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
+    m.on("click", () => setActiveMarker(m));
 
+    if (loc.id) markersById[String(loc.id)] = m;
 
-  if (loc.id) markersById[String(loc.id)] = m;
+    const imgHtml = loc.imageUrl
+      ? `
+        <div class="ss-popup-img-wrap">
+          <img class="ss-popup-img" src="${loc.imageUrl}" alt="${loc.name || ""}" loading="lazy"
+            onerror="this.closest('.ss-popup-img-wrap')?.remove()">
+        </div>
+      `
+      : "";
 
-  const imgHtml = loc.imageUrl
-    ? `
-      <div class="ss-popup-img-wrap">
-        <img class="ss-popup-img" src="${loc.imageUrl}" alt="${loc.name || ""}" loading="lazy"
-          onerror="this.closest('.ss-popup-img-wrap')?.remove()">
-      </div>
-    `
-    : "";
+    const web = normalizeUrl(loc.website);
 
-  m.bindPopup(
-    `
-    <div class="ss-popup ss-popup--simple">
-      <div class="ss-popup-top">
-        ${imgHtml}
-
-        <div class="ss-popup-text">
-          <div class="ss-popup-title">${loc.name || ""}</div>
-
-          ${loc.neighborhood ? `<div class="ss-popup-tags">${loc.neighborhood}</div>` : ""}
-
-          <div class="ss-popup-meta">${loc.address || ""}</div>
-          <div class="ss-popup-actions">
-            ${
-              normalizeUrl(loc.website)
-                ? `
-                  <a
-                    class="ss-pill"
-                    href="${normalizeUrl(loc.website)}"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    Website
-                  </a>
-                `
-              : ""
-            }
-
-            <a
-              class="ss-pill secondary"
-              href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                (loc.name || "") + " " + (loc.address || "")
-              )}"
-              target="_blank"
-              rel="noopener"
-            >
-              Directions
-            </a>
+    m.bindPopup(
+      `
+      <div class="ss-popup ss-popup--simple">
+        <div class="ss-popup-top">
+          ${imgHtml}
+          <div class="ss-popup-text">
+            <div class="ss-popup-title">${loc.name || ""}</div>
+            ${loc.neighborhood ? `<div class="ss-popup-tags">${loc.neighborhood}</div>` : ""}
+            <div class="ss-popup-meta">${loc.address || ""}</div>
+            <div class="ss-popup-actions">
+              ${
+                web
+                  ? `<a class="ss-pill" href="${web}" target="_blank" rel="noopener">Website</a>`
+                  : ""
+              }
+              <a
+                class="ss-pill secondary"
+                href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}"
+                target="_blank"
+                rel="noopener"
+              >Directions</a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    `,
-    {
-  minWidth: 220,
-  maxWidth: 280,
-  closeButton: true,
+      `,
+      {
+        minWidth: 220,
+        maxWidth: 280,
+        closeButton: true,
+        autoPan: true,
+        keepInView: true,
+        autoPanPaddingTopLeft: [18, 160],
+        autoPanPaddingBottomRight: [18, 260],
+        offset: [0, -18]
+      }
+    );
 
-  autoPan: true,
-  keepInView: true,
-
-  // Avoid your top controls + bottom sheet
-  autoPanPaddingTopLeft: [18, 160],
-  autoPanPaddingBottomRight: [18, 260],
-
-  // Lift popup slightly
-  offset: [0, -18]
-}
-  );
-
-  bounds.extend([loc.lat, loc.lng]);
-});
+    bounds.extend([loc.lat, loc.lng]);
+  });
 
   return { count: data.length, bounds: data.length ? bounds : null };
 }
 
-    function renderList(data) {
+function renderList(data) {
   const results = document.getElementById("results");
   const resultsCount = document.getElementById("results-count");
-
   if (!results) return;
 
   results.innerHTML = "";
 
-  // ✅ update results count
   if (resultsCount) {
     resultsCount.textContent =
-      data.length === 0
-        ? "No places found"
-        : `${data.length} place${data.length === 1 ? "" : "s"}`;
+      data.length === 0 ? "No places found" : `${data.length} place${data.length === 1 ? "" : "s"}`;
   }
 
   data.forEach((loc) => {
     const card = document.createElement("div");
     card.className = "card";
+
+    const web = normalizeUrl(loc.website);
 
     card.innerHTML = `
       <div class="card-top">
@@ -1697,11 +1265,7 @@ window.addEventListener("load", () => {
       </div>
 
       <div class="meta">${loc.address || ""}</div>
-      ${
-        loc.website
-          ? `<a href="${loc.website}" target="_blank" rel="noopener">Website</a>`
-          : ``
-      }
+      ${ web ? `<a href="${web}" target="_blank" rel="noopener">Website</a>` : `` }
       <div class="meta">Brand: ${loc.brand || ""}</div>
       <div class="meta">Neighborhood: ${loc.neighborhood || ""}</div>
     `;
@@ -1709,106 +1273,291 @@ window.addEventListener("load", () => {
     results.appendChild(card);
   });
 
-  // ✅ Web → Swift: keep native Search list in sync
+  // Web → Swift: keep native Search list in sync
   window.SipSober?.sendVenuesToNative?.(data);
 }
 
-    /* =========================
-       ACTIVE FILTER CHIPS
-       ========================= */
-    function updateActiveFilters(selectedBrands, selectedNeighborhoods) {
-      const container = document.getElementById("active-filters");
-      if (!container) return;
-
-      container.innerHTML = "";
-
-      const hasAny =
-        selectedBrands.length || selectedNeighborhoods.length;
-      container.style.display = hasAny ? "flex" : "none";
-      if (!hasAny) return;
-
-      function makePill(type, value) {
-        const pill = document.createElement("span");
-        pill.className = "filter-pill";
-
-        const x = document.createElement("span");
-        x.className = "filter-pill-x";
-        x.textContent = "×";
-
-        const label = document.createElement("span");
-        label.textContent = value;
-
-        x.addEventListener("click", () => {
-          clearSingleFilter(type, value);
-        });
-
-        pill.appendChild(x);
-        pill.appendChild(label);
-        container.appendChild(pill);
-      }
-
-      selectedNeighborhoods.forEach((n) => makePill("neighborhood", n));
-      selectedBrands.forEach((b) => makePill("brand", b));
-    }
-
-    function clearSingleFilter(type, value) {
-      if (type === "brand") {
-        document
-          .querySelectorAll('input[id^="brand-"]')
-          .forEach((cb) => {
-            if (cb.value === value) cb.checked = false;
-          });
-      } else if (type === "neighborhood") {
-        document.querySelectorAll('input[id^="n-"]').forEach((cb) => {
-          if (cb.value === value) cb.checked = false;
-        });
-      }
-        applyFiltersWithNearMe();
-
-    }
-
-    /* =========================
-       F) FILTER LOGIC
-       ========================= */
-    function getSelectedValues(prefix) {
-      return Array.from(
-        document.querySelectorAll(`input[id^="${prefix}-"]:checked`)
-      ).map((cb) => cb.value);
-    }
-
-    function matchesSearch(loc, q) {
-      if (!q) return true;
-        const hay = [loc.name, loc.address, loc.brand, loc.neighborhood]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-        return hay.includes(q.toLowerCase());
-      }
-    function applyFilters() {
-  applyFiltersWithNearMe();
-}
-
-    /* =========================
-   G) EVENT WIRING
+/* =========================
+   I) FILTER + APPLY (NO LOCATION MODE)
    ========================= */
 
-// ESC closes dropdowns
+/**
+ * ✅ Unified apply function.
+ * This is your single source of truth for filtering + search + rendering.
+ * No user location logic is allowed in here.
+ */
+function applyFiltersUnified() {
+  closeAllMenus();
+
+  const selectedBrands = getSelectedValues("brand");
+  const selectedNeighborhoods = getSelectedValues("n");
+  const q = (document.getElementById("searchTopInput")?.value || "").trim();
+
+  let filtered = locations.filter((loc) => {
+    const brandOK = selectedBrands.length
+      ? selectedBrands.some((b) => (loc.brand || "").toLowerCase().includes(b.toLowerCase()))
+      : true;
+
+    const hoodOK = selectedNeighborhoods.length
+      ? selectedNeighborhoods.includes(loc.neighborhood)
+      : true;
+
+    const searchOK = matchesSearch(loc, q);
+    return brandOK && hoodOK && searchOK;
+  });
+
+  // Default sort: A–Z
+  filtered.sort((a, b) => (a.name || "").localeCompare((b.name || ""), undefined, { sensitivity: "base" }));
+
+  renderList(filtered);
+  const { count, bounds } = renderMarkers(filtered);
+  updateActiveFilters(selectedBrands, selectedNeighborhoods);
+
+  const panel = document.getElementById("bottom-panel");
+  const panelH = panel ? panel.getBoundingClientRect().height : 0;
+
+  const hasSearch = q.length > 0;
+  if (count > 0 && bounds && !hasSearch) {
+    map.fitBounds(bounds, {
+      paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
+      paddingBottomRight: [16, panelH + 16],
+      maxZoom: 16,
+    });
+  }
+
+  window.filteredBounds = bounds;
+  setTimeout(() => map.invalidateSize(true), 120);
+}
+
+// Backwards compatibility: if any old call still uses applyFiltersWithUserLocation, it maps here.
+function applyFiltersWithUserLocation() { applyFiltersUnified(); }
+function applyFilters() { applyFiltersUnified(); }
+
+/* =========================
+   J) APPLE MAPS-STYLE LOCATION BRIDGE
+   ========================= */
+
+/**
+ * ✅ Location is not a mode.
+ * It ONLY centers and shows a user dot.
+ */
+let _mapReady = false;
+let _pendingUserLocation = null;
+
+// Leaflet layers for user location display
+let _userDot = null;
+let _userHalo = null;
+
+function _showUserLocation(lat, lng) {
+  const ll = L.latLng(lat, lng);
+
+  // Remove existing layers
+  if (_userDot) { try { map.removeLayer(_userDot); } catch(e) {} _userDot = null; }
+  if (_userHalo) { try { map.removeLayer(_userHalo); } catch(e) {} _userHalo = null; }
+
+  // Subtle halo + dot (Apple-ish)
+  _userHalo = L.circle(ll, {
+    radius: 120,              // meters; visual only
+    stroke: false,
+    fill: true,
+    fillOpacity: 0.12
+  }).addTo(map);
+
+  _userDot = L.circleMarker(ll, {
+    radius: 6,
+    stroke: true,
+    weight: 2,
+    opacity: 1,
+    fill: true,
+    fillOpacity: 1
+  }).addTo(map);
+}
+
+function _clearUserLocationLayers() {
+  if (_userDot) { try { map.removeLayer(_userDot); } catch(e) {} _userDot = null; }
+  if (_userHalo) { try { map.removeLayer(_userHalo); } catch(e) {} _userHalo = null; }
+}
+
+window.SipSober.setUserLocation = function(lat, lng) {
+  const LAT = Number(lat);
+  const LNG = Number(lng);
+  if (!Number.isFinite(LAT) || !Number.isFinite(LNG)) return;
+
+  if (!_mapReady) {
+    _pendingUserLocation = { lat: LAT, lng: LNG };
+    return;
+  }
+
+  _showUserLocation(LAT, LNG);
+
+  // Center map (Apple Maps feel)
+  map.invalidateSize(true);
+  map.setView([LAT, LNG], Math.max(map.getZoom(), 15), { animate: true });
+
+  // Optional: expand panel so user sees list easily
+  const panel = document.getElementById("bottom-panel");
+  if (panel) panel.classList.add("expanded");
+};
+
+window.SipSober.clearUserLocation = function() {
+  _pendingUserLocation = null;
+  if (!_mapReady) return;
+  _clearUserLocationLayers();
+};
+
+/**
+ * ✅ Swift Reset button calls this.
+ * Clears filters/search/chips + restores initial Manhattan framing.
+ */
+window.SipSober.resetMapToDefault = function() {
+  resetMapToDefault();
+};
+
+// Global aliases for your Swift bridging (MapView checks these first)
+window.setUserLocation = function(lat, lng) { window.SipSober.setUserLocation(lat, lng); };
+window.clearUserLocation = function() { window.SipSober.clearUserLocation(); };
+window.resetMapToDefault = function() { window.SipSober.resetMapToDefault(); };
+
+/* =========================
+   K) RESET HELPERS
+   ========================= */
+function fitInitialView() {
+  const panel = document.getElementById("bottom-panel");
+  const panelH = panel ? panel.getBoundingClientRect().height : 0;
+
+  map.fitBounds(manhattanInitialBounds, {
+    paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
+    paddingBottomRight: [16, panelH + 16]
+  });
+}
+
+function resetMapToDefault() {
+  // Close menus + search UI
+  closeAllMenus();
+  document.getElementById("searchTopRow")?.classList.remove("is-open");
+  document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
+
+  // Clear filters
+  document.querySelectorAll('input[id^="brand-"], input[id^="n-"]').forEach(cb => { cb.checked = false; });
+
+  // Clear search
+  const searchInput = document.getElementById("searchTopInput");
+  if (searchInput) searchInput.value = "";
+
+  // Clear user dot (Reset should clear location visuals)
+  window.SipSober.clearUserLocation();
+
+  // Render full dataset
+  renderList(locations);
+  renderMarkers(locations);
+
+  // Reset chips
+  updateActiveFilters([], []);
+
+  // Reset map framing
+  setTimeout(() => {
+    map.invalidateSize(true);
+    fitInitialView();
+  }, 80);
+}
+
+/* =========================
+   L) FAVORITES + FOCUS + FILTER SYNC
+   ========================= */
+
+// Swift → JS sync (keep stars filled)
+window.SipSober.setFavorites = function (payload) {
+  const ids = new Set((payload && payload.ids) || []);
+  document.querySelectorAll(".fav-btn[data-id]").forEach(btn => {
+    const id = btn.dataset.id;
+    btn.classList.toggle("is-fav", ids.has(id));
+  });
+};
+
+// Swift → JS: set filters
+window.SipSober.setFilters = function (payload) {
+  const brands = Array.isArray(payload?.brands) ? payload.brands : [];
+  const neighborhoods = Array.isArray(payload?.neighborhoods) ? payload.neighborhoods : [];
+
+  document.querySelectorAll('input[id^="brand-"]').forEach(cb => { cb.checked = brands.includes(cb.value); });
+  document.querySelectorAll('input[id^="n-"]').forEach(cb => { cb.checked = neighborhoods.includes(cb.value); });
+
+  applyFiltersUnified();
+};
+
+// Swift → JS: focus a venue (zoom + open popup)
+let _lastFocusedVenueId = null;
+
+window.SipSober.focusVenue = function (payload) {
+  const venueId = (typeof payload === "string" ? payload : payload?.venueId) || "";
+  const id = String(venueId).trim();
+  if (!id) return;
+
+  if (_lastFocusedVenueId === id) return;
+  _lastFocusedVenueId = id;
+
+  // Make sure markers exist for everything (so focus always works)
+  // If your list is filtered, this ensures the target exists.
+  renderMarkers(locations);
+  renderList(locations);
+  updateActiveFilters(getSelectedValues("brand"), getSelectedValues("n"));
+
+  let tries = 0;
+  (function attempt() {
+    const marker = markersById?.[id];
+    if (!marker) {
+      tries += 1;
+      if (tries <= 25) return setTimeout(attempt, 120);
+      console.warn("❌ focusVenue: marker not found for id:", id);
+      _lastFocusedVenueId = null;
+      return;
+    }
+
+    const ll = marker.getLatLng();
+    map.invalidateSize(true);
+    map.setView([ll.lat, ll.lng], 16, { animate: true });
+
+    setTimeout(() => {
+      setActiveMarker(marker);
+      marker.openPopup();
+
+      const closer = document.querySelector(".leaflet-popup-close-button");
+      if (closer) {
+        closer.addEventListener("click", () => { _lastFocusedVenueId = null; }, { once: true });
+      }
+    }, 200);
+
+    const panel = document.getElementById("bottom-panel");
+    if (panel) panel.classList.add("expanded");
+  })();
+};
+
+window.SipSober.focusVenueById = function (id) {
+  window.SipSober.focusVenue(id);
+};
+
+window.SipSober.closePopup = function () {
+  try { map.closePopup(); } catch (e) {}
+};
+
+/* =========================
+   M) EVENT WIRING
+   ========================= */
+
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeAllMenus();
 });
 
-// ✅ ONE unified click handler (favorites + venue focus + dropdown open/close + search row close)
+// Unified click handler (favorites + venue focus + dropdown + search close)
 document.addEventListener("click", (e) => {
 
-  // If a link was clicked, allow navigation but still close menus/search
-if (e.target.closest("a")) {
-  closeAllMenus();
-  document.getElementById("searchTopRow")?.classList.remove("is-open");
-  document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
-  return;
-}
+  if (e.target.closest("a")) {
+    closeAllMenus();
+    document.getElementById("searchTopRow")?.classList.remove("is-open");
+    document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
+    return;
+  }
 
-  // 1) ⭐ Favorite button
   const favBtn = e.target.closest(".fav-btn");
   if (favBtn) {
     e.preventDefault();
@@ -1826,16 +1575,15 @@ if (e.target.closest("a")) {
         venueId: String(v.id),
         name: v.name || "",
         address: v.address || "",
-        website: v.website || "",
+        website: normalizeUrl(v.website || ""),
         neighborhood: v.neighborhood || "",
         brands: v.brand || "",
       },
     });
 
-    return; // stop here so name-click logic doesn't run
+    return;
   }
 
-  // 2) 📍 Venue name → focus + zoom
   const nameEl = e.target.closest(".card-name[data-focus-id]");
   if (nameEl) {
     e.preventDefault();
@@ -1844,7 +1592,6 @@ if (e.target.closest("a")) {
     return;
   }
 
-  // 3) Dropdown button toggle
   const btn = e.target.closest(".dropdown > button");
   if (btn) {
     const parent = btn.parentElement;
@@ -1858,14 +1605,10 @@ if (e.target.closest("a")) {
     return;
   }
 
-  // 4) Click outside → close dropdowns
   const clickedInsideDropdown = !!e.target.closest(".dropdown");
   if (!clickedInsideDropdown) closeAllMenus();
 
-  // 5) Click outside search → close search row if open
-  const clickedInsideSearch =
-    !!e.target.closest("#searchTopRow") || !!e.target.closest("#searchToggle");
-
+  const clickedInsideSearch = !!e.target.closest("#searchTopRow") || !!e.target.closest("#searchToggle");
   if (!clickedInsideSearch) {
     const row = document.getElementById("searchTopRow");
     if (row?.classList.contains("is-open")) {
@@ -1876,7 +1619,7 @@ if (e.target.closest("a")) {
   }
 });
 
-// Keep aria wiring for menus
+// aria wiring for menus
 document.querySelectorAll(".dropdown > button").forEach((btn) => {
   btn.setAttribute("aria-haspopup", "true");
   const dd = btn.parentElement;
@@ -1888,12 +1631,9 @@ document.querySelectorAll(".dropdown > button").forEach((btn) => {
   }
 });
 
-// Go button applies filters + Near Me logic
-document.getElementById("goBtn").addEventListener("click", applyFiltersWithNearMe);
+document.getElementById("goBtn")?.addEventListener("click", applyFiltersUnified);
 
-// ==============================
-// TOP SEARCH TOGGLE
-// ==============================
+// Search toggle
 (() => {
   const toggleBtn = document.getElementById("searchToggle");
   const row = document.getElementById("searchTopRow");
@@ -1913,8 +1653,6 @@ document.getElementById("goBtn").addEventListener("click", applyFiltersWithNearM
     input?.blur();
   }
 
-  // expose for the unified click handler (optional but clean)
-  window.SipSober = window.SipSober || {};
   window.SipSober._openSearchRow = openRow;
   window.SipSober._closeSearchRow = closeRow;
 
@@ -1925,35 +1663,26 @@ document.getElementById("goBtn").addEventListener("click", applyFiltersWithNearM
   });
 })();
 
-
-    // ==============================
-// TOP SEARCH (after Go button)
-// ==============================
-
+// Search input events
 const searchInput = document.getElementById("searchTopInput");
 const searchClear = document.getElementById("searchTopClear");
 
-// Enter key = apply filters
 searchInput?.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
-    applyFiltersWithNearMe();
+    applyFiltersUnified();
     document.getElementById("searchTopRow")?.classList.remove("is-open");
     document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");
     searchInput.blur();
   }
 });
 
-// Clear (×)
 searchClear?.addEventListener("click", () => {
   if (searchInput) searchInput.value = "";
-  applyFiltersWithNearMe();
+  applyFiltersUnified();
 });
 
-  
-// =========================
 // Bottom panel expand / collapse toggle
-// =========================
 (function () {
   const panel = document.getElementById("bottom-panel");
   const toggle = document.getElementById("panel-toggle");
@@ -1967,14 +1696,12 @@ searchClear?.addEventListener("click", () => {
     if (label) label.textContent = expanded ? "Hide" : "Show";
   }
 
-  // Toggle on tap
   toggle.addEventListener("click", (e) => {
-    e.stopPropagation(); // important: prevents scrollIntoView interference
+    e.stopPropagation();
     panel.classList.toggle("expanded");
     syncLabel();
   });
 
-  // Optional: auto-expand on mobile when results update
   if (window.matchMedia("(max-width: 768px)").matches) {
     panel.classList.add("expanded");
   }
@@ -1982,140 +1709,25 @@ searchClear?.addEventListener("click", () => {
   syncLabel();
 })();
 
-    /* =========================
-       I) INITIALIZE
-       ========================= */
-    renderList(locations);
-    renderMarkers(locations);
-
-    window.SipSober?.sendVenuesToNative?.();
-
-    setTimeout(() => {
-      map.invalidateSize(true);
-    }, 200);
-  
-    /* =========================
-   Bottom Tab Bar Logic
+/* =========================
+   N) INITIALIZE
    ========================= */
-(() => {
-  const nav = document.getElementById('bottom-nav');
-  if (!nav) return;
+renderList(locations);
+renderMarkers(locations);
+window.SipSober?.sendVenuesToNative?.();
 
-  const btns = nav.querySelectorAll('.tab-btn');
-  btns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      btns.forEach(b => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-    });
-  });
-})();
+setTimeout(() => { map.invalidateSize(true); }, 200);
 
-// ================================
-// Swift → JS sync (keep stars filled)
-// ================================
-window.SipSober = window.SipSober || {};
+// Mark map ready + flush any queued Locate call
+_mapReady = true;
+if (_pendingUserLocation) {
+  window.SipSober.setUserLocation(_pendingUserLocation.lat, _pendingUserLocation.lng);
+  _pendingUserLocation = null;
+}
+</script>
 
-window.SipSober.setFavorites = function (payload) {
-  const ids = new Set((payload && payload.ids) || []);
-
-  document.querySelectorAll(".fav-btn[data-id]").forEach(btn => {
-    const id = btn.dataset.id;
-    btn.classList.toggle("is-fav", ids.has(id));
-  });
-};
-
-// ================================
-// Swift → JS: set filters (brands + neighborhoods)
-// ================================
-window.SipSober.setFilters = function (payload) {
-  const brands = Array.isArray(payload?.brands) ? payload.brands : [];
-  const neighborhoods = Array.isArray(payload?.neighborhoods) ? payload.neighborhoods : [];
-
-  // Brand checkboxes
-  document.querySelectorAll('input[id^="brand-"]').forEach(cb => {
-    cb.checked = brands.includes(cb.value);
-  });
-
-  // Neighborhood checkboxes
-  document.querySelectorAll('input[id^="n-"]').forEach(cb => {
-    cb.checked = neighborhoods.includes(cb.value);
-  });
-
-  // Apply using your unified logic (keeps Near Me consistent)
-  applyFiltersWithNearMe();
-};
-
-// ================================
-// Swift → JS: focus a venue (zoom + open popup)
-// ================================
-let _lastFocusedVenueId = null;
-
-window.SipSober.focusVenue = function (payload) {
-  const venueId =
-    (typeof payload === "string" ? payload : payload?.venueId) || "";
-
-  const id = String(venueId).trim();
-  if (!id) return;
-
-  // ✅ PREVENT "CLOSE X" BUG: if we already focused this same venue, ignore repeats
-  if (_lastFocusedVenueId === id) return;
-  _lastFocusedVenueId = id;
-
-  if (!_nearMeActive) {
-  resetForFocusOnly();
-  }
-
-  let tries = 0;
-
-  (function attempt() {
-    const marker = markersById?.[id];
-
-    if (!marker) {
-      tries += 1;
-      if (tries <= 25) {
-        setTimeout(attempt, 120);
-        return;
-      }
-      console.warn("❌ focusVenue: marker not found after retries for id:", id);
-      _lastFocusedVenueId = null; // allow retry later
-      return;
-    }
-
-    const ll = marker.getLatLng();
-    map.invalidateSize(true);
-    map.setView([ll.lat, ll.lng], 16, { animate: true });
-
-    setTimeout(() => {
-      setActiveMarker(marker);
-      marker.openPopup();
-
-      // If Leaflet doesn't fire popupclose for some reason, also unlock when X is tapped
-      const closer = document.querySelector(".leaflet-popup-close-button");
-      if (closer) {
-        closer.addEventListener(
-          "click",
-          () => {
-            _lastFocusedVenueId = null;
-          },
-          { once: true }
-        );
-      }
-    }, 200);
-
-    const panel = document.getElementById("bottom-panel");
-    if (panel) panel.classList.add("expanded");
-  })();
-};
-
-// ✅ Alias so Swift can call focusVenueById(id)
-window.SipSober.focusVenueById = function (id) {
-  window.SipSober.focusVenue(id);
-};
-
-  </script>
-
-  <!-- ===== Sip Sober: one-time onboarding banner JS ===== -->
-  <script>
+<!-- Onboarding JS -->
+<script>
 (function () {
   const KEY = "ss_seen_map_onboarding_v1";
 
@@ -2129,7 +1741,6 @@ window.SipSober.focusVenueById = function (id) {
     requestAnimationFrame(() => el.classList.add("is-visible"));
 
     const okBtn = document.getElementById("ss-onboard-ok");
-
     function dismiss() {
       localStorage.setItem(KEY, "true");
       el.classList.remove("is-visible");
@@ -2144,5 +1755,6 @@ window.SipSober.focusVenueById = function (id) {
   });
 })();
 </script>
+
 </body>
 </html>
