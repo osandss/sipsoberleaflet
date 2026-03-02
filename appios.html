@@ -1266,8 +1266,11 @@ function renderList(data) {
 
       <div class="meta">${loc.address || ""}</div>
       ${ web ? `<a href="${web}" target="_blank" rel="noopener">Website</a>` : `` }
-      <div class="meta">Brand: ${loc.brand || ""}</div>
-      <div class="meta">Neighborhood: ${loc.neighborhood || ""}</div>
+            <div class="meta">${
+        [_distanceLabelForVenue(loc), loc.neighborhood || "", loc.brand || ""]
+          .filter(Boolean)
+          .join(" • ")
+      }</div>
     `;
 
     results.appendChild(card);
@@ -1339,10 +1342,12 @@ function applyFilters() { applyFiltersUnified(); }
 
 /**
  * ✅ Location is not a mode.
- * It ONLY centers and shows a user dot.
+ * It ONLY centers and shows a user dot,
+ * and (if enabled) adds miles to the list rows.
  */
 let _mapReady = false;
 let _pendingUserLocation = null;
+let _userLocationForDistance = null; // {lat, lng} used ONLY for miles display
 
 // Leaflet layers for user location display
 let _userDot = null;
@@ -1357,7 +1362,7 @@ function _showUserLocation(lat, lng) {
 
   // Subtle halo + dot (Apple-ish)
   _userHalo = L.circle(ll, {
-    radius: 120,              // meters; visual only
+    radius: 120,            // meters; visual only
     stroke: false,
     fill: true,
     fillOpacity: 0.12
@@ -1378,29 +1383,75 @@ function _clearUserLocationLayers() {
   if (_userHalo) { try { map.removeLayer(_userHalo); } catch(e) {} _userHalo = null; }
 }
 
+function _haversineMiles(lat1, lon1, lat2, lon2) {
+  const toRad = (v) => (v * Math.PI) / 180;
+  const R = 3958.7613; // earth radius in miles
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+// Used by renderList() to show "• X.X mi"
+function _distanceLabelForVenue(loc) {
+  if (!_userLocationForDistance) return "";
+
+  const lat = Number(loc?.lat);
+  const lng = Number(loc?.lng);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return "";
+
+  const miles = _haversineMiles(
+    _userLocationForDistance.lat,
+    _userLocationForDistance.lng,
+    lat,
+    lng
+  );
+
+  if (!Number.isFinite(miles)) return "";
+  if (miles < 0.1) return "<0.1 mi";
+  return `${miles.toFixed(1)} mi`;
+}
+
 window.SipSober.setUserLocation = function(lat, lng) {
   const LAT = Number(lat);
   const LNG = Number(lng);
   if (!Number.isFinite(LAT) || !Number.isFinite(LNG)) return;
 
+  // If map isn't ready yet, queue it (don't render yet)
   if (!_mapReady) {
     _pendingUserLocation = { lat: LAT, lng: LNG };
     return;
   }
 
+  // Apply now
+  _pendingUserLocation = null;
+
   _showUserLocation(LAT, LNG);
+
+  // Save for miles display + refresh list (keeps current filters/search)
+  _userLocationForDistance = { lat: LAT, lng: LNG };
+  applyFiltersUnified();
 
   // Center map (Apple Maps feel)
   map.invalidateSize(true);
   map.setView([LAT, LNG], Math.max(map.getZoom(), 15), { animate: true });
 
-  // Optional: expand panel so user sees list easily
+  // Expand panel so user sees list easily
   const panel = document.getElementById("bottom-panel");
   if (panel) panel.classList.add("expanded");
 };
 
 window.SipSober.clearUserLocation = function() {
   _pendingUserLocation = null;
+  _userLocationForDistance = null;
+
+  // Remove miles immediately (even if map not ready yet)
+  applyFiltersUnified();
+
   if (!_mapReady) return;
   _clearUserLocationLayers();
 };
@@ -1418,6 +1469,7 @@ window.setUserLocation = function(lat, lng) { window.SipSober.setUserLocation(la
 window.clearUserLocation = function() { window.SipSober.clearUserLocation(); };
 window.resetMapToDefault = function() { window.SipSober.resetMapToDefault(); };
 
+  
 /* =========================
    K) RESET HELPERS
    ========================= */
