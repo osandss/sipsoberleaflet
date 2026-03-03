@@ -1309,8 +1309,36 @@ function applyFiltersUnified() {
     return brandOK && hoodOK && searchOK;
   });
 
-  // Default sort: A–Z
-  filtered.sort((a, b) => (a.name || "").localeCompare((b.name || ""), undefined, { sensitivity: "base" }));
+  // ✅ Sorting rule:
+  // Location OFF → always A–Z
+  // Location ON  → always Distance (miles), with A–Z tie-breaker
+  const hasUserLoc = !!_userLocationForDistance;
+
+  if (hasUserLoc) {
+    filtered.sort((a, b) => {
+      const da = _distanceMilesForVenue(a);
+      const db = _distanceMilesForVenue(b);
+
+      // push unknown distances to the bottom
+      if (da == null && db == null) {
+        return (a.name || "").localeCompare((b.name || ""), undefined, { sensitivity: "base" });
+      }
+      if (da == null) return 1;
+      if (db == null) return -1;
+
+      // primary: miles
+      if (da !== db) return da - db;
+
+      // secondary: A–Z (stable)
+      return (a.name || "").localeCompare((b.name || ""), undefined, { sensitivity: "base" });
+    });
+  } else {
+    filtered.sort((a, b) => (a.name || "").localeCompare((b.name || ""), undefined, { sensitivity: "base" }));
+  }
+
+  // Optional: keep the sort button label honest (you already have it in HTML)
+  const sortBtn = document.getElementById("sortBtn");
+  if (sortBtn) sortBtn.textContent = hasUserLoc ? "Miles" : "A–Z";
 
   renderList(filtered);
   const { count, bounds } = renderMarkers(filtered);
@@ -1331,7 +1359,7 @@ function applyFiltersUnified() {
   window.filteredBounds = bounds;
   setTimeout(() => map.invalidateSize(true), 120);
 }
-
+  
 // Backwards compatibility: if any old call still uses applyFiltersWithUserLocation, it maps here.
 function applyFiltersWithUserLocation() { applyFiltersUnified(); }
 function applyFilters() { applyFiltersUnified(); }
@@ -1394,6 +1422,23 @@ function _haversineMiles(lat1, lon1, lat2, lon2) {
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
+}
+
+function _distanceMilesForVenue(loc) {
+  if (!_userLocationForDistance) return null;
+
+  const lat = Number(loc?.lat);
+  const lng = Number(loc?.lng);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+
+  const miles = _haversineMiles(
+    _userLocationForDistance.lat,
+    _userLocationForDistance.lng,
+    lat,
+    lng
+  );
+
+  return Number.isFinite(miles) ? miles : null;
 }
 
 // Used by renderList() to show "• X.X mi"
@@ -1499,11 +1544,10 @@ function resetMapToDefault() {
   // Clear user dot (Reset should clear location visuals)
   window.SipSober.clearUserLocation();
 
-  // Render full dataset
-  renderList(locations);
-  renderMarkers(locations);
+  // ✅ Render using the unified logic (A–Z if location is off)
+  applyFiltersUnified();
 
-  // Reset chips
+  // Chips are handled by applyFiltersUnified, but keeping this is harmless:
   updateActiveFilters([], []);
 
   // Reset map framing
@@ -1764,8 +1808,7 @@ searchClear?.addEventListener("click", () => {
 /* =========================
    N) INITIALIZE
    ========================= */
-renderList(locations);
-renderMarkers(locations);
+applyFiltersUnified(); // ✅ ensures Location OFF starts A–Z
 window.SipSober?.sendVenuesToNative?.();
 
 setTimeout(() => { map.invalidateSize(true); }, 200);
