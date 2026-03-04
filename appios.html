@@ -333,7 +333,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      margin-top: 2px;
+      margin-top: 6px;
     }
 
     #panel-meta-row .active-filters{
@@ -356,15 +356,14 @@
       align-items: center;
       justify-content: center;
 
-      height: 28px;
-      padding: 0 12px;
+      padding: 4px 9px;
 
       border-radius: 999px;
       background: rgba(28, 28, 30, 0.035);
       border: 1px solid rgba(28, 28, 30, 0.08);
 
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 11.5px;
+      font-weight: 600;
       letter-spacing: 0.01em;
       color: rgba(28, 28, 30, 0.72);
 
@@ -372,8 +371,10 @@
       -webkit-appearance: none;
       outline: none;
 
-      cursor: default;      /* looks non-clickable */
-      pointer-events: none; /* truly non-interactive */
+      cursor: default;
+      pointer-events: none;
+
+      opacity: .85; /* slightly less prominent than filters */
     }
 
     /* Panel toggle handle */
@@ -485,18 +486,18 @@
     .filter-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      
-      padding: 5px 10px;
+      gap: 5px;
+
+      padding: 4px 9px;
       border-radius: 999px;
 
       background: rgba(28, 28, 30, 0.035);
       border: 1px solid rgba(28, 28, 30, 0.08);
 
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       letter-spacing: 0.01em;
-      color: rgba(28, 28, 30, 0.78);
+      color: rgba(28, 28, 30, 0.75);
     }
 
     .filter-pill-x {
@@ -504,21 +505,22 @@
       align-items: center;
       justify-content: center;
 
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
 
       border-radius: 999px;
-      background: rgba(28, 28, 30, 0.06);
+      background: rgba(28, 28, 30, 0.055);
 
-      font-weight: 800;
-      font-size: 14px;
+      font-weight: 700;
+      font-size: 12px;
       line-height: 1;
 
-      color: rgba(28, 28, 30, 0.70);
+      color: rgba(28, 28, 30, 0.65);
       cursor: pointer;
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 720px
+) {
       #filters {
         top: 10px;
       }
