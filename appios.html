@@ -676,13 +676,15 @@
     /* MAP ONBOARDING BANNER */
     .ss-onboard {
       position: fixed;
-      left: 12px;
-      right: 12px;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
       top: 140px;
       z-index: 5000;
 
+      width: calc(100% - 32px);
+      max-width: 420px;
+
       opacity: 0;
-      transform: translateY(8px);
       transition: opacity 220ms ease, transform 220ms ease;
 
       pointer-events: none;
@@ -690,7 +692,7 @@
 
     .ss-onboard.is-visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateX(-50%) translateY(0);
       pointer-events: auto;
     }
 
@@ -703,7 +705,7 @@
       background: rgba(255, 255, 255, 0.92);
       border: 1px solid rgba(32, 34, 57, 0.12);
       border-radius: 18px;
-      padding: 12px 14px;
+      padding: 14px 16px;
       box-shadow: 0 10px 26px rgba(0,0,0,0.12);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
