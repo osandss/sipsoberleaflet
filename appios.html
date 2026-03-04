@@ -237,13 +237,14 @@
       left: 0;
       right: 0;
       bottom: 0;
-      width: 100vw;
+
+      width: 100%;     /* ✅ NOT 100vw */
       height: 100%;
     }
 
     /* iOS dynamic viewport helper */
     @supports (height: 100dvh){
-      #map{ height: 100dvh; }
+        #map{ height: 100dvh; }
     }
     
     /* --- Dropdown menus (hide/show) --- */
@@ -992,11 +993,8 @@ window.SipSober = window.SipSober || {};
 
 // ✅ Create map
 const map = L.map("map", {
-  zoomControl: true,
+  zoomControl: false,     // ✅ hides +/-
   scrollWheelZoom: true,
-  preferCanvas: true,          // helps some iOS redraw quirks
-  updateWhenIdle: true,
-  updateWhenZooming: false
 }).setView([40.755, -73.985], 12.1);
 
 // ✅ Tiles
