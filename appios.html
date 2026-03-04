@@ -25,32 +25,30 @@
   />
 
   <style>
+    
     /* =========================
        SOFT BRANDED MAP — BALANCED DEPTH
        ========================= */
 
-    /* Base tile adjustment (keep it crisp but not harsh) */
+    /* ✅ DO NOT change Leaflet pane positioning */
     .leaflet-tile-pane {
-      position: relative;
       filter: brightness(0.96) contrast(1.06) saturate(0.85);
-    }
-
-    /* Very subtle navy brand wash */
-    .leaflet-tile-pane::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-
-      background: rgba(32, 34, 57, 0.10);
-      mix-blend-mode: multiply;
-
-      z-index: 200;
     }
 
     /* Container positioning */
     .leaflet-container {
       position: relative;
+    }
+
+    /* Stable brand wash (doesn't interfere with tile pane layout) */
+    .leaflet-container::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: rgba(32, 34, 57, 0.10);
+      mix-blend-mode: multiply;
+      z-index: 200; /* under vignette, above tiles */
     }
 
     /* Restore elegant vignette depth */
@@ -1000,6 +998,32 @@ L.tileLayer(
   }
 ).addTo(map);
 
+/* ✅ iOS/Safari: force Leaflet to lay out tiles correctly on reload */
+function forceLeafletRelayout() {
+  try {
+    map.invalidateSize(true);
+
+    // Next frame
+    requestAnimationFrame(() => map.invalidateSize(true));
+
+    // After iOS address-bar / viewport settles
+    setTimeout(() => map.invalidateSize(true), 120);
+    setTimeout(() => map.invalidateSize(true), 420);
+  } catch (e) {}
+}
+
+// Run once right after initial load settles
+window.addEventListener("load", () => setTimeout(forceLeafletRelayout, 60));
+
+// Run on viewport changes (common cause of gray gaps on iOS)
+window.addEventListener("resize", () => setTimeout(forceLeafletRelayout, 60));
+window.addEventListener("orientationchange", () => setTimeout(forceLeafletRelayout, 80));
+
+// Run when returning to the tab / app (very important for your tab switching)
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) setTimeout(forceLeafletRelayout, 80);
+});  
+
 const manhattanLockBounds = L.latLngBounds([40.5, -74.3], [40.98, -73.6]);
 
 const manhattanInitialBounds = L.latLngBounds(
@@ -1845,6 +1869,7 @@ searchClear?.addEventListener("click", () => {
     e.stopPropagation();
     panel.classList.toggle("expanded");
     syncLabel();
+    setTimeout(forceLeafletRelayout, 80);
   });
 
   if (window.matchMedia("(max-width: 768px)").matches) {
