@@ -282,7 +282,6 @@
       left: 12px;
       right: 12px;
       bottom: 0;
-
       height: var(--panel-collapsed);
   
       background: rgba(255, 255, 255, 0.72);
@@ -297,7 +296,6 @@
 
       padding: 8px 14px calc(10px + env(safe-area-inset-bottom));
       z-index: 2001;
-
       transition: none !important;
       overflow: hidden;
     }
@@ -517,11 +515,8 @@
       cursor: pointer;
     }
 
-    @media (max-width: 720px
-) {
-      #filters {
-        top: 10px;
-      }
+    @media (max-width: 720px) {
+      #filters { top: 10px; }
     }
 
     /* EMBED MODE (iOS app) */
@@ -639,7 +634,6 @@
 
       padding: 5px 9px;
       border-radius: 999px;
-
       color: #1c1c1e;
       text-decoration: none;
 
@@ -648,7 +642,6 @@
 
       white-space: nowrap;
       -webkit-tap-highlight-color: transparent;
-
       transition: background 0.15s ease, transform 0.15s ease;
     }
 
@@ -998,57 +991,52 @@ const tiles = L.tileLayer(
     maxZoom: 20,
     subdomains: "abcd",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-    updateWhenIdle: true,
-    keepBuffer: 4              // helps prevent edge gaps during fast resize
+
+    // ✅ These are fine to keep
+    updateWhenIdle: false,
+    keepBuffer: 4
   }
 ).addTo(map);
 
-/* ✅ iOS/Safari/WKWebView: force Leaflet to lay out tiles correctly on reload */
-function forceLeafletRelayout() {
-  try {
-    // If the map is in a hidden tab, size can be 0 — guard it
-    const el = document.getElementById("map");
-    if (!el) return;
+/* ✅ iOS/Safari/WKWebView: debounced relayout (reduces gray flashing) */
+let _relayoutTimer = null;
+let _lastSizeKey = "";
 
-    const r = el.getBoundingClientRect();
-    if (r.width < 10 || r.height < 10) return;
+function scheduleRelayout(delay = 180) {
+  clearTimeout(_relayoutTimer);
+  _relayoutTimer = setTimeout(() => {
+    try {
+      const el = document.getElementById("map");
+      if (!el) return;
 
-    map.invalidateSize(true);
+      const r = el.getBoundingClientRect();
+      if (r.width < 10 || r.height < 10) return;
 
-    // Next frame
-    requestAnimationFrame(() => map.invalidateSize(true));
+      // only relayout if the size actually changed
+      const sizeKey = `${Math.round(r.width)}x${Math.round(r.height)}`;
+      if (sizeKey === _lastSizeKey) return;
+      _lastSizeKey = sizeKey;
 
-    // After iOS address-bar / viewport settles
-    setTimeout(() => map.invalidateSize(true), 120);
-    setTimeout(() => map.invalidateSize(true), 420);
-  } catch (e) {}
+      // ✅ false = less aggressive; fewer gray flashes than true
+      map.invalidateSize(false);
+    } catch (e) {}
+  }, delay);
 }
 
-// ✅ Run once tiles are actually ready (better than only window.load)
-tiles.on("load", () => {
-  setTimeout(forceLeafletRelayout, 50);
-  setTimeout(forceLeafletRelayout, 250);
-});
+// ✅ Run once map is ready (better than tiles.on("load") for iOS/WKWebView)
+map.whenReady(() => scheduleRelayout(220));
 
-// ✅ Also run after initial page load settles
-window.addEventListener("load", () => setTimeout(forceLeafletRelayout, 80));
+// ✅ Run on viewport changes
+window.addEventListener("resize", () => scheduleRelayout(240));
+window.addEventListener("orientationchange", () => scheduleRelayout(280));
 
-// ✅ Run on viewport changes (common cause of gray gaps on iOS)
-window.addEventListener("resize", () => setTimeout(forceLeafletRelayout, 80));
-window.addEventListener("orientationchange", () => setTimeout(forceLeafletRelayout, 120));
-
-// ✅ Run when returning to the tab / app (very important for your tab switching)
+// ✅ Run when returning to the tab / app
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) {
-    setTimeout(forceLeafletRelayout, 80);
-    setTimeout(forceLeafletRelayout, 300);
-  }
+  if (!document.hidden) scheduleRelayout(260);
 });
 
-// ✅ (Optional but helpful) if your app uses focus/blur events
-window.addEventListener("focus", () => {
-  setTimeout(forceLeafletRelayout, 120);
-});
+// ✅ Optional: focus (WKWebView sometimes triggers size changes on focus)
+window.addEventListener("focus", () => scheduleRelayout(260));
 
 // ✅ Manhattan bounds + layers
 const manhattanLockBounds = L.latLngBounds([40.5, -74.3], [40.98, -73.6]);
@@ -1065,7 +1053,7 @@ map.setMinZoom(11.5);
 let markersLayer = L.layerGroup().addTo(map);
 
 // ✅ One more relayout after your UI finishes (panel/filter render can shift size)
-setTimeout(forceLeafletRelayout, 200);
+setTimeout(() => scheduleRelayout(220), 220);
 
 /* =========================
    D) ICONS
@@ -1460,7 +1448,7 @@ function applyFiltersUnified() {
   }
 
   window.filteredBounds = bounds;
-  setTimeout(() => map.invalidateSize(true), 120);
+  scheduleRelayout(160);
 }
   
 // Backwards compatibility: if any old call still uses applyFiltersWithUserLocation, it maps here.
@@ -1585,7 +1573,7 @@ window.SipSober.setUserLocation = function(lat, lng) {
   applyFiltersUnified();
 
   // Center map (Apple Maps feel)
-  map.invalidateSize(true);
+  map.invalidateSize(false);
   map.setView([LAT, LNG], Math.max(map.getZoom(), 15), { animate: true });
 
   // Expand panel so user sees list easily
@@ -1655,7 +1643,7 @@ function resetMapToDefault() {
 
   // Reset map framing
   setTimeout(() => {
-    map.invalidateSize(true);
+    map.invalidateSize(false);
     fitInitialView();
   }, 80);
 }
@@ -1713,7 +1701,7 @@ window.SipSober.focusVenue = function (payload) {
     }
 
     const ll = marker.getLatLng();
-    map.invalidateSize(true);
+    map.invalidateSize(false);
     map.setView([ll.lat, ll.lng], 16, { animate: true });
 
     setTimeout(() => {
@@ -1899,7 +1887,7 @@ searchClear?.addEventListener("click", () => {
     e.stopPropagation();
     panel.classList.toggle("expanded");
     syncLabel();
-    setTimeout(forceLeafletRelayout, 80);
+    scheduleRelayout(140);
   });
 
   if (window.matchMedia("(max-width: 768px)").matches) {
@@ -1915,7 +1903,7 @@ searchClear?.addEventListener("click", () => {
 applyFiltersUnified(); // ✅ ensures Location OFF starts A–Z
 window.SipSober?.sendVenuesToNative?.();
 
-setTimeout(() => { map.invalidateSize(true); }, 200);
+scheduleRelayout(220);
 
 // Mark map ready + flush any queued Locate call
 _mapReady = true;
