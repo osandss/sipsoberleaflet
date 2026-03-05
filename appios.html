@@ -234,6 +234,13 @@
 
       width: 100%;     /* ✅ NOT 100vw */
       height: 100%;
+
+      background: #ffffff; /* ✅ prevents gray flash */
+    }
+
+    /* Leaflet container background safety */
+    .leaflet-container {
+      background: #ffffff;
     }
 
     /* iOS dynamic viewport helper */
@@ -978,10 +985,11 @@ window.SipSober = window.SipSober || {};
    C) MAP INIT
    ========================= */
 
-// ✅ Create map
+// ✅ Create map (no +/- controls)
 const map = L.map("map", {
-  zoomControl: false,     // ✅ hides +/-
+  zoomControl: false,        // ✅ hides +/-
   scrollWheelZoom: true,
+  preferCanvas: true         // ✅ helps performance on iOS sometimes
 }).setView([40.755, -73.985], 12.1);
 
 // ✅ Tiles
@@ -992,18 +1000,20 @@ const tiles = L.tileLayer(
     subdomains: "abcd",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
 
-    // ✅ These are fine to keep
-    updateWhenIdle: false,
-    keepBuffer: 4
+    // ✅ Better defaults for iOS paint stability
+    updateWhenIdle: true,
+    keepBuffer: 2
   }
 ).addTo(map);
 
-/* ✅ iOS/Safari/WKWebView: debounced relayout (reduces gray flashing) */
+/* ✅ iOS/Safari/WKWebView: relayout helper (handles "same-size" redraw bugs) */
 let _relayoutTimer = null;
 let _lastSizeKey = "";
+let _relayoutBurstTimer = null;
 
-function scheduleRelayout(delay = 180) {
+function scheduleRelayout(delay = 180, force = false) {
   clearTimeout(_relayoutTimer);
+
   _relayoutTimer = setTimeout(() => {
     try {
       const el = document.getElementById("map");
@@ -1012,31 +1022,44 @@ function scheduleRelayout(delay = 180) {
       const r = el.getBoundingClientRect();
       if (r.width < 10 || r.height < 10) return;
 
-      // only relayout if the size actually changed
       const sizeKey = `${Math.round(r.width)}x${Math.round(r.height)}`;
-      if (sizeKey === _lastSizeKey) return;
+
+      // ✅ Don't skip if forcing (WKWebView often needs invalidate even at same size)
+      if (!force && sizeKey === _lastSizeKey) return;
       _lastSizeKey = sizeKey;
 
-      // ✅ false = less aggressive; fewer gray flashes than true
-      map.invalidateSize(false);
+      // ✅ Two-frame kick fixes "gray tiles" / partial paint on iOS
+      requestAnimationFrame(() => {
+        try { map.invalidateSize(force); } catch (e) {}
+        requestAnimationFrame(() => {
+          try { map.invalidateSize(force); } catch (e) {}
+        });
+      });
+
+      // ✅ Optional small burst after resume/reopen (helps iOS settle tiles)
+      clearTimeout(_relayoutBurstTimer);
+      _relayoutBurstTimer = setTimeout(() => {
+        try { map.invalidateSize(true); } catch (e) {}
+      }, 380);
+
     } catch (e) {}
   }, delay);
 }
 
-// ✅ Run once map is ready (better than tiles.on("load") for iOS/WKWebView)
-map.whenReady(() => scheduleRelayout(220));
+// ✅ Run once map is ready (FORCE on iOS)
+map.whenReady(() => scheduleRelayout(220, true));
 
-// ✅ Run on viewport changes
-window.addEventListener("resize", () => scheduleRelayout(240));
-window.addEventListener("orientationchange", () => scheduleRelayout(280));
+// ✅ Run on viewport changes (FORCE)
+window.addEventListener("resize", () => scheduleRelayout(240, true));
+window.addEventListener("orientationchange", () => scheduleRelayout(280, true));
 
-// ✅ Run when returning to the tab / app
+// ✅ Run when returning to the tab / app (FORCE even if same size)
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) scheduleRelayout(260);
+  if (!document.hidden) scheduleRelayout(260, true);
 });
 
-// ✅ Optional: focus (WKWebView sometimes triggers size changes on focus)
-window.addEventListener("focus", () => scheduleRelayout(260));
+// ✅ WKWebView focus can cause visual shift without size change
+window.addEventListener("focus", () => scheduleRelayout(260, true));
 
 // ✅ Manhattan bounds + layers
 const manhattanLockBounds = L.latLngBounds([40.5, -74.3], [40.98, -73.6]);
@@ -1052,9 +1075,9 @@ map.setMinZoom(11.5);
 
 let markersLayer = L.layerGroup().addTo(map);
 
-// ✅ One more relayout after your UI finishes (panel/filter render can shift size)
-setTimeout(() => scheduleRelayout(220), 220);
-
+// ✅ One more relayout after UI finishes mounting (FORCE)
+setTimeout(() => scheduleRelayout(260, true), 260);
+  
 /* =========================
    D) ICONS
    ========================= */
