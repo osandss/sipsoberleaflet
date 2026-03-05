@@ -326,21 +326,20 @@ h2, h3, h4, h5, h6 {
   }
 }
  
-    /* SECTION BLOCKS */
+    /* SECTION BLOCKS (disabled — landing sections use .band instead)
     section {
       margin-top: 0;
       padding: 36px 0;
     }
 
-    /* Prevent double padding between consecutive sections */
     section + section {
       padding-top: 18px;
     }
 
-    /* Remove extra bottom gap caused by last paragraph margin */
     section p:last-of-type {
       margin-bottom: 0;
     }
+    */
 
     .section-heading {
       margin-bottom: 18px;
@@ -360,30 +359,6 @@ h2, h3, h4, h5, h6 {
       color: var(--ss-text-muted);
       max-width: 540px;
     }
-
-    .about-body {
-      font-size: 15px;
-      max-width: 760px;
-      margin-top: 10px;
-      color: var(--ss-text-main);
-      line-height: 1.75;
-    }
-
-    /* ABOUT — centered column, left-aligned text */
-    #about .band-inner{
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 0 24px
-    }
-
-    #about .band-title,
-    #about .band-lede,
-    #about .band-body{
-      max-width: 860px;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: left;
-  }
   
     .cta-panel {
       background: var(--ss-card);
@@ -416,20 +391,12 @@ h2, h3, h4, h5, h6 {
       gap: 10px;
     }
 
-    /* ===== Landing sections (Aaptiv-style layout) ===== */
+
+    /* ===== Landing sections (Unified system) ===== */
 
 .band{
-  padding: 40px 0;
+  padding: 64px 0;
   background: #ffffff;
-}
-
-.band-alt{
-  background: #f3f4f6;
-}
-
-.band-cta{
-  background: #ffffff;
-  text-align: center;
 }
 
 .band-inner{
@@ -438,36 +405,41 @@ h2, h3, h4, h5, h6 {
   padding: 0 24px;
 }
 
-.band-title,
-.how-title{
-  font-size: 18px;
-  letter-spacing: 0.14em;
+/* Section title */
+.band-title{
+  font-size: 16px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  opacity: 0.95;
+}
+
+/* ABOUT: make it a panel so it matches the cards */
+.about-panel{
+  max-width: 860px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 18px;
+  padding: 26px 26px 22px;
+  box-shadow: 0 10px 30px rgba(10,12,30,0.04);
 }
 
 .band-lede{
-  font-size: 20px;
-  line-height: 1.35;
-  max-width: 60ch;
-  margin: 0 0 14px;
-  opacity: 0.9;
+  font-size: 18px;
+  line-height: 1.4;
+  margin: 0 0 10px;
+  opacity: 0.92;
 }
 
 .band-body{
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.7;
-  max-width: 86ch;
-  opacity: 0.85;
+  margin: 0;
+  opacity: 0.80;
+  max-width: 70ch;
 }
 
-/* How it works — heading aligns with About column */
-.how .band-title{
-  text-align: left;
-  max-width: 860px;
-  margin: 0 auto 26px;
-}
-
+/* HOW: mini feature cards with numbers */
 .how-grid{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -475,70 +447,60 @@ h2, h3, h4, h5, h6 {
 }
 
 .how-card{
-  background: #ffffff;
+  background: rgba(255,255,255,0.92);
   border: 1px solid rgba(0,0,0,0.06);
   border-radius: 18px;
-  padding: 22px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 10px 30px rgba(10,12,30,0.04);
+}
+
+.how-kicker{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.how-num{
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(32,34,57,0.92);
+  background: rgba(32,34,57,0.06);
+  border: 1px solid rgba(32,34,57,0.10);
 }
 
 .how-card h3{
-  margin: 0 0 8px;
-  font-size: 16px;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.25;
 }
 
 .how-card p{
   margin: 0;
-  opacity: 0.8;
+  font-size: 14px;
+  opacity: 0.78;
   line-height: 1.6;
 }
 
-/* Final CTA */
-.cta{
-  display: grid;
-  justify-items: center;
-  gap: 12px;
+/* CTA band */
+.band-cta{
+  text-align: center;
 }
 
-.cta-title{
-  font-size: 20px;
-  margin: 0;
-}
-
-.cta-note{
-  margin: 0;
-  opacity: 0.75;
-  font-size: 13px;
-}
-
-  .hero-title,
-  .hero-subtitle,
-  .hero-platform{
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .hero-cta{
-    text-align: center;
-  }
-
-  .appstore-badge img{
-    margin: 0 auto;
-  }
-
-  .hero-phone{
-    width: min(360px, 82vw);
-    transform: translateY(0);
-  }
-    
-    /* Responsive */
+/* Responsive */
 @media (max-width: 860px){
-  .band{ padding: 36px 0; }
-
-  .how-grid{
-    grid-template-columns: 1fr;
-  }
+  .band{ padding: 52px 0; }
+  .how-grid{ grid-template-columns: 1fr; }
+  .about-panel{ padding: 22px 20px 18px; }
 }
-
+    
     /* FOOTER */
     footer {
       border-top: 1px solid #dddfee;
@@ -577,14 +539,14 @@ h2, h3, h4, h5, h6 {
   margin-bottom: 8px;
 }
 
-#about .band-lede{
+.about-panel .band-lede{
   font-size: 16px;
   line-height: 1.35;
   margin: 0 0 10px;
   max-width: 100%;
 }
 
-#about .band-body{
+.about-panel .band-body{
   font-size: 15px;
   line-height: 1.65;
   margin: 0;
@@ -596,8 +558,9 @@ h2, h3, h4, h5, h6 {
   grid-template-columns: 1fr;
   gap: 16px;
 }
+  
 .how-card{
-  padding: 22px 20px;
+  padding: 18px 18px 16px;
 }
   
   /* HERO — MOBILE polish (sizes only) */
@@ -748,48 +711,64 @@ h2, h3, h4, h5, h6 {
   </div>
 
 </section>
+    
 <!-- START PAGE CONTENT -->
 <main>
 
-  <!-- SECTION 1: What is Sip Sober (shorter, more “landing page” style) -->
+  <!-- SECTION: What is Sip Sober -->
   <section id="about" class="band">
     <div class="container band-inner">
       <h2 class="band-title">What is Sip Sober?</h2>
-      <p class="band-lede">
-        Sip Sober is a location-based discovery app built for nights out without alcohol.
-      </p>
 
-      <p class="band-body">
-        It shows exactly which venues carry zero-proof brands - so you can choose confidently.
-      </p>
+      <div class="about-panel">
+        <p class="band-lede">
+          Sip Sober helps you find bars and restaurants serving real zero-proof cocktails.
+        </p>
+
+        <p class="band-body">
+          Search the map, filter by neighborhood or brand, and save your favorite spots — so you always know where to go before you head out.
+        </p>
+      </div>
+
     </div>
   </section>
- 
-  <!-- SECTION 5: How it works -->
-  <section class="band">
-    <div class="band-inner how">
+
+  <!-- SECTION: How it works (Option 1) -->
+  <section class="band how">
+    <div class="band-inner">
       <h2 class="band-title">How it works</h2>
 
       <div class="how-grid">
+
         <div class="how-card">
-          <h3>Live venue data</h3>
-          <p>See real zero-proof offerings across NYC.</p>
+          <div class="how-kicker">
+            <span class="how-num">01</span>
+            <h3>Explore the map</h3>
+          </div>
+          <p>See NYC venues offering zero-proof cocktails and alcohol-free options.</p>
         </div>
 
         <div class="how-card">
-          <h3>Filter by neighborhood and brand</h3>
-          <p>Find what you want - instantly.</p>
+          <div class="how-kicker">
+            <span class="how-num">02</span>
+            <h3>Filter instantly</h3>
+          </div>
+          <p>Filter by neighborhood or brand to find exactly what you want.</p>
         </div>
 
         <div class="how-card">
-          <h3>Save your spots</h3>
-          <p>Build a personal list for quick decisions next time.</p>
+          <div class="how-kicker">
+            <span class="how-num">03</span>
+            <h3>Save favorites</h3>
+          </div>
+          <p>Keep a personal list of spots to revisit anytime.</p>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- SECTION 6: Final CTA -->
+  <!-- SECTION 6: Final CTA (unchanged) -->
   <section class="band band-cta">
     <div class="container cta">
       <h2 class="cta-title">Download Sip Sober</h2>
