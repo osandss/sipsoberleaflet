@@ -33,6 +33,7 @@
     /* Container positioning */
     .leaflet-container {
       position: relative;
+      background: #ffffff !important;
     }
 
     /* Stable brand wash (doesn't interfere with tile pane layout) */
@@ -73,23 +74,26 @@
     body {
       margin: 0;
       padding: 0;
+      width: 100%;
       height: 100%;
       overflow: hidden;
       overscroll-behavior: none;
 
-      /* Cleaner, more modern iOS font stack */
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-
-      /* Softer, professional text color */
       background: #ffffff;
       color: #1c1c1e;
 
-      /* Makes text look smoother on iPhone */
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
 
       line-height: 1.45;
-      font-size: 12px; /* smaller base type */
+      font-size: 12px;
+    }
+
+    /* lock viewport for iOS */
+    body{
+      position: fixed;
+      inset: 0;
     }
 
     /* --- Top filters bar: floating pill --- */
@@ -226,27 +230,30 @@
 
     /* Main map area – robust sizing on iOS */
     #map{
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-
-      width: 100%;     /* ✅ NOT 100vw */
+      position: fixed;
+      inset: 0;
+      width: 100%;
       height: 100%;
-
-      background: #ffffff; /* ✅ prevents gray flash */
-    }
-
-    /* Leaflet container background safety */
-    .leaflet-container {
       background: #ffffff;
     }
 
-    /* iOS dynamic viewport helper */
-    @supports (height: 100dvh){
-        #map{ height: 100dvh; }
+    /* ✅ iOS/WKWebView: white curtain until tiles are ready */
+    #map::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:#ffffff;
+      opacity:1;
+      pointer-events:none;
+      z-index: 2500;          /* above tiles/panes, below top bar (3100) */
+      transition: opacity 180ms ease;
     }
+
+    /* when tiles are ready, fade curtain away */
+    #map.ss-tiles-ready::before{
+      opacity:0;
+    }
+
     
     /* --- Dropdown menus (hide/show) --- */
     .dropdown {
@@ -982,14 +989,20 @@ window.SipSober = window.SipSober || {};
 })();
 
 /* =========================
-   C) MAP INIT
+   C) MAP INIT (iOS/WKWebView stable)
    ========================= */
 
-// ✅ Create map (no +/- controls)
-const map = L.map("map", {
-  zoomControl: false,        // ✅ hides +/-
+const mapEl = document.getElementById("map");
+
+// ✅ Create map (keep zoomControl OFF)
+const map = L.map(mapEl, {
+  zoomControl: false,
   scrollWheelZoom: true,
-  preferCanvas: true         // ✅ helps performance on iOS sometimes
+
+  // ✅ Reduce “flash/snap” animations on iOS
+  fadeAnimation: false,
+  zoomAnimation: true,
+  markerZoomAnimation: false,
 }).setView([40.755, -73.985], 12.1);
 
 // ✅ Tiles
@@ -1000,83 +1013,62 @@ const tiles = L.tileLayer(
     subdomains: "abcd",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
 
-    // ✅ Better defaults for iOS paint stability
+    // ✅ iOS tends to behave better with idle updates ON
     updateWhenIdle: true,
-    keepBuffer: 2
+    keepBuffer: 2,
+
+    // helps WKWebView/CORS edge cases
+    crossOrigin: true,
   }
 ).addTo(map);
 
-/* ✅ iOS/Safari/WKWebView: relayout helper (handles "same-size" redraw bugs) */
-let _relayoutTimer = null;
-let _lastSizeKey = "";
-let _relayoutBurstTimer = null;
+// ✅ start covered (prevents gray tile flash)
+mapEl.classList.remove("ss-tiles-ready");
 
-function scheduleRelayout(delay = 180, force = false) {
-  clearTimeout(_relayoutTimer);
-
-  _relayoutTimer = setTimeout(() => {
-    try {
-      const el = document.getElementById("map");
-      if (!el) return;
-
-      const r = el.getBoundingClientRect();
-      if (r.width < 10 || r.height < 10) return;
-
-      const sizeKey = `${Math.round(r.width)}x${Math.round(r.height)}`;
-
-      // ✅ Don't skip if forcing (WKWebView often needs invalidate even at same size)
-      if (!force && sizeKey === _lastSizeKey) return;
-      _lastSizeKey = sizeKey;
-
-      // ✅ Two-frame kick fixes "gray tiles" / partial paint on iOS
-      requestAnimationFrame(() => {
-        try { map.invalidateSize(force); } catch (e) {}
-        requestAnimationFrame(() => {
-          try { map.invalidateSize(force); } catch (e) {}
-        });
-      });
-
-      // ✅ Optional small burst after resume/reopen (helps iOS settle tiles)
-      clearTimeout(_relayoutBurstTimer);
-      _relayoutBurstTimer = setTimeout(() => {
-        try { map.invalidateSize(true); } catch (e) {}
-      }, 380);
-
-    } catch (e) {}
-  }, delay);
-}
-
-// ✅ Run once map is ready (FORCE on iOS)
-map.whenReady(() => scheduleRelayout(220, true));
-
-// ✅ Run on viewport changes (FORCE)
-window.addEventListener("resize", () => scheduleRelayout(240, true));
-window.addEventListener("orientationchange", () => scheduleRelayout(280, true));
-
-// ✅ Run when returning to the tab / app (FORCE even if same size)
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) scheduleRelayout(260, true);
+// while tiles are loading (tab return / resize), cover again briefly
+tiles.on("loading", () => {
+  mapEl.classList.remove("ss-tiles-ready");
 });
 
-// ✅ WKWebView focus can cause visual shift without size change
-window.addEventListener("focus", () => scheduleRelayout(260, true));
+// first successful tile load → reveal
+tiles.once("load", () => {
+  requestAnimationFrame(() => {
+    mapEl.classList.add("ss-tiles-ready");
+    try { map.invalidateSize(false); } catch(e) {}
+  });
+});
 
-// ✅ Manhattan bounds + layers
+// ✅ Only invalidate AFTER tiles actually start arriving (prevents blank flashes)
+function invalidateSoon(ms = 0) {
+  setTimeout(() => {
+    try { map.invalidateSize(false); } catch (e) {}
+  }, ms);
+}
+
+// 1) First real tile paint
+tiles.once("load", () => invalidateSoon(0));
+
+// 2) If the map container changes size (bottom panel open/close, tab switch)
+if ("ResizeObserver" in window) {
+  const ro = new ResizeObserver(() => invalidateSoon(80));
+  ro.observe(mapEl);
+}
+
+// 3) Coming back to foreground / rotation
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) invalidateSoon(120);
+});
+window.addEventListener("orientationchange", () => invalidateSoon(180));
+
+// ✅ Manhattan bounds + layers (your existing logic)
 const manhattanLockBounds = L.latLngBounds([40.5, -74.3], [40.98, -73.6]);
-
-const manhattanInitialBounds = L.latLngBounds(
-  [40.70, -74.05],
-  [40.88, -73.90]
-);
+const manhattanInitialBounds = L.latLngBounds([40.70, -74.05], [40.88, -73.90]);
 
 map.setMaxBounds(manhattanLockBounds);
 map.options.maxBoundsViscosity = 0.1;
 map.setMinZoom(11.5);
 
 let markersLayer = L.layerGroup().addTo(map);
-
-// ✅ One more relayout after UI finishes mounting (FORCE)
-setTimeout(() => scheduleRelayout(260, true), 260);
   
 /* =========================
    D) ICONS
@@ -1471,7 +1463,6 @@ function applyFiltersUnified() {
   }
 
   window.filteredBounds = bounds;
-  scheduleRelayout(160);
 }
   
 // Backwards compatibility: if any old call still uses applyFiltersWithUserLocation, it maps here.
@@ -1910,7 +1901,7 @@ searchClear?.addEventListener("click", () => {
     e.stopPropagation();
     panel.classList.toggle("expanded");
     syncLabel();
-    scheduleRelayout(140);
+    invalidateSoon(120);
   });
 
   if (window.matchMedia("(max-width: 768px)").matches) {
@@ -1925,8 +1916,6 @@ searchClear?.addEventListener("click", () => {
    ========================= */
 applyFiltersUnified(); // ✅ ensures Location OFF starts A–Z
 window.SipSober?.sendVenuesToNative?.();
-
-scheduleRelayout(220);
 
 // Mark map ready + flush any queued Locate call
 _mapReady = true;
