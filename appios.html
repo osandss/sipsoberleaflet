@@ -33,7 +33,6 @@
     /* Container positioning */
     .leaflet-container {
       position: relative;
-      background: #ffffff !important;
     }
 
     /* Stable brand wash (doesn't interfere with tile pane layout) */
@@ -74,26 +73,23 @@
     body {
       margin: 0;
       padding: 0;
-      width: 100%;
       height: 100%;
       overflow: hidden;
       overscroll-behavior: none;
 
+      /* Cleaner, more modern iOS font stack */
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+
+      /* Softer, professional text color */
       background: #ffffff;
       color: #1c1c1e;
 
+      /* Makes text look smoother on iPhone */
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
 
       line-height: 1.45;
-      font-size: 12px;
-    }
-
-    /* lock viewport for iOS */
-    body{
-      position: fixed;
-      inset: 0;
+      font-size: 12px; /* smaller base type */
     }
 
     /* --- Top filters bar: floating pill --- */
@@ -230,11 +226,16 @@
 
     /* Main map area – robust sizing on iOS */
     #map{
-      position: fixed;
-      inset: 0;
-      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      width: 100%;     /* ✅ NOT 100vw */
       height: 100%;
-      background: #ffffff;
+
+      background: #ffffff; /* ✅ prevents gray flash */
     }
 
     /* ✅ iOS/WKWebView: white curtain until tiles are ready */
@@ -254,6 +255,16 @@
       opacity:0;
     }
 
+    
+    /* Leaflet container background safety */
+    .leaflet-container {
+      background: #ffffff;
+    }
+
+    /* iOS dynamic viewport helper */
+    @supports (height: 100dvh){
+        #map{ height: 100dvh; }
+    }
     
     /* --- Dropdown menus (hide/show) --- */
     .dropdown {
