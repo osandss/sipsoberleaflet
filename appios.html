@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
+
   <title>Zero-Proof Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -11,6 +12,8 @@
   <link rel="icon" href="/sipsoberleaflet/icons/icon-192.png">
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous" />
+
+  <!-- FIX: Leaflet JS in <head> so it's parsed before DOMContentLoaded -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin="anonymous"></script>
@@ -19,15 +22,26 @@
     .leaflet-tile-pane {
       filter: brightness(0.96) contrast(1.06) saturate(0.85);
     }
+
     .leaflet-container { position: relative; }
+
     .leaflet-container::before {
-      content: ""; position: absolute; inset: 0; pointer-events: none;
-      background: rgba(32,34,57,0.10); z-index: 200;
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: rgba(32, 34, 57, 0.10);
+      z-index: 200;
     }
+
     .leaflet-container::after {
-      content: ""; position: absolute; inset: 0; pointer-events: none;
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
       background: radial-gradient(circle at 50% 32%, rgba(255,255,255,0) 0%, rgba(32,34,57,0.06) 60%, rgba(32,34,57,0.10) 100%);
-      opacity: 0.9; z-index: 300;
+      opacity: 0.9;
+      z-index: 300;
     }
 
     :root {
@@ -36,265 +50,519 @@
     }
 
     html, body {
-      margin: 0; padding: 0; height: 100%;
-      overflow: hidden; overscroll-behavior: none;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      overscroll-behavior: none;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-      background: #ffffff; color: #1c1c1e;
+      background: #ffffff;
+      color: #1c1c1e;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      line-height: 1.45; font-size: 12px;
+      line-height: 1.45;
+      font-size: 12px;
     }
-
-    /* ─────────────────────────────────────────────────────
-       THE KEY FIX: #map is position:fixed and fills the
-       FULL viewport including the area under the panel.
-       Leaflet must see the full screen so it loads ALL
-       tiles — the panel floats on top of already-loaded
-       tiles. This is what stops the grey bottom strip.
-    ───────────────────────────────────────────────────── */
-    #map {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;        /* full screen — NOT cropped by panel */
-      background: #f0ede8; /* warm fallback, never cold grey */
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-    }
-    @supports (height: 100dvh) { #map { height: 100dvh; } }
-    .leaflet-container { background: #f0ede8; }
 
     #filters {
-      position: fixed; top: 10px; left: 20px; right: 12px; z-index: 3100;
-      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      right: 12px;
+      z-index: 3100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
       padding: 6px 12px;
-      background: rgba(255,255,255,0.98);
-      border-radius: 999px; border: 1px solid #e2e4ec;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.22);
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 999px;
+      border: 1px solid #e2e4ec;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
       backdrop-filter: none;
     }
 
     .ss-searchTop {
-      display: flex; align-items: center; gap: 8px;
-      height: 26px; padding: 0 10px;
-      background: #f2f2f7; border: 1px solid #ccc; border-radius: 999px;
-      font-size: 12px; width: 160px; min-width: 160px; max-width: 160px;
-      flex: 0 0 160px; overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 26px;
+      padding: 0 10px;
+      background: #f2f2f7;
+      border: 1px solid #ccc;
+      border-radius: 999px;
+      font-size: 12px;
+      width: 160px;
+      min-width: 160px;
+      max-width: 160px;
+      flex: 0 0 160px;
+      overflow: hidden;
     }
+
     .ss-searchIcon { font-size: 11px; opacity: 0.6; }
+
     #searchTopInput {
-      border: 0; outline: none; background: transparent;
-      width: 100%; font-size: 16px; min-width: 0; line-height: 1;
-      transform: scale(0.82); transform-origin: left center;
+      border: 0;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 16px;
+      min-width: 0;
+      line-height: 1;
+      transform: scale(0.82);
+      transform-origin: left center;
     }
+
     #searchTopInput::-webkit-search-cancel-button { -webkit-appearance: none; }
+
     #searchTopClear {
-      border: 0; background: transparent; font-size: 16px;
-      line-height: 1; opacity: 0.6; cursor: pointer; padding: 0;
+      border: 0;
+      background: transparent;
+      font-size: 16px;
+      line-height: 1;
+      opacity: 0.6;
+      cursor: pointer;
+      padding: 0;
     }
+
     #searchToggle {
-      border: 1px solid #ccc; background: #f2f2f7; border-radius: 999px;
-      padding: 6px 10px; font-size: 16px; cursor: pointer; color: #2f3b69;
+      border: 1px solid #ccc;
+      background: #f2f2f7;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #2f3b69;
     }
-    #searchTopRow { display: none; width: 100%; margin-top: 4px; padding-left: 6px; }
+
+    #searchTopRow {
+      display: none;
+      width: 100%;
+      margin-top: 4px;
+      padding-left: 6px;
+    }
+
     #searchTopRow.is-open { display: block; }
 
     .dropdown > button {
-      background: #f2f2f7; border: 1px solid #ccc; border-radius: 999px;
-      padding: 5px 10px; font-size: 12px; cursor: pointer; color: #2f3b69;
+      background: #f2f2f7;
+      border: 1px solid #ccc;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      color: #2f3b69;
     }
+
     .dropdown .menu {
-      max-height: 160px; overflow-y: auto; overflow-x: hidden;
-      -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+      max-height: 160px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
     }
+
     #goBtn {
-      background: #202329; color: white; border: 0; border-radius: 10px;
-      padding: 8px 14px; font-weight: 600; cursor: pointer; font-size: 12px;
+      background: #202329;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 12px;
     }
+
+    /* ═══════════════════════════════════════════════
+       FIX 1: #map uses position:fixed (not absolute).
+       This is the #1 cause of the grey-tile flash and
+       the layout jump — absolute sizing races against
+       iOS's async layout pipeline.
+       ─────────────────────────────────────────────── */
+    #map {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+
+      /* Warm fallback so blank area is never cold grey */
+      background: #f0ede8;
+
+      /* Promote to GPU compositor layer before tiles arrive */
+      will-change: transform;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+
+    @supports (height: 100dvh) { #map { height: 100dvh; } }
+
+    /* Match #map fallback — no grey flash between map div and tiles */
+    .leaflet-container { background: #f0ede8; }
+
     .dropdown { position: relative; }
+
     .dropdown .menu {
-      display: none; position: absolute; top: 120%; left: 0;
-      background: #ffffff; border: 1px solid #e2e4ec; border-radius: 16px;
-      padding: 10px 12px; width: 200px; z-index: 3000;
-      box-shadow: 0 10px 26px rgba(0,0,0,0.16);
+      display: none;
+      position: absolute;
+      top: 120%;
+      left: 0;
+      background: #ffffff;
+      border: 1px solid #e2e4ec;
+      border-radius: 16px;
+      padding: 10px 12px;
+      width: 200px;
+      z-index: 3000;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.16);
     }
+
     .dropdown.open .menu { display: block; }
+
     .dropdown .row {
-      display: flex; align-items: center; gap: 8px;
-      padding: 3px 0; margin: 0; font-size: 12px; color: #1c1c1e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 3px 0;
+      margin: 0;
+      font-size: 12px;
+      color: #1c1c1e;
     }
 
     #bottom-panel {
-      position: fixed; left: 12px; right: 12px; bottom: 0;
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 0;
       height: var(--panel-collapsed);
-      background: rgba(255,255,255,0.72);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: 22px 22px 0 0;
-      box-shadow: 0 -8px 22px rgba(0,0,0,0.08);
-      display: flex; flex-direction: column;
+      box-shadow: 0 -8px 22px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
       padding: 8px 14px calc(10px + env(safe-area-inset-bottom));
-      z-index: 2001; transition: none !important; overflow: hidden;
+      z-index: 2001;
+      transition: none !important;
+      overflow: hidden;
     }
+
     #bottom-panel.expanded { height: var(--panel-expanded); }
+
     #panel-header { flex: 0 0 auto; padding: 0 10px 6px; }
+
     #panel-body {
-      flex: 1 1 auto; overflow-y: auto;
-      -webkit-overflow-scrolling: touch; padding: 6px 0 10px;
+      flex: 1 1 auto;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 6px 0 10px;
     }
+
     #results { padding: 0; }
+
     #panel-meta-row {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 10px; margin-top: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 6px;
     }
+
     #panel-meta-row .active-filters {
-      flex: 1 1 auto; display: none; flex-wrap: wrap; gap: 6px;
-      margin: 0; padding: 0; position: static; top: auto; background: transparent;
+      flex: 1 1 auto;
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      position: static;
+      top: auto;
+      background: transparent;
     }
+
     #sortBtn {
-      display: inline-flex; align-items: center; justify-content: center;
-      padding: 4px 9px; border-radius: 999px;
-      background: rgba(28,28,30,0.035); border: 1px solid rgba(28,28,30,0.08);
-      font-size: 11.5px; font-weight: 600; letter-spacing: 0.01em;
-      color: rgba(28,28,30,0.72); appearance: none; -webkit-appearance: none;
-      outline: none; cursor: default; pointer-events: none; opacity: .85;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(28, 28, 30, 0.035);
+      border: 1px solid rgba(28, 28, 30, 0.08);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: rgba(28, 28, 30, 0.72);
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+      cursor: default;
+      pointer-events: none;
+      opacity: .85;
     }
+
     #panel-toggle {
-      width: 100%; border: 0; background: transparent; padding: 6px 0;
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      cursor: pointer; -webkit-tap-highlight-color: transparent;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 6px 0 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
+
     #panel-toggle .handle {
-      width: 44px; height: 5px; border-radius: 999px; background: rgba(0,0,0,0.18);
+      width: 44px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.18);
     }
-    #panel-toggle .label { font-size: 12px; font-weight: 600; color: #202239; opacity: 0.75; }
+
+    #panel-toggle .label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #202239;
+      opacity: 0.75;
+    }
+
     #results-count {
-      flex: 0 0 auto; margin: 0; font-size: 13px; font-weight: 500;
-      color: #5f6368; letter-spacing: 0.01em; white-space: nowrap;
+      flex: 0 0 auto;
+      margin: 0;
+      font-size: 13px;
+      font-weight: 500;
+      color: #5f6368;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
     }
 
     .card {
-      padding: 8px 10px; border-bottom: 1px solid #eee;
-      font-size: 12px; color: #333; line-height: 1.25;
+      padding: 8px 10px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 0;
+      font-size: 12px;
+      color: #333;
+      line-height: 1.25;
     }
+
     .card:last-child { border-bottom: none; }
+
     .card-name {
-      display: block; font-size: 14px; font-weight: 600;
-      margin: 0 0 2px; line-height: 1.18; color: #111; cursor: pointer;
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 2px 0;
+      line-height: 1.18;
+      color: #111;
+      cursor: pointer;
     }
+
     .card-name:hover { text-decoration: underline; }
     .card .meta { margin: 0; line-height: 1.22; }
     #bottom-panel .card p { margin: 0; line-height: 1.32; }
+
     #bottom-panel .card a {
-      display: inline-block; margin: 1px 0 3px;
-      font-size: 12px; font-weight: 500; color: #2f3b69; text-decoration: underline;
+      display: inline-block;
+      margin: 1px 0 3px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #2f3b69;
+      text-decoration: underline;
     }
 
     .leaflet-control-zoom { bottom: 20px; right: 20px; left: auto !important; top: auto !important; }
+
     .leaflet-top.leaflet-left {
-      top: auto !important; left: auto !important;
-      right: 16px !important; bottom: 24px !important; z-index: 3200 !important;
+      top: auto !important;
+      left: auto !important;
+      right: 16px !important;
+      bottom: 24px !important;
+      z-index: 3200 !important;
     }
 
     .active-filters { display: none; }
+
     .filter-pill {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 9px; border-radius: 999px;
-      background: rgba(28,28,30,0.035); border: 1px solid rgba(28,28,30,0.08);
-      font-size: 11.5px; font-weight: 600; letter-spacing: 0.01em; color: rgba(28,28,30,0.75);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(28, 28, 30, 0.035);
+      border: 1px solid rgba(28, 28, 30, 0.08);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: rgba(28, 28, 30, 0.75);
     }
+
     .filter-pill-x {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 16px; height: 16px; border-radius: 999px;
-      background: rgba(28,28,30,0.055); font-weight: 700; font-size: 12px;
-      line-height: 1; color: rgba(28,28,30,0.65); cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: rgba(28, 28, 30, 0.055);
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 1;
+      color: rgba(28, 28, 30, 0.65);
+      cursor: pointer;
     }
 
     @media (max-width: 720px) { #filters { top: 10px; } }
+
     body.ss-embed #filters { display: none !important; }
 
     .fav-btn {
-      background: none; border: 0; padding: 4px; cursor: pointer;
-      font-size: 18px; line-height: 1; color: #b9b9b9;
+      background: none;
+      border: 0;
+      padding: 4px;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      color: #b9b9b9;
     }
+
     .fav-btn.is-fav { color: #202239; }
+
     .card-top {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 10px; margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
     }
 
     .leaflet-popup-content-wrapper {
       border-radius: 18px !important;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.18) !important; padding: 0 !important;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18) !important;
+      padding: 0 !important;
     }
+
     .leaflet-popup-content { margin: 0 !important; width: auto !important; max-width: none !important; }
+
     .ss-popup--simple {
-      padding: 12px; min-width: 240px; max-width: 300px;
+      padding: 12px;
+      min-width: 240px;
+      max-width: 300px;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
       color: #1c1c1e;
     }
+
     .ss-popup-top { display: flex; gap: 12px; align-items: flex-start; }
     .ss-popup-text { flex: 1; min-width: 0; }
     .ss-popup-img-wrap { margin: 0; flex: 0 0 104px; display: block; }
+
     .ss-popup-img {
-      width: 104px; height: 78px; max-height: none;
-      object-fit: cover; border-radius: 12px; display: block;
+      width: 104px;
+      height: 78px;
+      max-height: none;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
     }
+
     .ss-popup--simple .ss-popup-title { font-size: 13px; font-weight: 700; line-height: 1.2; margin: 0 0 4px; }
     .ss-popup--simple .ss-popup-tags { font-size: 11px; color: rgba(28,28,30,0.55); line-height: 1.2; margin: 0 0 6px; }
     .ss-popup--simple .ss-popup-meta { font-size: 11px; color: rgba(28,28,30,0.65); line-height: 1.25; margin: 0 0 8px; }
+
     .ss-popup--simple .ss-popup-actions {
-      display: flex; gap: 8px; flex-wrap: nowrap; align-items: center; margin-top: 6px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: nowrap;
+      align-items: center;
+      margin-top: 6px;
     }
+
     .ss-popup--simple .ss-pill {
-      display: inline-flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 600; line-height: 1; padding: 5px 9px;
-      border-radius: 999px; color: #1c1c1e; text-decoration: none;
-      background: rgba(28,28,30,0.06); border: 1px solid rgba(28,28,30,0.08);
-      white-space: nowrap; -webkit-tap-highlight-color: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: #1c1c1e;
+      text-decoration: none;
+      background: rgba(28,28,30,0.06);
+      border: 1px solid rgba(28,28,30,0.08);
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
       transition: background 0.15s ease, transform 0.15s ease;
     }
+
     .ss-popup--simple .ss-pill.secondary { background: rgba(28,28,30,0.03); }
     .ss-popup--simple .ss-pill:active { background: rgba(28,28,30,0.12); transform: scale(0.97); }
+
     .leaflet-container a.leaflet-popup-close-button {
-      width: 26px !important; height: 26px !important; font-size: 18px !important;
-      line-height: 26px !important; color: rgba(28,28,30,0.45) !important;
+      width: 26px !important; height: 26px !important;
+      font-size: 18px !important; line-height: 26px !important;
+      color: rgba(28,28,30,0.45) !important;
       right: 6px !important; top: 6px !important;
     }
 
     .ss-onboard {
-      position: fixed; left: 50%; transform: translateX(-50%) translateY(8px);
-      top: 140px; z-index: 5000; width: calc(100% - 32px); max-width: 420px;
-      opacity: 0; transition: opacity 220ms ease, transform 220ms ease; pointer-events: none;
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      top: 140px;
+      z-index: 5000;
+      width: calc(100% - 32px);
+      max-width: 420px;
+      opacity: 0;
+      transition: opacity 220ms ease, transform 220ms ease;
+      pointer-events: none;
     }
+
     .ss-onboard.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
     .ss-onboard[hidden] { display: none !important; }
+
     .ss-onboard__content {
-      pointer-events: auto; background: rgba(255,255,255,0.92);
-      border: 1px solid rgba(32,34,57,0.12); border-radius: 18px; padding: 14px 16px;
+      pointer-events: auto;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(32,34,57,0.12);
+      border-radius: 18px;
+      padding: 14px 16px;
       box-shadow: 0 10px 26px rgba(0,0,0,0.12);
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
     }
+
     .ss-onboard__title { font-size: 14px; font-weight: 800; color: #202239; margin-bottom: 4px; }
     .ss-onboard__text { font-size: 13px; line-height: 1.3; color: rgba(0,0,0,0.65); margin-bottom: 10px; }
     .ss-onboard__actions { display: flex; gap: 10px; align-items: center; }
+
     .ss-onboard__btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      height: 34px; padding: 0 12px; border-radius: 999px; font-size: 13px;
-      font-weight: 700; text-decoration: none; cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
+
     .ss-onboard__btn--primary { border: 0; color: #fff; background: #202239; }
     .ss-onboard__btn--ghost { border: 1px solid rgba(32,34,57,0.18); color: #202239; background: rgba(255,255,255,0.65); }
   </style>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-W6LRN7EDH7"></script>
   <script>
-    window.dataLayer=window.dataLayer||[];
+    window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag("js",new Date()); gtag("config","G-W6LRN7EDH7",{send_page_view:true});
+    gtag("js",new Date());
+    gtag("config","G-W6LRN7EDH7",{send_page_view:true});
   </script>
 </head>
+
 <body>
 
 <div id="ss-onboard" class="ss-onboard" role="status" aria-live="polite" hidden>
@@ -324,6 +592,7 @@
       <div class="row"><input id="brand-athletic" type="checkbox" value="Athletic Brewing Co."/><label for="brand-athletic">Athletic Brewing Co.</label></div>
     </div>
   </div>
+
   <div class="dropdown" id="neighborhoodDD">
     <button type="button" aria-expanded="false">Neighborhoods ▾</button>
     <div class="menu" role="menu">
@@ -340,8 +609,10 @@
       <div class="row"><input id="n-east-village" type="checkbox" value="East Village"/><label for="n-east-village">East Village</label></div>
     </div>
   </div>
+
   <button id="goBtn" type="button">Go</button>
   <button id="searchToggle" type="button" aria-label="Search" aria-expanded="false">🔍</button>
+
   <div id="searchTopRow">
     <div class="ss-searchTop">
       <span class="ss-searchIcon" aria-hidden="true">🔍</span>
@@ -367,11 +638,13 @@
       </div>
     </div>
   </div>
-  <div id="panel-body"><div id="results"></div></div>
+  <div id="panel-body">
+    <div id="results"></div>
+  </div>
 </div>
 
 <script>
-/* ─── DATA ──────────────────────────────────────────────────────── */
+/* ─── DATA ─────────────────────────────────────────────────────── */
 const locations = [
   {id:"bemelmans",name:"Bemelman's Bar",address:"35 E 76th St, NY",lat:40.774,lng:-73.9636,website:"https://www.rosewoodhotels.com",brand:"Ritual Zero Proof",neighborhood:"Upper East Side",imageUrl:"venue-images/bemelmans.jpeg"},
   {id:"bar-avant",name:"Bar Avant (Olly Olly Market)",address:"601 W 26th St, NY",lat:40.7498,lng:-74.0075,website:"https://ollyollymarket.com",brand:"Seedlip, St. Agrestis",neighborhood:"Chelsea",imageUrl:"venue-images/baravant.jpeg"},
@@ -465,7 +738,7 @@ const locations = [
   {id:"carnemare",name:"Carne Mare",address:"89 South St, NY",lat:40.7062,lng:-74.0034,website:"https://www.carnemare.com",brand:"Athletic Brewing Co., Pentire, Lyre's",neighborhood:"FiDi",imageUrl:"venue-images/carnemare.jpeg"},
 ];
 
-/* ─── EMBED MODE ────────────────────────────────────────────────── */
+/* ─── EMBED MODE ──────────────────────────────────────────────── */
 window.SipSober = window.SipSober || {};
 (function(){
   const p = new URLSearchParams(window.location.search);
@@ -473,40 +746,40 @@ window.SipSober = window.SipSober || {};
   if(window.SipSober.isEmbed) document.body.classList.add("ss-embed");
 })();
 
-/* ─── STATE ─────────────────────────────────────────────────────── */
+/* ─── STATE ────────────────────────────────────────────────────── */
 let map, markersLayer, markersById={};
 let _mapReady=false, _pendingUserLocation=null;
 let _userLocationForDistance=null, _userDot=null, _userHalo=null;
 let _activeMarker=null, _lastFocusedVenueId=null;
 let defaultIcon, activeIcon, currentIcon;
 const mobileQuery = window.matchMedia("(max-width:767px)");
+
 const manhattanLockBounds    = L.latLngBounds([40.5,-74.3],[40.98,-73.6]);
 const manhattanInitialBounds = L.latLngBounds([40.70,-74.05],[40.88,-73.90]);
 
-/* ══════════════════════════════════════════════════════════════════
-   MAP INIT — the entire sequence is:
-   1. window "load" fires  → browser has finished laying out
-   2. requestAnimationFrame → we're inside a real paint frame
-   3. _initMap() creates the map
-   4. map.whenReady() fires → Leaflet is ready
-   5. invalidateSize()      → NOW Leaflet knows the true size
-   6. setTimeout 0          → yield one tick so size is committed
-   7. fitInitialView()      → NOW fit bounds (no jump, no grey)
-   ══════════════════════════════════════════════════════════════════ */
-function _initMap() {
-  map = L.map("map", {
+/* ─────────────────────────────────────────────────────────────────
+   FIX 2: Map initialises AFTER the browser has completed its first
+   paint. This guarantees Leaflet reads the true #map dimensions,
+   which eliminates both the grey-tile gap and the layout jump.
+   ───────────────────────────────────────────────────────────────── */
+function _initMap(){
+  map = L.map("map",{
     zoomControl: false,
     scrollWheelZoom: true,
     preferCanvas: true,
-    tap: false   // prevents iOS tap shim from firing a spurious relayout
-  }).setView([40.755, -73.985], 12.1);
+    // FIX 3: tap:false stops Leaflet's iOS tap shim from triggering
+    // an unwanted invalidateSize() that causes the visible jump.
+    tap: false
+  }).setView([40.755,-73.985],12.1);
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{
     maxZoom: 20,
     subdomains: "abcd",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-    updateWhenIdle: false,  // load tiles immediately on pan/zoom
-    keepBuffer: 4,          // pre-load extra tiles around viewport
+    // FIX 4: Load tiles immediately (not just when idle) and keep
+    // a larger buffer so edges never go grey on fast pan/load.
+    updateWhenIdle: false,
+    keepBuffer: 4,
     detectRetina: true
   }).addTo(map);
 
@@ -515,322 +788,437 @@ function _initMap() {
   map.setMinZoom(11.5);
   markersLayer = L.layerGroup().addTo(map);
 
-  // ── The critical sequence: size THEN bounds, never simultaneously ──
-  map.whenReady(function() {
-    // Step 1: correct the size
-    map.invalidateSize({ animate: false, pan: false });
-
-    // Step 2: wait one tick for the size to be fully committed,
-    // THEN fit bounds. This is what stops both the grey strip
-    // AND the jump — they were both caused by fitBounds running
-    // before invalidateSize had finished.
-    setTimeout(function() {
-      map.invalidateSize({ animate: false, pan: false }); // belt-and-suspenders
-      renderMarkersAndFit();
-    }, 0);
-  });
-
-  // Viewport change handlers — same safe sequence
-  function onResize() {
-    requestAnimationFrame(function() {
-      map.invalidateSize({ animate: false, pan: false });
+  /* ─── FIX 5: Clean, two-step invalidateSize sequence ────────────
+     • rAF frame 1 → layout is done
+     • rAF frame 2 → paint is done → NOW call invalidateSize
+     • 300 ms later → catch any WKWebView async settle
+  ────────────────────────────────────────────────────────────── */
+  function kickSize(){
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        if(!map) return;
+        map.invalidateSize({animate:false,pan:false});
+        setTimeout(()=>{ if(map) map.invalidateSize({animate:false,pan:false}); },300);
+      });
     });
   }
-  window.addEventListener("resize", onResize);
-  window.addEventListener("orientationchange", function(){ setTimeout(onResize, 200); });
-  document.addEventListener("visibilitychange", function(){ if(!document.hidden) onResize(); });
-  window.addEventListener("focus", onResize);
 
-  map.on("popupclose", function(){ clearActiveMarker(); _lastFocusedVenueId=null; });
+  map.whenReady(kickSize);
+  window.addEventListener("resize",            kickSize);
+  window.addEventListener("orientationchange", ()=>setTimeout(kickSize,200));
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden) kickSize(); });
+  window.addEventListener("focus",             kickSize);
+
+  map.on("popupclose",()=>{ clearActiveMarker(); _lastFocusedVenueId=null; });
 
   _buildIcons();
   applyIconForViewport();
   mobileQuery.addEventListener("change", applyIconForViewport);
 
   _mapReady = true;
-  if (_pendingUserLocation) {
-    window.SipSober.setUserLocation(_pendingUserLocation.lat, _pendingUserLocation.lng);
+  if(_pendingUserLocation){
+    window.SipSober.setUserLocation(_pendingUserLocation.lat,_pendingUserLocation.lng);
     _pendingUserLocation = null;
   }
 
+  applyFiltersUnified();
   window.SipSober?.sendVenuesToNative?.();
+  kickSize();
 }
 
-// Kick off after full paint
-if (document.readyState === "complete") {
+// Wait for full paint
+if(document.readyState==="complete"){
   requestAnimationFrame(_initMap);
 } else {
-  window.addEventListener("load", function(){ requestAnimationFrame(_initMap); });
+  window.addEventListener("load",()=>requestAnimationFrame(_initMap));
 }
 
-// Renders markers AND fits the initial view — always called together
-// so they can never get out of sync
-function renderMarkersAndFit() {
-  const brands = getSelectedValues("brand");
-  const hoods  = getSelectedValues("n");
-  const q = (document.getElementById("searchTopInput")?.value || "").trim();
+/* ─── ICONS ────────────────────────────────────────────────────── */
+function makePinIconSVG(hex="#1F2430",size=[28,38],opts={}){
+  const [w,h]=size, ring=opts.ring??false;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 28 38">
+    ${ring?`<path d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z" fill="none" stroke="rgba(32,34,57,0.20)" stroke-width="2.2"/>` : ""}
+    <path d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z" fill="${hex}" stroke="rgba(0,0,0,0.14)" stroke-width="0.5"/>
+    <circle cx="14" cy="13" r="4.6" fill="#F5F6FA"/>
+  </svg>`;
+}
 
-  let filtered = locations.filter(function(loc) {
-    const brandOK = brands.length ? brands.some(function(b){ return (loc.brand||"").toLowerCase().includes(b.toLowerCase()); }) : true;
-    const hoodOK  = hoods.length  ? hoods.includes(loc.neighborhood) : true;
-    return brandOK && hoodOK && matchesSearch(loc, q);
+function makeIcon(size=[28,38],color="#1F2430",isActive=false){
+  return L.icon({
+    iconUrl:"data:image/svg+xml;utf8,"+encodeURIComponent(makePinIconSVG(color,size,{ring:isActive})),
+    iconSize:size,
+    iconAnchor:[Math.floor(size[0]/2),size[1]],
+    popupAnchor:[0,-Math.floor(size[1]*0.84)]
   });
+}
 
-  const hasLoc = !!_userLocationForDistance;
-  if (hasLoc) {
-    filtered.sort(function(a,b){
-      const da=_distanceMilesForVenue(a), db=_distanceMilesForVenue(b);
+function _buildIcons(){
+  const isMobile = mobileQuery.matches;
+  const size = isMobile?[16,24]:[26,36];
+  defaultIcon = makeIcon(size,"#1F2430",false);
+  activeIcon  = makeIcon(size,"#1F2430",true);
+  currentIcon = defaultIcon;
+  L.Marker.prototype.options.icon = currentIcon;
+}
+
+const __origMarkerFactory = L.marker;
+L.marker = function(latlng,options){
+  const opts=options||{};
+  if(!opts.icon) opts.icon=currentIcon||makeIcon();
+  return __origMarkerFactory.call(this,latlng,opts);
+};
+
+function setActiveMarker(m){
+  if(_activeMarker&&_activeMarker!==m) _activeMarker.setIcon(defaultIcon);
+  _activeMarker=m||null;
+  if(_activeMarker) _activeMarker.setIcon(activeIcon);
+}
+
+function clearActiveMarker(){
+  if(_activeMarker) _activeMarker.setIcon(defaultIcon);
+  _activeMarker=null;
+}
+
+function applyIconForViewport(){
+  if(!map) return;
+  _buildIcons();
+  if(markersLayer&&markersLayer.eachLayer){
+    markersLayer.eachLayer(layer=>{
+      if(!layer||typeof layer.setIcon!=="function") return;
+      layer.setIcon(layer===_activeMarker?activeIcon:defaultIcon);
+    });
+  }
+}
+
+/* ─── UI HELPERS ───────────────────────────────────────────────── */
+function closeAllMenus(){
+  document.querySelectorAll(".dropdown").forEach(dd=>dd.classList.remove("open"));
+  document.querySelectorAll(".dropdown > button").forEach(btn=>btn.setAttribute("aria-expanded","false"));
+}
+
+function normalizeUrl(u){
+  u=String(u||"").trim();
+  if(!u||u.toLowerCase()==="n/a") return "";
+  if(!/^https?:\/\//i.test(u)) u="https://"+u;
+  return u;
+}
+
+function getSelectedValues(prefix){
+  return Array.from(document.querySelectorAll(`input[id^="${prefix}-"]:checked`)).map(cb=>cb.value);
+}
+
+function matchesSearch(loc,q){
+  if(!q) return true;
+  return [loc.name,loc.address,loc.brand,loc.neighborhood].filter(Boolean).join(" ").toLowerCase().includes(q.toLowerCase());
+}
+
+/* ─── FILTER CHIPS ─────────────────────────────────────────────── */
+function updateActiveFilters(selectedBrands,selectedNeighborhoods){
+  const c=document.getElementById("active-filters");
+  if(!c) return;
+  c.innerHTML="";
+  const has=selectedBrands.length||selectedNeighborhoods.length;
+  c.style.display=has?"flex":"none";
+  if(!has) return;
+  function pill(type,value){
+    const p=document.createElement("span"); p.className="filter-pill";
+    const x=document.createElement("span"); x.className="filter-pill-x"; x.textContent="×";
+    const l=document.createElement("span"); l.textContent=value;
+    x.addEventListener("click",()=>clearSingleFilter(type,value));
+    p.appendChild(x); p.appendChild(l); c.appendChild(p);
+  }
+  selectedNeighborhoods.forEach(n=>pill("neighborhood",n));
+  selectedBrands.forEach(b=>pill("brand",b));
+}
+
+function clearSingleFilter(type,value){
+  if(type==="brand") document.querySelectorAll('input[id^="brand-"]').forEach(cb=>{if(cb.value===value)cb.checked=false;});
+  else document.querySelectorAll('input[id^="n-"]').forEach(cb=>{if(cb.value===value)cb.checked=false;});
+  applyFiltersUnified();
+}
+
+/* ─── NATIVE BRIDGE ────────────────────────────────────────────── */
+let _didSendVenuesToNative=false;
+function _brandsArrayFromString(s){return String(s||"").split(",").map(x=>x.trim()).filter(Boolean);}
+function _venueForNative(loc){return{id:String(loc.id||""),name:String(loc.name||""),address:String(loc.address||""),neighborhood:String(loc.neighborhood||""),brands:_brandsArrayFromString(loc.brand),website:normalizeUrl(loc.website||""),lat:Number(loc.lat||0),lng:Number(loc.lng||0),imageUrl:String(loc.imageUrl||"")};}
+
+window.SipSober.sendVenuesToNative=function(arg){
+  try{
+    const force=(typeof arg==="boolean")?arg:false;
+    const source=Array.isArray(arg)?arg:(locations||[]);
+    if(_didSendVenuesToNative&&!force&&!Array.isArray(arg)) return;
+    const venues=source.map(_venueForNative).filter(v=>v.id&&v.name);
+    if(window.webkit?.messageHandlers?.sipSober){
+      window.webkit.messageHandlers.sipSober.postMessage({type:"venues",venues});
+      _didSendVenuesToNative=true;
+    }
+  }catch(e){}
+};
+
+window.addEventListener("load",()=>setTimeout(()=>window.SipSober.sendVenuesToNative(),400));
+
+/* ─── RENDERERS ────────────────────────────────────────────────── */
+function renderMarkers(data){
+  if(!markersLayer) return{count:0,bounds:null};
+  markersLayer.clearLayers(); clearActiveMarker(); markersById={};
+  const bounds=L.latLngBounds([]);
+  data.forEach(loc=>{
+    const m=L.marker([loc.lat,loc.lng]).addTo(markersLayer);
+    m.on("click",()=>setActiveMarker(m));
+    if(loc.id) markersById[String(loc.id)]=m;
+    const imgHtml=loc.imageUrl?`<div class="ss-popup-img-wrap"><img class="ss-popup-img" src="${loc.imageUrl}" alt="${loc.name||""}" loading="lazy" onerror="this.closest('.ss-popup-img-wrap')?.remove()"></div>`:"";
+    const web=normalizeUrl(loc.website);
+    m.bindPopup(`<div class="ss-popup ss-popup--simple"><div class="ss-popup-top">${imgHtml}<div class="ss-popup-text"><div class="ss-popup-title">${loc.name||""}</div>${loc.neighborhood?`<div class="ss-popup-tags">${loc.neighborhood}</div>`:""}<div class="ss-popup-meta">${loc.address||""}</div><div class="ss-popup-actions">${web?`<a class="ss-pill" href="${web}" target="_blank" rel="noopener">Website</a>`:""}<a class="ss-pill secondary" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name||"")+" "+(loc.address||""))}" target="_blank" rel="noopener">Directions</a></div></div></div></div>`,{minWidth:220,maxWidth:280,closeButton:true,autoPan:true,keepInView:true,autoPanPaddingTopLeft:[18,160],autoPanPaddingBottomRight:[18,260],offset:[0,-18]});
+    bounds.extend([loc.lat,loc.lng]);
+  });
+  return{count:data.length,bounds:data.length?bounds:null};
+}
+
+function renderList(data){
+  const results=document.getElementById("results");
+  const rc=document.getElementById("results-count");
+  if(!results) return;
+  results.innerHTML="";
+  if(rc) rc.textContent=data.length===0?"No places found":`${data.length} place${data.length===1?"":"s"}`;
+  data.forEach(loc=>{
+    const card=document.createElement("div"); card.className="card";
+    const web=normalizeUrl(loc.website);
+    card.innerHTML=`<div class="card-top"><span class="card-name" data-focus-id="${loc.id}">${loc.name}</span><button class="fav-btn" data-id="${loc.id}" aria-label="Favorite">★</button></div><div class="meta">${loc.address||""}</div>${web?`<a href="${web}" target="_blank" rel="noopener">Website</a>`:""}<div class="meta">${[_distanceLabelForVenue(loc),loc.neighborhood||"",loc.brand||""].filter(Boolean).join(" • ")}</div>`;
+    results.appendChild(card);
+  });
+  window.SipSober?.sendVenuesToNative?.(data);
+}
+
+/* ─── FILTER + APPLY ────────────────────────────────────────────── */
+function applyFiltersUnified(){
+  closeAllMenus();
+  const brands=getSelectedValues("brand"), hoods=getSelectedValues("n");
+  const q=(document.getElementById("searchTopInput")?.value||"").trim();
+  let filtered=locations.filter(loc=>{
+    const brandOK=brands.length?brands.some(b=>(loc.brand||"").toLowerCase().includes(b.toLowerCase())):true;
+    const hoodOK=hoods.length?hoods.includes(loc.neighborhood):true;
+    return brandOK&&hoodOK&&matchesSearch(loc,q);
+  });
+  const hasLoc=!!_userLocationForDistance;
+  if(hasLoc){
+    filtered.sort((a,b)=>{
+      const da=_distanceMilesForVenue(a),db=_distanceMilesForVenue(b);
       if(da==null&&db==null) return (a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"});
       if(da==null) return 1; if(db==null) return -1;
       if(da!==db) return da-db;
       return (a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"});
     });
   } else {
-    filtered.sort(function(a,b){ return (a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"}); });
+    filtered.sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"}));
   }
-
-  const sortBtn = document.getElementById("sortBtn");
-  if (sortBtn) sortBtn.textContent = hasLoc ? "Miles" : "A–Z";
-
+  const sortBtn=document.getElementById("sortBtn");
+  if(sortBtn) sortBtn.textContent=hasLoc?"Miles":"A–Z";
   renderList(filtered);
-  const { count, bounds } = renderMarkers(filtered);
-  updateActiveFilters(brands, hoods);
-
-  if (count > 0 && bounds && !q.length) {
-    const panel  = document.getElementById("bottom-panel");
-    const panelH = panel ? panel.getBoundingClientRect().height : 0;
-    map.fitBounds(bounds, {
-      paddingTopLeft:     [16, window.SipSober?.isEmbed ? 70 : 110],
-      paddingBottomRight: [16, panelH + 16],
-      maxZoom: 16
+  if(!map) return;
+  const{count,bounds}=renderMarkers(filtered);
+  updateActiveFilters(brands,hoods);
+  const panel=document.getElementById("bottom-panel");
+  const panelH=panel?panel.getBoundingClientRect().height:0;
+  if(count>0&&bounds&&!q.length){
+    map.fitBounds(bounds,{
+      paddingTopLeft:[16,window.SipSober?.isEmbed?70:110],
+      paddingBottomRight:[16,panelH+16],
+      maxZoom:16
     });
   }
-  window.filteredBounds = bounds;
+  window.filteredBounds=bounds;
 }
 
-/* ─── ICONS ─────────────────────────────────────────────────────── */
-function makePinIconSVG(hex,size,opts){
-  hex=hex||"#1F2430"; size=size||[28,38]; opts=opts||{};
-  const [w,h]=size, ring=opts.ring||false;
-  return '<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'" viewBox="0 0 28 38">'
-    +(ring?'<path d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z" fill="none" stroke="rgba(32,34,57,0.20)" stroke-width="2.2"/>':'')
-    +'<path d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z" fill="'+hex+'" stroke="rgba(0,0,0,0.14)" stroke-width="0.5"/>'
-    +'<circle cx="14" cy="13" r="4.6" fill="#F5F6FA"/></svg>';
-}
-function makeIcon(size,color,isActive){
-  size=size||[28,38]; color=color||"#1F2430"; isActive=isActive||false;
-  return L.icon({
-    iconUrl:"data:image/svg+xml;utf8,"+encodeURIComponent(makePinIconSVG(color,size,{ring:isActive})),
-    iconSize:size, iconAnchor:[Math.floor(size[0]/2),size[1]], popupAnchor:[0,-Math.floor(size[1]*0.84)]
-  });
-}
-function _buildIcons(){
-  const sz = mobileQuery.matches?[16,24]:[26,36];
-  defaultIcon=makeIcon(sz,"#1F2430",false);
-  activeIcon =makeIcon(sz,"#1F2430",true);
-  currentIcon=defaultIcon;
-  L.Marker.prototype.options.icon=currentIcon;
-}
-const __origMarkerFactory=L.marker;
-L.marker=function(latlng,options){ const o=options||{}; if(!o.icon) o.icon=currentIcon||makeIcon(); return __origMarkerFactory.call(this,latlng,o); };
-function setActiveMarker(m){ if(_activeMarker&&_activeMarker!==m) _activeMarker.setIcon(defaultIcon); _activeMarker=m||null; if(_activeMarker) _activeMarker.setIcon(activeIcon); }
-function clearActiveMarker(){ if(_activeMarker) _activeMarker.setIcon(defaultIcon); _activeMarker=null; }
-function applyIconForViewport(){
-  if(!map) return; _buildIcons();
-  if(markersLayer&&markersLayer.eachLayer) markersLayer.eachLayer(function(l){ if(l&&typeof l.setIcon==="function") l.setIcon(l===_activeMarker?activeIcon:defaultIcon); });
-}
-
-/* ─── UI HELPERS ────────────────────────────────────────────────── */
-function closeAllMenus(){ document.querySelectorAll(".dropdown").forEach(function(d){d.classList.remove("open");}); document.querySelectorAll(".dropdown > button").forEach(function(b){b.setAttribute("aria-expanded","false");}); }
-function normalizeUrl(u){ u=String(u||"").trim(); if(!u||u.toLowerCase()==="n/a") return ""; if(!/^https?:\/\//i.test(u)) u="https://"+u; return u; }
-function getSelectedValues(prefix){ return Array.from(document.querySelectorAll('input[id^="'+prefix+'-"]:checked')).map(function(cb){return cb.value;}); }
-function matchesSearch(loc,q){ if(!q) return true; return [loc.name,loc.address,loc.brand,loc.neighborhood].filter(Boolean).join(" ").toLowerCase().includes(q.toLowerCase()); }
-
-/* ─── FILTER CHIPS ──────────────────────────────────────────────── */
-function updateActiveFilters(brands,hoods){
-  const c=document.getElementById("active-filters"); if(!c) return;
-  c.innerHTML=""; const has=brands.length||hoods.length; c.style.display=has?"flex":"none"; if(!has) return;
-  function pill(type,value){ const p=document.createElement("span"); p.className="filter-pill"; const x=document.createElement("span"); x.className="filter-pill-x"; x.textContent="×"; const l=document.createElement("span"); l.textContent=value; x.addEventListener("click",function(){clearSingleFilter(type,value);}); p.appendChild(x); p.appendChild(l); c.appendChild(p); }
-  hoods.forEach(function(n){pill("neighborhood",n);}); brands.forEach(function(b){pill("brand",b);});
-}
-function clearSingleFilter(type,value){
-  if(type==="brand") document.querySelectorAll('input[id^="brand-"]').forEach(function(cb){if(cb.value===value)cb.checked=false;});
-  else document.querySelectorAll('input[id^="n-"]').forEach(function(cb){if(cb.value===value)cb.checked=false;});
-  applyFiltersUnified();
-}
-
-/* ─── NATIVE BRIDGE ─────────────────────────────────────────────── */
-let _didSendVenuesToNative=false;
-function _brandsArrayFromString(s){return String(s||"").split(",").map(function(x){return x.trim();}).filter(Boolean);}
-function _venueForNative(loc){return{id:String(loc.id||""),name:String(loc.name||""),address:String(loc.address||""),neighborhood:String(loc.neighborhood||""),brands:_brandsArrayFromString(loc.brand),website:normalizeUrl(loc.website||""),lat:Number(loc.lat||0),lng:Number(loc.lng||0),imageUrl:String(loc.imageUrl||"")};}
-window.SipSober.sendVenuesToNative=function(arg){
-  try{ const force=(typeof arg==="boolean")?arg:false; const source=Array.isArray(arg)?arg:(locations||[]); if(_didSendVenuesToNative&&!force&&!Array.isArray(arg)) return; const venues=source.map(_venueForNative).filter(function(v){return v.id&&v.name;}); if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.sipSober){window.webkit.messageHandlers.sipSober.postMessage({type:"venues",venues});_didSendVenuesToNative=true;} }catch(e){}
-};
-window.addEventListener("load",function(){setTimeout(function(){window.SipSober.sendVenuesToNative();},400);});
-
-/* ─── RENDERERS ─────────────────────────────────────────────────── */
-function renderMarkers(data){
-  if(!markersLayer) return{count:0,bounds:null};
-  markersLayer.clearLayers(); clearActiveMarker(); markersById={};
-  const bounds=L.latLngBounds([]);
-  data.forEach(function(loc){
-    const m=L.marker([loc.lat,loc.lng]).addTo(markersLayer);
-    m.on("click",function(){setActiveMarker(m);});
-    if(loc.id) markersById[String(loc.id)]=m;
-    const imgHtml=loc.imageUrl?'<div class="ss-popup-img-wrap"><img class="ss-popup-img" src="'+loc.imageUrl+'" alt="'+(loc.name||"")+'" loading="lazy" onerror="this.closest(\'.ss-popup-img-wrap\')?.remove()"></div>':"";
-    const web=normalizeUrl(loc.website);
-    m.bindPopup('<div class="ss-popup ss-popup--simple"><div class="ss-popup-top">'+imgHtml+'<div class="ss-popup-text"><div class="ss-popup-title">'+(loc.name||"")+'</div>'+(loc.neighborhood?'<div class="ss-popup-tags">'+loc.neighborhood+'</div>':'')+'<div class="ss-popup-meta">'+(loc.address||"")+'</div><div class="ss-popup-actions">'+(web?'<a class="ss-pill" href="'+web+'" target="_blank" rel="noopener">Website</a>':'")+'<a class="ss-pill secondary" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((loc.name||"")+" "+(loc.address||""))+'" target="_blank" rel="noopener">Directions</a></div></div></div></div>',{minWidth:220,maxWidth:280,closeButton:true,autoPan:true,keepInView:true,autoPanPaddingTopLeft:[18,160],autoPanPaddingBottomRight:[18,260],offset:[0,-18]});
-    bounds.extend([loc.lat,loc.lng]);
-  });
-  return{count:data.length,bounds:data.length?bounds:null};
-}
-function renderList(data){
-  const results=document.getElementById("results"), rc=document.getElementById("results-count"); if(!results) return;
-  results.innerHTML="";
-  if(rc) rc.textContent=data.length===0?"No places found":data.length+" place"+(data.length===1?"":"s");
-  data.forEach(function(loc){
-    const card=document.createElement("div"); card.className="card";
-    const web=normalizeUrl(loc.website);
-    card.innerHTML='<div class="card-top"><span class="card-name" data-focus-id="'+loc.id+'">'+loc.name+'</span><button class="fav-btn" data-id="'+loc.id+'" aria-label="Favorite">★</button></div><div class="meta">'+(loc.address||"")+"</div>"+(web?'<a href="'+web+'" target="_blank" rel="noopener">Website</a>':"")+'<div class="meta">'+[_distanceLabelForVenue(loc),loc.neighborhood||"",loc.brand||""].filter(Boolean).join(" • ")+"</div>";
-    results.appendChild(card);
-  });
-  window.SipSober&&window.SipSober.sendVenuesToNative&&window.SipSober.sendVenuesToNative(data);
-}
-
-/* ─── FILTER + APPLY ────────────────────────────────────────────── */
-function applyFiltersUnified(){
-  closeAllMenus();
-  if(map) renderMarkersAndFit();
-  else {
-    // Map not ready yet — just update the list
-    const sorted=locations.slice().sort(function(a,b){return (a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"});});
-    renderList(sorted);
-  }
-}
 function applyFiltersWithUserLocation(){applyFiltersUnified();}
 function applyFilters(){applyFiltersUnified();}
 
 /* ─── LOCATION BRIDGE ───────────────────────────────────────────── */
 function _showUserLocation(lat,lng){
-  if(!map) return; const ll=L.latLng(lat,lng);
+  if(!map) return;
+  const ll=L.latLng(lat,lng);
   if(_userDot){try{map.removeLayer(_userDot);}catch(e){}_userDot=null;}
   if(_userHalo){try{map.removeLayer(_userHalo);}catch(e){}_userHalo=null;}
   _userHalo=L.circle(ll,{radius:120,stroke:false,fill:true,fillOpacity:0.12}).addTo(map);
   _userDot=L.circleMarker(ll,{radius:6,stroke:true,weight:2,opacity:1,fill:true,fillOpacity:1}).addTo(map);
 }
+
 function _clearUserLocationLayers(){
   if(_userDot){try{map.removeLayer(_userDot);}catch(e){}_userDot=null;}
   if(_userHalo){try{map.removeLayer(_userHalo);}catch(e){}_userHalo=null;}
 }
+
 function _haversineMiles(lat1,lon1,lat2,lon2){
-  const toRad=function(v){return v*Math.PI/180;}, R=3958.7613;
-  const dLat=toRad(lat2-lat1),dLon=toRad(lon2-lon1);
-  const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)*Math.sin(dLon/2);
+  const r=v=>(v*Math.PI)/180, R=3958.7613;
+  const dLat=r(lat2-lat1),dLon=r(lon2-lon1);
+  const a=Math.sin(dLat/2)**2+Math.cos(r(lat1))*Math.cos(r(lat2))*Math.sin(dLon/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
-function _distanceMilesForVenue(loc){ if(!_userLocationForDistance) return null; const lat=Number(loc&&loc.lat),lng=Number(loc&&loc.lng); if(!isFinite(lat)||!isFinite(lng)) return null; const m=_haversineMiles(_userLocationForDistance.lat,_userLocationForDistance.lng,lat,lng); return isFinite(m)?m:null; }
-function _distanceLabelForVenue(loc){ if(!_userLocationForDistance) return ""; const m=_distanceMilesForVenue(loc); if(m==null) return ""; return m<0.1?"<0.1 mi":m.toFixed(1)+" mi"; }
+
+function _distanceMilesForVenue(loc){
+  if(!_userLocationForDistance) return null;
+  const lat=Number(loc?.lat),lng=Number(loc?.lng);
+  if(!Number.isFinite(lat)||!Number.isFinite(lng)) return null;
+  const m=_haversineMiles(_userLocationForDistance.lat,_userLocationForDistance.lng,lat,lng);
+  return Number.isFinite(m)?m:null;
+}
+
+function _distanceLabelForVenue(loc){
+  if(!_userLocationForDistance) return "";
+  const m=_distanceMilesForVenue(loc);
+  if(m==null) return "";
+  return m<0.1?"<0.1 mi":`${m.toFixed(1)} mi`;
+}
 
 window.SipSober.setUserLocation=function(lat,lng){
-  const LAT=Number(lat),LNG=Number(lng); if(!isFinite(LAT)||!isFinite(LNG)) return;
+  const LAT=Number(lat),LNG=Number(lng);
+  if(!Number.isFinite(LAT)||!Number.isFinite(LNG)) return;
   if(!_mapReady){_pendingUserLocation={lat:LAT,lng:LNG};return;}
-  _pendingUserLocation=null; _showUserLocation(LAT,LNG); _userLocationForDistance={lat:LAT,lng:LNG};
-  applyFiltersUnified(); map.invalidateSize(false); map.setView([LAT,LNG],Math.max(map.getZoom(),15),{animate:true});
-  const panel=document.getElementById("bottom-panel"); if(panel) panel.classList.add("expanded");
+  _pendingUserLocation=null;
+  _showUserLocation(LAT,LNG);
+  _userLocationForDistance={lat:LAT,lng:LNG};
+  applyFiltersUnified();
+  map.invalidateSize(false);
+  map.setView([LAT,LNG],Math.max(map.getZoom(),15),{animate:true});
+  const panel=document.getElementById("bottom-panel");
+  if(panel) panel.classList.add("expanded");
 };
-window.SipSober.clearUserLocation=function(){ _pendingUserLocation=null; _userLocationForDistance=null; applyFiltersUnified(); if(!_mapReady) return; _clearUserLocationLayers(); };
+
+window.SipSober.clearUserLocation=function(){
+  _pendingUserLocation=null; _userLocationForDistance=null;
+  applyFiltersUnified();
+  if(!_mapReady) return;
+  _clearUserLocationLayers();
+};
+
 window.SipSober.resetMapToDefault=function(){resetMapToDefault();};
-window.setUserLocation=function(lat,lng){window.SipSober.setUserLocation(lat,lng);};
+window.setUserLocation  =function(lat,lng){window.SipSober.setUserLocation(lat,lng);};
 window.clearUserLocation=function(){window.SipSober.clearUserLocation();};
 window.resetMapToDefault=function(){window.SipSober.resetMapToDefault();};
 
-/* ─── RESET ──────────────────────────────────────────────────────── */
+/* ─── RESET ─────────────────────────────────────────────────────── */
 function fitInitialView(){
   if(!map) return;
-  const panel=document.getElementById("bottom-panel"), panelH=panel?panel.getBoundingClientRect().height:0;
-  map.fitBounds(manhattanInitialBounds,{paddingTopLeft:[16,window.SipSober&&window.SipSober.isEmbed?70:110],paddingBottomRight:[16,panelH+16]});
+  const panel=document.getElementById("bottom-panel");
+  const panelH=panel?panel.getBoundingClientRect().height:0;
+  map.fitBounds(manhattanInitialBounds,{
+    paddingTopLeft:[16,window.SipSober?.isEmbed?70:110],
+    paddingBottomRight:[16,panelH+16]
+  });
 }
+
 function resetMapToDefault(){
   closeAllMenus();
-  document.getElementById("searchTopRow")&&document.getElementById("searchTopRow").classList.remove("is-open");
-  document.getElementById("searchToggle")&&document.getElementById("searchToggle").setAttribute("aria-expanded","false");
-  document.querySelectorAll('input[id^="brand-"],input[id^="n-"]').forEach(function(cb){cb.checked=false;});
+  document.getElementById("searchTopRow")?.classList.remove("is-open");
+  document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");
+  document.querySelectorAll('input[id^="brand-"],input[id^="n-"]').forEach(cb=>{cb.checked=false;});
   const si=document.getElementById("searchTopInput"); if(si) si.value="";
-  window.SipSober.clearUserLocation(); applyFiltersUnified(); updateActiveFilters([],[]);
-  setTimeout(function(){if(map){map.invalidateSize(false);fitInitialView();}},80);
+  window.SipSober.clearUserLocation();
+  applyFiltersUnified();
+  updateActiveFilters([],[]);
+  setTimeout(()=>{if(map){map.invalidateSize(false);fitInitialView();}},80);
 }
 
 /* ─── FAVORITES + FOCUS ─────────────────────────────────────────── */
-window.SipSober.setFavorites=function(payload){ const ids=new Set((payload&&payload.ids)||[]); document.querySelectorAll(".fav-btn[data-id]").forEach(function(btn){btn.classList.toggle("is-fav",ids.has(btn.dataset.id));}); };
+window.SipSober.setFavorites=function(payload){
+  const ids=new Set((payload&&payload.ids)||[]);
+  document.querySelectorAll(".fav-btn[data-id]").forEach(btn=>btn.classList.toggle("is-fav",ids.has(btn.dataset.id)));
+};
+
 window.SipSober.setFilters=function(payload){
-  const brands=Array.isArray(payload&&payload.brands)?payload.brands:[];
-  const hoods=Array.isArray(payload&&payload.neighborhoods)?payload.neighborhoods:[];
-  document.querySelectorAll('input[id^="brand-"]').forEach(function(cb){cb.checked=brands.includes(cb.value);});
-  document.querySelectorAll('input[id^="n-"]').forEach(function(cb){cb.checked=hoods.includes(cb.value);});
+  const brands=Array.isArray(payload?.brands)?payload.brands:[];
+  const hoods=Array.isArray(payload?.neighborhoods)?payload.neighborhoods:[];
+  document.querySelectorAll('input[id^="brand-"]').forEach(cb=>{cb.checked=brands.includes(cb.value);});
+  document.querySelectorAll('input[id^="n-"]').forEach(cb=>{cb.checked=hoods.includes(cb.value);});
   applyFiltersUnified();
 };
+
 window.SipSober.focusVenue=function(payload){
-  const id=String((typeof payload==="string"?payload:(payload&&payload.venueId))||"").trim();
-  if(!id||_lastFocusedVenueId===id) return; _lastFocusedVenueId=id;
-  renderMarkers(locations); renderList(locations); updateActiveFilters(getSelectedValues("brand"),getSelectedValues("n"));
+  const id=String((typeof payload==="string"?payload:payload?.venueId)||"").trim();
+  if(!id||_lastFocusedVenueId===id) return;
+  _lastFocusedVenueId=id;
+  renderMarkers(locations); renderList(locations);
+  updateActiveFilters(getSelectedValues("brand"),getSelectedValues("n"));
   let tries=0;
   (function attempt(){
-    const marker=markersById&&markersById[id];
-    if(!marker){ if(++tries<=25) return setTimeout(attempt,120); _lastFocusedVenueId=null; return; }
-    const ll=marker.getLatLng(); map.invalidateSize(false); map.setView([ll.lat,ll.lng],16,{animate:true});
-    setTimeout(function(){ setActiveMarker(marker); marker.openPopup(); const c=document.querySelector(".leaflet-popup-close-button"); if(c) c.addEventListener("click",function(){_lastFocusedVenueId=null;},{once:true}); },200);
-    const panel=document.getElementById("bottom-panel"); if(panel) panel.classList.add("expanded");
+    const marker=markersById?.[id];
+    if(!marker){
+      if(++tries<=25) return setTimeout(attempt,120);
+      _lastFocusedVenueId=null; return;
+    }
+    const ll=marker.getLatLng();
+    map.invalidateSize(false);
+    map.setView([ll.lat,ll.lng],16,{animate:true});
+    setTimeout(()=>{
+      setActiveMarker(marker); marker.openPopup();
+      const c=document.querySelector(".leaflet-popup-close-button");
+      if(c) c.addEventListener("click",()=>{_lastFocusedVenueId=null;},{once:true});
+    },200);
+    const panel=document.getElementById("bottom-panel");
+    if(panel) panel.classList.add("expanded");
   })();
 };
-window.SipSober.focusVenueById=function(id){window.SipSober.focusVenue(id);};
-window.SipSober.closePopup=function(){try{map&&map.closePopup();}catch(e){}};
 
-/* ─── EVENT WIRING ───────────────────────────────────────────────── */
-document.addEventListener("keydown",function(e){if(e.key==="Escape")closeAllMenus();});
-document.addEventListener("click",function(e){
-  if(e.target.closest("a")){closeAllMenus();document.getElementById("searchTopRow")&&document.getElementById("searchTopRow").classList.remove("is-open");document.getElementById("searchToggle")&&document.getElementById("searchToggle").setAttribute("aria-expanded","false");return;}
+window.SipSober.focusVenueById=function(id){window.SipSober.focusVenue(id);};
+window.SipSober.closePopup=function(){try{map?.closePopup();}catch(e){}};
+
+/* ─── EVENT WIRING ──────────────────────────────────────────────── */
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeAllMenus();});
+
+document.addEventListener("click",e=>{
+  if(e.target.closest("a")){closeAllMenus();document.getElementById("searchTopRow")?.classList.remove("is-open");document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");return;}
   const favBtn=e.target.closest(".fav-btn");
-  if(favBtn){e.preventDefault();e.stopPropagation();const venueId=favBtn.dataset.id;const v=locations.find(function(x){return String(x.id)===String(venueId);});if(!v)return;favBtn.classList.toggle("is-fav");window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.favorites&&window.webkit.messageHandlers.favorites.postMessage({action:"toggle",venue:{venueId:String(v.id),name:v.name||"",address:v.address||"",website:normalizeUrl(v.website||""),neighborhood:v.neighborhood||"",brands:v.brand||""}});return;}
+  if(favBtn){
+    e.preventDefault();e.stopPropagation();
+    const venueId=favBtn.dataset.id;
+    const v=locations.find(x=>String(x.id)===String(venueId)); if(!v) return;
+    favBtn.classList.toggle("is-fav");
+    window.webkit?.messageHandlers?.favorites?.postMessage({action:"toggle",venue:{venueId:String(v.id),name:v.name||"",address:v.address||"",website:normalizeUrl(v.website||""),neighborhood:v.neighborhood||"",brands:v.brand||""}});
+    return;
+  }
   const nameEl=e.target.closest(".card-name[data-focus-id]");
-  if(nameEl){e.preventDefault();e.stopPropagation();window.SipSober&&window.SipSober.focusVenue(nameEl.dataset.focusId);return;}
+  if(nameEl){e.preventDefault();e.stopPropagation();window.SipSober?.focusVenue(nameEl.dataset.focusId);return;}
   const btn=e.target.closest(".dropdown > button");
   if(btn){const p=btn.parentElement,willOpen=!p.classList.contains("open");closeAllMenus();if(willOpen){p.classList.add("open");btn.setAttribute("aria-expanded","true");}return;}
   if(!e.target.closest(".dropdown")) closeAllMenus();
-  if(!e.target.closest("#searchTopRow")&&!e.target.closest("#searchToggle")){const row=document.getElementById("searchTopRow");if(row&&row.classList.contains("is-open")){row.classList.remove("is-open");document.getElementById("searchToggle")&&document.getElementById("searchToggle").setAttribute("aria-expanded","false");document.getElementById("searchTopInput")&&document.getElementById("searchTopInput").blur();}}
+  if(!e.target.closest("#searchTopRow")&&!e.target.closest("#searchToggle")){
+    const row=document.getElementById("searchTopRow");
+    if(row?.classList.contains("is-open")){row.classList.remove("is-open");document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");document.getElementById("searchTopInput")?.blur();}
+  }
 });
 
-document.querySelectorAll(".dropdown > button").forEach(function(btn){
-  btn.setAttribute("aria-haspopup","true");const dd=btn.parentElement,menu=dd.querySelector(".menu");
+document.querySelectorAll(".dropdown > button").forEach(btn=>{
+  btn.setAttribute("aria-haspopup","true");
+  const dd=btn.parentElement,menu=dd.querySelector(".menu");
   if(dd&&menu){const id=dd.id?dd.id+"-menu":"menu-"+Math.random().toString(36).slice(2);menu.id=id;btn.setAttribute("aria-controls",id);}
 });
 
-document.getElementById("goBtn")&&document.getElementById("goBtn").addEventListener("click",applyFiltersUnified);
+document.getElementById("goBtn")?.addEventListener("click",applyFiltersUnified);
 
-(function(){
+(()=>{
   const toggle=document.getElementById("searchToggle"),row=document.getElementById("searchTopRow"),input=document.getElementById("searchTopInput");
   if(!toggle||!row) return;
-  function openRow(){row.classList.add("is-open");toggle.setAttribute("aria-expanded","true");setTimeout(function(){input&&input.focus();},50);}
-  function closeRow(){row.classList.remove("is-open");toggle.setAttribute("aria-expanded","false");input&&input.blur();}
+  function openRow(){row.classList.add("is-open");toggle.setAttribute("aria-expanded","true");setTimeout(()=>input?.focus(),50);}
+  function closeRow(){row.classList.remove("is-open");toggle.setAttribute("aria-expanded","false");input?.blur();}
   window.SipSober._openSearchRow=openRow; window.SipSober._closeSearchRow=closeRow;
-  toggle.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();row.classList.contains("is-open")?closeRow():openRow();});
+  toggle.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();row.classList.contains("is-open")?closeRow():openRow();});
 })();
 
 const searchInput=document.getElementById("searchTopInput");
 const searchClear=document.getElementById("searchTopClear");
-searchInput&&searchInput.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();applyFiltersUnified();document.getElementById("searchTopRow")&&document.getElementById("searchTopRow").classList.remove("is-open");document.getElementById("searchToggle")&&document.getElementById("searchToggle").setAttribute("aria-expanded","false");searchInput.blur();}});
-searchClear&&searchClear.addEventListener("click",function(){if(searchInput)searchInput.value="";applyFiltersUnified();});
+searchInput?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyFiltersUnified();document.getElementById("searchTopRow")?.classList.remove("is-open");document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");searchInput.blur();}});
+searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";applyFiltersUnified();});
 
-(function(){
-  const panel=document.getElementById("bottom-panel"),toggle=document.getElementById("panel-toggle"),label=toggle&&toggle.querySelector(".label");
+(()=>{
+  const panel=document.getElementById("bottom-panel"),toggle=document.getElementById("panel-toggle"),label=toggle?.querySelector(".label");
   if(!panel||!toggle) return;
   function syncLabel(){const ex=panel.classList.contains("expanded");toggle.setAttribute("aria-expanded",ex?"true":"false");if(label)label.textContent=ex?"Hide":"Show";}
-  toggle.addEventListener("click",function(e){e.stopPropagation();panel.classList.toggle("expanded");syncLabel();});
+  toggle.addEventListener("click",e=>{e.stopPropagation();panel.classList.toggle("expanded");syncLabel();});
   if(window.matchMedia("(max-width:768px)").matches) panel.classList.add("expanded");
   syncLabel();
 })();
 
-// Render list right away so something is visible before map init
-renderList(locations.slice().sort(function(a,b){return (a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"});}));
+// Render list immediately (map init is async but list doesn't need it)
+renderList(locations.slice().sort((a,b)=>(a.name||"").localeCompare(b.name||"")));
 </script>
 
 <script>
@@ -839,12 +1227,12 @@ renderList(locations.slice().sort(function(a,b){return (a.name||"").localeCompar
   function showOnboarding(){
     if(localStorage.getItem(KEY)==="true") return;
     const el=document.getElementById("ss-onboard"); if(!el) return;
-    el.hidden=false; requestAnimationFrame(function(){el.classList.add("is-visible");});
+    el.hidden=false; requestAnimationFrame(()=>el.classList.add("is-visible"));
     const ok=document.getElementById("ss-onboard-ok");
-    function dismiss(){localStorage.setItem(KEY,"true");el.classList.remove("is-visible");setTimeout(function(){el.hidden=true;},240);}
-    ok&&ok.addEventListener("click",dismiss);
+    function dismiss(){localStorage.setItem(KEY,"true");el.classList.remove("is-visible");setTimeout(()=>(el.hidden=true),240);}
+    ok?.addEventListener("click",dismiss);
   }
-  window.addEventListener("load",function(){setTimeout(showOnboarding,450);});
+  window.addEventListener("load",()=>setTimeout(showOnboarding,450));
 })();
 </script>
 
