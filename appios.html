@@ -6,126 +6,91 @@
   <title>Zero-Proof Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- PWA manifest + icons -->
   <link rel="manifest" href="/sipsoberleaflet/manifest.json">
   <meta name="theme-color" content="#202329">
   <link rel="apple-touch-icon" href="/sipsoberleaflet/icons/icon-192.png">
   <link rel="icon" href="/sipsoberleaflet/icons/icon-192.png">
 
-  <!-- Leaflet CSS (latest CDN) -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    crossorigin="anonymous"
-  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous" />
+
+  <!-- FIX: Leaflet JS in <head> so it's parsed before DOMContentLoaded -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin="anonymous"></script>
 
   <style>
-    
-    /* =========================
-       SOFT BRANDED MAP — BALANCED DEPTH
-       ========================= */
-
-    /* ✅ DO NOT change Leaflet pane positioning */
     .leaflet-tile-pane {
       filter: brightness(0.96) contrast(1.06) saturate(0.85);
     }
 
-    /* Container positioning */
-    .leaflet-container {
-      position: relative;
-    }
+    .leaflet-container { position: relative; }
 
-    /* Stable brand wash (doesn't interfere with tile pane layout) */
     .leaflet-container::before {
       content: "";
       position: absolute;
       inset: 0;
       pointer-events: none;
       background: rgba(32, 34, 57, 0.10);
-      z-index: 200; /* under vignette, above tiles */
+      z-index: 200;
     }
 
-    /* Restore elegant vignette depth */
     .leaflet-container::after {
       content: "";
       position: absolute;
       inset: 0;
       pointer-events: none;
-
-      background: radial-gradient(
-        circle at 50% 32%,
-        rgba(255,255,255,0) 0%,
-        rgba(32,34,57,0.06) 60%,
-        rgba(32,34,57,0.10) 100%
-      );
-
+      background: radial-gradient(circle at 50% 32%, rgba(255,255,255,0) 0%, rgba(32,34,57,0.06) 60%, rgba(32,34,57,0.10) 100%);
       opacity: 0.9;
       z-index: 300;
     }
 
     :root {
-      /* mobile panel heights (used for dynamic map resizing) */
       --panel-collapsed: 18vh;
       --panel-expanded: 38vh;
     }
 
-    html,
-    body {
+    html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow: hidden;
       overscroll-behavior: none;
-
-      /* Cleaner, more modern iOS font stack */
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-
-      /* Softer, professional text color */
       background: #ffffff;
       color: #1c1c1e;
-
-      /* Makes text look smoother on iPhone */
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-
       line-height: 1.45;
-      font-size: 12px; /* smaller base type */
+      font-size: 12px;
     }
 
-    /* --- Top filters bar: floating pill --- */
     #filters {
       position: fixed;
       top: 10px;
       left: 20px;
       right: 12px;
       z-index: 3100;
-
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
-
       padding: 6px 12px;
       background: rgba(255, 255, 255, 0.98);
-      border-radius: 999px; /* pill shape */
+      border-radius: 999px;
       border: 1px solid #e2e4ec;
       box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
-
       backdrop-filter: none;
     }
 
-    /* --- Top bar search (after Go) --- */
-    .ss-searchTop{
+    .ss-searchTop {
       display: flex;
       align-items: center;
       gap: 8px;
       height: 26px;
       padding: 0 10px;
-
       background: #f2f2f7;
       border: 1px solid #ccc;
       border-radius: 999px;
-
       font-size: 12px;
       width: 160px;
       min-width: 160px;
@@ -134,12 +99,9 @@
       overflow: hidden;
     }
 
-    .ss-searchIcon{
-      font-size: 11px;
-      opacity: 0.6;
-    }
+    .ss-searchIcon { font-size: 11px; opacity: 0.6; }
 
-    #searchTopInput{
+    #searchTopInput {
       border: 0;
       outline: none;
       background: transparent;
@@ -147,16 +109,13 @@
       font-size: 16px;
       min-width: 0;
       line-height: 1;
-
-      transform: scale(0.82);          /* makes it LOOK smaller */
-      transform-origin: left center;   /* keep it aligned */
+      transform: scale(0.82);
+      transform-origin: left center;
     }
 
-    #searchTopInput::-webkit-search-cancel-button{
-      -webkit-appearance: none;
-    }
+    #searchTopInput::-webkit-search-cancel-button { -webkit-appearance: none; }
 
-    #searchTopClear{
+    #searchTopClear {
       border: 0;
       background: transparent;
       font-size: 16px;
@@ -166,11 +125,7 @@
       padding: 0;
     }
 
-    /* =========================
-       TOP SEARCH TOGGLE
-       ========================= */
-
-    #searchToggle{
+    #searchToggle {
       border: 1px solid #ccc;
       background: #f2f2f7;
       border-radius: 999px;
@@ -180,18 +135,14 @@
       color: #2f3b69;
     }
 
-    /* collapsible row */
-    #searchTopRow{
+    #searchTopRow {
       display: none;
       width: 100%;
       margin-top: 4px;
-
-      padding-left: 6px; /* aligns search bar under pills */
+      padding-left: 6px;
     }
 
-    #searchTopRow.is-open{
-      display: block;
-    }
+    #searchTopRow.is-open { display: block; }
 
     .dropdown > button {
       background: #f2f2f7;
@@ -203,12 +154,10 @@
       color: #2f3b69;
     }
 
-    /* Dropdown menus: show ~4 items + scroll */
     .dropdown .menu {
       max-height: 160px;
       overflow-y: auto;
       overflow-x: hidden;
-
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
     }
@@ -224,54 +173,49 @@
       font-size: 12px;
     }
 
-    /* Main map area – robust sizing on iOS */
-    #map{
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-
-      width: 100%;     /* ✅ NOT 100vw */
+    /* ═══════════════════════════════════════════════
+       FIX 1: #map uses position:fixed (not absolute).
+       This is the #1 cause of the grey-tile flash and
+       the layout jump — absolute sizing races against
+       iOS's async layout pipeline.
+       ─────────────────────────────────────────────── */
+    #map {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
       height: 100%;
 
-      background: #ffffff; /* ✅ prevents gray flash */
+      /* Warm fallback so blank area is never cold grey */
+      background: #f0ede8;
+
+      /* Promote to GPU compositor layer before tiles arrive */
+      will-change: transform;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
 
-    /* Leaflet container background safety */
-    .leaflet-container {
-      background: #ffffff;
-    }
+    @supports (height: 100dvh) { #map { height: 100dvh; } }
 
-    /* iOS dynamic viewport helper */
-    @supports (height: 100dvh){
-        #map{ height: 100dvh; }
-    }
-    
-    /* --- Dropdown menus (hide/show) --- */
-    .dropdown {
-      position: relative;
-    }
+    /* Match #map fallback — no grey flash between map div and tiles */
+    .leaflet-container { background: #f0ede8; }
+
+    .dropdown { position: relative; }
 
     .dropdown .menu {
       display: none;
       position: absolute;
       top: 120%;
       left: 0;
-
       background: #ffffff;
       border: 1px solid #e2e4ec;
       border-radius: 16px;
       padding: 10px 12px;
       width: 200px;
       z-index: 3000;
-
       box-shadow: 0 10px 26px rgba(0, 0, 0, 0.16);
     }
 
-    .dropdown.open .menu {
-      display: block;
-    }
+    .dropdown.open .menu { display: block; }
 
     .dropdown .row {
       display: flex;
@@ -283,55 +227,39 @@
       color: #1c1c1e;
     }
 
-    /* --- Bottom results panel floats above the map --- */
     #bottom-panel {
       position: fixed;
       left: 12px;
       right: 12px;
       bottom: 0;
       height: var(--panel-collapsed);
-  
       background: rgba(255, 255, 255, 0.72);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-
       border-radius: 22px 22px 0 0;
       box-shadow: 0 -8px 22px rgba(0, 0, 0, 0.08);
-
       display: flex;
       flex-direction: column;
-
       padding: 8px 14px calc(10px + env(safe-area-inset-bottom));
       z-index: 2001;
       transition: none !important;
       overflow: hidden;
     }
 
-    /* expanded state */
-    #bottom-panel.expanded {
-      height: var(--panel-expanded);
-    }
+    #bottom-panel.expanded { height: var(--panel-expanded); }
 
-    /* Fixed header */
-    #panel-header{
-      flex: 0 0 auto;
-      padding: 0 10px 6px;
-    }
+    #panel-header { flex: 0 0 auto; padding: 0 10px 6px; }
 
-    /* Scrollable body (only results scroll) */
-    #panel-body{
+    #panel-body {
       flex: 1 1 auto;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding: 6px 0 10px;
     }
 
-    #results{
-      padding: 0;
-    }
+    #results { padding: 0; }
 
-    /* Filters + count live in ONE row */
-    #panel-meta-row{
+    #panel-meta-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -339,48 +267,38 @@
       margin-top: 6px;
     }
 
-    #panel-meta-row .active-filters{
+    #panel-meta-row .active-filters {
       flex: 1 1 auto;
-      display: none; /* JS toggles to flex */
+      display: none;
       flex-wrap: wrap;
       gap: 6px;
-
       margin: 0;
       padding: 0;
-
       position: static;
       top: auto;
       background: transparent;
     }
 
-    /* Sort indicator pill (A–Z / Miles) */
-    #sortBtn{
+    #sortBtn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-
       padding: 4px 9px;
-
       border-radius: 999px;
       background: rgba(28, 28, 30, 0.035);
       border: 1px solid rgba(28, 28, 30, 0.08);
-
       font-size: 11.5px;
       font-weight: 600;
       letter-spacing: 0.01em;
       color: rgba(28, 28, 30, 0.72);
-
       appearance: none;
       -webkit-appearance: none;
       outline: none;
-
       cursor: default;
       pointer-events: none;
-
-      opacity: .85; /* slightly less prominent than filters */
+      opacity: .85;
     }
 
-    /* Panel toggle handle */
     #panel-toggle {
       width: 100%;
       border: 0;
@@ -408,7 +326,6 @@
       opacity: 0.75;
     }
 
-    /* Results count */
     #results-count {
       flex: 0 0 auto;
       margin: 0;
@@ -419,7 +336,6 @@
       white-space: nowrap;
     }
 
-    /* Bottom panel cards */
     .card {
       padding: 8px 10px;
       border-bottom: 1px solid #eee;
@@ -429,9 +345,7 @@
       line-height: 1.25;
     }
 
-    .card:last-child {
-      border-bottom: none;
-    }
+    .card:last-child { border-bottom: none; }
 
     .card-name {
       display: block;
@@ -443,19 +357,9 @@
       cursor: pointer;
     }
 
-    .card-name:hover {
-      text-decoration: underline;
-    }
-
-    .card .meta{
-      margin: 0;
-      line-height: 1.22;
-    }
-
-    #bottom-panel .card p {
-      margin: 0;
-      line-height: 1.32;
-    }
+    .card-name:hover { text-decoration: underline; }
+    .card .meta { margin: 0; line-height: 1.22; }
+    #bottom-panel .card p { margin: 0; line-height: 1.32; }
 
     #bottom-panel .card a {
       display: inline-block;
@@ -466,13 +370,7 @@
       text-decoration: underline;
     }
 
-    /* Move Leaflet zoom controls */
-    .leaflet-control-zoom {
-      bottom: 20px;
-      right: 20px;
-      left: auto !important;
-      top: auto !important;
-    }
+    .leaflet-control-zoom { bottom: 20px; right: 20px; left: auto !important; top: auto !important; }
 
     .leaflet-top.leaflet-left {
       top: auto !important;
@@ -482,21 +380,16 @@
       z-index: 3200 !important;
     }
 
-    .active-filters{
-      display: none;
-    }
+    .active-filters { display: none; }
 
     .filter-pill {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-
       padding: 4px 9px;
       border-radius: 999px;
-
       background: rgba(28, 28, 30, 0.035);
       border: 1px solid rgba(28, 28, 30, 0.08);
-
       font-size: 11.5px;
       font-weight: 600;
       letter-spacing: 0.01em;
@@ -507,32 +400,22 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-
       width: 16px;
       height: 16px;
-
       border-radius: 999px;
       background: rgba(28, 28, 30, 0.055);
-
       font-weight: 700;
       font-size: 12px;
       line-height: 1;
-
       color: rgba(28, 28, 30, 0.65);
       cursor: pointer;
     }
 
-    @media (max-width: 720px) {
-      #filters { top: 10px; }
-    }
+    @media (max-width: 720px) { #filters { top: 10px; } }
 
-    /* EMBED MODE (iOS app) */
-    body.ss-embed #filters {
-      display: none !important;
-    }
+    body.ss-embed #filters { display: none !important; }
 
-    /* Favorite star */
-    .fav-btn{
+    .fav-btn {
       background: none;
       border: 0;
       padding: 4px;
@@ -542,11 +425,9 @@
       color: #b9b9b9;
     }
 
-    .fav-btn.is-fav{
-      color: #202239;
-    }
+    .fav-btn.is-fav { color: #202239; }
 
-    .card-top{
+    .card-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -554,18 +435,13 @@
       margin-bottom: 4px;
     }
 
-    /* MAP POPUP */
     .leaflet-popup-content-wrapper {
       border-radius: 18px !important;
       box-shadow: 0 16px 40px rgba(0,0,0,0.18) !important;
       padding: 0 !important;
     }
 
-    .leaflet-popup-content {
-      margin: 0 !important;
-      width: auto !important;
-      max-width: none !important;
-    }
+    .leaflet-popup-content { margin: 0 !important; width: auto !important; max-width: none !important; }
 
     .ss-popup--simple {
       padding: 12px;
@@ -575,24 +451,11 @@
       color: #1c1c1e;
     }
 
-    .ss-popup-top{
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
+    .ss-popup-top { display: flex; gap: 12px; align-items: flex-start; }
+    .ss-popup-text { flex: 1; min-width: 0; }
+    .ss-popup-img-wrap { margin: 0; flex: 0 0 104px; display: block; }
 
-    .ss-popup-text{
-      flex: 1;
-      min-width: 0;
-    }
-
-    .ss-popup-img-wrap{
-      margin: 0;
-      flex: 0 0 104px;
-      display: block;
-    }
-
-    .ss-popup-img{
+    .ss-popup-img {
       width: 104px;
       height: 78px;
       max-height: none;
@@ -601,28 +464,11 @@
       display: block;
     }
 
-    .ss-popup--simple .ss-popup-title {
-      font-size: 13px;
-      font-weight: 700;
-      line-height: 1.2;
-      margin: 0 0 4px;
-    }
+    .ss-popup--simple .ss-popup-title { font-size: 13px; font-weight: 700; line-height: 1.2; margin: 0 0 4px; }
+    .ss-popup--simple .ss-popup-tags { font-size: 11px; color: rgba(28,28,30,0.55); line-height: 1.2; margin: 0 0 6px; }
+    .ss-popup--simple .ss-popup-meta { font-size: 11px; color: rgba(28,28,30,0.65); line-height: 1.25; margin: 0 0 8px; }
 
-    .ss-popup--simple .ss-popup-tags {
-      font-size: 11px;
-      color: rgba(28, 28, 30, 0.55);
-      line-height: 1.2;
-      margin: 0 0 6px;
-    }
-
-    .ss-popup--simple .ss-popup-meta {
-      font-size: 11px;
-      color: rgba(28, 28, 30, 0.65);
-      line-height: 1.25;
-      margin: 0 0 8px;
-    }
-
-    .ss-popup--simple .ss-popup-actions{
+    .ss-popup--simple .ss-popup-actions {
       display: flex;
       gap: 8px;
       flex-wrap: nowrap;
@@ -630,78 +476,54 @@
       margin-top: 6px;
     }
 
-    .ss-popup--simple .ss-pill{
+    .ss-popup--simple .ss-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-
       font-size: 11px;
       font-weight: 600;
       line-height: 1;
-
       padding: 5px 9px;
       border-radius: 999px;
       color: #1c1c1e;
       text-decoration: none;
-
-      background: rgba(28, 28, 30, 0.06);
-      border: 1px solid rgba(28, 28, 30, 0.08);
-
+      background: rgba(28,28,30,0.06);
+      border: 1px solid rgba(28,28,30,0.08);
       white-space: nowrap;
       -webkit-tap-highlight-color: transparent;
       transition: background 0.15s ease, transform 0.15s ease;
     }
 
-    .ss-popup--simple .ss-pill.secondary{
-      background: rgba(28, 28, 30, 0.03);
-    }
-
-    .ss-popup--simple .ss-pill:active{
-      background: rgba(28, 28, 30, 0.12);
-      transform: scale(0.97);
-    }
+    .ss-popup--simple .ss-pill.secondary { background: rgba(28,28,30,0.03); }
+    .ss-popup--simple .ss-pill:active { background: rgba(28,28,30,0.12); transform: scale(0.97); }
 
     .leaflet-container a.leaflet-popup-close-button {
-      width: 26px !important;
-      height: 26px !important;
-      font-size: 18px !important;
-      line-height: 26px !important;
-      color: rgba(28, 28, 30, 0.45) !important;
-      right: 6px !important;
-      top: 6px !important;
+      width: 26px !important; height: 26px !important;
+      font-size: 18px !important; line-height: 26px !important;
+      color: rgba(28,28,30,0.45) !important;
+      right: 6px !important; top: 6px !important;
     }
 
-    /* MAP ONBOARDING BANNER */
     .ss-onboard {
       position: fixed;
       left: 50%;
       transform: translateX(-50%) translateY(8px);
       top: 140px;
       z-index: 5000;
-
       width: calc(100% - 32px);
       max-width: 420px;
-
       opacity: 0;
       transition: opacity 220ms ease, transform 220ms ease;
-
       pointer-events: none;
     }
 
-    .ss-onboard.is-visible {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-      pointer-events: auto;
-    }
-
-    .ss-onboard[hidden] {
-      display: none !important;
-    }
+    .ss-onboard.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+    .ss-onboard[hidden] { display: none !important; }
 
     .ss-onboard__content {
       pointer-events: auto;
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid rgba(32, 34, 57, 0.12);
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(32,34,57,0.12);
       border-radius: 18px;
       padding: 14px 16px;
       box-shadow: 0 10px 26px rgba(0,0,0,0.12);
@@ -710,25 +532,9 @@
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
     }
 
-    .ss-onboard__title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #202239;
-      margin-bottom: 4px;
-    }
-
-    .ss-onboard__text {
-      font-size: 13px;
-      line-height: 1.3;
-      color: rgba(0,0,0,0.65);
-      margin-bottom: 10px;
-    }
-
-    .ss-onboard__actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
+    .ss-onboard__title { font-size: 14px; font-weight: 800; color: #202239; margin-bottom: 4px; }
+    .ss-onboard__text { font-size: 13px; line-height: 1.3; color: rgba(0,0,0,0.65); margin-bottom: 10px; }
+    .ss-onboard__actions { display: flex; gap: 10px; align-items: center; }
 
     .ss-onboard__btn {
       display: inline-flex;
@@ -744,1225 +550,689 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .ss-onboard__btn--primary {
-      border: 0;
-      color: #fff;
-      background: #202239;
-    }
-
-    .ss-onboard__btn--ghost {
-      border: 1px solid rgba(32, 34, 57, 0.18);
-      color: #202239;
-      background: rgba(255,255,255,0.65);
-    }
+    .ss-onboard__btn--primary { border: 0; color: #fff; background: #202239; }
+    .ss-onboard__btn--ghost { border: 1px solid rgba(32,34,57,0.18); color: #202239; background: rgba(255,255,255,0.65); }
   </style>
 
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-W6LRN7EDH7"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag("js", new Date());
-    gtag("config", "G-W6LRN7EDH7", { send_page_view: true });
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js",new Date());
+    gtag("config","G-W6LRN7EDH7",{send_page_view:true});
   </script>
 </head>
 
 <body>
 
-<!-- ===== Sip Sober: one-time onboarding banner ===== -->
 <div id="ss-onboard" class="ss-onboard" role="status" aria-live="polite" hidden>
   <div class="ss-onboard__content">
     <div class="ss-onboard__title">Explore &amp; save</div>
-    <div class="ss-onboard__text">
-      Filter by <b>brand</b> or <b>neighborhood</b>, then tap <b>★</b> to save favorites.
-    </div>
+    <div class="ss-onboard__text">Filter by <b>brand</b> or <b>neighborhood</b>, then tap <b>★</b> to save favorites.</div>
     <div class="ss-onboard__actions">
-      <button id="ss-onboard-ok" class="ss-onboard__btn ss-onboard__btn--primary" type="button">
-        Got it
-      </button>
+      <button id="ss-onboard-ok" class="ss-onboard__btn ss-onboard__btn--primary" type="button">Got it</button>
     </div>
   </div>
 </div>
 
-<!-- TOP CONTROLS (filters + Go) -->
 <div id="filters" class="topbar filterbar">
-
   <div class="dropdown" id="brandDD">
     <button type="button" aria-expanded="false">Brands ▾</button>
     <div class="menu" role="menu">
-      <div class="row"><input id="brand-seedlip" type="checkbox" value="Seedlip" /><label for="brand-seedlip">Seedlip</label></div>
-      <div class="row"><input id="brand-ritual" type="checkbox" value="Ritual Zero Proof" /><label for="brand-ritual">Ritual Zero Proof</label></div>
-      <div class="row"><input id="brand-lyres" type="checkbox" value="Lyre's" /><label for="brand-lyres">Lyre's</label></div>
-      <div class="row"><input id="brand-agrestis" type="checkbox" value="St. Agrestis" /><label for="brand-agrestis">St. Agrestis</label></div>
-      <div class="row"><input id="brand-aplos" type="checkbox" value="Aplós" /><label for="brand-aplos">Aplós</label></div>
-      <div class="row"><input id="brand-pathfinder" type="checkbox" value="Pathfinder" /><label for="brand-pathfinder">Pathfinder</label></div>
-      <div class="row"><input id="brand-curious" type="checkbox" value="Curious Elixirs" /><label for="brand-curious">Curious Elixirs</label></div>
-      <div class="row"><input id="brand-goodtime" type="checkbox" value="Good Time Brewing" /><label for="brand-goodtime">Good Time Brewing</label></div>
-      <div class="row"><input id="brand-ghia" type="checkbox" value="Ghia" /><label for="brand-ghia">Ghia</label></div>
-      <div class="row"><input id="brand-pentire" type="checkbox" value="Pentire" /><label for="brand-pentire">Pentire</label></div>
-      <div class="row"><input id="brand-athletic" type="checkbox" value="Athletic Brewing Co." /><label for="brand-athletic">Athletic Brewing Co.</label></div>
+      <div class="row"><input id="brand-seedlip" type="checkbox" value="Seedlip"/><label for="brand-seedlip">Seedlip</label></div>
+      <div class="row"><input id="brand-ritual" type="checkbox" value="Ritual Zero Proof"/><label for="brand-ritual">Ritual Zero Proof</label></div>
+      <div class="row"><input id="brand-lyres" type="checkbox" value="Lyre's"/><label for="brand-lyres">Lyre's</label></div>
+      <div class="row"><input id="brand-agrestis" type="checkbox" value="St. Agrestis"/><label for="brand-agrestis">St. Agrestis</label></div>
+      <div class="row"><input id="brand-aplos" type="checkbox" value="Aplós"/><label for="brand-aplos">Aplós</label></div>
+      <div class="row"><input id="brand-pathfinder" type="checkbox" value="Pathfinder"/><label for="brand-pathfinder">Pathfinder</label></div>
+      <div class="row"><input id="brand-curious" type="checkbox" value="Curious Elixirs"/><label for="brand-curious">Curious Elixirs</label></div>
+      <div class="row"><input id="brand-goodtime" type="checkbox" value="Good Time Brewing"/><label for="brand-goodtime">Good Time Brewing</label></div>
+      <div class="row"><input id="brand-ghia" type="checkbox" value="Ghia"/><label for="brand-ghia">Ghia</label></div>
+      <div class="row"><input id="brand-pentire" type="checkbox" value="Pentire"/><label for="brand-pentire">Pentire</label></div>
+      <div class="row"><input id="brand-athletic" type="checkbox" value="Athletic Brewing Co."/><label for="brand-athletic">Athletic Brewing Co.</label></div>
     </div>
   </div>
 
   <div class="dropdown" id="neighborhoodDD">
     <button type="button" aria-expanded="false">Neighborhoods ▾</button>
     <div class="menu" role="menu">
-      <div class="row"><input id="n-ues" type="checkbox" value="Upper East Side" /><label for="n-ues">Upper East Side</label></div>
-      <div class="row"><input id="n-midtown" type="checkbox" value="Midtown" /><label for="n-midtown">Midtown</label></div>
-      <div class="row"><input id="n-gramercy" type="checkbox" value="Gramercy" /><label for="n-gramercy">Gramercy</label></div>
-      <div class="row"><input id="n-chelsea" type="checkbox" value="Chelsea" /><label for="n-chelsea">Chelsea</label></div>
-      <div class="row"><input id="n-uws" type="checkbox" value="Upper West Side" /><label for="n-uws">Upper West Side</label></div>
-      <div class="row"><input id="n-fidi" type="checkbox" value="FiDi" /><label for="n-fidi">FiDi</label></div>
-      <div class="row"><input id="n-flatiron" type="checkbox" value="Flatiron" /><label for="n-flatiron">Flatiron</label></div>
-      <div class="row"><input id="n-west-village" type="checkbox" value="West Village" /><label for="n-west-village">West Village</label></div>
-      <div class="row"><input id="n-tribeca" type="checkbox" value="Tribeca" /><label for="n-tribeca">Tribeca</label></div>
-      <div class="row"><input id="n-soho" type="checkbox" value="SoHo" /><label for="n-soho">SoHo</label></div>
-      <div class="row"><input id="n-east-village" type="checkbox" value="East Village" /><label for="n-east-village">East Village</label></div>
+      <div class="row"><input id="n-ues" type="checkbox" value="Upper East Side"/><label for="n-ues">Upper East Side</label></div>
+      <div class="row"><input id="n-midtown" type="checkbox" value="Midtown"/><label for="n-midtown">Midtown</label></div>
+      <div class="row"><input id="n-gramercy" type="checkbox" value="Gramercy"/><label for="n-gramercy">Gramercy</label></div>
+      <div class="row"><input id="n-chelsea" type="checkbox" value="Chelsea"/><label for="n-chelsea">Chelsea</label></div>
+      <div class="row"><input id="n-uws" type="checkbox" value="Upper West Side"/><label for="n-uws">Upper West Side</label></div>
+      <div class="row"><input id="n-fidi" type="checkbox" value="FiDi"/><label for="n-fidi">FiDi</label></div>
+      <div class="row"><input id="n-flatiron" type="checkbox" value="Flatiron"/><label for="n-flatiron">Flatiron</label></div>
+      <div class="row"><input id="n-west-village" type="checkbox" value="West Village"/><label for="n-west-village">West Village</label></div>
+      <div class="row"><input id="n-tribeca" type="checkbox" value="Tribeca"/><label for="n-tribeca">Tribeca</label></div>
+      <div class="row"><input id="n-soho" type="checkbox" value="SoHo"/><label for="n-soho">SoHo</label></div>
+      <div class="row"><input id="n-east-village" type="checkbox" value="East Village"/><label for="n-east-village">East Village</label></div>
     </div>
   </div>
 
   <button id="goBtn" type="button">Go</button>
-
   <button id="searchToggle" type="button" aria-label="Search" aria-expanded="false">🔍</button>
 
-  <!-- Search (TOP BAR) -->
   <div id="searchTopRow">
     <div class="ss-searchTop">
       <span class="ss-searchIcon" aria-hidden="true">🔍</span>
-      <input id="searchTopInput" type="search" placeholder="Search a venue…" autocomplete="off" />
+      <input id="searchTopInput" type="search" placeholder="Search a venue…" autocomplete="off"/>
       <button id="searchTopClear" type="button" aria-label="Clear search">×</button>
     </div>
   </div>
 </div>
 
-<!-- Fullscreen Map -->
 <div id="map"></div>
 
-<!-- Sliding Bottom Results Panel -->
 <div id="bottom-panel">
-
   <div id="panel-header">
     <button id="panel-toggle" type="button" aria-expanded="false">
       <span class="handle" aria-hidden="true"></span>
       <span class="label">Show</span>
     </button>
-
     <div id="panel-meta-row">
       <div id="active-filters" class="active-filters"></div>
-
-      <div style="display:flex; align-items:center; gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px;">
         <button id="sortBtn" type="button">A–Z</button>
         <div id="results-count" class="results-count"></div>
       </div>
     </div>
   </div>
-
   <div id="panel-body">
     <div id="results"></div>
   </div>
-
 </div>
 
-<!-- Leaflet JS -->
-<script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-  crossorigin="anonymous"
-></script>
-
 <script>
-/* =========================
-       A) DATA
-       ========================= */
-    const locations = [
-      { id: "bemelmans", name: "Bemelman's Bar", address: "35 E 76th St, NY", lat: 40.774, lng: -73.9636, website: "https://www.rosewoodhotels.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side", imageUrl: "venue-images/bemelmans.jpeg" },
-      { id: "bar-avant", name: "Bar Avant (Olly Olly Market)", address: "601 W 26th St, NY", lat: 40.7498, lng: -74.0075, website: "https://ollyollymarket.com", brand: "Seedlip, St. Agrestis", neighborhood: "Chelsea", imageUrl: "venue-images/baravant.jpeg" },
-      { id: "fumo", name: "Fumo", address: "198 8th Ave, NY", lat: 40.7448, lng: -73.9809, website: "https://fumonyc.com", brand: "Seedlip, Athletic Brewing Co.", neighborhood: "Chelsea", imageUrl: "venue-images/fumochelsea.jpeg" },
-      { id: "miriam", name: "Miriam", address: "300 Amsterdam Ave, NY", lat: 40.7809, lng: -73.9797, website: "https://miriamrestaurant.com", brand: "Seedlip, Lyre's, Athletic Brewing Co.", neighborhood: "Upper West Side", imageUrl: "venue-images/miriamuws.jpeg" },
-      { id: "sarabeths", name: "Sarabeth's", address: "423 Amsterdam Ave, NY", lat: 40.786, lng: -73.977, website: "https://sarabethsrestaurants.com", brand: "Lyre's", neighborhood: "Upper West Side" },
-      { id: "bondurants", name: "Bondurants", address: "303 E 85th St, NY", lat: 40.777, lng: -73.9518, website: "https://bondurantsnyc.com", brand: "Seedlip, Lyre's, Athletic Brewing Co.", neighborhood: "Upper East Side", imageUrl: "venue-images/bondurants.jpeg" },
-      { id: "sfoglia", name: "Sfoglia", address: "1402 Lexington Ave, NY", lat: 40.7835, lng: -73.9529, website: "https://sfogliarestaurant.com", brand: "Lyre's, Ritual Zero Proof, St. Agrestis, Good Time Brewing", neighborhood: "Upper East Side", imageUrl: "venue-images/sfoglia.jpeg" },
-      { id: "blasket", name: "The Blasket", address: "1085 2nd Ave, NY", lat: 40.7579, lng: -73.9635, website: "https://theblasketnyc.com", brand: "Lyre's, Athletic Brewing Co.", neighborhood: "Midtown", imageUrl: "venue-images/blasket.jpeg" },
-      { id: "rosemarysmid", name: "Rosemary's Midtown", address: "825 3rd Ave, NY", lat: 40.7559, lng: -73.9701, website: "https://rosemarysnyc.com", brand: "Lyre's, Ghia, Athletic Brewing Co.", neighborhood: "Midtown", imageUrl: "venue-images/rosemarysmid.jpeg" },
-      { id: "hutong", name: "Hutong NYC", address: "731 Lexington Ave, NY", lat: 40.761812, lng: -73.968178, website: "https://hutong-nyc.com", brand: "Athletic Brewing Co., Pathfinder", neighborhood: "Midtown", imageUrl: "venue-images/hutongmid.jpeg" },
-      { id: "penrose", name: "The Penrose", address: "1590 2nd Ave, NY", lat: 40.7763, lng: -73.9498, website: "https://penrosebar.com", brand: "Seedlip, Lyre's", neighborhood: "Upper East Side", imageUrl: "venue-images/penrose.jpeg" },
-      { id: "orsay", name: "Orsay", address: "1057 Lexington Ave, NY", lat: 40.7731, lng: -73.9599, website: "https://orsayrestaurant.com", brand: "Seedlip", neighborhood: "Upper East Side", imageUrl: "venue-images/orsay.jpeg" },
-      { id: "boqueria", name: "Boqueria", address: "1460 2nd Ave, NY", lat: 40.7728, lng: -73.953, website: "https://boqueriarestaurant.com", brand: "Ritual Zero Proof, Seedlip, Athletic Brewing Co.", neighborhood: "Upper East Side", imageUrl: "venue-images/boqueria.jpeg" },
-      { id: "cravefishbar", name: "Crave Fishbar", address: "945 2nd Ave, NY", lat: 40.7544, lng: -73.9685, website: "https://cravefishbar.com", brand: "Seedlip", neighborhood: "Midtown" },
-      { id: "uva", name: "UVA", address: "1486 2nd Ave, NY", lat: 40.7726, lng: -73.9541, website: "https://uvanyc.com", brand: "Lyre's, Athletic Brewing Co.", neighborhood: "Upper East Side", imageUrl: "venue-images/uva.jpeg" },
-      { id: "sefton", name: "Sefton", address: "510 E 117th St, NY", lat: 40.7969, lng: -73.9304, website: "https://seftonnyc.com", brand: "Ritual Zero Proof", neighborhood: "Upper East Side", imageUrl: "venue-images/sefton.jpeg" },
-      { id: "hawksmoor", name: "Hawksmoor NYC", address: "109 E 22nd St, NY", lat: 40.7394, lng: -73.9861, website: "https://thehawksmoor.com/us/?pl=null&utm_source=google&utm_medium=organic&utm_campaign=gbp", brand: "Seedlip, Good Time Brewing, Pathfinder", neighborhood: "Gramercy", imageUrl: "venue-images/hawksmoor.jpeg" },
-      { id: "monkeybar", name: "Monkey Bar", address: "60 E 54th St, NY", lat: 40.7598, lng: -73.9732, website: "https://www.nycmonkeybar.com", brand: "Ritual Zero Proof, St. Agrestis, Athletic Brewing Co.", neighborhood: "Midtown", imageUrl: "venue-images/monkeybar.jpeg" },
-      { id: "gramtav", name: "Gramercy Tavern", address: "42 E 20th St, NY", lat: 40.7386, lng: -73.9882, website: "https://www.gramercytavern.com", brand: "Lyre's, St. Agrestis", neighborhood: "Gramercy", imageUrl: "venue-images/gramercytavern.jpeg" },
-      { id: "junction", name: "The Junction", address: "329 Lexington Ave, NY", lat: 40.747, lng: -73.976, website: "https://www.thejunctionnyc.com", brand: "Lyre's, Seedlip, Athletic Brewing Co.", neighborhood: "Midtown", imageUrl: "venue-images/junction.jpeg" },
-      { id: "brokenshaker", name: "Broken Shaker", address: "23 Lexington Ave, NY", lat: 40.7395, lng: -73.9845, website: "https://www.brokenshaker.com", brand: "Seedlip, Ritual Zero Proof", neighborhood: "Midtown", imageUrl: "venue-images/brokenshaker.jpeg" },
-      { id: "wildflower", name: "Wildflower", address: "505 W 23 St A, NY", lat: 40.744, lng: -73.9988, website: "https://www.wildflowernyc.com", brand: "Seedlip, St. Agrestis, Athletic Brewing Co.", neighborhood: "Chelsea", imageUrl: "venue-images/wildflower.jpeg" },
-      { id: "campbell", name: "The Campbell", address: "15 Vanderbilt Ave, NY", lat: 40.7525, lng: -73.9778, website: "https://www.thecampbellnyc.com", brand: "St. Agrestis, Lyre's", neighborhood: "Midtown", imageUrl: "venue-images/campbell.jpeg" },
-      { id: "junglebird", name: "Jungle Bird", address: "174 8th Ave, NY", lat: 40.7429, lng: -74.0011, website: "https://junglebirdnyc.com", brand: "St. Agrestis, Ritual Zero Proof, Lyre's, Pathfinder", neighborhood: "Chelsea", imageUrl: "venue-images/junglebird.jpeg" },
-      { id: "sempreoggi", name: "Sempre Oggi", address: "164 W 75th St, NY", lat: 40.7803, lng: -73.9799, website: "https://www.semprenyc.com", brand: "St. Agrestis, Athletic Brewing Co.", neighborhood: "Upper West Side", imageUrl: "venue-images/sempreoggi.jpeg" },
-      { id: "wolfe", name: "The Wolfe", address: "425 Amsterdam Ave, NY", lat: 40.7868, lng: -73.9783, website: "https://www.thewolfenyc.com", brand: "St. Agrestis, Lyre's, Athletic Brewing Co.", neighborhood: "Upper West Side", imageUrl: "venue-images/wolfe.jpeg" },
-      { id: "elea", name: "Elea", address: "217 W 85th St, NY", lat: 40.7893, lng: -73.9766, website: "https://eleanyc.com", brand: "Ritual Zero Proof", neighborhood: "Upper West Side", imageUrl: "venue-images/elea.jpeg" },
-      { id: "friendfarmer", name: "Friend of a Farmer", address: "68 W 71st St, NY", lat: 40.7782, lng: -73.9791, website: "https://www.friendofafarmer.com", brand: "Seedlip, Ghia, Athletic Brewing Co.", neighborhood: "Upper West Side", imageUrl: "venue-images/friendfarmer.jpeg" },
-      { id: "pendry", name: "Bar Pendry", address: "438 W 33rd St, NY", lat: 40.7536, lng: -73.9934, website: "https://www.pendry.com/manhattan-west/", brand: "Lyre's", neighborhood: "Midtown", imageUrl: "venue-images/barpendry.jpeg" },
-      { id: "portrait", name: "The Portrait Bar", address: "1 W 28th St, NY", lat: 40.745, lng: -73.9886, website: "https://www.theportraitbar.com", brand: "Aplós, Seedlip, Ritual Zero Proof, Athletic Brewing Co.", neighborhood: "Midtown", imageUrl: "venue-images/portraitbar.jpeg" },
-      { id: "clemente", name: "Clemente Bar", address: "11 Madison Ave, NY", lat: 40.7417, lng: -73.9872, website: "https://www.clementebar.com", brand: "Seedlip, Athletic Brewing Co.", neighborhood: "Flatiron", imageUrl: "venue-images/clemente.jpeg" },
-      { id: "delfriscogrille", name: "Del Frisco's Grille", address: "50 Rockefeller Plaza, NY", lat: 40.759, lng: -73.9799, website: "https://www.delfriscosgrille.com", brand: "Aplós, Ritual Zero Proof", neighborhood: "Midtown", imageUrl: "venue-images/delfriscoe.jpeg" },
-      { id: "cosme", name: "Cosme", address: "35 E 21st St, NY", lat: 40.7396, lng: -73.9884, website: "https://cosmenyc.com", brand: "Seedlip", neighborhood: "Flatiron", imageUrl: "venue-images/cosme.jpeg" },
-      { id: "calico", name: "Bar Calico", address: "23 Lexington Ave, NY", lat: 40.7415, lng: -73.9874, website: "https://barcaliconyc.com", brand: "Ritual Zero Proof, Seedlip", neighborhood: "Flatiron", imageUrl: "venue-images/barcalico.jpeg" },
-      { id: "lobbyedition", name: "Lobby Bar at The Edition", address: "5 Madison Ave, NY", lat: 40.742, lng: -73.987, website: "https://www.editionhotels.com/new-york/restaurants-and-bars/lobby-bar/", brand: "Lyre's", neighborhood: "Flatiron", imageUrl: "venue-images/lobbybaredition.jpeg" },
-      { id: "lamericana", name: "L'Americana", address: "51 Irving Place, NY", lat: 40.7375, lng: -73.9854, website: "https://www.lamericana-nyc.com", brand: "Seedlip, Good Time Brewing", neighborhood: "Gramercy", imageUrl: "venue-images/lamericana.jpeg" },
-      { id: "handcraft", name: "Handcraft Kitchen & Cocktails", address: "367 3rd Ave, NY", lat: 40.7429, lng: -73.9796, website: "https://www.handcraftnyc.com", brand: "Seedlip, Lyre's, Ritual Zero Proof", neighborhood: "Midtown", imageUrl: "venue-images/handcraft.jpeg" },
-      { id: "decoy", name: "Decoy", address: "529 Hudson St, NY", lat: 40.7348, lng: -74.0061, website: "https://www.decoynyc.com", brand: "Seedlip", neighborhood: "West Village", imageUrl: "venue-images/decoy.jpeg" },
-      { id: "dante", name: "Dante West Village", address: "551 Hudson St, NY", lat: 40.7353, lng: -74.0054, website: "https://www.dante-nyc.com/wv/", brand: "Seedlip, Lyre's", neighborhood: "West Village", imageUrl: "venue-images/dante.jpeg" },
-      { id: "hudsonhound", name: "Hudson Hound", address: "575 Hudson St, NY", lat: 40.7361, lng: -74.0063, website: "https://hudsonhoundnyc.com", brand: "Lyre's", neighborhood: "West Village", imageUrl: "venue-images/hudsonhound.jpeg" },
-      { id: "wilfienell", name: "Wilfie & Nell", address: "228 W 4th St, NY", lat: 40.7338, lng: -74.0028, website: "https://www.wilfieandnell.com", brand: "Seedlip, Athletic Brewing Co., Good Time Brewing", neighborhood: "West Village", imageUrl: "venue-images/wilfienell.jpeg" },
-      { id: "fiddlesticks", name: "Fiddlesticks Pub", address: "56 Greenwich Ave, NY", lat: 40.7359, lng: -74.0021, website: "https://www.fiddlesticksnyc.net", brand: "St. Agrestis, Seedlip", neighborhood: "West Village", imageUrl: "venue-images/fiddlesticks.jpeg" },
-      { id: "deathco", name: "Death & Co", address: "433 E 6th St, NY", lat: 40.7275, lng: -73.9846, website: "https://www.deathandcompany.com", brand: "Pathfinder, Seedlip, Ritual Zero Proof, Lyre's", neighborhood: "East Village", imageUrl: "venue-images/deathco.jpeg" },
-      { id: "pineappleclub", name: "Pineapple Club", address: "509 E 6th St, NY", lat: 40.7268, lng: -73.9789, website: "http://pineappleclub.com", brand: "St. Agrestis", neighborhood: "East Village", imageUrl: "venue-images/pineappleclub.jpeg" },
-      { id: "hardtoexplain", name: "Hard to Explain", address: "224 E 10th St, NY", lat: 40.7299, lng: -73.9831, website: "https://www.hardtoexplain.co", brand: "Good Time Brewing", neighborhood: "East Village", imageUrl: "venue-images/hardtoexplain.jpeg" },
-      { id: "superbueno", name: "Superbueno", address: "13 1st Ave, NY", lat: 40.7273, lng: -73.9896, website: "https://www.superbuenonyc.com", brand: "Pathfinder, Curious Elixirs, Aplós, Good Time Brewing", neighborhood: "East Village", imageUrl: "venue-images/superbueno.jpeg" },
-      { id: "donna", name: "Donna", address: "7 Cornelia St, NY", lat: 40.7316, lng: -74.0035, website: "https://www.donnanyc.com", brand: "Ritual Zero Proof, St. Agrestis, Pathfinder", neighborhood: "West Village", imageUrl: "venue-images/donna.jpeg" },
-      { id: "entwine", name: "Entwine Cocktail Bar", address: "765 Washington St, NY", lat: 40.7342, lng: -74.0062, website: "https://www.entwinenyc.com", brand: "Athletic Brewing Co., St. Agrestis", neighborhood: "West Village", imageUrl: "venue-images/entwine.jpeg" },
-      { id: "onewhite", name: "One White Street", address: "1 White St, NY", lat: 40.7167, lng: -74.0081, website: "https://www.onewhitestreetnyc.com", brand: "Seedlip, Pathfinder, St. Agrestis, Athletic Brewing Co.", neighborhood: "Tribeca", imageUrl: "venue-images/onewhite.jpeg" },
-      { id: "macao", name: "Macao Trading Company", address: "311 Church St, NY", lat: 40.7178, lng: -74.0092, website: "https://www.macaonyc.com", brand: "Pathfinder, Athletic Brewing Co.", neighborhood: "Tribeca", imageUrl: "venue-images/macao.jpeg" },
-      { id: "sainttuesday", name: "Saint Tuesday", address: "24 Cortlandt Alley, NY", lat: 40.7174, lng: -74.0060, website: "https://www.sainttuesdaynyc.com", brand: "Lyre's, Pathfinder, Ghia", neighborhood: "Tribeca", imageUrl: "venue-images/sainttuesday.jpeg" },
-      { id: "northbar", name: "North Bar", address: "458 Greenwich St, NY", lat: 40.7204, lng: -74.0097, website: "http://northbartribeca.com", brand: "Athletic Brewing Co.", neighborhood: "Tribeca", imageUrl: "venue-images/northbar.jpeg" },
-      { id: "bridges", name: "Bridges", address: "9 Chatham Sq, NY", lat: 40.7135, lng: -73.9981, website: "https://www.bridges-nyc.com", brand: "Lyre's, Pathfinder, Good Time Brewing", neighborhood: "Tribeca", imageUrl: "venue-images/bridges.jpeg" },
-      { id: "trinity", name: "Trinity Place", address: "115 Broadway, NY", lat: 40.7070, lng: -74.0112, website: "https://www.trinityplacenyc.com", brand: "Lyre's, Athletic Brewing Co.", neighborhood: "FiDi", imageUrl: "venue-images/trinity.jpeg" },
-      { id: "barbelly", name: "Bar Belly", address: "14 Orchard St, NY", lat: 40.7168, lng: -73.9910, website: "https://www.barbellynyc.com", brand: "Pathfinder, Seedlip, Good Time Brewing", neighborhood: "East Village", imageUrl: "venue-images/barbelly.jpeg" },
-      { id: "luckytiger", name: "Lucky Tiger", address: "66 Pearl St, NY", lat: 40.7075, lng: -74.0026, website: "https://www.luckytigernyc.com", brand: "St. Agrestis", neighborhood: "FiDi", imageUrl: "venue-images/luckytiger.jpeg" },
-      { id: "bedford", name: "The Bedford", address: "55 Stone St, NY", lat: 40.7263, lng: -73.9819, website: "https://www.thebedford.nyc", brand: "Seedlip", neighborhood: "FiDi", imageUrl: "venue-images/bedford.jpeg" },
-      { id: "tradewell", name: "Tradwell Park", address: "301 S End Ave, NY", lat: 40.7160, lng: -74.0105, website: "https://www.treadwellpark.com/location/downtown/", brand: "Lyre's, Athletic Brewing Co.", neighborhood: "Tribeca", imageUrl: "venue-images/tradewellpark.jpeg" },
-      { id: "tizio", name: "Bar Tizio", address: "107 Horatio St, NY", lat: 40.7358, lng: -74.0050, website: "https://www.bartizio.com", brand: "St. Agrestis", neighborhood: "West Village", imageUrl: "venue-images/bartizio.jpeg" },
-      { id: "grovestreet", name: "Grove Street Social", address: "39 Grove St, NY", lat: 40.7337, lng: -74.0021, website: "https://www.grovestreetsocial.com", brand: "Guinness, Heineken, Curious Elixirs", neighborhood: "West Village", imageUrl: "venue-images/grovestreetsocial.jpeg" },
-      { id: "artbar", name: "Art Bar", address: "52 8th Ave, NY", lat: 40.7390, lng: -74.0039, website: "https://www.artbarnyc.com", brand: "Ghia, Guinness, Athletic Brewing Co.", neighborhood: "West Village", imageUrl: "venue-images/artbar.jpeg" }, 
-      { id: "marlow", name: "Marlow East", address: "1015 Lexington Ave, NY", lat: 40.7716, lng: -73.9607, website: "https://www.marloweast.com", brand: "Ghia, Pathfinder", neighborhood: "Upper East Side", imageUrl: "venue-images/marlow.jpeg" },
-      { id: "cafefiorello", name: "Cafe Fiorello", address: "1900 Broadway, NY", lat: 40.7713, lng: -73.9819, website: "https://www.cafefiorello.com", brand: "Lyre's, St. Agrestis, Athletic Brewing Co.", neighborhood: "Upper West Side", imageUrl: "venue-images/cafefiorello.jpeg" },
-      { id: "parisbar", name: "Paris Bar", address: "120 W 57th St, NY", lat: 40.7640, lng: -73.9776, website: "https://www.parisbar.com", brand: "Lyre's, Ghia, Athletic Brewing Co.", neighborhood: "Midtown", imageUrl: "venue-images/parisbar.jpeg" },
-      { id: "tartinery", name: "Tartinery", address: "2090 Broadway, NY", lat: 40.7782, lng: -73.9813, website: "https://www.tartinery.com", brand: "Ghia", neighborhood: "Upper West Side", imageUrl: "venue-images/tartinery.jpeg" },
-      { id: "pjclarkes", name: "P.J. Clarke's", address: "4 Columbus Cir, NY", lat: 40.7680, lng: -73.9836, website: "https://www.pjclarkes.com", brand: "Athletic Brewing Co., Heineken, Ghia, Lyre's", neighborhood: "Upper West Side", imageUrl: "venue-images/pjclarkeuws.jpeg" },
-      { id: "empirerooftop", name: "The Empire Rooftop", address: "44 W 63rd St, NY", lat: 40.7719, lng: -73.9832, website: "https://www.theempirerooftop.com", brand: "Run Wild, Corona, Lyre's, St. Agrestis, Ritual Zero Proof", neighborhood: "Upper West Side", imageUrl: "venue-images/empireroof.jpeg" },
-      { id: "allurebar", name: "Allure Bar", address: "80 Riverside Blvd, NY", lat: 40.7807, lng: -73.9886, website: "https://www.allurebar.com", brand: "Seedlip, Run Wild", neighborhood: "Upper West Side", imageUrl: "venue-images/allurebar.jpeg" },
-      { id: "parklane", name: "Park Lane", address: "36 Central Park S, NY", lat: 40.7666, lng: -73.9777, website: "https://www.parklanenewyork.com", brand: "Curious Elixirs", neighborhood: "Midtown", imageUrl: "venue-images/parklane.jpeg" },
-      { id: "cotta", name: "Cotta", address: "513 Columbus Ave, NY", lat: 40.7871, lng: -73.9725, website: "https://www.cottanyc.com", brand: "Curious Elixirs, St. Agrestis, Good Time Brewing", neighborhood: "Upper West Side", imageUrl: "venue-images/cotta.jpeg" },
-      { id: "spaniard", name: "The Spaniard", address: "190 W 4th St, NY", lat: 40.7346, lng: -74.0007, website: "https://www.thespaniardnyc.com", brand: "Curious Elixirs, St. Agrestis, Seedlip, Good Time Brewing", neighborhood: "West Village", imageUrl: "venue-images/spaniard.jpeg" },
-      { id: "peckslip", name: "Peck Slip Social", address: "36 Peck Slip, NY", lat: 40.7079, lng: -74.0016, website: "https://www.peckslipsocial.com", brand: "Curious Elixirs, Guinness, St. Agrestis", neighborhood: "FiDi", imageUrl: "venue-images/peckslip.jpeg" },
-      { id: "shyshy", name: "Shy Shy", address: "520 W 27th St, NY", lat: 40.7502, lng: -74.0049, website: "https://www.shyshynyc.com", brand: "Ritual Zero Proof, Pentire, Giffard", neighborhood: "Chelsea", imageUrl: "venue-images/shyshy.jpeg" },
-      { id: "markette", name: "Markette", address: "135 W 24th St, NY", lat: 40.7447, lng: -73.9944, website: "https://www.markettenyc.com", brand: "St. Agrestis", neighborhood: "Chelsea", imageUrl: "venue-images/markette.jpeg" },
-      { id: "hellohello", name: "Hello Hello Bar", address: "138 W 26th St, NY", lat: 40.7456, lng: -73.9936, website: "https://www.hellohellonyc.com", brand: "Pathfinder, Aplós, Good Time Brewing", neighborhood: "Chelsea", imageUrl: "venue-images/hellohello.jpeg" },
-      { id: "littlerebel", name: "Little Rebel", address: "129 Orchard St, NY", lat: 40.7201, lng: -73.9889, website: "https://www.littlerebelnyc.com", brand: "Lyre's, Seedlip", neighborhood: "East Village", imageUrl: "venue-images/littlerebel.jpeg" },
-      { id: "cabinet", name: "The Cabinet", address: "649 E 9th St, NY", lat: 40.7264, lng: -73.9794, website: "https://www.thecabinetnyc.com", brand: "Athletic Brewing Co.", neighborhood: "East Village", imageUrl: "venue-images/thecabinet.jpeg" },
-      { id: "dutch", name: "The Dutch", address: "131 Sullivan St, NY", lat: 40.7259, lng: -74.0013, website: "https://www.thedutchnyc.com", brand: "Aplós, Pentire, Ritual Zero Proof, Pathfinder", neighborhood: "SoHo", imageUrl: "venue-images/thedutch.jpeg" },
-      { id: "raon", name: "Raon", address: "119 E 54th St, NY", lat: 40.7596, lng: -73.9692, website: "https://www.raonnyc.com", brand: "Seedlip, Pentire, Aplós", neighborhood: "Upper East Side", imageUrl: "venue-images/raon.jpeg" },
-      { id: "nothingrmatters", name: "Nothing Really Matters", address: "30 W 48th St, NY", lat: 40.7571, lng: -73.9815, website: "https://www.nothingreallymatters.bar", brand: "Lager, Aplós", neighborhood: "Midtown", imageUrl: "venue-images/nothingreallymatters.jpeg" },
-      { id: "dutchfreds", name: "Dutch Freds", address: "307 W 47th St, NY", lat: 40.7597, lng: -73.9883, website: "https://www.dutchfreds.com", brand: "Good Time Brewing, Stella Artois, Guinness, Aplós", neighborhood: "Midtown", imageUrl: "venue-images/dutchfreds.jpeg" },
-      { id: "cuerno", name: "Cuerno", address: "52 W 54th St, NY", lat: 40.7613, lng: -73.9785, website: "https://www.cuernonyc.com", brand: "Ritual Zero Proof, Corona", neighborhood: "Midtown", imageUrl: "venue-images/cuerno.jpeg" },
-      { id: "felicehudson", name: "Felice on Hudson", address: "15 W 3rd St, NY", lat: 40.7327, lng: -74.0030, website: "https://www.felicerestaurants.com", brand: "Ghia, Peroni, Lyre's", neighborhood: "West Village", imageUrl: "venue-images/felicehudson.jpeg" },
-      { id: "parkgate", name: "The Park Gate", address: "91 Christopher St, NY", lat: 40.7338, lng: -74.0057, website: "https://www.theparkgatenyc.com", brand: "Guinness, Good Time Brewing, Athletic Brewing Co., Lyre's", neighborhood: "West Village", imageUrl: "venue-images/parkgate.jpeg" },
-      { id: "americanbar", name: "American Bar", address: "33 Greenwich Ave, NY", lat: 40.7352, lng: -74.0026, website: "https://www.americanbarnyc.com", brand: "Pentire, Kin Euphorics, Seedlip", neighborhood: "West Village", imageUrl: "venue-images/americanbar.jpeg" },
-      { id: "travelerspoets", name: "Travelers Poets & Friends", address: "442 Hudson St, NY", lat: 40.7320, lng: -74.0067, website: "https://www.travelersnyc.com", brand: "Pathfinder, St. Agrestis", neighborhood: "West Village", imageUrl: "venue-images/travelerspoets.jpeg" },
-      { id: "53", name: "53", address: "53 W 53rd St, NY", lat: 40.7610, lng: -73.9776, website: "https://www.53-nyc.com", brand: "Lyre's, Pentire, Pathfinder, St. Agrestis", neighborhood: "Midtown", imageUrl: "venue-images/53nyc.jpeg" },
-      { id: "naro", name: "Naro", address: "10 Rockefeller Plaza, NY", lat: 40.7587, lng: -73.9787, website: "https://www.naronyc.com", brand: "Seedlip, Aplós", neighborhood: "Midtown", imageUrl: "venue-images/naro.jpeg" },
-      { id: "king", name: "King", address: "18 King St, NY", lat: 40.7276, lng: -74.0036, website: "https://www.kingrestaurant.nyc", brand: "Ghia, Lyre's, Athletic Brewing Co.",neighborhood: "SoHo", imageUrl: "venue-images/kingbar.jpeg" },
-      { id: "carnemare", name: "Carne Mare", address: "89 South St, NY", lat: 40.7062, lng: -74.0034, website: "https://www.carnemare.com", brand: "Athletic Brewing Co., Pentire, Lyre's", neighborhood: "FiDi", imageUrl: "venue-images/carnemare.jpeg" },
+/* ─── DATA ─────────────────────────────────────────────────────── */
+const locations = [
+  {id:"bemelmans",name:"Bemelman's Bar",address:"35 E 76th St, NY",lat:40.774,lng:-73.9636,website:"https://www.rosewoodhotels.com",brand:"Ritual Zero Proof",neighborhood:"Upper East Side",imageUrl:"venue-images/bemelmans.jpeg"},
+  {id:"bar-avant",name:"Bar Avant (Olly Olly Market)",address:"601 W 26th St, NY",lat:40.7498,lng:-74.0075,website:"https://ollyollymarket.com",brand:"Seedlip, St. Agrestis",neighborhood:"Chelsea",imageUrl:"venue-images/baravant.jpeg"},
+  {id:"fumo",name:"Fumo",address:"198 8th Ave, NY",lat:40.7448,lng:-73.9809,website:"https://fumonyc.com",brand:"Seedlip, Athletic Brewing Co.",neighborhood:"Chelsea",imageUrl:"venue-images/fumochelsea.jpeg"},
+  {id:"miriam",name:"Miriam",address:"300 Amsterdam Ave, NY",lat:40.7809,lng:-73.9797,website:"https://miriamrestaurant.com",brand:"Seedlip, Lyre's, Athletic Brewing Co.",neighborhood:"Upper West Side",imageUrl:"venue-images/miriamuws.jpeg"},
+  {id:"sarabeths",name:"Sarabeth's",address:"423 Amsterdam Ave, NY",lat:40.786,lng:-73.977,website:"https://sarabethsrestaurants.com",brand:"Lyre's",neighborhood:"Upper West Side"},
+  {id:"bondurants",name:"Bondurants",address:"303 E 85th St, NY",lat:40.777,lng:-73.9518,website:"https://bondurantsnyc.com",brand:"Seedlip, Lyre's, Athletic Brewing Co.",neighborhood:"Upper East Side",imageUrl:"venue-images/bondurants.jpeg"},
+  {id:"sfoglia",name:"Sfoglia",address:"1402 Lexington Ave, NY",lat:40.7835,lng:-73.9529,website:"https://sfogliarestaurant.com",brand:"Lyre's, Ritual Zero Proof, St. Agrestis, Good Time Brewing",neighborhood:"Upper East Side",imageUrl:"venue-images/sfoglia.jpeg"},
+  {id:"blasket",name:"The Blasket",address:"1085 2nd Ave, NY",lat:40.7579,lng:-73.9635,website:"https://theblasketnyc.com",brand:"Lyre's, Athletic Brewing Co.",neighborhood:"Midtown",imageUrl:"venue-images/blasket.jpeg"},
+  {id:"rosemarysmid",name:"Rosemary's Midtown",address:"825 3rd Ave, NY",lat:40.7559,lng:-73.9701,website:"https://rosemarysnyc.com",brand:"Lyre's, Ghia, Athletic Brewing Co.",neighborhood:"Midtown",imageUrl:"venue-images/rosemarysmid.jpeg"},
+  {id:"hutong",name:"Hutong NYC",address:"731 Lexington Ave, NY",lat:40.761812,lng:-73.968178,website:"https://hutong-nyc.com",brand:"Athletic Brewing Co., Pathfinder",neighborhood:"Midtown",imageUrl:"venue-images/hutongmid.jpeg"},
+  {id:"penrose",name:"The Penrose",address:"1590 2nd Ave, NY",lat:40.7763,lng:-73.9498,website:"https://penrosebar.com",brand:"Seedlip, Lyre's",neighborhood:"Upper East Side",imageUrl:"venue-images/penrose.jpeg"},
+  {id:"orsay",name:"Orsay",address:"1057 Lexington Ave, NY",lat:40.7731,lng:-73.9599,website:"https://orsayrestaurant.com",brand:"Seedlip",neighborhood:"Upper East Side",imageUrl:"venue-images/orsay.jpeg"},
+  {id:"boqueria",name:"Boqueria",address:"1460 2nd Ave, NY",lat:40.7728,lng:-73.953,website:"https://boqueriarestaurant.com",brand:"Ritual Zero Proof, Seedlip, Athletic Brewing Co.",neighborhood:"Upper East Side",imageUrl:"venue-images/boqueria.jpeg"},
+  {id:"cravefishbar",name:"Crave Fishbar",address:"945 2nd Ave, NY",lat:40.7544,lng:-73.9685,website:"https://cravefishbar.com",brand:"Seedlip",neighborhood:"Midtown"},
+  {id:"uva",name:"UVA",address:"1486 2nd Ave, NY",lat:40.7726,lng:-73.9541,website:"https://uvanyc.com",brand:"Lyre's, Athletic Brewing Co.",neighborhood:"Upper East Side",imageUrl:"venue-images/uva.jpeg"},
+  {id:"sefton",name:"Sefton",address:"510 E 117th St, NY",lat:40.7969,lng:-73.9304,website:"https://seftonnyc.com",brand:"Ritual Zero Proof",neighborhood:"Upper East Side",imageUrl:"venue-images/sefton.jpeg"},
+  {id:"hawksmoor",name:"Hawksmoor NYC",address:"109 E 22nd St, NY",lat:40.7394,lng:-73.9861,website:"https://thehawksmoor.com/us/",brand:"Seedlip, Good Time Brewing, Pathfinder",neighborhood:"Gramercy",imageUrl:"venue-images/hawksmoor.jpeg"},
+  {id:"monkeybar",name:"Monkey Bar",address:"60 E 54th St, NY",lat:40.7598,lng:-73.9732,website:"https://www.nycmonkeybar.com",brand:"Ritual Zero Proof, St. Agrestis, Athletic Brewing Co.",neighborhood:"Midtown",imageUrl:"venue-images/monkeybar.jpeg"},
+  {id:"gramtav",name:"Gramercy Tavern",address:"42 E 20th St, NY",lat:40.7386,lng:-73.9882,website:"https://www.gramercytavern.com",brand:"Lyre's, St. Agrestis",neighborhood:"Gramercy",imageUrl:"venue-images/gramercytavern.jpeg"},
+  {id:"junction",name:"The Junction",address:"329 Lexington Ave, NY",lat:40.747,lng:-73.976,website:"https://www.thejunctionnyc.com",brand:"Lyre's, Seedlip, Athletic Brewing Co.",neighborhood:"Midtown",imageUrl:"venue-images/junction.jpeg"},
+  {id:"brokenshaker",name:"Broken Shaker",address:"23 Lexington Ave, NY",lat:40.7395,lng:-73.9845,website:"https://www.brokenshaker.com",brand:"Seedlip, Ritual Zero Proof",neighborhood:"Midtown",imageUrl:"venue-images/brokenshaker.jpeg"},
+  {id:"wildflower",name:"Wildflower",address:"505 W 23 St A, NY",lat:40.744,lng:-73.9988,website:"https://www.wildflowernyc.com",brand:"Seedlip, St. Agrestis, Athletic Brewing Co.",neighborhood:"Chelsea",imageUrl:"venue-images/wildflower.jpeg"},
+  {id:"campbell",name:"The Campbell",address:"15 Vanderbilt Ave, NY",lat:40.7525,lng:-73.9778,website:"https://www.thecampbellnyc.com",brand:"St. Agrestis, Lyre's",neighborhood:"Midtown",imageUrl:"venue-images/campbell.jpeg"},
+  {id:"junglebird",name:"Jungle Bird",address:"174 8th Ave, NY",lat:40.7429,lng:-74.0011,website:"https://junglebirdnyc.com",brand:"St. Agrestis, Ritual Zero Proof, Lyre's, Pathfinder",neighborhood:"Chelsea",imageUrl:"venue-images/junglebird.jpeg"},
+  {id:"sempreoggi",name:"Sempre Oggi",address:"164 W 75th St, NY",lat:40.7803,lng:-73.9799,website:"https://www.semprenyc.com",brand:"St. Agrestis, Athletic Brewing Co.",neighborhood:"Upper West Side",imageUrl:"venue-images/sempreoggi.jpeg"},
+  {id:"wolfe",name:"The Wolfe",address:"425 Amsterdam Ave, NY",lat:40.7868,lng:-73.9783,website:"https://www.thewolfenyc.com",brand:"St. Agrestis, Lyre's, Athletic Brewing Co.",neighborhood:"Upper West Side",imageUrl:"venue-images/wolfe.jpeg"},
+  {id:"elea",name:"Elea",address:"217 W 85th St, NY",lat:40.7893,lng:-73.9766,website:"https://eleanyc.com",brand:"Ritual Zero Proof",neighborhood:"Upper West Side",imageUrl:"venue-images/elea.jpeg"},
+  {id:"friendfarmer",name:"Friend of a Farmer",address:"68 W 71st St, NY",lat:40.7782,lng:-73.9791,website:"https://www.friendofafarmer.com",brand:"Seedlip, Ghia, Athletic Brewing Co.",neighborhood:"Upper West Side",imageUrl:"venue-images/friendfarmer.jpeg"},
+  {id:"pendry",name:"Bar Pendry",address:"438 W 33rd St, NY",lat:40.7536,lng:-73.9934,website:"https://www.pendry.com/manhattan-west/",brand:"Lyre's",neighborhood:"Midtown",imageUrl:"venue-images/barpendry.jpeg"},
+  {id:"portrait",name:"The Portrait Bar",address:"1 W 28th St, NY",lat:40.745,lng:-73.9886,website:"https://www.theportraitbar.com",brand:"Aplós, Seedlip, Ritual Zero Proof, Athletic Brewing Co.",neighborhood:"Midtown",imageUrl:"venue-images/portraitbar.jpeg"},
+  {id:"clemente",name:"Clemente Bar",address:"11 Madison Ave, NY",lat:40.7417,lng:-73.9872,website:"https://www.clementebar.com",brand:"Seedlip, Athletic Brewing Co.",neighborhood:"Flatiron",imageUrl:"venue-images/clemente.jpeg"},
+  {id:"delfriscogrille",name:"Del Frisco's Grille",address:"50 Rockefeller Plaza, NY",lat:40.759,lng:-73.9799,website:"https://www.delfriscosgrille.com",brand:"Aplós, Ritual Zero Proof",neighborhood:"Midtown",imageUrl:"venue-images/delfriscoe.jpeg"},
+  {id:"cosme",name:"Cosme",address:"35 E 21st St, NY",lat:40.7396,lng:-73.9884,website:"https://cosmenyc.com",brand:"Seedlip",neighborhood:"Flatiron",imageUrl:"venue-images/cosme.jpeg"},
+  {id:"calico",name:"Bar Calico",address:"23 Lexington Ave, NY",lat:40.7415,lng:-73.9874,website:"https://barcaliconyc.com",brand:"Ritual Zero Proof, Seedlip",neighborhood:"Flatiron",imageUrl:"venue-images/barcalico.jpeg"},
+  {id:"lobbyedition",name:"Lobby Bar at The Edition",address:"5 Madison Ave, NY",lat:40.742,lng:-73.987,website:"https://www.editionhotels.com/new-york/restaurants-and-bars/lobby-bar/",brand:"Lyre's",neighborhood:"Flatiron",imageUrl:"venue-images/lobbybaredition.jpeg"},
+  {id:"lamericana",name:"L'Americana",address:"51 Irving Place, NY",lat:40.7375,lng:-73.9854,website:"https://www.lamericana-nyc.com",brand:"Seedlip, Good Time Brewing",neighborhood:"Gramercy",imageUrl:"venue-images/lamericana.jpeg"},
+  {id:"handcraft",name:"Handcraft Kitchen & Cocktails",address:"367 3rd Ave, NY",lat:40.7429,lng:-73.9796,website:"https://www.handcraftnyc.com",brand:"Seedlip, Lyre's, Ritual Zero Proof",neighborhood:"Midtown",imageUrl:"venue-images/handcraft.jpeg"},
+  {id:"decoy",name:"Decoy",address:"529 Hudson St, NY",lat:40.7348,lng:-74.0061,website:"https://www.decoynyc.com",brand:"Seedlip",neighborhood:"West Village",imageUrl:"venue-images/decoy.jpeg"},
+  {id:"dante",name:"Dante West Village",address:"551 Hudson St, NY",lat:40.7353,lng:-74.0054,website:"https://www.dante-nyc.com/wv/",brand:"Seedlip, Lyre's",neighborhood:"West Village",imageUrl:"venue-images/dante.jpeg"},
+  {id:"hudsonhound",name:"Hudson Hound",address:"575 Hudson St, NY",lat:40.7361,lng:-74.0063,website:"https://hudsonhoundnyc.com",brand:"Lyre's",neighborhood:"West Village",imageUrl:"venue-images/hudsonhound.jpeg"},
+  {id:"wilfienell",name:"Wilfie & Nell",address:"228 W 4th St, NY",lat:40.7338,lng:-74.0028,website:"https://www.wilfieandnell.com",brand:"Seedlip, Athletic Brewing Co., Good Time Brewing",neighborhood:"West Village",imageUrl:"venue-images/wilfienell.jpeg"},
+  {id:"fiddlesticks",name:"Fiddlesticks Pub",address:"56 Greenwich Ave, NY",lat:40.7359,lng:-74.0021,website:"https://www.fiddlesticksnyc.net",brand:"St. Agrestis, Seedlip",neighborhood:"West Village",imageUrl:"venue-images/fiddlesticks.jpeg"},
+  {id:"deathco",name:"Death & Co",address:"433 E 6th St, NY",lat:40.7275,lng:-73.9846,website:"https://www.deathandcompany.com",brand:"Pathfinder, Seedlip, Ritual Zero Proof, Lyre's",neighborhood:"East Village",imageUrl:"venue-images/deathco.jpeg"},
+  {id:"pineappleclub",name:"Pineapple Club",address:"509 E 6th St, NY",lat:40.7268,lng:-73.9789,website:"http://pineappleclub.com",brand:"St. Agrestis",neighborhood:"East Village",imageUrl:"venue-images/pineappleclub.jpeg"},
+  {id:"hardtoexplain",name:"Hard to Explain",address:"224 E 10th St, NY",lat:40.7299,lng:-73.9831,website:"https://www.hardtoexplain.co",brand:"Good Time Brewing",neighborhood:"East Village",imageUrl:"venue-images/hardtoexplain.jpeg"},
+  {id:"superbueno",name:"Superbueno",address:"13 1st Ave, NY",lat:40.7273,lng:-73.9896,website:"https://www.superbuenonyc.com",brand:"Pathfinder, Curious Elixirs, Aplós, Good Time Brewing",neighborhood:"East Village",imageUrl:"venue-images/superbueno.jpeg"},
+  {id:"donna",name:"Donna",address:"7 Cornelia St, NY",lat:40.7316,lng:-74.0035,website:"https://www.donnanyc.com",brand:"Ritual Zero Proof, St. Agrestis, Pathfinder",neighborhood:"West Village",imageUrl:"venue-images/donna.jpeg"},
+  {id:"entwine",name:"Entwine Cocktail Bar",address:"765 Washington St, NY",lat:40.7342,lng:-74.0062,website:"https://www.entwinenyc.com",brand:"Athletic Brewing Co., St. Agrestis",neighborhood:"West Village",imageUrl:"venue-images/entwine.jpeg"},
+  {id:"onewhite",name:"One White Street",address:"1 White St, NY",lat:40.7167,lng:-74.0081,website:"https://www.onewhitestreetnyc.com",brand:"Seedlip, Pathfinder, St. Agrestis, Athletic Brewing Co.",neighborhood:"Tribeca",imageUrl:"venue-images/onewhite.jpeg"},
+  {id:"macao",name:"Macao Trading Company",address:"311 Church St, NY",lat:40.7178,lng:-74.0092,website:"https://www.macaonyc.com",brand:"Pathfinder, Athletic Brewing Co.",neighborhood:"Tribeca",imageUrl:"venue-images/macao.jpeg"},
+  {id:"sainttuesday",name:"Saint Tuesday",address:"24 Cortlandt Alley, NY",lat:40.7174,lng:-74.0060,website:"https://www.sainttuesdaynyc.com",brand:"Lyre's, Pathfinder, Ghia",neighborhood:"Tribeca",imageUrl:"venue-images/sainttuesday.jpeg"},
+  {id:"northbar",name:"North Bar",address:"458 Greenwich St, NY",lat:40.7204,lng:-74.0097,website:"http://northbartribeca.com",brand:"Athletic Brewing Co.",neighborhood:"Tribeca",imageUrl:"venue-images/northbar.jpeg"},
+  {id:"bridges",name:"Bridges",address:"9 Chatham Sq, NY",lat:40.7135,lng:-73.9981,website:"https://www.bridges-nyc.com",brand:"Lyre's, Pathfinder, Good Time Brewing",neighborhood:"Tribeca",imageUrl:"venue-images/bridges.jpeg"},
+  {id:"trinity",name:"Trinity Place",address:"115 Broadway, NY",lat:40.7070,lng:-74.0112,website:"https://www.trinityplacenyc.com",brand:"Lyre's, Athletic Brewing Co.",neighborhood:"FiDi",imageUrl:"venue-images/trinity.jpeg"},
+  {id:"barbelly",name:"Bar Belly",address:"14 Orchard St, NY",lat:40.7168,lng:-73.9910,website:"https://www.barbellynyc.com",brand:"Pathfinder, Seedlip, Good Time Brewing",neighborhood:"East Village",imageUrl:"venue-images/barbelly.jpeg"},
+  {id:"luckytiger",name:"Lucky Tiger",address:"66 Pearl St, NY",lat:40.7075,lng:-74.0026,website:"https://www.luckytigernyc.com",brand:"St. Agrestis",neighborhood:"FiDi",imageUrl:"venue-images/luckytiger.jpeg"},
+  {id:"bedford",name:"The Bedford",address:"55 Stone St, NY",lat:40.7263,lng:-73.9819,website:"https://www.thebedford.nyc",brand:"Seedlip",neighborhood:"FiDi",imageUrl:"venue-images/bedford.jpeg"},
+  {id:"tradewell",name:"Tradwell Park",address:"301 S End Ave, NY",lat:40.7160,lng:-74.0105,website:"https://www.treadwellpark.com/location/downtown/",brand:"Lyre's, Athletic Brewing Co.",neighborhood:"Tribeca",imageUrl:"venue-images/tradewellpark.jpeg"},
+  {id:"tizio",name:"Bar Tizio",address:"107 Horatio St, NY",lat:40.7358,lng:-74.0050,website:"https://www.bartizio.com",brand:"St. Agrestis",neighborhood:"West Village",imageUrl:"venue-images/bartizio.jpeg"},
+  {id:"grovestreet",name:"Grove Street Social",address:"39 Grove St, NY",lat:40.7337,lng:-74.0021,website:"https://www.grovestreetsocial.com",brand:"Guinness, Heineken, Curious Elixirs",neighborhood:"West Village",imageUrl:"venue-images/grovestreetsocial.jpeg"},
+  {id:"artbar",name:"Art Bar",address:"52 8th Ave, NY",lat:40.7390,lng:-74.0039,website:"https://www.artbarnyc.com",brand:"Ghia, Guinness, Athletic Brewing Co.",neighborhood:"West Village",imageUrl:"venue-images/artbar.jpeg"},
+  {id:"marlow",name:"Marlow East",address:"1015 Lexington Ave, NY",lat:40.7716,lng:-73.9607,website:"https://www.marloweast.com",brand:"Ghia, Pathfinder",neighborhood:"Upper East Side",imageUrl:"venue-images/marlow.jpeg"},
+  {id:"cafefiorello",name:"Cafe Fiorello",address:"1900 Broadway, NY",lat:40.7713,lng:-73.9819,website:"https://www.cafefiorello.com",brand:"Lyre's, St. Agrestis, Athletic Brewing Co.",neighborhood:"Upper West Side",imageUrl:"venue-images/cafefiorello.jpeg"},
+  {id:"parisbar",name:"Paris Bar",address:"120 W 57th St, NY",lat:40.7640,lng:-73.9776,website:"https://www.parisbar.com",brand:"Lyre's, Ghia, Athletic Brewing Co.",neighborhood:"Midtown",imageUrl:"venue-images/parisbar.jpeg"},
+  {id:"tartinery",name:"Tartinery",address:"2090 Broadway, NY",lat:40.7782,lng:-73.9813,website:"https://www.tartinery.com",brand:"Ghia",neighborhood:"Upper West Side",imageUrl:"venue-images/tartinery.jpeg"},
+  {id:"pjclarkes",name:"P.J. Clarke's",address:"4 Columbus Cir, NY",lat:40.7680,lng:-73.9836,website:"https://www.pjclarkes.com",brand:"Athletic Brewing Co., Heineken, Ghia, Lyre's",neighborhood:"Upper West Side",imageUrl:"venue-images/pjclarkeuws.jpeg"},
+  {id:"empirerooftop",name:"The Empire Rooftop",address:"44 W 63rd St, NY",lat:40.7719,lng:-73.9832,website:"https://www.theempirerooftop.com",brand:"Run Wild, Corona, Lyre's, St. Agrestis, Ritual Zero Proof",neighborhood:"Upper West Side",imageUrl:"venue-images/empireroof.jpeg"},
+  {id:"allurebar",name:"Allure Bar",address:"80 Riverside Blvd, NY",lat:40.7807,lng:-73.9886,website:"https://www.allurebar.com",brand:"Seedlip, Run Wild",neighborhood:"Upper West Side",imageUrl:"venue-images/allurebar.jpeg"},
+  {id:"parklane",name:"Park Lane",address:"36 Central Park S, NY",lat:40.7666,lng:-73.9777,website:"https://www.parklanenewyork.com",brand:"Curious Elixirs",neighborhood:"Midtown",imageUrl:"venue-images/parklane.jpeg"},
+  {id:"cotta",name:"Cotta",address:"513 Columbus Ave, NY",lat:40.7871,lng:-73.9725,website:"https://www.cottanyc.com",brand:"Curious Elixirs, St. Agrestis, Good Time Brewing",neighborhood:"Upper West Side",imageUrl:"venue-images/cotta.jpeg"},
+  {id:"spaniard",name:"The Spaniard",address:"190 W 4th St, NY",lat:40.7346,lng:-74.0007,website:"https://www.thespaniardnyc.com",brand:"Curious Elixirs, St. Agrestis, Seedlip, Good Time Brewing",neighborhood:"West Village",imageUrl:"venue-images/spaniard.jpeg"},
+  {id:"peckslip",name:"Peck Slip Social",address:"36 Peck Slip, NY",lat:40.7079,lng:-74.0016,website:"https://www.peckslipsocial.com",brand:"Curious Elixirs, Guinness, St. Agrestis",neighborhood:"FiDi",imageUrl:"venue-images/peckslip.jpeg"},
+  {id:"shyshy",name:"Shy Shy",address:"520 W 27th St, NY",lat:40.7502,lng:-74.0049,website:"https://www.shyshynyc.com",brand:"Ritual Zero Proof, Pentire, Giffard",neighborhood:"Chelsea",imageUrl:"venue-images/shyshy.jpeg"},
+  {id:"markette",name:"Markette",address:"135 W 24th St, NY",lat:40.7447,lng:-73.9944,website:"https://www.markettenyc.com",brand:"St. Agrestis",neighborhood:"Chelsea",imageUrl:"venue-images/markette.jpeg"},
+  {id:"hellohello",name:"Hello Hello Bar",address:"138 W 26th St, NY",lat:40.7456,lng:-73.9936,website:"https://www.hellohellonyc.com",brand:"Pathfinder, Aplós, Good Time Brewing",neighborhood:"Chelsea",imageUrl:"venue-images/hellohello.jpeg"},
+  {id:"littlerebel",name:"Little Rebel",address:"129 Orchard St, NY",lat:40.7201,lng:-73.9889,website:"https://www.littlerebelnyc.com",brand:"Lyre's, Seedlip",neighborhood:"East Village",imageUrl:"venue-images/littlerebel.jpeg"},
+  {id:"cabinet",name:"The Cabinet",address:"649 E 9th St, NY",lat:40.7264,lng:-73.9794,website:"https://www.thecabinetnyc.com",brand:"Athletic Brewing Co.",neighborhood:"East Village",imageUrl:"venue-images/thecabinet.jpeg"},
+  {id:"dutch",name:"The Dutch",address:"131 Sullivan St, NY",lat:40.7259,lng:-74.0013,website:"https://www.thedutchnyc.com",brand:"Aplós, Pentire, Ritual Zero Proof, Pathfinder",neighborhood:"SoHo",imageUrl:"venue-images/thedutch.jpeg"},
+  {id:"raon",name:"Raon",address:"119 E 54th St, NY",lat:40.7596,lng:-73.9692,website:"https://www.raonnyc.com",brand:"Seedlip, Pentire, Aplós",neighborhood:"Upper East Side",imageUrl:"venue-images/raon.jpeg"},
+  {id:"nothingrmatters",name:"Nothing Really Matters",address:"30 W 48th St, NY",lat:40.7571,lng:-73.9815,website:"https://www.nothingreallymatters.bar",brand:"Lager, Aplós",neighborhood:"Midtown",imageUrl:"venue-images/nothingreallymatters.jpeg"},
+  {id:"dutchfreds",name:"Dutch Freds",address:"307 W 47th St, NY",lat:40.7597,lng:-73.9883,website:"https://www.dutchfreds.com",brand:"Good Time Brewing, Stella Artois, Guinness, Aplós",neighborhood:"Midtown",imageUrl:"venue-images/dutchfreds.jpeg"},
+  {id:"cuerno",name:"Cuerno",address:"52 W 54th St, NY",lat:40.7613,lng:-73.9785,website:"https://www.cuernonyc.com",brand:"Ritual Zero Proof, Corona",neighborhood:"Midtown",imageUrl:"venue-images/cuerno.jpeg"},
+  {id:"felicehudson",name:"Felice on Hudson",address:"15 W 3rd St, NY",lat:40.7327,lng:-74.0030,website:"https://www.felicerestaurants.com",brand:"Ghia, Peroni, Lyre's",neighborhood:"West Village",imageUrl:"venue-images/felicehudson.jpeg"},
+  {id:"parkgate",name:"The Park Gate",address:"91 Christopher St, NY",lat:40.7338,lng:-74.0057,website:"https://www.theparkgatenyc.com",brand:"Guinness, Good Time Brewing, Athletic Brewing Co., Lyre's",neighborhood:"West Village",imageUrl:"venue-images/parkgate.jpeg"},
+  {id:"americanbar",name:"American Bar",address:"33 Greenwich Ave, NY",lat:40.7352,lng:-74.0026,website:"https://www.americanbarnyc.com",brand:"Pentire, Kin Euphorics, Seedlip",neighborhood:"West Village",imageUrl:"venue-images/americanbar.jpeg"},
+  {id:"travelerspoets",name:"Travelers Poets & Friends",address:"442 Hudson St, NY",lat:40.7320,lng:-74.0067,website:"https://www.travelersnyc.com",brand:"Pathfinder, St. Agrestis",neighborhood:"West Village",imageUrl:"venue-images/travelerspoets.jpeg"},
+  {id:"53",name:"53",address:"53 W 53rd St, NY",lat:40.7610,lng:-73.9776,website:"https://www.53-nyc.com",brand:"Lyre's, Pentire, Pathfinder, St. Agrestis",neighborhood:"Midtown",imageUrl:"venue-images/53nyc.jpeg"},
+  {id:"naro",name:"Naro",address:"10 Rockefeller Plaza, NY",lat:40.7587,lng:-73.9787,website:"https://www.naronyc.com",brand:"Seedlip, Aplós",neighborhood:"Midtown",imageUrl:"venue-images/naro.jpeg"},
+  {id:"king",name:"King",address:"18 King St, NY",lat:40.7276,lng:-74.0036,website:"https://www.kingrestaurant.nyc",brand:"Ghia, Lyre's, Athletic Brewing Co.",neighborhood:"SoHo",imageUrl:"venue-images/kingbar.jpeg"},
+  {id:"carnemare",name:"Carne Mare",address:"89 South St, NY",lat:40.7062,lng:-74.0034,website:"https://www.carnemare.com",brand:"Athletic Brewing Co., Pentire, Lyre's",neighborhood:"FiDi",imageUrl:"venue-images/carnemare.jpeg"},
+];
 
-    ];
-
-/* =========================
-   B) EMBED MODE FLAG (?embed=1)
-   ========================= */
+/* ─── EMBED MODE ──────────────────────────────────────────────── */
 window.SipSober = window.SipSober || {};
-
-(function () {
-  const params = new URLSearchParams(window.location.search);
-  const isEmbed = params.get("embed") === "1";
-
-  window.SipSober.isEmbed = isEmbed;
-  if (isEmbed) document.body.classList.add("ss-embed");
+(function(){
+  const p = new URLSearchParams(window.location.search);
+  window.SipSober.isEmbed = p.get("embed")==="1";
+  if(window.SipSober.isEmbed) document.body.classList.add("ss-embed");
 })();
 
-/* =========================
-   C) MAP INIT
-   ========================= */
+/* ─── STATE ────────────────────────────────────────────────────── */
+let map, markersLayer, markersById={};
+let _mapReady=false, _pendingUserLocation=null;
+let _userLocationForDistance=null, _userDot=null, _userHalo=null;
+let _activeMarker=null, _lastFocusedVenueId=null;
+let defaultIcon, activeIcon, currentIcon;
+const mobileQuery = window.matchMedia("(max-width:767px)");
 
-// ✅ Create map (no +/- controls)
-const map = L.map("map", {
-  zoomControl: false,        // ✅ hides +/-
-  scrollWheelZoom: true,
-  preferCanvas: true         // ✅ helps performance on iOS sometimes
-}).setView([40.755, -73.985], 12.1);
+const manhattanLockBounds    = L.latLngBounds([40.5,-74.3],[40.98,-73.6]);
+const manhattanInitialBounds = L.latLngBounds([40.70,-74.05],[40.88,-73.90]);
 
-// ✅ Tiles
-const tiles = L.tileLayer(
-  "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-  {
+/* ─────────────────────────────────────────────────────────────────
+   FIX 2: Map initialises AFTER the browser has completed its first
+   paint. This guarantees Leaflet reads the true #map dimensions,
+   which eliminates both the grey-tile gap and the layout jump.
+   ───────────────────────────────────────────────────────────────── */
+function _initMap(){
+  map = L.map("map",{
+    zoomControl: false,
+    scrollWheelZoom: true,
+    preferCanvas: true,
+    // FIX 3: tap:false stops Leaflet's iOS tap shim from triggering
+    // an unwanted invalidateSize() that causes the visible jump.
+    tap: false
+  }).setView([40.755,-73.985],12.1);
+
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{
     maxZoom: 20,
     subdomains: "abcd",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
+    // FIX 4: Load tiles immediately (not just when idle) and keep
+    // a larger buffer so edges never go grey on fast pan/load.
+    updateWhenIdle: false,
+    keepBuffer: 4,
+    detectRetina: true
+  }).addTo(map);
 
-    // ✅ Better defaults for iOS paint stability
-    updateWhenIdle: true,
-    keepBuffer: 2
-  }
-).addTo(map);
+  map.setMaxBounds(manhattanLockBounds);
+  map.options.maxBoundsViscosity = 0.1;
+  map.setMinZoom(11.5);
+  markersLayer = L.layerGroup().addTo(map);
 
-/* ✅ iOS/Safari/WKWebView: relayout helper (handles "same-size" redraw bugs) */
-let _relayoutTimer = null;
-let _lastSizeKey = "";
-let _relayoutBurstTimer = null;
-
-function scheduleRelayout(delay = 180, force = false) {
-  clearTimeout(_relayoutTimer);
-
-  _relayoutTimer = setTimeout(() => {
-    try {
-      const el = document.getElementById("map");
-      if (!el) return;
-
-      const r = el.getBoundingClientRect();
-      if (r.width < 10 || r.height < 10) return;
-
-      const sizeKey = `${Math.round(r.width)}x${Math.round(r.height)}`;
-
-      // ✅ Don't skip if forcing (WKWebView often needs invalidate even at same size)
-      if (!force && sizeKey === _lastSizeKey) return;
-      _lastSizeKey = sizeKey;
-
-      // ✅ Two-frame kick fixes "gray tiles" / partial paint on iOS
-      requestAnimationFrame(() => {
-        try { map.invalidateSize(force); } catch (e) {}
-        requestAnimationFrame(() => {
-          try { map.invalidateSize(force); } catch (e) {}
-        });
+  /* ─── FIX 5: Clean, two-step invalidateSize sequence ────────────
+     • rAF frame 1 → layout is done
+     • rAF frame 2 → paint is done → NOW call invalidateSize
+     • 300 ms later → catch any WKWebView async settle
+  ────────────────────────────────────────────────────────────── */
+  function kickSize(){
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        if(!map) return;
+        map.invalidateSize({animate:false,pan:false});
+        setTimeout(()=>{ if(map) map.invalidateSize({animate:false,pan:false}); },300);
       });
+    });
+  }
 
-      // ✅ Optional small burst after resume/reopen (helps iOS settle tiles)
-      clearTimeout(_relayoutBurstTimer);
-      _relayoutBurstTimer = setTimeout(() => {
-        try { map.invalidateSize(true); } catch (e) {}
-      }, 380);
+  map.whenReady(kickSize);
+  window.addEventListener("resize",            kickSize);
+  window.addEventListener("orientationchange", ()=>setTimeout(kickSize,200));
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden) kickSize(); });
+  window.addEventListener("focus",             kickSize);
 
-    } catch (e) {}
-  }, delay);
+  map.on("popupclose",()=>{ clearActiveMarker(); _lastFocusedVenueId=null; });
+
+  _buildIcons();
+  applyIconForViewport();
+  mobileQuery.addEventListener("change", applyIconForViewport);
+
+  _mapReady = true;
+  if(_pendingUserLocation){
+    window.SipSober.setUserLocation(_pendingUserLocation.lat,_pendingUserLocation.lng);
+    _pendingUserLocation = null;
+  }
+
+  applyFiltersUnified();
+  window.SipSober?.sendVenuesToNative?.();
+  kickSize();
 }
 
-// ✅ Run once map is ready (FORCE on iOS)
-map.whenReady(() => scheduleRelayout(220, true));
-
-// ✅ Run on viewport changes (FORCE)
-window.addEventListener("resize", () => scheduleRelayout(240, true));
-window.addEventListener("orientationchange", () => scheduleRelayout(280, true));
-
-// ✅ Run when returning to the tab / app (FORCE even if same size)
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) scheduleRelayout(260, true);
-});
-
-// ✅ WKWebView focus can cause visual shift without size change
-window.addEventListener("focus", () => scheduleRelayout(260, true));
-
-// ✅ Manhattan bounds + layers
-const manhattanLockBounds = L.latLngBounds([40.5, -74.3], [40.98, -73.6]);
-
-const manhattanInitialBounds = L.latLngBounds(
-  [40.70, -74.05],
-  [40.88, -73.90]
-);
-
-map.setMaxBounds(manhattanLockBounds);
-map.options.maxBoundsViscosity = 0.1;
-map.setMinZoom(11.5);
-
-let markersLayer = L.layerGroup().addTo(map);
-
-// ✅ One more relayout after UI finishes mounting (FORCE)
-setTimeout(() => scheduleRelayout(260, true), 260);
-  
-/* =========================
-   D) ICONS
-   ========================= */
-function makePinIconSVG(hex = "#1F2430", size = [28, 38], opts = {}) {
-  const [w, h] = size;
-  const ring = opts.ring ?? false;
-
-  const stroke = "rgba(0,0,0,0.14)";
-  const strokeW = 0.5;
-
-  const ringColor = "rgba(32,34,57,0.20)";
-  const ringW = 2.2;
-
-  return `
-    <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 28 38">
-      ${
-        ring
-          ? `<path d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"
-               fill="none" stroke="${ringColor}" stroke-width="${ringW}" />`
-          : ""
-      }
-      <path d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"
-            fill="${hex}" stroke="${stroke}" stroke-width="${strokeW}"/>
-      <circle cx="14" cy="13" r="4.6" fill="#F5F6FA"/>
-    </svg>`;
+// Wait for full paint
+if(document.readyState==="complete"){
+  requestAnimationFrame(_initMap);
+} else {
+  window.addEventListener("load",()=>requestAnimationFrame(_initMap));
 }
 
-function makeIcon(size = [28, 38], color = "#1F2430", isActive = false) {
+/* ─── ICONS ────────────────────────────────────────────────────── */
+function makePinIconSVG(hex="#1F2430",size=[28,38],opts={}){
+  const [w,h]=size, ring=opts.ring??false;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 28 38">
+    ${ring?`<path d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z" fill="none" stroke="rgba(32,34,57,0.20)" stroke-width="2.2"/>` : ""}
+    <path d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z" fill="${hex}" stroke="rgba(0,0,0,0.14)" stroke-width="0.5"/>
+    <circle cx="14" cy="13" r="4.6" fill="#F5F6FA"/>
+  </svg>`;
+}
+
+function makeIcon(size=[28,38],color="#1F2430",isActive=false){
   return L.icon({
-    iconUrl: "data:image/svg+xml;utf8," + encodeURIComponent(makePinIconSVG(color, size, { ring: isActive })),
-    iconSize: size,
-    iconAnchor: [Math.floor(size[0] / 2), size[1]],
-    popupAnchor: [0, -Math.floor(size[1] * 0.84)],
+    iconUrl:"data:image/svg+xml;utf8,"+encodeURIComponent(makePinIconSVG(color,size,{ring:isActive})),
+    iconSize:size,
+    iconAnchor:[Math.floor(size[0]/2),size[1]],
+    popupAnchor:[0,-Math.floor(size[1]*0.84)]
   });
 }
 
-let defaultIcon = makeIcon([28, 38], "#1F2430", false);
-let activeIcon  = makeIcon([28, 38], "#1F2430", true);
-let currentIcon = defaultIcon;
-
-L.Marker.prototype.options.icon = currentIcon;
-
-const __origMarkerFactory = L.marker;
-L.marker = function (latlng, options) {
-  const opts = options || {};
-  if (!opts.icon) opts.icon = currentIcon;
-  return __origMarkerFactory.call(this, latlng, opts);
-};
-
-let _activeMarker = null;
-
-function setActiveMarker(marker) {
-  if (_activeMarker && _activeMarker !== marker) _activeMarker.setIcon(defaultIcon);
-  _activeMarker = marker || null;
-  if (_activeMarker) _activeMarker.setIcon(activeIcon);
-}
-
-function clearActiveMarker() {
-  if (_activeMarker) _activeMarker.setIcon(defaultIcon);
-  _activeMarker = null;
-}
-
-const mobileQuery = window.matchMedia("(max-width: 767px)");
-function applyIconForViewport() {
+function _buildIcons(){
   const isMobile = mobileQuery.matches;
-  const size = isMobile ? [16, 24] : [26, 36];
-
-  defaultIcon = makeIcon(size, "#1F2430", false);
-  activeIcon  = makeIcon(size, "#1F2430", true);
-
+  const size = isMobile?[16,24]:[26,36];
+  defaultIcon = makeIcon(size,"#1F2430",false);
+  activeIcon  = makeIcon(size,"#1F2430",true);
   currentIcon = defaultIcon;
   L.Marker.prototype.options.icon = currentIcon;
+}
 
-  if (markersLayer && markersLayer.eachLayer) {
-    markersLayer.eachLayer((layer) => {
-      if (!layer || typeof layer.setIcon !== "function") return;
-      layer.setIcon(layer === _activeMarker ? activeIcon : defaultIcon);
+const __origMarkerFactory = L.marker;
+L.marker = function(latlng,options){
+  const opts=options||{};
+  if(!opts.icon) opts.icon=currentIcon||makeIcon();
+  return __origMarkerFactory.call(this,latlng,opts);
+};
+
+function setActiveMarker(m){
+  if(_activeMarker&&_activeMarker!==m) _activeMarker.setIcon(defaultIcon);
+  _activeMarker=m||null;
+  if(_activeMarker) _activeMarker.setIcon(activeIcon);
+}
+
+function clearActiveMarker(){
+  if(_activeMarker) _activeMarker.setIcon(defaultIcon);
+  _activeMarker=null;
+}
+
+function applyIconForViewport(){
+  if(!map) return;
+  _buildIcons();
+  if(markersLayer&&markersLayer.eachLayer){
+    markersLayer.eachLayer(layer=>{
+      if(!layer||typeof layer.setIcon!=="function") return;
+      layer.setIcon(layer===_activeMarker?activeIcon:defaultIcon);
     });
   }
 }
-applyIconForViewport();
-mobileQuery.addEventListener("change", applyIconForViewport);
 
-map.on("popupclose", () => {
-  clearActiveMarker();
-  _lastFocusedVenueId = null;
-});
-
-/* =========================
-   E) UI HELPERS
-   ========================= */
-function closeAllMenus() {
-  document.querySelectorAll(".dropdown").forEach((dd) => dd.classList.remove("open"));
-  document.querySelectorAll(".dropdown > button").forEach((btn) => btn.setAttribute("aria-expanded", "false"));
+/* ─── UI HELPERS ───────────────────────────────────────────────── */
+function closeAllMenus(){
+  document.querySelectorAll(".dropdown").forEach(dd=>dd.classList.remove("open"));
+  document.querySelectorAll(".dropdown > button").forEach(btn=>btn.setAttribute("aria-expanded","false"));
 }
 
-function normalizeUrl(u) {
-  u = String(u || "").trim();
-  if (!u || u.toLowerCase() === "n/a") return "";
-  if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+function normalizeUrl(u){
+  u=String(u||"").trim();
+  if(!u||u.toLowerCase()==="n/a") return "";
+  if(!/^https?:\/\//i.test(u)) u="https://"+u;
   return u;
 }
 
-function getSelectedValues(prefix) {
-  return Array.from(document.querySelectorAll(`input[id^="${prefix}-"]:checked`)).map((cb) => cb.value);
+function getSelectedValues(prefix){
+  return Array.from(document.querySelectorAll(`input[id^="${prefix}-"]:checked`)).map(cb=>cb.value);
 }
 
-function matchesSearch(loc, q) {
-  if (!q) return true;
-  const hay = [loc.name, loc.address, loc.brand, loc.neighborhood].filter(Boolean).join(" ").toLowerCase();
-  return hay.includes(q.toLowerCase());
+function matchesSearch(loc,q){
+  if(!q) return true;
+  return [loc.name,loc.address,loc.brand,loc.neighborhood].filter(Boolean).join(" ").toLowerCase().includes(q.toLowerCase());
 }
 
-/* =========================
-   F) ACTIVE FILTER CHIPS
-   ========================= */
-function updateActiveFilters(selectedBrands, selectedNeighborhoods) {
-  const container = document.getElementById("active-filters");
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  const hasAny = selectedBrands.length || selectedNeighborhoods.length;
-  container.style.display = hasAny ? "flex" : "none";
-  if (!hasAny) return;
-
-  function makePill(type, value) {
-    const pill = document.createElement("span");
-    pill.className = "filter-pill";
-
-    const x = document.createElement("span");
-    x.className = "filter-pill-x";
-    x.textContent = "×";
-
-    const label = document.createElement("span");
-    label.textContent = value;
-
-    x.addEventListener("click", () => clearSingleFilter(type, value));
-
-    pill.appendChild(x);
-    pill.appendChild(label);
-    container.appendChild(pill);
+/* ─── FILTER CHIPS ─────────────────────────────────────────────── */
+function updateActiveFilters(selectedBrands,selectedNeighborhoods){
+  const c=document.getElementById("active-filters");
+  if(!c) return;
+  c.innerHTML="";
+  const has=selectedBrands.length||selectedNeighborhoods.length;
+  c.style.display=has?"flex":"none";
+  if(!has) return;
+  function pill(type,value){
+    const p=document.createElement("span"); p.className="filter-pill";
+    const x=document.createElement("span"); x.className="filter-pill-x"; x.textContent="×";
+    const l=document.createElement("span"); l.textContent=value;
+    x.addEventListener("click",()=>clearSingleFilter(type,value));
+    p.appendChild(x); p.appendChild(l); c.appendChild(p);
   }
-
-  selectedNeighborhoods.forEach((n) => makePill("neighborhood", n));
-  selectedBrands.forEach((b) => makePill("brand", b));
+  selectedNeighborhoods.forEach(n=>pill("neighborhood",n));
+  selectedBrands.forEach(b=>pill("brand",b));
 }
 
-function clearSingleFilter(type, value) {
-  if (type === "brand") {
-    document.querySelectorAll('input[id^="brand-"]').forEach((cb) => { if (cb.value === value) cb.checked = false; });
-  } else if (type === "neighborhood") {
-    document.querySelectorAll('input[id^="n-"]').forEach((cb) => { if (cb.value === value) cb.checked = false; });
-  }
+function clearSingleFilter(type,value){
+  if(type==="brand") document.querySelectorAll('input[id^="brand-"]').forEach(cb=>{if(cb.value===value)cb.checked=false;});
+  else document.querySelectorAll('input[id^="n-"]').forEach(cb=>{if(cb.value===value)cb.checked=false;});
   applyFiltersUnified();
 }
 
-/* =========================
-   G) WEB → SWIFT: send venues for native Search
-   ========================= */
-let _didSendVenuesToNative = false;
+/* ─── NATIVE BRIDGE ────────────────────────────────────────────── */
+let _didSendVenuesToNative=false;
+function _brandsArrayFromString(s){return String(s||"").split(",").map(x=>x.trim()).filter(Boolean);}
+function _venueForNative(loc){return{id:String(loc.id||""),name:String(loc.name||""),address:String(loc.address||""),neighborhood:String(loc.neighborhood||""),brands:_brandsArrayFromString(loc.brand),website:normalizeUrl(loc.website||""),lat:Number(loc.lat||0),lng:Number(loc.lng||0),imageUrl:String(loc.imageUrl||"")};}
 
-function _brandsArrayFromString(s) {
-  return String(s || "").split(",").map(x => x.trim()).filter(Boolean);
-}
-
-function _venueForNative(loc) {
-  return {
-    id: String(loc.id || ""),
-    name: String(loc.name || ""),
-    address: String(loc.address || ""),
-    neighborhood: String(loc.neighborhood || ""),
-    brands: _brandsArrayFromString(loc.brand),
-    website: normalizeUrl(loc.website || ""),
-    lat: Number(loc.lat || 0),
-    lng: Number(loc.lng || 0),
-    imageUrl: String(loc.imageUrl || "")
-  };
-}
-
-window.SipSober.sendVenuesToNative = function (arg) {
-  try {
-    const force = (typeof arg === "boolean") ? arg : false;
-    const source = Array.isArray(arg) ? arg : (locations || []);
-
-    if (_didSendVenuesToNative && !force && !Array.isArray(arg)) return;
-
-    const venues = source.map(_venueForNative).filter(v => v.id && v.name);
-
-    if (window.webkit?.messageHandlers?.sipSober) {
-      window.webkit.messageHandlers.sipSober.postMessage({ type: "venues", venues });
-      _didSendVenuesToNative = true;
-      console.log("✅ sent venues to native:", venues.length);
+window.SipSober.sendVenuesToNative=function(arg){
+  try{
+    const force=(typeof arg==="boolean")?arg:false;
+    const source=Array.isArray(arg)?arg:(locations||[]);
+    if(_didSendVenuesToNative&&!force&&!Array.isArray(arg)) return;
+    const venues=source.map(_venueForNative).filter(v=>v.id&&v.name);
+    if(window.webkit?.messageHandlers?.sipSober){
+      window.webkit.messageHandlers.sipSober.postMessage({type:"venues",venues});
+      _didSendVenuesToNative=true;
     }
-  } catch (e) {
-    console.log("sendVenuesToNative error", e);
-  }
+  }catch(e){}
 };
 
-window.addEventListener("load", () => {
-  setTimeout(() => window.SipSober.sendVenuesToNative(), 400);
-});
+window.addEventListener("load",()=>setTimeout(()=>window.SipSober.sendVenuesToNative(),400));
 
-/* =========================
-   H) RENDERERS
-   ========================= */
-let markersById = {};
-
-function renderMarkers(data) {
-  markersLayer.clearLayers();
-  clearActiveMarker();
-  markersById = {};
-
-  const bounds = L.latLngBounds([]);
-
-  data.forEach((loc) => {
-    const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
-    m.on("click", () => setActiveMarker(m));
-
-    if (loc.id) markersById[String(loc.id)] = m;
-
-    const imgHtml = loc.imageUrl
-      ? `
-        <div class="ss-popup-img-wrap">
-          <img class="ss-popup-img" src="${loc.imageUrl}" alt="${loc.name || ""}" loading="lazy"
-            onerror="this.closest('.ss-popup-img-wrap')?.remove()">
-        </div>
-      `
-      : "";
-
-    const web = normalizeUrl(loc.website);
-
-    m.bindPopup(
-      `
-      <div class="ss-popup ss-popup--simple">
-        <div class="ss-popup-top">
-          ${imgHtml}
-          <div class="ss-popup-text">
-            <div class="ss-popup-title">${loc.name || ""}</div>
-            ${loc.neighborhood ? `<div class="ss-popup-tags">${loc.neighborhood}</div>` : ""}
-            <div class="ss-popup-meta">${loc.address || ""}</div>
-            <div class="ss-popup-actions">
-              ${
-                web
-                  ? `<a class="ss-pill" href="${web}" target="_blank" rel="noopener">Website</a>`
-                  : ""
-              }
-              <a
-                class="ss-pill secondary"
-                href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}"
-                target="_blank"
-                rel="noopener"
-              >Directions</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      `,
-      {
-        minWidth: 220,
-        maxWidth: 280,
-        closeButton: true,
-        autoPan: true,
-        keepInView: true,
-        autoPanPaddingTopLeft: [18, 160],
-        autoPanPaddingBottomRight: [18, 260],
-        offset: [0, -18]
-      }
-    );
-
-    bounds.extend([loc.lat, loc.lng]);
+/* ─── RENDERERS ────────────────────────────────────────────────── */
+function renderMarkers(data){
+  if(!markersLayer) return{count:0,bounds:null};
+  markersLayer.clearLayers(); clearActiveMarker(); markersById={};
+  const bounds=L.latLngBounds([]);
+  data.forEach(loc=>{
+    const m=L.marker([loc.lat,loc.lng]).addTo(markersLayer);
+    m.on("click",()=>setActiveMarker(m));
+    if(loc.id) markersById[String(loc.id)]=m;
+    const imgHtml=loc.imageUrl?`<div class="ss-popup-img-wrap"><img class="ss-popup-img" src="${loc.imageUrl}" alt="${loc.name||""}" loading="lazy" onerror="this.closest('.ss-popup-img-wrap')?.remove()"></div>`:"";
+    const web=normalizeUrl(loc.website);
+    m.bindPopup(`<div class="ss-popup ss-popup--simple"><div class="ss-popup-top">${imgHtml}<div class="ss-popup-text"><div class="ss-popup-title">${loc.name||""}</div>${loc.neighborhood?`<div class="ss-popup-tags">${loc.neighborhood}</div>`:""}<div class="ss-popup-meta">${loc.address||""}</div><div class="ss-popup-actions">${web?`<a class="ss-pill" href="${web}" target="_blank" rel="noopener">Website</a>`:""}<a class="ss-pill secondary" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name||"")+" "+(loc.address||""))}" target="_blank" rel="noopener">Directions</a></div></div></div></div>`,{minWidth:220,maxWidth:280,closeButton:true,autoPan:true,keepInView:true,autoPanPaddingTopLeft:[18,160],autoPanPaddingBottomRight:[18,260],offset:[0,-18]});
+    bounds.extend([loc.lat,loc.lng]);
   });
-
-  return { count: data.length, bounds: data.length ? bounds : null };
+  return{count:data.length,bounds:data.length?bounds:null};
 }
 
-function renderList(data) {
-  const results = document.getElementById("results");
-  const resultsCount = document.getElementById("results-count");
-  if (!results) return;
-
-  results.innerHTML = "";
-
-  if (resultsCount) {
-    resultsCount.textContent =
-      data.length === 0 ? "No places found" : `${data.length} place${data.length === 1 ? "" : "s"}`;
-  }
-
-  data.forEach((loc) => {
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const web = normalizeUrl(loc.website);
-
-    card.innerHTML = `
-      <div class="card-top">
-        <span class="card-name" data-focus-id="${loc.id}">${loc.name}</span>
-        <button class="fav-btn" data-id="${loc.id}" aria-label="Favorite">★</button>
-      </div>
-
-      <div class="meta">${loc.address || ""}</div>
-      ${ web ? `<a href="${web}" target="_blank" rel="noopener">Website</a>` : `` }
-            <div class="meta">${
-        [_distanceLabelForVenue(loc), loc.neighborhood || "", loc.brand || ""]
-          .filter(Boolean)
-          .join(" • ")
-      }</div>
-    `;
-
+function renderList(data){
+  const results=document.getElementById("results");
+  const rc=document.getElementById("results-count");
+  if(!results) return;
+  results.innerHTML="";
+  if(rc) rc.textContent=data.length===0?"No places found":`${data.length} place${data.length===1?"":"s"}`;
+  data.forEach(loc=>{
+    const card=document.createElement("div"); card.className="card";
+    const web=normalizeUrl(loc.website);
+    card.innerHTML=`<div class="card-top"><span class="card-name" data-focus-id="${loc.id}">${loc.name}</span><button class="fav-btn" data-id="${loc.id}" aria-label="Favorite">★</button></div><div class="meta">${loc.address||""}</div>${web?`<a href="${web}" target="_blank" rel="noopener">Website</a>`:""}<div class="meta">${[_distanceLabelForVenue(loc),loc.neighborhood||"",loc.brand||""].filter(Boolean).join(" • ")}</div>`;
     results.appendChild(card);
   });
-
-  // Web → Swift: keep native Search list in sync
   window.SipSober?.sendVenuesToNative?.(data);
 }
 
-/* =========================
-   I) FILTER + APPLY (NO LOCATION MODE)
-   ========================= */
-
-/**
- * ✅ Unified apply function.
- * This is your single source of truth for filtering + search + rendering.
- * No user location logic is allowed in here.
- */
-function applyFiltersUnified() {
+/* ─── FILTER + APPLY ────────────────────────────────────────────── */
+function applyFiltersUnified(){
   closeAllMenus();
-
-  const selectedBrands = getSelectedValues("brand");
-  const selectedNeighborhoods = getSelectedValues("n");
-  const q = (document.getElementById("searchTopInput")?.value || "").trim();
-
-  let filtered = locations.filter((loc) => {
-    const brandOK = selectedBrands.length
-      ? selectedBrands.some((b) => (loc.brand || "").toLowerCase().includes(b.toLowerCase()))
-      : true;
-
-    const hoodOK = selectedNeighborhoods.length
-      ? selectedNeighborhoods.includes(loc.neighborhood)
-      : true;
-
-    const searchOK = matchesSearch(loc, q);
-    return brandOK && hoodOK && searchOK;
+  const brands=getSelectedValues("brand"), hoods=getSelectedValues("n");
+  const q=(document.getElementById("searchTopInput")?.value||"").trim();
+  let filtered=locations.filter(loc=>{
+    const brandOK=brands.length?brands.some(b=>(loc.brand||"").toLowerCase().includes(b.toLowerCase())):true;
+    const hoodOK=hoods.length?hoods.includes(loc.neighborhood):true;
+    return brandOK&&hoodOK&&matchesSearch(loc,q);
   });
-
-  // ✅ Sorting rule:
-  // Location OFF → always A–Z
-  // Location ON  → always Distance (miles), with A–Z tie-breaker
-  const hasUserLoc = !!_userLocationForDistance;
-
-  if (hasUserLoc) {
-    filtered.sort((a, b) => {
-      const da = _distanceMilesForVenue(a);
-      const db = _distanceMilesForVenue(b);
-
-      // push unknown distances to the bottom
-      if (da == null && db == null) {
-        return (a.name || "").localeCompare((b.name || ""), undefined, { sensitivity: "base" });
-      }
-      if (da == null) return 1;
-      if (db == null) return -1;
-
-      // primary: miles
-      if (da !== db) return da - db;
-
-      // secondary: A–Z (stable)
-      return (a.name || "").localeCompare((b.name || ""), undefined, { sensitivity: "base" });
+  const hasLoc=!!_userLocationForDistance;
+  if(hasLoc){
+    filtered.sort((a,b)=>{
+      const da=_distanceMilesForVenue(a),db=_distanceMilesForVenue(b);
+      if(da==null&&db==null) return (a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"});
+      if(da==null) return 1; if(db==null) return -1;
+      if(da!==db) return da-db;
+      return (a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"});
     });
   } else {
-    filtered.sort((a, b) => (a.name || "").localeCompare((b.name || ""), undefined, { sensitivity: "base" }));
+    filtered.sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"}));
   }
-
-  // Optional: keep the sort button label honest (you already have it in HTML)
-  const sortBtn = document.getElementById("sortBtn");
-  if (sortBtn) sortBtn.textContent = hasUserLoc ? "Miles" : "A–Z";
-
+  const sortBtn=document.getElementById("sortBtn");
+  if(sortBtn) sortBtn.textContent=hasLoc?"Miles":"A–Z";
   renderList(filtered);
-  const { count, bounds } = renderMarkers(filtered);
-  updateActiveFilters(selectedBrands, selectedNeighborhoods);
-
-  const panel = document.getElementById("bottom-panel");
-  const panelH = panel ? panel.getBoundingClientRect().height : 0;
-
-  const hasSearch = q.length > 0;
-  if (count > 0 && bounds && !hasSearch) {
-    map.fitBounds(bounds, {
-      paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
-      paddingBottomRight: [16, panelH + 16],
-      maxZoom: 16,
+  if(!map) return;
+  const{count,bounds}=renderMarkers(filtered);
+  updateActiveFilters(brands,hoods);
+  const panel=document.getElementById("bottom-panel");
+  const panelH=panel?panel.getBoundingClientRect().height:0;
+  if(count>0&&bounds&&!q.length){
+    map.fitBounds(bounds,{
+      paddingTopLeft:[16,window.SipSober?.isEmbed?70:110],
+      paddingBottomRight:[16,panelH+16],
+      maxZoom:16
     });
   }
-
-  window.filteredBounds = bounds;
-  scheduleRelayout(160);
-}
-  
-// Backwards compatibility: if any old call still uses applyFiltersWithUserLocation, it maps here.
-function applyFiltersWithUserLocation() { applyFiltersUnified(); }
-function applyFilters() { applyFiltersUnified(); }
-
-/* =========================
-   J) APPLE MAPS-STYLE LOCATION BRIDGE
-   ========================= */
-
-/**
- * ✅ Location is not a mode.
- * It ONLY centers and shows a user dot,
- * and (if enabled) adds miles to the list rows.
- */
-let _mapReady = false;
-let _pendingUserLocation = null;
-let _userLocationForDistance = null; // {lat, lng} used ONLY for miles display
-
-// Leaflet layers for user location display
-let _userDot = null;
-let _userHalo = null;
-
-function _showUserLocation(lat, lng) {
-  const ll = L.latLng(lat, lng);
-
-  // Remove existing layers
-  if (_userDot) { try { map.removeLayer(_userDot); } catch(e) {} _userDot = null; }
-  if (_userHalo) { try { map.removeLayer(_userHalo); } catch(e) {} _userHalo = null; }
-
-  // Subtle halo + dot (Apple-ish)
-  _userHalo = L.circle(ll, {
-    radius: 120,            // meters; visual only
-    stroke: false,
-    fill: true,
-    fillOpacity: 0.12
-  }).addTo(map);
-
-  _userDot = L.circleMarker(ll, {
-    radius: 6,
-    stroke: true,
-    weight: 2,
-    opacity: 1,
-    fill: true,
-    fillOpacity: 1
-  }).addTo(map);
+  window.filteredBounds=bounds;
 }
 
-function _clearUserLocationLayers() {
-  if (_userDot) { try { map.removeLayer(_userDot); } catch(e) {} _userDot = null; }
-  if (_userHalo) { try { map.removeLayer(_userHalo); } catch(e) {} _userHalo = null; }
+function applyFiltersWithUserLocation(){applyFiltersUnified();}
+function applyFilters(){applyFiltersUnified();}
+
+/* ─── LOCATION BRIDGE ───────────────────────────────────────────── */
+function _showUserLocation(lat,lng){
+  if(!map) return;
+  const ll=L.latLng(lat,lng);
+  if(_userDot){try{map.removeLayer(_userDot);}catch(e){}_userDot=null;}
+  if(_userHalo){try{map.removeLayer(_userHalo);}catch(e){}_userHalo=null;}
+  _userHalo=L.circle(ll,{radius:120,stroke:false,fill:true,fillOpacity:0.12}).addTo(map);
+  _userDot=L.circleMarker(ll,{radius:6,stroke:true,weight:2,opacity:1,fill:true,fillOpacity:1}).addTo(map);
 }
 
-function _haversineMiles(lat1, lon1, lat2, lon2) {
-  const toRad = (v) => (v * Math.PI) / 180;
-  const R = 3958.7613; // earth radius in miles
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+function _clearUserLocationLayers(){
+  if(_userDot){try{map.removeLayer(_userDot);}catch(e){}_userDot=null;}
+  if(_userHalo){try{map.removeLayer(_userHalo);}catch(e){}_userHalo=null;}
 }
 
-function _distanceMilesForVenue(loc) {
-  if (!_userLocationForDistance) return null;
-
-  const lat = Number(loc?.lat);
-  const lng = Number(loc?.lng);
-  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-
-  const miles = _haversineMiles(
-    _userLocationForDistance.lat,
-    _userLocationForDistance.lng,
-    lat,
-    lng
-  );
-
-  return Number.isFinite(miles) ? miles : null;
+function _haversineMiles(lat1,lon1,lat2,lon2){
+  const r=v=>(v*Math.PI)/180, R=3958.7613;
+  const dLat=r(lat2-lat1),dLon=r(lon2-lon1);
+  const a=Math.sin(dLat/2)**2+Math.cos(r(lat1))*Math.cos(r(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-// Used by renderList() to show "• X.X mi"
-function _distanceLabelForVenue(loc) {
-  if (!_userLocationForDistance) return "";
-
-  const lat = Number(loc?.lat);
-  const lng = Number(loc?.lng);
-  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return "";
-
-  const miles = _haversineMiles(
-    _userLocationForDistance.lat,
-    _userLocationForDistance.lng,
-    lat,
-    lng
-  );
-
-  if (!Number.isFinite(miles)) return "";
-  if (miles < 0.1) return "<0.1 mi";
-  return `${miles.toFixed(1)} mi`;
+function _distanceMilesForVenue(loc){
+  if(!_userLocationForDistance) return null;
+  const lat=Number(loc?.lat),lng=Number(loc?.lng);
+  if(!Number.isFinite(lat)||!Number.isFinite(lng)) return null;
+  const m=_haversineMiles(_userLocationForDistance.lat,_userLocationForDistance.lng,lat,lng);
+  return Number.isFinite(m)?m:null;
 }
 
-window.SipSober.setUserLocation = function(lat, lng) {
-  const LAT = Number(lat);
-  const LNG = Number(lng);
-  if (!Number.isFinite(LAT) || !Number.isFinite(LNG)) return;
+function _distanceLabelForVenue(loc){
+  if(!_userLocationForDistance) return "";
+  const m=_distanceMilesForVenue(loc);
+  if(m==null) return "";
+  return m<0.1?"<0.1 mi":`${m.toFixed(1)} mi`;
+}
 
-  // If map isn't ready yet, queue it (don't render yet)
-  if (!_mapReady) {
-    _pendingUserLocation = { lat: LAT, lng: LNG };
-    return;
-  }
-
-  // Apply now
-  _pendingUserLocation = null;
-
-  _showUserLocation(LAT, LNG);
-
-  // Save for miles display + refresh list (keeps current filters/search)
-  _userLocationForDistance = { lat: LAT, lng: LNG };
+window.SipSober.setUserLocation=function(lat,lng){
+  const LAT=Number(lat),LNG=Number(lng);
+  if(!Number.isFinite(LAT)||!Number.isFinite(LNG)) return;
+  if(!_mapReady){_pendingUserLocation={lat:LAT,lng:LNG};return;}
+  _pendingUserLocation=null;
+  _showUserLocation(LAT,LNG);
+  _userLocationForDistance={lat:LAT,lng:LNG};
   applyFiltersUnified();
-
-  // Center map (Apple Maps feel)
   map.invalidateSize(false);
-  map.setView([LAT, LNG], Math.max(map.getZoom(), 15), { animate: true });
-
-  // Expand panel so user sees list easily
-  const panel = document.getElementById("bottom-panel");
-  if (panel) panel.classList.add("expanded");
+  map.setView([LAT,LNG],Math.max(map.getZoom(),15),{animate:true});
+  const panel=document.getElementById("bottom-panel");
+  if(panel) panel.classList.add("expanded");
 };
 
-window.SipSober.clearUserLocation = function() {
-  _pendingUserLocation = null;
-  _userLocationForDistance = null;
-
-  // Remove miles immediately (even if map not ready yet)
+window.SipSober.clearUserLocation=function(){
+  _pendingUserLocation=null; _userLocationForDistance=null;
   applyFiltersUnified();
-
-  if (!_mapReady) return;
+  if(!_mapReady) return;
   _clearUserLocationLayers();
 };
 
-/**
- * ✅ Swift Reset button calls this.
- * Clears filters/search/chips + restores initial Manhattan framing.
- */
-window.SipSober.resetMapToDefault = function() {
-  resetMapToDefault();
-};
+window.SipSober.resetMapToDefault=function(){resetMapToDefault();};
+window.setUserLocation  =function(lat,lng){window.SipSober.setUserLocation(lat,lng);};
+window.clearUserLocation=function(){window.SipSober.clearUserLocation();};
+window.resetMapToDefault=function(){window.SipSober.resetMapToDefault();};
 
-// Global aliases for your Swift bridging (MapView checks these first)
-window.setUserLocation = function(lat, lng) { window.SipSober.setUserLocation(lat, lng); };
-window.clearUserLocation = function() { window.SipSober.clearUserLocation(); };
-window.resetMapToDefault = function() { window.SipSober.resetMapToDefault(); };
-
-  
-/* =========================
-   K) RESET HELPERS
-   ========================= */
-function fitInitialView() {
-  const panel = document.getElementById("bottom-panel");
-  const panelH = panel ? panel.getBoundingClientRect().height : 0;
-
-  map.fitBounds(manhattanInitialBounds, {
-    paddingTopLeft: [16, (window.SipSober?.isEmbed ? 70 : 110)],
-    paddingBottomRight: [16, panelH + 16]
+/* ─── RESET ─────────────────────────────────────────────────────── */
+function fitInitialView(){
+  if(!map) return;
+  const panel=document.getElementById("bottom-panel");
+  const panelH=panel?panel.getBoundingClientRect().height:0;
+  map.fitBounds(manhattanInitialBounds,{
+    paddingTopLeft:[16,window.SipSober?.isEmbed?70:110],
+    paddingBottomRight:[16,panelH+16]
   });
 }
 
-function resetMapToDefault() {
-  // Close menus + search UI
+function resetMapToDefault(){
   closeAllMenus();
   document.getElementById("searchTopRow")?.classList.remove("is-open");
-  document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
-
-  // Clear filters
-  document.querySelectorAll('input[id^="brand-"], input[id^="n-"]').forEach(cb => { cb.checked = false; });
-
-  // Clear search
-  const searchInput = document.getElementById("searchTopInput");
-  if (searchInput) searchInput.value = "";
-
-  // Clear user dot (Reset should clear location visuals)
+  document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");
+  document.querySelectorAll('input[id^="brand-"],input[id^="n-"]').forEach(cb=>{cb.checked=false;});
+  const si=document.getElementById("searchTopInput"); if(si) si.value="";
   window.SipSober.clearUserLocation();
-
-  // ✅ Render using the unified logic (A–Z if location is off)
   applyFiltersUnified();
-
-  // Chips are handled by applyFiltersUnified, but keeping this is harmless:
-  updateActiveFilters([], []);
-
-  // Reset map framing
-  setTimeout(() => {
-    map.invalidateSize(false);
-    fitInitialView();
-  }, 80);
+  updateActiveFilters([],[]);
+  setTimeout(()=>{if(map){map.invalidateSize(false);fitInitialView();}},80);
 }
 
-/* =========================
-   L) FAVORITES + FOCUS + FILTER SYNC
-   ========================= */
-
-// Swift → JS sync (keep stars filled)
-window.SipSober.setFavorites = function (payload) {
-  const ids = new Set((payload && payload.ids) || []);
-  document.querySelectorAll(".fav-btn[data-id]").forEach(btn => {
-    const id = btn.dataset.id;
-    btn.classList.toggle("is-fav", ids.has(id));
-  });
+/* ─── FAVORITES + FOCUS ─────────────────────────────────────────── */
+window.SipSober.setFavorites=function(payload){
+  const ids=new Set((payload&&payload.ids)||[]);
+  document.querySelectorAll(".fav-btn[data-id]").forEach(btn=>btn.classList.toggle("is-fav",ids.has(btn.dataset.id)));
 };
 
-// Swift → JS: set filters
-window.SipSober.setFilters = function (payload) {
-  const brands = Array.isArray(payload?.brands) ? payload.brands : [];
-  const neighborhoods = Array.isArray(payload?.neighborhoods) ? payload.neighborhoods : [];
-
-  document.querySelectorAll('input[id^="brand-"]').forEach(cb => { cb.checked = brands.includes(cb.value); });
-  document.querySelectorAll('input[id^="n-"]').forEach(cb => { cb.checked = neighborhoods.includes(cb.value); });
-
+window.SipSober.setFilters=function(payload){
+  const brands=Array.isArray(payload?.brands)?payload.brands:[];
+  const hoods=Array.isArray(payload?.neighborhoods)?payload.neighborhoods:[];
+  document.querySelectorAll('input[id^="brand-"]').forEach(cb=>{cb.checked=brands.includes(cb.value);});
+  document.querySelectorAll('input[id^="n-"]').forEach(cb=>{cb.checked=hoods.includes(cb.value);});
   applyFiltersUnified();
 };
 
-// Swift → JS: focus a venue (zoom + open popup)
-let _lastFocusedVenueId = null;
-
-window.SipSober.focusVenue = function (payload) {
-  const venueId = (typeof payload === "string" ? payload : payload?.venueId) || "";
-  const id = String(venueId).trim();
-  if (!id) return;
-
-  if (_lastFocusedVenueId === id) return;
-  _lastFocusedVenueId = id;
-
-  // Make sure markers exist for everything (so focus always works)
-  // If your list is filtered, this ensures the target exists.
-  renderMarkers(locations);
-  renderList(locations);
-  updateActiveFilters(getSelectedValues("brand"), getSelectedValues("n"));
-
-  let tries = 0;
-  (function attempt() {
-    const marker = markersById?.[id];
-    if (!marker) {
-      tries += 1;
-      if (tries <= 25) return setTimeout(attempt, 120);
-      console.warn("❌ focusVenue: marker not found for id:", id);
-      _lastFocusedVenueId = null;
-      return;
+window.SipSober.focusVenue=function(payload){
+  const id=String((typeof payload==="string"?payload:payload?.venueId)||"").trim();
+  if(!id||_lastFocusedVenueId===id) return;
+  _lastFocusedVenueId=id;
+  renderMarkers(locations); renderList(locations);
+  updateActiveFilters(getSelectedValues("brand"),getSelectedValues("n"));
+  let tries=0;
+  (function attempt(){
+    const marker=markersById?.[id];
+    if(!marker){
+      if(++tries<=25) return setTimeout(attempt,120);
+      _lastFocusedVenueId=null; return;
     }
-
-    const ll = marker.getLatLng();
+    const ll=marker.getLatLng();
     map.invalidateSize(false);
-    map.setView([ll.lat, ll.lng], 16, { animate: true });
-
-    setTimeout(() => {
-      setActiveMarker(marker);
-      marker.openPopup();
-
-      const closer = document.querySelector(".leaflet-popup-close-button");
-      if (closer) {
-        closer.addEventListener("click", () => { _lastFocusedVenueId = null; }, { once: true });
-      }
-    }, 200);
-
-    const panel = document.getElementById("bottom-panel");
-    if (panel) panel.classList.add("expanded");
+    map.setView([ll.lat,ll.lng],16,{animate:true});
+    setTimeout(()=>{
+      setActiveMarker(marker); marker.openPopup();
+      const c=document.querySelector(".leaflet-popup-close-button");
+      if(c) c.addEventListener("click",()=>{_lastFocusedVenueId=null;},{once:true});
+    },200);
+    const panel=document.getElementById("bottom-panel");
+    if(panel) panel.classList.add("expanded");
   })();
 };
 
-window.SipSober.focusVenueById = function (id) {
-  window.SipSober.focusVenue(id);
-};
+window.SipSober.focusVenueById=function(id){window.SipSober.focusVenue(id);};
+window.SipSober.closePopup=function(){try{map?.closePopup();}catch(e){}};
 
-window.SipSober.closePopup = function () {
-  try { map.closePopup(); } catch (e) {}
-};
+/* ─── EVENT WIRING ──────────────────────────────────────────────── */
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeAllMenus();});
 
-/* =========================
-   M) EVENT WIRING
-   ========================= */
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeAllMenus();
-});
-
-// Unified click handler (favorites + venue focus + dropdown + search close)
-document.addEventListener("click", (e) => {
-
-  if (e.target.closest("a")) {
-    closeAllMenus();
-    document.getElementById("searchTopRow")?.classList.remove("is-open");
-    document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
-    return;
-  }
-
-  const favBtn = e.target.closest(".fav-btn");
-  if (favBtn) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const venueId = favBtn.dataset.id;
-    const v = locations.find((x) => String(x.id) === String(venueId));
-    if (!v) return;
-
+document.addEventListener("click",e=>{
+  if(e.target.closest("a")){closeAllMenus();document.getElementById("searchTopRow")?.classList.remove("is-open");document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");return;}
+  const favBtn=e.target.closest(".fav-btn");
+  if(favBtn){
+    e.preventDefault();e.stopPropagation();
+    const venueId=favBtn.dataset.id;
+    const v=locations.find(x=>String(x.id)===String(venueId)); if(!v) return;
     favBtn.classList.toggle("is-fav");
-
-    window.webkit?.messageHandlers?.favorites?.postMessage({
-      action: "toggle",
-      venue: {
-        venueId: String(v.id),
-        name: v.name || "",
-        address: v.address || "",
-        website: normalizeUrl(v.website || ""),
-        neighborhood: v.neighborhood || "",
-        brands: v.brand || "",
-      },
-    });
-
+    window.webkit?.messageHandlers?.favorites?.postMessage({action:"toggle",venue:{venueId:String(v.id),name:v.name||"",address:v.address||"",website:normalizeUrl(v.website||""),neighborhood:v.neighborhood||"",brands:v.brand||""}});
     return;
   }
-
-  const nameEl = e.target.closest(".card-name[data-focus-id]");
-  if (nameEl) {
-    e.preventDefault();
-    e.stopPropagation();
-    window.SipSober?.focusVenue(nameEl.dataset.focusId);
-    return;
-  }
-
-  const btn = e.target.closest(".dropdown > button");
-  if (btn) {
-    const parent = btn.parentElement;
-    const willOpen = !parent.classList.contains("open");
-
-    closeAllMenus();
-    if (willOpen) {
-      parent.classList.add("open");
-      btn.setAttribute("aria-expanded", "true");
-    }
-    return;
-  }
-
-  const clickedInsideDropdown = !!e.target.closest(".dropdown");
-  if (!clickedInsideDropdown) closeAllMenus();
-
-  const clickedInsideSearch = !!e.target.closest("#searchTopRow") || !!e.target.closest("#searchToggle");
-  if (!clickedInsideSearch) {
-    const row = document.getElementById("searchTopRow");
-    if (row?.classList.contains("is-open")) {
-      row.classList.remove("is-open");
-      document.getElementById("searchToggle")?.setAttribute("aria-expanded", "false");
-      document.getElementById("searchTopInput")?.blur();
-    }
+  const nameEl=e.target.closest(".card-name[data-focus-id]");
+  if(nameEl){e.preventDefault();e.stopPropagation();window.SipSober?.focusVenue(nameEl.dataset.focusId);return;}
+  const btn=e.target.closest(".dropdown > button");
+  if(btn){const p=btn.parentElement,willOpen=!p.classList.contains("open");closeAllMenus();if(willOpen){p.classList.add("open");btn.setAttribute("aria-expanded","true");}return;}
+  if(!e.target.closest(".dropdown")) closeAllMenus();
+  if(!e.target.closest("#searchTopRow")&&!e.target.closest("#searchToggle")){
+    const row=document.getElementById("searchTopRow");
+    if(row?.classList.contains("is-open")){row.classList.remove("is-open");document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");document.getElementById("searchTopInput")?.blur();}
   }
 });
 
-// aria wiring for menus
-document.querySelectorAll(".dropdown > button").forEach((btn) => {
-  btn.setAttribute("aria-haspopup", "true");
-  const dd = btn.parentElement;
-  const menu = dd.querySelector(".menu");
-  if (dd && menu) {
-    const id = dd.id ? dd.id + "-menu" : "menu-" + Math.random().toString(36).slice(2);
-    menu.id = id;
-    btn.setAttribute("aria-controls", id);
-  }
+document.querySelectorAll(".dropdown > button").forEach(btn=>{
+  btn.setAttribute("aria-haspopup","true");
+  const dd=btn.parentElement,menu=dd.querySelector(".menu");
+  if(dd&&menu){const id=dd.id?dd.id+"-menu":"menu-"+Math.random().toString(36).slice(2);menu.id=id;btn.setAttribute("aria-controls",id);}
 });
 
-document.getElementById("goBtn")?.addEventListener("click", applyFiltersUnified);
+document.getElementById("goBtn")?.addEventListener("click",applyFiltersUnified);
 
-// Search toggle
-(() => {
-  const toggleBtn = document.getElementById("searchToggle");
-  const row = document.getElementById("searchTopRow");
-  const input = document.getElementById("searchTopInput");
-
-  if (!toggleBtn || !row) return;
-
-  function openRow() {
-    row.classList.add("is-open");
-    toggleBtn.setAttribute("aria-expanded", "true");
-    setTimeout(() => input?.focus(), 50);
-  }
-
-  function closeRow() {
-    row.classList.remove("is-open");
-    toggleBtn.setAttribute("aria-expanded", "false");
-    input?.blur();
-  }
-
-  window.SipSober._openSearchRow = openRow;
-  window.SipSober._closeSearchRow = closeRow;
-
-  toggleBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    row.classList.contains("is-open") ? closeRow() : openRow();
-  });
+(()=>{
+  const toggle=document.getElementById("searchToggle"),row=document.getElementById("searchTopRow"),input=document.getElementById("searchTopInput");
+  if(!toggle||!row) return;
+  function openRow(){row.classList.add("is-open");toggle.setAttribute("aria-expanded","true");setTimeout(()=>input?.focus(),50);}
+  function closeRow(){row.classList.remove("is-open");toggle.setAttribute("aria-expanded","false");input?.blur();}
+  window.SipSober._openSearchRow=openRow; window.SipSober._closeSearchRow=closeRow;
+  toggle.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();row.classList.contains("is-open")?closeRow():openRow();});
 })();
 
-// Search input events
-const searchInput = document.getElementById("searchTopInput");
-const searchClear = document.getElementById("searchTopClear");
+const searchInput=document.getElementById("searchTopInput");
+const searchClear=document.getElementById("searchTopClear");
+searchInput?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyFiltersUnified();document.getElementById("searchTopRow")?.classList.remove("is-open");document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");searchInput.blur();}});
+searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";applyFiltersUnified();});
 
-searchInput?.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    applyFiltersUnified();
-    document.getElementById("searchTopRow")?.classList.remove("is-open");
-    document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");
-    searchInput.blur();
-  }
-});
-
-searchClear?.addEventListener("click", () => {
-  if (searchInput) searchInput.value = "";
-  applyFiltersUnified();
-});
-
-// Bottom panel expand / collapse toggle
-(function () {
-  const panel = document.getElementById("bottom-panel");
-  const toggle = document.getElementById("panel-toggle");
-  const label = toggle?.querySelector(".label");
-
-  if (!panel || !toggle) return;
-
-  function syncLabel() {
-    const expanded = panel.classList.contains("expanded");
-    toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
-    if (label) label.textContent = expanded ? "Hide" : "Show";
-  }
-
-  toggle.addEventListener("click", (e) => {
-    e.stopPropagation();
-    panel.classList.toggle("expanded");
-    syncLabel();
-    scheduleRelayout(140);
-  });
-
-  if (window.matchMedia("(max-width: 768px)").matches) {
-    panel.classList.add("expanded");
-  }
-
+(()=>{
+  const panel=document.getElementById("bottom-panel"),toggle=document.getElementById("panel-toggle"),label=toggle?.querySelector(".label");
+  if(!panel||!toggle) return;
+  function syncLabel(){const ex=panel.classList.contains("expanded");toggle.setAttribute("aria-expanded",ex?"true":"false");if(label)label.textContent=ex?"Hide":"Show";}
+  toggle.addEventListener("click",e=>{e.stopPropagation();panel.classList.toggle("expanded");syncLabel();});
+  if(window.matchMedia("(max-width:768px)").matches) panel.classList.add("expanded");
   syncLabel();
 })();
 
-/* =========================
-   N) INITIALIZE
-   ========================= */
-applyFiltersUnified(); // ✅ ensures Location OFF starts A–Z
-window.SipSober?.sendVenuesToNative?.();
-
-scheduleRelayout(220);
-
-// Mark map ready + flush any queued Locate call
-_mapReady = true;
-if (_pendingUserLocation) {
-  window.SipSober.setUserLocation(_pendingUserLocation.lat, _pendingUserLocation.lng);
-  _pendingUserLocation = null;
-}
+// Render list immediately (map init is async but list doesn't need it)
+renderList(locations.slice().sort((a,b)=>(a.name||"").localeCompare(b.name||"")));
 </script>
 
-<!-- Onboarding JS -->
 <script>
-(function () {
-  const KEY = "ss_seen_map_onboarding_v1";
-
-  function showOnboarding() {
-    if (localStorage.getItem(KEY) === "true") return;
-
-    const el = document.getElementById("ss-onboard");
-    if (!el) return;
-
-    el.hidden = false;
-    requestAnimationFrame(() => el.classList.add("is-visible"));
-
-    const okBtn = document.getElementById("ss-onboard-ok");
-    function dismiss() {
-      localStorage.setItem(KEY, "true");
-      el.classList.remove("is-visible");
-      setTimeout(() => (el.hidden = true), 240);
-    }
-
-    okBtn?.addEventListener("click", dismiss);
+(function(){
+  const KEY="ss_seen_map_onboarding_v1";
+  function showOnboarding(){
+    if(localStorage.getItem(KEY)==="true") return;
+    const el=document.getElementById("ss-onboard"); if(!el) return;
+    el.hidden=false; requestAnimationFrame(()=>el.classList.add("is-visible"));
+    const ok=document.getElementById("ss-onboard-ok");
+    function dismiss(){localStorage.setItem(KEY,"true");el.classList.remove("is-visible");setTimeout(()=>(el.hidden=true),240);}
+    ok?.addEventListener("click",dismiss);
   }
-
-  window.addEventListener("load", () => {
-    setTimeout(showOnboarding, 450);
-  });
+  window.addEventListener("load",()=>setTimeout(showOnboarding,450));
 })();
 </script>
 
