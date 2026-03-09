@@ -748,6 +748,7 @@ let map, markersLayer, markersById={};
 let _mapReady=false, _pendingUserLocation=null;
 let _userLocationForDistance=null, _userDot=null, _userHalo=null;
 let _activeMarker=null, _lastFocusedVenueId=null;
+let _suppressAutoFit = false;
 let defaultIcon, activeIcon, currentIcon;
 const mobileQuery = window.matchMedia("(max-width:767px)");
 
@@ -1018,13 +1019,14 @@ function applyFiltersUnified(){
   updateActiveFilters(brands,hoods);
   const panel=document.getElementById("bottom-panel");
   const panelH=panel?panel.getBoundingClientRect().height:0;
-  if(count>0&&bounds&&!q.length){
-    map.fitBounds(bounds,{
-      paddingTopLeft:[16,window.SipSober?.isEmbed?70:110],
-      paddingBottomRight:[16,panelH+16],
-      maxZoom:16
-    });
-  }
+  if(count>0 && bounds && !q.length && !_suppressAutoFit){
+  map.fitBounds(bounds,{
+    paddingTopLeft:[16,window.SipSober?.isEmbed?70:110],
+    paddingBottomRight:[16,panelH+16],
+    maxZoom:16,
+    animate:false
+  });
+}
   window.filteredBounds=bounds;
 }
 
@@ -1101,7 +1103,8 @@ function fitInitialView(){
   const panelH=panel?panel.getBoundingClientRect().height:0;
   map.fitBounds(manhattanInitialBounds,{
     paddingTopLeft:[16,window.SipSober?.isEmbed?70:110],
-    paddingBottomRight:[16,panelH+16]
+    paddingBottomRight:[16,panelH+16],
+    animate:false
   });
 }
 
@@ -1109,12 +1112,27 @@ function resetMapToDefault(){
   closeAllMenus();
   document.getElementById("searchTopRow")?.classList.remove("is-open");
   document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");
-  document.querySelectorAll('input[id^="brand-"],input[id^="n-"]').forEach(cb=>{cb.checked=false;});
-  const si=document.getElementById("searchTopInput"); if(si) si.value="";
+
+  document.querySelectorAll('input[id^="brand-"],input[id^="n-"]').forEach(cb => {
+    cb.checked = false;
+  });
+
+  const si = document.getElementById("searchTopInput");
+  if (si) si.value = "";
+
+  _suppressAutoFit = true;
+
   window.SipSober.clearUserLocation();
   applyFiltersUnified();
-  updateActiveFilters([],[]);
-  setTimeout(()=>{if(map){map.invalidateSize(false);fitInitialView();}},80);
+  updateActiveFilters([], []);
+
+  if (map) {
+    map.closePopup();
+    map.invalidateSize({ animate: false, pan: false });
+    fitInitialView();
+  }
+
+  _suppressAutoFit = false;
 }
 
 /* ─── FAVORITES + FOCUS ─────────────────────────────────────────── */
