@@ -19,9 +19,6 @@
     crossorigin="anonymous"></script>
 
   <style>
-    .leaflet-tile-pane {
-      filter: brightness(0.96) contrast(1.06) saturate(0.85);
-    }
 
     .leaflet-container { position: relative; }
 
@@ -826,11 +823,13 @@ function _initMap(){
   kickSize();
 }
 
-// Wait for full paint
-if(document.readyState==="complete"){
-  requestAnimationFrame(_initMap);
+// Start the map as soon as the DOM is ready
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    requestAnimationFrame(_initMap);
+  });
 } else {
-  window.addEventListener("load",()=>requestAnimationFrame(_initMap));
+  requestAnimationFrame(_initMap);
 }
 
 /* ─── ICONS ────────────────────────────────────────────────────── */
