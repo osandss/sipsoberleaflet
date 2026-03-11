@@ -770,15 +770,14 @@ function _initMap(){
     tap: false
   }).setView([40.755,-73.985],12.1);
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
     subdomains: "abcd",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-    // FIX 4: Load tiles immediately (not just when idle) and keep
-    // a larger buffer so edges never go grey on fast pan/load.
-    updateWhenIdle: false,
-    keepBuffer: 4,
-    detectRetina: true
+    updateWhenIdle: true,
+    keepBuffer: 6,
+    detectRetina: false,
+    updateWhenZooming: false
   }).addTo(map);
 
   map.setMaxBounds(manhattanLockBounds);
