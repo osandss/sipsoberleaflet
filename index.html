@@ -11,13 +11,20 @@
   <style>
     :root {
       --ss-navy: #202239;
-      --ss-bg: #f5f5f8;
-      --ss-text-main: #111217;
-      --ss-text-muted: #737589;
-      --ss-accent: #f1a7c5;
-      --ss-card: #ffffff;
-      --ss-border: #e1e2ec;
-      --ss-radius: 18px;
+      --ss-navy-deep: #1B1E31;
+      --ss-navy-mid: #1F2237;
+      --ss-navy-soft: #22263A;
+      --ss-card: #2B3048;
+
+      --ss-text-main: rgba(255,255,255,0.96);
+      --ss-text-soft: rgba(255,255,255,0.74);
+      --ss-text-faint: rgba(255,255,255,0.56);
+
+      --ss-border: rgba(255,255,255,0.08);
+      --ss-border-soft: rgba(255,255,255,0.06);
+
+      --ss-shadow: 0 18px 48px rgba(6, 10, 24, 0.28);
+      --ss-radius: 20px;
     }
 
     * {
@@ -26,11 +33,15 @@
       padding: 0;
     }
 
+    html {
+      background: var(--ss-navy-deep);
+    }
+
     body {
       font-family: "Avenir Next", Avenir, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, "Lexend", sans-serif;
       background:
-        radial-gradient(1200px 600px at 50% -120px, rgba(32,34,57,0.08), rgba(0,0,0,0) 60%),
-        var(--ss-bg);
+        radial-gradient(1200px 720px at 50% -120px, rgba(94,110,170,0.16), rgba(0,0,0,0) 58%),
+        linear-gradient(180deg, #1B1E31 0%, #1F2237 42%, #202239 100%);
       color: var(--ss-text-main);
       line-height: 1.6;
     }
@@ -58,290 +69,270 @@
       width: 100%;
     }
 
-/* Section headings — smaller + tighter spacing */
-h2, h3, h4, h5, h6 {
-  font-family: "Avenir Next", Avenir, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, "Lexend", sans-serif;
-  font-weight: 600;
-  font-size: 17px;        /* smaller — adjust here */
-  letter-spacing: -0.2px; /* tighter — no wide spacing */
-  text-transform: none;
-  line-height: 1.25;      /* cleaner vertical spacing */
-  margin-bottom: 16px;
-}
+    /* Section headings — smaller + tighter spacing */
+    h2, h3, h4, h5, h6 {
+      font-family: "Avenir Next", Avenir, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, "Lexend", sans-serif;
+      font-weight: 600;
+      font-size: 17px;
+      letter-spacing: -0.2px;
+      text-transform: none;
+      line-height: 1.25;
+      margin-bottom: 16px;
+      color: var(--ss-text-main);
+    }
 
-.hero{
-  position: relative;
-  margin-top: 0;
-  min-height: 100svh;
-  padding: 18px 0 50px;
-  background: #fff;
-  overflow: hidden;
-}
-
-.hero-overlay{
-  width: 100%;
-  position: relative;
-  z-index: 1;
-  min-height: 100svh;
-}
-
-.hero-content-centered{ display: none; }
-
-.hero-inner{
-  min-height: 100svh;          
-  display: flex;               
-  flex-direction: column;     
-  align-items: center;        
-  text-align: center;
-  padding: 0;
-  padding-top: 92px;        
-  padding-bottom: 0;     
-}
-
-/* Top-left brand + menu inside hero */
-.hero-topbar{
-  position: absolute;
-  top: 18px;
-  left: 18px;
-  right: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  z-index: 50;
-}
-
-.hero-logo{
-  font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-weight: 600;
-  font-size: 38px;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: #202239;
-}
-
-.hero-copy{
-  text-align: center;
-  max-width: 760px;
-  margin: 0 auto;
-  color: #202239;
-
-  min-height: calc(100svh - 92px);
-  box-sizing: border-box;
-  
-  display: flex;
-  flex-direction: column;
-  
-  padding-bottom: 60px;
-}
-
-.hero-brand{
-  font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-weight: 600;
-  font-size: 38px;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-}
-
-.hero-title{
-  font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 32px;
-  line-height: 1.08;
-  margin: 0 auto 48px;
-  color: #202239;
-  max-width: 26ch;
-
-  opacity: 0;
-  transform: translateY(24px);
-  animation: heroTitleRise 1300ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 120ms;
-  will-change: transform, opacity;
-}
-
-/* Avenir condensed for brand + headlines (app-like) */
-.hero-logo,
-.hero-title {
-  font-family:
-    "Avenir Next Condensed",
-    "Avenir Next",
-    Avenir,
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Pro Display",
-    "Helvetica Neue",
-    Arial,
-    "Lexend",
-    sans-serif;
-  font-weight: 600;
-}
-
-.hero-subtitle{
-  font-size: 16px;
-  color: rgba(32,34,57,0.85);
-  max-width: 56ch;
-  margin: 0 auto 18px;
-}
-
-/* Scroll reveal (left → right) */
-.reveal-on-scroll{
-  opacity: 0;
-  transform: translateX(-48px);
-  transition:
-    opacity 1100ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 1500ms cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
-}
-
-.reveal-on-scroll.is-visible{
-  opacity: 1;
-  transform: translateX(0);
-}
-
-    
-/* CTA */
-.hero-cta{
-  text-align: center;
-  margin-top: 20px;
-}
-
-.appstore-badge img{
-  height: 52px;
-  width: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-.hero-platform{
-  margin: 10px auto 0;
-  font-size: 13px;
-  color: rgba(32,34,57,0.72);
-  letter-spacing: 0.02em;
-}
-
-/* =========================
-   HERO PHONES (Seen-style 3D)
-   ========================= */
-
-.hero-phones{
-  margin-top: 80px;             /* ✅ pushes phones downward */
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 0;
-  position: relative;
-
-  perspective: 1400px;
-  transform-style: preserve-3d;
-
-  padding-bottom: 0;
-}
-
-/* Smooth iOS Safari rendering (reduces flicker) */
-.hero-phones,
-.hero-phones .phone{
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  will-change: transform, opacity;
-}
-    
-/* Hero subtitle + CTA (below phones) */
-.hero-subtitle--below{
-  margin-top: 120px;
-  margin-bottom: 22px;
-
-  font-size: 27px;
-  line-height: 1.35;
-  font-weight: 600;
-}
-
-.hero-cta--below{
-  margin-top: 34px;
-  position: relative;
-  z-index: 10;          
-  margin-bottom: 0;
-}
-
-.hero-phones .phone{
-  --pose: translateZ(0px);
-
-  width: clamp(200px, 23vw, 270px);
-  height: auto;
-  display: block;
-  transform-style: preserve-3d;
-  transform-origin: center bottom;
-
-  filter:
-    drop-shadow(0 28px 56px rgba(10, 12, 30, 0.22))
-    drop-shadow(0 10px 22px rgba(10, 12, 30, 0.10));
-
-  opacity: 1;
-  transform: var(--pose) translateY(0);
-  
-  animation: phoneFloatIn 2000ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 0ms;
-
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-
-  pointer-events: none;
-}
-
-.hero-phones .phone-center{
-  width: clamp(230px, 27vw, 320px);
-  --pose: translateZ(80px);
-  z-index: 3;
-}
-
-.hero-phones .phone-left{
-  --pose: translateX(54px) rotateY(26deg) rotateZ(-3deg) translateY(10px);
-  z-index: 2;
-}
-
-.hero-phones .phone-right{
-  --pose: translateX(-54px) rotateY(-26deg) rotateZ(3deg) translateY(10px);
-  z-index: 1;
-}
-
-@keyframes phoneFloatIn{
-  0%{
-    opacity: 0;
-    transform: var(--pose) translateY(70px);
-  }
-  100%{
-    opacity: 1;
-    transform: var(--pose) translateY(0);
-  }
-}
-
-@keyframes heroTitleRise{
-  from{
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to{
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
- 
-    /* SECTION BLOCKS (disabled — landing sections use .band instead)
-    section {
+    .hero{
+      position: relative;
       margin-top: 0;
-      padding: 36px 0;
+      min-height: 100svh;
+      padding: 18px 0 50px;
+      background:
+        radial-gradient(900px 500px at 50% 0%, rgba(103, 123, 196, 0.10), rgba(0,0,0,0) 62%);
+      overflow: hidden;
     }
 
-    section + section {
-      padding-top: 18px;
+    .hero-overlay{
+      width: 100%;
+      position: relative;
+      z-index: 1;
+      min-height: 100svh;
     }
 
-    section p:last-of-type {
+    .hero-content-centered{ display: none; }
+
+    .hero-inner{
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0;
+      padding-top: 92px;
+      padding-bottom: 0;
+    }
+
+    /* Top-left brand + menu inside hero */
+    .hero-topbar{
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      z-index: 50;
+    }
+
+    .hero-logo{
+      font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 600;
+      font-size: 38px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ss-text-main);
+    }
+
+    .hero-copy{
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto;
+      color: var(--ss-text-main);
+      min-height: calc(100svh - 92px);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 60px;
+    }
+
+    .hero-brand{
+      font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 600;
+      font-size: 38px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-title{
+      font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 32px;
+      line-height: 1.08;
+      margin: 0 auto 48px;
+      color: var(--ss-text-main);
+      max-width: 26ch;
+
+      opacity: 0;
+      transform: translateY(24px);
+      animation: heroTitleRise 1300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 120ms;
+      will-change: transform, opacity;
+    }
+
+    /* Avenir condensed for brand + headlines (app-like) */
+    .hero-logo,
+    .hero-title {
+      font-family:
+        "Avenir Next Condensed",
+        "Avenir Next",
+        Avenir,
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "Helvetica Neue",
+        Arial,
+        "Lexend",
+        sans-serif;
+      font-weight: 600;
+    }
+
+    .hero-subtitle{
+      font-size: 16px;
+      color: var(--ss-text-soft);
+      max-width: 56ch;
+      margin: 0 auto 18px;
+    }
+
+    /* Scroll reveal (left → right) */
+    .reveal-on-scroll{
+      opacity: 0;
+      transform: translateX(-48px);
+      transition:
+        opacity 1100ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 1500ms cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+    }
+
+    .reveal-on-scroll.is-visible{
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* CTA */
+    .hero-cta{
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .appstore-badge img{
+      height: 52px;
+      width: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .hero-platform{
+      margin: 10px auto 0;
+      font-size: 13px;
+      color: var(--ss-text-faint);
+      letter-spacing: 0.02em;
+    }
+
+    /* =========================
+       HERO PHONES (Seen-style 3D)
+       ========================= */
+
+    .hero-phones{
+      margin-top: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 0;
+      position: relative;
+      perspective: 1400px;
+      transform-style: preserve-3d;
+      padding-bottom: 0;
+    }
+
+    /* Smooth iOS Safari rendering (reduces flicker) */
+    .hero-phones,
+    .hero-phones .phone{
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      will-change: transform, opacity;
+    }
+
+    /* Hero subtitle + CTA (below phones) */
+    .hero-subtitle--below{
+      margin-top: 120px;
+      margin-bottom: 22px;
+      font-size: 27px;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+
+    .hero-cta--below{
+      margin-top: 34px;
+      position: relative;
+      z-index: 10;
       margin-bottom: 0;
     }
-    */
+
+    .hero-phones .phone{
+      --pose: translateZ(0px);
+
+      width: clamp(200px, 23vw, 270px);
+      height: auto;
+      display: block;
+      transform-style: preserve-3d;
+      transform-origin: center bottom;
+
+      filter:
+        drop-shadow(0 28px 56px rgba(8, 10, 22, 0.34))
+        drop-shadow(0 12px 24px rgba(8, 10, 22, 0.16));
+
+      opacity: 1;
+      transform: var(--pose) translateY(0);
+
+      animation: phoneFloatIn 2000ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0ms;
+
+      will-change: transform, opacity;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+
+      pointer-events: none;
+    }
+
+    .hero-phones .phone-center{
+      width: clamp(230px, 27vw, 320px);
+      --pose: translateZ(80px);
+      z-index: 3;
+    }
+
+    .hero-phones .phone-left{
+      --pose: translateX(54px) rotateY(26deg) rotateZ(-3deg) translateY(10px);
+      z-index: 2;
+    }
+
+    .hero-phones .phone-right{
+      --pose: translateX(-54px) rotateY(-26deg) rotateZ(3deg) translateY(10px);
+      z-index: 1;
+    }
+
+    @keyframes phoneFloatIn{
+      0%{
+        opacity: 0;
+        transform: var(--pose) translateY(70px);
+      }
+      100%{
+        opacity: 1;
+        transform: var(--pose) translateY(0);
+      }
+    }
+
+    @keyframes heroTitleRise{
+      from{
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to{
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
     .section-heading {
       margin-bottom: 18px;
@@ -358,14 +349,14 @@ h2, h3, h4, h5, h6 {
 
     .section-intro {
       font-size: 14px;
-      color: var(--ss-text-muted);
+      color: var(--ss-text-soft);
       max-width: 540px;
     }
-  
+
     .cta-panel {
-      background: var(--ss-card);
+      background: rgba(43,48,72,0.84);
       border-radius: var(--ss-radius);
-      border: 1px solid var(--ss-border);
+      border: 1px solid var(--ss-border-soft);
       padding: 18px 18px 16px;
       margin-top: 40px;
       display: flex;
@@ -373,6 +364,9 @@ h2, h3, h4, h5, h6 {
       align-items: center;
       gap: 18px;
       flex-wrap: wrap;
+      box-shadow: var(--ss-shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
     .cta-main {
@@ -383,7 +377,7 @@ h2, h3, h4, h5, h6 {
 
     .cta-sub {
       font-size: 13px;
-      color: var(--ss-text-muted);
+      color: var(--ss-text-soft);
       max-width: 420px;
     }
 
@@ -393,132 +387,159 @@ h2, h3, h4, h5, h6 {
       gap: 10px;
     }
 
-
     /* ===== Landing sections (Unified system) ===== */
 
-.band{
-  padding: 56px 0;
-  background: transparent;
-}
+    .band{
+      padding: 56px 0;
+      background: transparent;
+    }
 
-.band + .band{
-  border-top: 1px solid rgba(32,34,57,0.06);
-}
+    .band + .band{
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
 
-.band-inner{
-  max-width: 1040px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
+    .band-inner{
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-/* Section title */
-.band-title{
-  font-size: 13px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  opacity: 0.78;
-  margin-bottom: 18px;
-}
+    /* Section title */
+    .band-title{
+      font-size: 12px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--ss-text-faint);
+      margin-bottom: 18px;
+    }
 
-/* ABOUT: premium whisper surface */
-.about-panel{
-  max-width: 720px;
-  margin: 0 auto;
-  background: rgba(255,255,255,0.78);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(32,34,57,0.08);
-  border-radius: 20px;
-  padding: 26px 26px 22px;
-  box-shadow: 0 18px 50px rgba(10,12,30,0.06);
-}
+    /* ABOUT: premium navy surface */
+    .about-panel{
+      max-width: 720px;
+      margin: 0 auto;
+      background: rgba(43,48,72,0.76);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--ss-border-soft);
+      border-radius: 22px;
+      padding: 28px 28px 24px;
+      box-shadow: var(--ss-shadow);
+    }
 
-.band-lede{
-  font-size: 18px;
-  line-height: 1.45;
-  margin: 0 0 10px;
-  opacity: 0.92;
-}
+    .band-lede{
+      font-size: 18px;
+      line-height: 1.45;
+      margin: 0 0 10px;
+      color: var(--ss-text-main);
+    }
 
-.band-body{
-  font-size: 15px;
-  line-height: 1.7;
-  margin: 0;
-  opacity: 0.78;
-  max-width: 70ch;
-}
+    .band-body{
+      font-size: 15px;
+      line-height: 1.7;
+      margin: 0;
+      color: var(--ss-text-soft);
+      max-width: 70ch;
+    }
 
-/* HOW: mini feature cards with numbers */
-.how-grid{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
+    /* HOW: mini feature cards with numbers */
+    .how-grid{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
 
-.how-card{
-  background: rgba(255,255,255,0.78);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(32,34,57,0.08);
-  border-radius: 20px;
-  padding: 18px 18px 16px;
-  box-shadow: 0 18px 50px rgba(10,12,30,0.06);
-}
+    .how-card{
+      background: rgba(43,48,72,0.76);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--ss-border-soft);
+      border-radius: 22px;
+      padding: 18px 18px 16px;
+      box-shadow: var(--ss-shadow);
+    }
 
-.how-kicker{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
+    .how-kicker{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
 
-.how-num{
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: rgba(32,34,57,0.92);
-  background: rgba(32,34,57,0.08);
-  border: 1px solid rgba(32,34,57,0.14);
-}
+    .how-num{
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--ss-text-main);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
 
-.how-card h3{
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.25;
-}
+    .how-card h3{
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.25;
+      color: var(--ss-text-main);
+    }
 
-.how-card p{
-  margin: 0;
-  font-size: 14px;
-  opacity: 0.78;
-  line-height: 1.6;
-}
+    .how-card p{
+      margin: 0;
+      font-size: 14px;
+      color: var(--ss-text-soft);
+      line-height: 1.6;
+    }
 
-/* CTA band */
-.band-cta{
-  text-align: center;
-}
+    /* CTA band */
+    .band-cta{
+      text-align: center;
+    }
 
-/* Responsive */
-@media (max-width: 860px){
-  .band{ padding: 52px 0; }
-  .how-grid{ grid-template-columns: 1fr; }
-  .about-panel{ padding: 22px 20px 18px; }
-}
-    
+    .cta-title{
+      font-size: 28px;
+      line-height: 1.12;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ss-text-main);
+      margin-bottom: 18px;
+      font-family:
+        "Avenir Next Condensed",
+        "Avenir Next",
+        Avenir,
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "Helvetica Neue",
+        Arial,
+        "Lexend",
+        sans-serif;
+    }
+
+    .cta-note{
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--ss-text-faint);
+      letter-spacing: 0.02em;
+    }
+
+    /* Responsive */
+    @media (max-width: 860px){
+      .band{ padding: 52px 0; }
+      .how-grid{ grid-template-columns: 1fr; }
+      .about-panel{ padding: 22px 20px 18px; }
+    }
+
     /* FOOTER */
     footer {
-      border-top: 1px solid #dddfee;
+      border-top: 1px solid rgba(255,255,255,0.06);
       margin-top: 40px;
       padding: 18px 18px 26px;
       font-size: 11px;
-      color: var(--ss-text-muted);
+      color: var(--ss-text-faint);
     }
 
     .footer-inner {
@@ -539,259 +560,243 @@ h2, h3, h4, h5, h6 {
     .footer-links a:hover {
       color: var(--ss-text-main);
     }
-    
-/* MOBILE */
-@media (max-width: 720px) {
 
-/* ABOUT (What is Sip Sober?) — smaller on mobile */
-.band-title{
-  font-size: 16px;
-  letter-spacing: 0.16em;
-  margin-bottom: 8px;
-}
+    /* MOBILE */
+    @media (max-width: 720px) {
 
-.about-panel .band-lede{
-  font-size: 16px;
-  line-height: 1.35;
-  margin: 0 0 10px;
-  max-width: 100%;
-}
+      /* ABOUT (What is Sip Sober?) — smaller on mobile */
+      .band-title{
+        font-size: 13px;
+        letter-spacing: 0.14em;
+        margin-bottom: 8px;
+      }
 
-.about-panel .band-body{
-  font-size: 15px;
-  line-height: 1.65;
-  margin: 0;
-  max-width: 100%;
-}
+      .about-panel .band-lede{
+        font-size: 16px;
+        line-height: 1.35;
+        margin: 0 0 10px;
+        max-width: 100%;
+      }
 
-/* How it works — mobile: stack cards so they aren’t skinny */
-.how-grid{
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-  
-.how-card{
-  padding: 18px 18px 16px;
-}
-  
-  /* HERO — MOBILE polish (sizes only) */
-  .hero{
-    padding: 34px 0 18px;
-    overflow: hidden;
-  }
+      .about-panel .band-body{
+        font-size: 15px;
+        line-height: 1.65;
+        margin: 0;
+        max-width: 100%;
+      }
 
-  .hero-logo{
-    font-size: 30px;       /* smaller on mobile */
-    letter-spacing: 0.05em;
-  }
-  
-  .hero-inner{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 86px 0 0; /* IMPORTANT: space for topbar */
-}
+      /* How it works — mobile: stack cards so they aren’t skinny */
+      .how-grid{
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
 
-  .hero-title{
-    font-size: 22px;
-    line-height: 1.12;
-    max-width: 24ch;
-    margin: 0 auto 10px;
-    text-align: center;
-  }
+      .how-card{
+        padding: 18px 18px 16px;
+      }
 
-  .hero-subtitle{
-    font-size: 14px;
-    line-height: 1.55;
-    max-width: 42ch;
-    margin: 0 auto 14px;
-    text-align: center;
-  }
+      /* HERO — MOBILE polish (sizes only) */
+      .hero{
+        padding: 34px 0 18px;
+        overflow: hidden;
+      }
 
-  .appstore-badge img{
-    height: 42px;
-  }
+      .hero-logo{
+        font-size: 30px;
+        letter-spacing: 0.05em;
+      }
 
-  .hero-phones .phone{
-    width: 56vw;
-  }
-  .hero-phones .phone-center{
-    width: 64vw;
-    z-index: 3;
-  }
+      .hero-inner{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 86px 0 0;
+      }
 
-  .hero-copy{
-    min-height: auto;     /* removes giant gap */
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 18px;
-  }
+      .hero-title{
+        font-size: 22px;
+        line-height: 1.12;
+        max-width: 24ch;
+        margin: 0 auto 10px;
+        text-align: center;
+      }
 
-  .hero-phones{
-    margin-top: 18px;     /* normal spacing */
-    transform: translateY(38px);
-  }
+      .hero-subtitle{
+        font-size: 14px;
+        line-height: 1.55;
+        max-width: 42ch;
+        margin: 0 auto 14px;
+        text-align: center;
+      }
 
-  /* Make sure the CTA is always below and on top */
-  .hero-subtitle--below{
-    margin-top: 90px;
-    margin-bottom: 14px;
-    position: relative;
-    z-index: 10;
+      .appstore-badge img{
+        height: 42px;
+      }
 
-    font-size: 16px;
-    line-height: 1.45;
-  }
+      .hero-phones .phone{
+        width: 56vw;
+      }
 
-  .hero-cta--below{
-    position: relative;
-    z-index: 10;
-    margin-bottom: 0;
-  }
+      .hero-phones .phone-center{
+        width: 64vw;
+        z-index: 3;
+      }
 
-} /* ✅ IMPORTANT: close the 720px media query */
+      .hero-copy{
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 18px;
+      }
 
+      .hero-phones{
+        margin-top: 18px;
+        transform: translateY(38px);
+      }
 
+      /* Make sure the CTA is always below and on top */
+      .hero-subtitle--below{
+        margin-top: 90px;
+        margin-bottom: 14px;
+        position: relative;
+        z-index: 10;
+        font-size: 16px;
+        line-height: 1.45;
+      }
+
+      .hero-cta--below{
+        position: relative;
+        z-index: 10;
+        margin-bottom: 0;
+      }
+    }
   </style>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-W6LRN7EDH7"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-W6LRN7EDH7"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  gtag('config', 'G-W6LRN7EDH7', {
-    send_page_view: true
-  });
-</script>
-  
+    gtag('config', 'G-W6LRN7EDH7', {
+      send_page_view: true
+    });
+  </script>
 </head>
 <body>
   <div class="page">
 
-<section class="hero">
-
-  <div class="hero-topbar">
-    <a class="hero-logo" href="/">Sip Sober</a>
-  </div>
-
-  <div class="hero-overlay">
-    <div class="container">
-      <div class="hero-inner">
-
-        <div class="hero-copy">
-
-          <!-- Headline -->
-          <div class="hero-rise hero-rise--title">
-            <h1 class="hero-title">
-              The zero-proof map for NYC
-            </h1>
-          </div>
-
-          <!-- Subheadline -->
-          <p class="hero-subtitle reveal-on-scroll">
-            Discover bars and restaurants serving real zero-proof cocktails. 
-            Search the map, filter by neighborhood or brand, and save your favorite spots.
-          </p>
-
-          <!-- CTA -->
-          <div class="hero-cta">
-            <a class="appstore-badge"
-               href="https://apps.apple.com/us/app/sip-sober/id6756894415"
-               target="_blank"
-               rel="noopener">
-              <img src="appstore-badge.svg" alt="Download Sip Sober on the App Store">
-            </a>
-
-            <p class="hero-platform">Available on iPhone</p>
-          </div>
-
-          <!-- Phones -->
-          <div class="hero-phones">
-            <img src="feature-map.png" class="phone phone-left" alt="Sip Sober map view showing zero-proof venues">
-            <img src="feature-filters.png" class="phone phone-center" alt="Sip Sober filters for neighborhood and brand">
-            <img src="feature-favorites.png" class="phone phone-right" alt="Sip Sober saved favorites screen">
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-</section>
-    
-<!-- START PAGE CONTENT -->
-<main>
-
-  <!-- SECTION: What is Sip Sober -->
-  <section id="about" class="band">
-    <div class="container band-inner">
-      <h2 class="band-title">What is Sip Sober?</h2>
-
-      <div class="about-panel">
-        <p class="band-lede">
-          Sip Sober helps you find bars and restaurants serving real zero-proof cocktails.
-        </p>
-
-        <p class="band-body">
-          Search the map, filter by neighborhood or brand, and save your favorite spots — so you always know where to go before you head out.
-        </p>
+    <section class="hero">
+      <div class="hero-topbar">
+        <a class="hero-logo" href="/">Sip Sober</a>
       </div>
 
-    </div>
-  </section>
+      <div class="hero-overlay">
+        <div class="container">
+          <div class="hero-inner">
 
-  <!-- SECTION: How it works (Option 1) -->
-  <section class="band how">
-    <div class="band-inner">
-      <h2 class="band-title">How it works</h2>
+            <div class="hero-copy">
 
-      <div class="how-grid">
+              <div class="hero-rise hero-rise--title">
+                <h1 class="hero-title">
+                  The zero-proof map for NYC
+                </h1>
+              </div>
 
-        <div class="how-card">
-          <div class="how-kicker">
-            <span class="how-num">01</span>
-            <h3>Explore the map</h3>
+              <p class="hero-subtitle reveal-on-scroll">
+                Discover bars and restaurants serving real zero-proof cocktails.
+                Search the map, filter by neighborhood or brand, and save your favorite spots.
+              </p>
+
+              <div class="hero-cta">
+                <a class="appstore-badge"
+                   href="https://apps.apple.com/us/app/sip-sober/id6756894415"
+                   target="_blank"
+                   rel="noopener">
+                  <img src="appstore-badge.svg" alt="Download Sip Sober on the App Store">
+                </a>
+
+                <p class="hero-platform">Available on iPhone</p>
+              </div>
+
+              <div class="hero-phones">
+                <img src="feature-map.png" class="phone phone-left" alt="Sip Sober map view showing zero-proof venues">
+                <img src="feature-filters.png" class="phone phone-center" alt="Sip Sober filters for neighborhood and brand">
+                <img src="feature-favorites.png" class="phone phone-right" alt="Sip Sober saved favorites screen">
+              </div>
+
+            </div>
+
           </div>
-          <p>See NYC venues offering zero-proof cocktails and alcohol-free options.</p>
         </div>
-
-        <div class="how-card">
-          <div class="how-kicker">
-            <span class="how-num">02</span>
-            <h3>Filter instantly</h3>
-          </div>
-          <p>Filter by neighborhood or brand to find exactly what you want.</p>
-        </div>
-
-        <div class="how-card">
-          <div class="how-kicker">
-            <span class="how-num">03</span>
-            <h3>Save favorites</h3>
-          </div>
-          <p>Keep a personal list of spots to revisit anytime.</p>
-        </div>
-
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- SECTION 6: Final CTA (unchanged) -->
-  <section class="band band-cta">
-    <div class="container cta">
-      <h2 class="cta-title">Download Sip Sober</h2>
-      <a class="appstore-badge" href="https://apps.apple.com/us/app/sip-sober/id6756894415" target="_blank" rel="noopener">
-        <img src="appstore-badge.svg" alt="Download on the App Store">
-      </a>
-      <p class="cta-note">Available on iPhone</p>
-    </div>
-  </section>
+    <main>
 
-</main>
+      <section id="about" class="band">
+        <div class="container band-inner">
+          <h2 class="band-title">What is Sip Sober?</h2>
 
+          <div class="about-panel">
+            <p class="band-lede">
+              Sip Sober helps you find bars and restaurants serving real zero-proof cocktails.
+            </p>
+
+            <p class="band-body">
+              Search the map, filter by neighborhood or brand, and save your favorite spots — so you always know where to go before you head out.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="band how">
+        <div class="band-inner">
+          <h2 class="band-title">How it works</h2>
+
+          <div class="how-grid">
+
+            <div class="how-card">
+              <div class="how-kicker">
+                <span class="how-num">01</span>
+                <h3>Explore the map</h3>
+              </div>
+              <p>See NYC venues offering zero-proof cocktails and alcohol-free options.</p>
+            </div>
+
+            <div class="how-card">
+              <div class="how-kicker">
+                <span class="how-num">02</span>
+                <h3>Filter instantly</h3>
+              </div>
+              <p>Filter by neighborhood or brand to find exactly what you want.</p>
+            </div>
+
+            <div class="how-card">
+              <div class="how-kicker">
+                <span class="how-num">03</span>
+                <h3>Save favorites</h3>
+              </div>
+              <p>Keep a personal list of spots to revisit anytime.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section class="band band-cta">
+        <div class="container cta">
+          <h2 class="cta-title">Download Sip Sober</h2>
+          <a class="appstore-badge" href="https://apps.apple.com/us/app/sip-sober/id6756894415" target="_blank" rel="noopener">
+            <img src="appstore-badge.svg" alt="Download on the App Store">
+          </a>
+          <p class="cta-note">Available on iPhone</p>
+        </div>
+      </section>
+
+    </main>
 
     <footer>
       <div class="footer-inner">
@@ -809,22 +814,21 @@ h2, h3, h4, h5, h6 {
   </script>
 
   <script>
-  const revealEls = document.querySelectorAll('.reveal-on-scroll');
+    const revealEls = document.querySelectorAll('.reveal-on-scroll');
 
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.2 }
-  );
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
 
-  revealEls.forEach(el => observer.observe(el));
-</script>
-
+    revealEls.forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
