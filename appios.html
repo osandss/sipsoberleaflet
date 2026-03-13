@@ -1044,8 +1044,8 @@ function applyFiltersUnified(){
   const panelH=panel?panel.getBoundingClientRect().height:0;
   if(count>0 && bounds && !q.length && !_suppressAutoFit){
   map.fitBounds(bounds,{
-    paddingTopLeft:[16,window.SipSober?.isEmbed?70:110],
-    paddingBottomRight:[16,panelH+16],
+    paddingTopLeft:[16, window.SipSober?.isEmbed ? 90 : 130],
+  paddingBottomRight:[16, panelH + 80],
     maxZoom:16,
     animate:false
   });
