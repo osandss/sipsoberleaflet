@@ -1042,14 +1042,26 @@ function applyFiltersUnified(){
   updateActiveFilters(brands,hoods);
   const panel=document.getElementById("bottom-panel");
   const panelH=panel?panel.getBoundingClientRect().height:0;
-  if(count>0 && bounds && !q.length && !_suppressAutoFit){
-  map.fitBounds(bounds,{
-    paddingTopLeft:[16, window.SipSober?.isEmbed ? 90 : 130],
-  paddingBottomRight:[16, panelH + 80],
-    maxZoom:16,
-    animate:false
-  });
-}
+  
+  const isDefaultView =
+    !brands.length &&
+    !hoods.length &&
+    !q.length &&
+    !hasLoc;
+
+  if (!_suppressAutoFit) {
+    if (isDefaultView) {
+      fitInitialView();
+    } else if (count > 0 && bounds) {
+      map.fitBounds(bounds, {
+        paddingTopLeft: [16, window.SipSober?.isEmbed ? 80 : 120],
+        paddingBottomRight: [16, panelH + 40],
+        maxZoom: 16,
+        animate: false
+      });
+    }
+  }
+  
   window.filteredBounds=bounds;
 }
 
@@ -1122,12 +1134,19 @@ window.resetMapToDefault=function(){window.SipSober.resetMapToDefault();};
 /* ─── RESET ─────────────────────────────────────────────────────── */
 function fitInitialView(){
   if(!map) return;
-  const panel=document.getElementById("bottom-panel");
-  const panelH=panel?panel.getBoundingClientRect().height:0;
-  map.fitBounds(manhattanInitialBounds,{
-    paddingTopLeft:[16,window.SipSober?.isEmbed?70:110],
-    paddingBottomRight:[16,panelH+16],
-    animate:false
+
+  const panel = document.getElementById("bottom-panel");
+  const panelH = panel ? panel.getBoundingClientRect().height : 0;
+
+  const defaultBounds = L.latLngBounds(
+    [40.715, -74.03],  // lower-left (trim lower Manhattan)
+    [40.835, -73.93]   // upper-right (show more upper Manhattan)
+  );
+
+  map.fitBounds(defaultBounds, {
+    paddingTopLeft: [16, window.SipSober?.isEmbed ? 75 : 115],
+    paddingBottomRight: [16, panelH + 30],
+    animate: false
   });
 }
 
