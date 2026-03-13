@@ -790,21 +790,24 @@ function _initMap(){
      • rAF frame 2 → paint is done → NOW call invalidateSize
      • 300 ms later → catch any WKWebView async settle
   ────────────────────────────────────────────────────────────── */
-  function kickSize(){
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        if(!map) return;
-        map.invalidateSize({animate:false,pan:false});
-        setTimeout(()=>{ if(map) map.invalidateSize({animate:false,pan:false}); },300);
-      });
+  function kickSize() {
+    if (!map) return;
+    requestAnimationFrame(() => {
+      map.invalidateSize({ animate: false, pan: false });
     });
   }
 
-  map.whenReady(kickSize);
-  window.addEventListener("resize",            kickSize);
-  window.addEventListener("orientationchange", ()=>setTimeout(kickSize,200));
-  document.addEventListener("visibilitychange",()=>{ if(!document.hidden) kickSize(); });
-  window.addEventListener("focus",             kickSize);
+  map.whenReady(() => {
+    kickSize();
+    setTimeout(() => {
+      if (map) map.invalidateSize({ animate: false, pan: false });
+    }, 150);
+  });
+
+  window.addEventListener("resize", kickSize);
+  window.addEventListener("orientationchange", () => {
+    setTimeout(kickSize, 150);
+  });
 
   map.on("popupclose",()=>{ clearActiveMarker(); _lastFocusedVenueId=null; });
 
