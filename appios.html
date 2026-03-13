@@ -191,6 +191,15 @@
       transform: translateZ(0);
     }
 
+    body.map-loading #map {
+      opacity: 0;
+    }
+
+    body.map-ready #map {
+      opacity: 1;
+      transition: opacity 0.18s ease;
+    }
+    
     @supports (height: 100dvh) { #map { height: 100dvh; } }
 
     /* Match #map fallback — no grey flash between map div and tiles */
@@ -737,6 +746,8 @@ const locations = [
 
 /* ─── EMBED MODE ──────────────────────────────────────────────── */
 window.SipSober = window.SipSober || {};
+document.body.classList.add("map-loading");
+
 (function(){
   const p = new URLSearchParams(window.location.search);
   window.SipSober.isEmbed = p.get("embed")==="1";
@@ -770,7 +781,7 @@ function _initMap(){
     tap: false
   }).setView([40.755,-73.985],12.1);
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+  const tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
     subdomains: "abcd",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
@@ -778,7 +789,17 @@ function _initMap(){
     keepBuffer: 6,
     detectRetina: false,
     updateWhenZooming: false
-  }).addTo(map);
+  });
+
+  tiles.addTo(map);
+
+  tiles.once("load", () => {
+    document.body.classList.remove("map-loading");
+    document.body.classList.add("map-ready");
+    if (map) {
+      map.invalidateSize({ animate: false, pan: false });
+    }
+  });
 
   map.setMaxBounds(manhattanLockBounds);
   map.options.maxBoundsViscosity = 0.1;
