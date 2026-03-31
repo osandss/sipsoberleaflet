@@ -591,13 +591,14 @@
       color: #333;
       line-height: 1.25;
       border-radius: 18px;
+      cursor: pointer;
       transition:
         background 180ms ease,
         border-color 180ms ease,
         box-shadow 180ms ease,
         transform 180ms ease;
     }
-
+    
     .card.is-selected {
       background: rgba(32, 34, 57, 0.05);
       border: 1px solid rgba(32, 34, 57, 0.10);
@@ -620,12 +621,42 @@
       background: rgba(32, 34, 57, 0.12);
     }
     
-    .card-top {
+    .card-main-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    
+    .card-image-wrap {
+      width: 108px;
+      flex: 0 0 108px;
+    }
+    
+    .card-image {
+      width: 108px;
+      height: 82px;
+      object-fit: cover;
+      border-radius: 14px;
+      display: block;
+      background: rgba(28,28,30,0.06);
+    }
+    
+    .card-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .card-header-row {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 4px;
+    }
+    
+    .card-text {
+      flex: 1;
+      min-width: 0;
     }
     
     .card-name {
@@ -669,34 +700,21 @@
       font-weight: 700;
       color: #202239;
     }
-
+    
     .card-selected-extra {
       display: none;
     }
     
     .card.is-selected .card-selected-extra {
       display: block;
-      margin-top: 10px;
-    }
-    
-    .card-selected-media {
-      width: 100%;
-      margin: 0 0 10px;
-    }
-    
-    .card-selected-media img {
-      width: 100%;
-      height: 138px;
-      object-fit: cover;
-      border-radius: 16px;
-      display: block;
+      margin-top: 8px;
     }
     
     .card-selected-actions {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 10px;
+      margin-top: 8px;
     }
     
     .card-selected-pill {
@@ -719,7 +737,7 @@
       color: #fff;
       border-color: transparent;
     }
-
+    
     .card-close-btn {
       display: none;
       align-items: center;
@@ -745,7 +763,7 @@
       transform: scale(0.96);
       background: rgba(32,34,57,0.10);
     }
-    
+        
     .ss-pin-label {
       display: inline-flex;
       align-items: center;
@@ -787,8 +805,14 @@
     }
     
     @media (max-width: 640px) {
-      .card-selected-media img {
-        height: 120px;
+      .card-image-wrap {
+        width: 96px;
+        flex: 0 0 96px;
+      }
+    
+      .card-image {
+        width: 96px;
+        height: 76px;
       }
     }
     
@@ -1437,35 +1461,44 @@ function renderList(data){
     const web = normalizeUrl(loc.website);
     const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}`;
 
-    const selectedImage = loc.imageUrl
-      ? `<div class="card-selected-media">
-           <img src="${escapeHtml(loc.imageUrl)}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.parentElement?.remove()">
-         </div>`
-      : "";
+    const cardImage = loc.imageUrl
+      ? `<img class="card-image" src="${escapeHtml(loc.imageUrl)}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.remove()">`
+      : `<div class="card-image"></div>`;
 
-    const selectedExtras = `
+    const selectedExtras = isSelected ? `
       <div class="card-selected-extra">
-        ${selectedImage}
         <div class="card-selected-actions">
           <a class="card-selected-pill primary" href="${directionsUrl}" target="_blank" rel="noopener">Directions</a>
           ${web ? `<a class="card-selected-pill" href="${web}" target="_blank" rel="noopener">Website</a>` : ""}
         </div>
       </div>
-    `;
+    ` : "";
 
     card.innerHTML = `
-      <div class="card-top">
-        <span class="card-name" data-focus-id="${escapeHtml(loc.id)}">${escapeHtml(loc.name)}</span>
-        ${
-          isSelected
-            ? `<button class="card-close-btn" type="button" aria-label="Close selected card">×</button>`
-            : `<button class="fav-btn" data-id="${escapeHtml(loc.id)}" aria-label="Favorite">★</button>`
-        }
+      <div class="card-main-row">
+        <div class="card-image-wrap">
+          ${cardImage}
+        </div>
+    
+        <div class="card-content">
+          <div class="card-header-row">
+            <div class="card-text">
+              <span class="card-name" data-focus-id="${escapeHtml(loc.id)}">${escapeHtml(loc.name)}</span>
+            </div>
+    
+            ${
+              isSelected
+                ? `<button class="card-close-btn" type="button" aria-label="Close selected card">×</button>`
+                : `<button class="fav-btn" data-id="${escapeHtml(loc.id)}" aria-label="Favorite">★</button>`
+            }
+          </div>
+    
+          ${metaLine ? `<div class="meta">${escapeHtml(metaLine)}</div>` : ""}
+          ${featuredDrink}
+          ${badge}
+          ${selectedExtras}
+        </div>
       </div>
-      ${metaLine ? `<div class="meta">${escapeHtml(metaLine)}</div>` : ""}
-      ${featuredDrink}
-      ${badge}
-      ${selectedExtras}
     `;
 
     card.addEventListener("click", (e) => {
