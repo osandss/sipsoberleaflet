@@ -510,6 +510,132 @@
       right: 6px !important; top: 6px !important;
     }
 
+    .ss-popup--simple {
+      padding: 14px;
+      min-width: 248px;
+      max-width: 304px;
+    }
+    
+    .ss-popup-top {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    
+    .ss-popup-img-wrap {
+      margin: 0;
+      flex: 0 0 110px;
+      display: block;
+    }
+    
+    .ss-popup-img {
+      width: 110px;
+      height: 84px;
+      object-fit: cover;
+      border-radius: 13px;
+      display: block;
+    }
+    
+    .ss-popup--simple .ss-popup-title {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.18;
+      margin: 0 0 4px;
+    }
+    
+    .ss-popup--simple .ss-popup-tags {
+      font-size: 11px;
+      color: rgba(28,28,30,0.55);
+      line-height: 1.2;
+      margin: 0 0 7px;
+    }
+    
+    .ss-popup-featured {
+      font-size: 12px;
+      font-weight: 600;
+      color: #202239;
+      line-height: 1.25;
+      margin: 0 0 7px;
+    }
+    
+    .ss-popup-badge-row {
+      display: flex;
+      gap: 6px;
+      margin: 0 0 8px;
+    }
+    
+    .ss-popup-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: rgba(32,34,57,0.06);
+      border: 1px solid rgba(32,34,57,0.08);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: #202239;
+    }
+    
+    .card {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(28,28,30,0.08);
+      margin-bottom: 0;
+      font-size: 12px;
+      color: #333;
+      line-height: 1.25;
+    }
+    
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    
+    .card-name {
+      display: block;
+      font-size: 15px;
+      font-weight: 650;
+      margin: 0;
+      line-height: 1.18;
+      color: #111;
+      cursor: pointer;
+    }
+    
+    .card .meta {
+      margin: 0 0 5px;
+      line-height: 1.3;
+      color: rgba(28,28,30,0.62);
+    }
+    
+    .card-featured {
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: #202239;
+      margin: 0 0 6px;
+    }
+    
+    .card-badge-row {
+      display: flex;
+      gap: 6px;
+    }
+    
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 21px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: rgba(32,34,57,0.05);
+      border: 1px solid rgba(32,34,57,0.08);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #202239;
+    }
     .ss-onboard {
       position: fixed;
       left: 50%;
@@ -687,7 +813,7 @@ const locations = [
   {id:"cosme",name:"Cosme",address:"35 E 21st St, NY",lat:40.7396,lng:-73.9884,website:"https://cosmenyc.com",brand:"Seedlip",neighborhood:"Flatiron",imageUrl:"venue-images/cosme.jpeg"},
   {id:"calico",name:"Bar Calico",address:"23 Lexington Ave, NY",lat:40.7415,lng:-73.9874,website:"https://barcaliconyc.com",brand:"Ritual Zero Proof, Seedlip",neighborhood:"Flatiron",imageUrl:"venue-images/barcalico.jpeg"},
   {id:"lobbyedition",name:"Lobby Bar at The Edition",address:"5 Madison Ave, NY",lat:40.742,lng:-73.987,website:"https://www.editionhotels.com/new-york/restaurants-and-bars/lobby-bar/",brand:"Lyre's",neighborhood:"Flatiron",imageUrl:"venue-images/lobbybaredition.jpeg"},
-  {id:"lamericana",name:"L'Americana",address:"51 Irving Place, NY",lat:40.7375,lng:-73.9854,website:"https://www.lamericana-nyc.com",brand:"Seedlip, Good Time Brewing",neighborhood:"Gramercy",imageUrl:"venue-images/lamericana.jpeg"},
+  {id:"lamericana",name:"L'Americana",address:"51 Irving Place, NY",lat:40.7375,lng:-73.9854,website:"https://www.lamericana-nyc.com",brand:"Seedlip, Good Time Brewing",neighborhood:"Gramercy",imageUrl:"venue-images/lamericana.jpeg",featuredDrink:"Zero-proof Negroni",badge:"Sip Sober Pick"},
   {id:"handcraft",name:"Handcraft Kitchen & Cocktails",address:"367 3rd Ave, NY",lat:40.7429,lng:-73.9796,website:"https://www.handcraftnyc.com",brand:"Seedlip, Lyre's, Ritual Zero Proof",neighborhood:"Midtown",imageUrl:"venue-images/handcraft.jpeg"},
   {id:"decoy",name:"Decoy",address:"529 Hudson St, NY",lat:40.7348,lng:-74.0061,website:"https://www.decoynyc.com",brand:"Seedlip",neighborhood:"West Village",imageUrl:"venue-images/decoy.jpeg"},
   {id:"dante",name:"Dante West Village",address:"551 Hudson St, NY",lat:40.7353,lng:-74.0054,website:"https://www.dante-nyc.com/wv/",brand:"Seedlip, Lyre's",neighborhood:"West Village",imageUrl:"venue-images/dante.jpeg"},
@@ -719,7 +845,7 @@ const locations = [
   {id:"tartinery",name:"Tartinery",address:"2090 Broadway, NY",lat:40.7782,lng:-73.9813,website:"https://www.tartinery.com",brand:"Ghia",neighborhood:"Upper West Side",imageUrl:"venue-images/tartinery.jpeg"},
   {id:"pjclarkes",name:"P.J. Clarke's",address:"4 Columbus Cir, NY",lat:40.7680,lng:-73.9836,website:"https://www.pjclarkes.com",brand:"Athletic Brewing Co., Heineken, Ghia, Lyre's",neighborhood:"Upper West Side",imageUrl:"venue-images/pjclarkeuws.jpeg"},
   {id:"empirerooftop",name:"The Empire Rooftop",address:"44 W 63rd St, NY",lat:40.7719,lng:-73.9832,website:"https://www.theempirerooftop.com",brand:"Run Wild, Corona, Lyre's, St. Agrestis, Ritual Zero Proof",neighborhood:"Upper West Side",imageUrl:"venue-images/empireroof.jpeg"},
-  {id:"allurebar",name:"Allure Bar",address:"80 Riverside Blvd, NY",lat:40.7807,lng:-73.9886,website:"https://www.allurebar.com",brand:"Seedlip, Run Wild",neighborhood:"Upper West Side",imageUrl:"venue-images/allurebar.jpeg"},
+  {id:"allurebar",name:"Allure Bar",address:"80 Riverside Blvd, NY",lat:40.7807,lng:-73.9886,website:"https://www.allurebar.com",brand:"Seedlip, Run Wild",neighborhood:"Upper West Side",imageUrl:"venue-images/allurebar.jpeg",featuredDrink:"Citrus spritz",badge:"New"},
   {id:"parklane",name:"Park Lane",address:"36 Central Park S, NY",lat:40.7666,lng:-73.9777,website:"https://www.parklanenewyork.com",brand:"Curious Elixirs",neighborhood:"Midtown",imageUrl:"venue-images/parklane.jpeg"},
   {id:"cotta",name:"Cotta",address:"513 Columbus Ave, NY",lat:40.7871,lng:-73.9725,website:"https://www.cottanyc.com",brand:"Curious Elixirs, St. Agrestis, Good Time Brewing",neighborhood:"Upper West Side",imageUrl:"venue-images/cotta.jpeg"},
   {id:"spaniard",name:"The Spaniard",address:"190 W 4th St, NY",lat:40.7346,lng:-74.0007,website:"https://www.thespaniardnyc.com",brand:"Curious Elixirs, St. Agrestis, Seedlip, Good Time Brewing",neighborhood:"West Village",imageUrl:"venue-images/spaniard.jpeg"},
@@ -738,7 +864,7 @@ const locations = [
   {id:"parkgate",name:"The Park Gate",address:"91 Christopher St, NY",lat:40.7338,lng:-74.0057,website:"https://www.theparkgatenyc.com",brand:"Guinness, Good Time Brewing, Athletic Brewing Co., Lyre's",neighborhood:"West Village",imageUrl:"venue-images/parkgate.jpeg"},
   {id:"americanbar",name:"American Bar",address:"33 Greenwich Ave, NY",lat:40.7352,lng:-74.0026,website:"https://www.americanbarnyc.com",brand:"Pentire, Kin Euphorics, Seedlip",neighborhood:"West Village",imageUrl:"venue-images/americanbar.jpeg"},
   {id:"travelerspoets",name:"Travelers Poets & Friends",address:"442 Hudson St, NY",lat:40.7320,lng:-74.0067,website:"https://www.travelersnyc.com",brand:"Pathfinder, St. Agrestis",neighborhood:"West Village",imageUrl:"venue-images/travelerspoets.jpeg"},
-  {id:"53",name:"53",address:"53 W 53rd St, NY",lat:40.7610,lng:-73.9776,website:"https://www.53-nyc.com",brand:"Lyre's, Pentire, Pathfinder, St. Agrestis",neighborhood:"Midtown",imageUrl:"venue-images/53nyc.jpeg"},
+  {id:"53",name:"53",address:"53 W 53rd St, NY",lat:40.7610,lng:-73.9776,website:"https://www.53-nyc.com",brand:"Lyre's, Pentire, Pathfinder, St. Agrestis",neighborhood:"Midtown",imageUrl:"venue-images/53nyc.jpeg",featuredDrink:"Zero-proof spritz",badge:"Trending"},
   {id:"naro",name:"Naro",address:"10 Rockefeller Plaza, NY",lat:40.7587,lng:-73.9787,website:"https://www.naronyc.com",brand:"Seedlip, Aplós",neighborhood:"Midtown",imageUrl:"venue-images/naro.jpeg"},
   {id:"king",name:"King",address:"18 King St, NY",lat:40.7276,lng:-74.0036,website:"https://www.kingrestaurant.nyc",brand:"Ghia, Lyre's, Athletic Brewing Co.",neighborhood:"SoHo",imageUrl:"venue-images/kingbar.jpeg"},
   {id:"carnemare",name:"Carne Mare",address:"89 South St, NY",lat:40.7062,lng:-74.0034,website:"https://www.carnemare.com",brand:"Athletic Brewing Co., Pentire, Lyre's",neighborhood:"FiDi",imageUrl:"venue-images/carnemare.jpeg"},
@@ -980,35 +1106,125 @@ window.SipSober.sendVenuesToNative=function(arg){
 
 window.addEventListener("load",()=>setTimeout(()=>window.SipSober.sendVenuesToNative(),400));
 
+function escapeHtml(str){
+  return String(str ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[ch]));
+}
+
+function firstBrands(brandString, max = 2){
+  return String(brandString || "")
+    .split(",")
+    .map(s => s.trim())
+    .filter(Boolean)
+    .slice(0, max)
+    .join(", ");
+}
+  
 /* ─── RENDERERS ────────────────────────────────────────────────── */
 function renderMarkers(data){
-  if(!markersLayer) return{count:0,bounds:null};
-  markersLayer.clearLayers(); clearActiveMarker(); markersById={};
-  const bounds=L.latLngBounds([]);
-  data.forEach(loc=>{
-    const m=L.marker([loc.lat,loc.lng]).addTo(markersLayer);
-    m.on("click",()=>setActiveMarker(m));
-    if(loc.id) markersById[String(loc.id)]=m;
-    const imgHtml=loc.imageUrl?`<div class="ss-popup-img-wrap"><img class="ss-popup-img" src="${loc.imageUrl}" alt="${loc.name||""}" loading="lazy" onerror="this.closest('.ss-popup-img-wrap')?.remove()"></div>`:"";
-    const web=normalizeUrl(loc.website);
-    m.bindPopup(`<div class="ss-popup ss-popup--simple"><div class="ss-popup-top">${imgHtml}<div class="ss-popup-text"><div class="ss-popup-title">${loc.name||""}</div>${loc.neighborhood?`<div class="ss-popup-tags">${loc.neighborhood}</div>`:""}<div class="ss-popup-meta">${loc.address||""}</div><div class="ss-popup-actions">${web?`<a class="ss-pill" href="${web}" target="_blank" rel="noopener">Website</a>`:""}<a class="ss-pill secondary" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name||"")+" "+(loc.address||""))}" target="_blank" rel="noopener">Directions</a></div></div></div></div>`,{minWidth:220,maxWidth:280,closeButton:true,autoPan:true,keepInView:true,autoPanPaddingTopLeft:[18,160],autoPanPaddingBottomRight:[18,260],offset:[0,-18]});
-    bounds.extend([loc.lat,loc.lng]);
+  if(!markersLayer) return { count:0, bounds:null };
+  markersLayer.clearLayers();
+  clearActiveMarker();
+  markersById = {};
+
+  const bounds = L.latLngBounds([]);
+
+  data.forEach(loc => {
+    const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
+    m.on("click", () => setActiveMarker(m));
+    if(loc.id) markersById[String(loc.id)] = m;
+
+    const imgHtml = loc.imageUrl
+      ? `<div class="ss-popup-img-wrap">
+           <img class="ss-popup-img" src="${loc.imageUrl}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.closest('.ss-popup-img-wrap')?.remove()">
+         </div>`
+      : "";
+
+    const web = normalizeUrl(loc.website);
+    const featuredDrink = loc.featuredDrink
+      ? `<div class="ss-popup-featured">Try: ${escapeHtml(loc.featuredDrink)}</div>`
+      : "";
+
+    const badge = loc.badge
+      ? `<div class="ss-popup-badge-row"><span class="ss-popup-badge">${escapeHtml(loc.badge)}</span></div>`
+      : "";
+
+    m.bindPopup(`
+      <div class="ss-popup ss-popup--simple">
+        <div class="ss-popup-top">
+          ${imgHtml}
+          <div class="ss-popup-text">
+            <div class="ss-popup-title">${escapeHtml(loc.name || "")}</div>
+            ${loc.neighborhood ? `<div class="ss-popup-tags">${escapeHtml(loc.neighborhood)}</div>` : ""}
+            ${featuredDrink}
+            ${badge}
+            <div class="ss-popup-actions">
+              ${web ? `<a class="ss-pill" href="${web}" target="_blank" rel="noopener">Website</a>` : ""}
+              <a class="ss-pill secondary" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}" target="_blank" rel="noopener">Directions</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `,{
+      minWidth:220,
+      maxWidth:280,
+      closeButton:true,
+      autoPan:true,
+      keepInView:true,
+      autoPanPaddingTopLeft:[18,160],
+      autoPanPaddingBottomRight:[18,260],
+      offset:[0,-18]
+    });
+
+    bounds.extend([loc.lat, loc.lng]);
   });
-  return{count:data.length,bounds:data.length?bounds:null};
+
+  return { count:data.length, bounds:data.length ? bounds : null };
 }
 
 function renderList(data){
-  const results=document.getElementById("results");
-  const rc=document.getElementById("results-count");
+  const results = document.getElementById("results");
+  const rc = document.getElementById("results-count");
   if(!results) return;
-  results.innerHTML="";
-  if(rc) rc.textContent=data.length===0?"No places found":`${data.length} place${data.length===1?"":"s"}`;
-  data.forEach(loc=>{
-    const card=document.createElement("div"); card.className="card";
-    const web=normalizeUrl(loc.website);
-    card.innerHTML=`<div class="card-top"><span class="card-name" data-focus-id="${loc.id}">${loc.name}</span><button class="fav-btn" data-id="${loc.id}" aria-label="Favorite">★</button></div><div class="meta">${loc.address||""}</div>${web?`<a href="${web}" target="_blank" rel="noopener">Website</a>`:""}<div class="meta">${[_distanceLabelForVenue(loc),loc.neighborhood||"",loc.brand||""].filter(Boolean).join(" • ")}</div>`;
+
+  results.innerHTML = "";
+  if(rc) rc.textContent = data.length === 0 ? "No places found" : `${data.length} place${data.length === 1 ? "" : "s"}`;
+
+  data.forEach(loc => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const distance = _distanceLabelForVenue(loc);
+    const neighborhood = loc.neighborhood || "";
+    const brands = firstBrands(loc.brand, 2);
+    const metaLine = [distance, neighborhood, brands].filter(Boolean).join(" • ");
+
+    const featuredDrink = loc.featuredDrink
+      ? `<div class="card-featured">Try: ${escapeHtml(loc.featuredDrink)}</div>`
+      : "";
+
+    const badge = loc.badge
+      ? `<div class="card-badge-row"><span class="card-badge">${escapeHtml(loc.badge)}</span></div>`
+      : "";
+
+    card.innerHTML = `
+      <div class="card-top">
+        <span class="card-name" data-focus-id="${escapeHtml(loc.id)}">${escapeHtml(loc.name)}</span>
+        <button class="fav-btn" data-id="${escapeHtml(loc.id)}" aria-label="Favorite">★</button>
+      </div>
+      ${metaLine ? `<div class="meta">${escapeHtml(metaLine)}</div>` : ""}
+      ${featuredDrink}
+      ${badge}
+    `;
+
     results.appendChild(card);
   });
+
   window.SipSober?.sendVenuesToNative?.(data);
 }
 
