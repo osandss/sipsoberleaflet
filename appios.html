@@ -636,6 +636,169 @@
       font-weight: 700;
       color: #202239;
     }
+
+    .ss-preview {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: calc(var(--panel-collapsed) + 14px + env(safe-area-inset-bottom));
+      z-index: 2600;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    
+    #bottom-panel.expanded ~ .ss-preview,
+    body .ss-preview.is-raised {
+      bottom: calc(var(--panel-expanded) + 14px + env(safe-area-inset-bottom));
+    }
+    
+    .ss-preview.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    
+    .ss-preview-card {
+      position: relative;
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(32,34,57,0.10);
+      border-radius: 22px;
+      box-shadow: 0 16px 38px rgba(0,0,0,0.14);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 12px;
+    }
+    
+    .ss-preview-media {
+      flex: 0 0 112px;
+      width: 112px;
+    }
+    
+    .ss-preview-media img {
+      width: 112px;
+      height: 112px;
+      object-fit: cover;
+      border-radius: 16px;
+      display: block;
+    }
+    
+    .ss-preview-body {
+      flex: 1;
+      min-width: 0;
+      padding-right: 18px;
+    }
+    
+    .ss-preview-title {
+      font-size: 15px;
+      line-height: 1.18;
+      font-weight: 700;
+      color: #111;
+      margin: 0 0 4px;
+    }
+    
+    .ss-preview-sub {
+      font-size: 11.5px;
+      line-height: 1.25;
+      color: rgba(28,28,30,0.58);
+      margin: 0 0 8px;
+    }
+    
+    .ss-preview-featured {
+      font-size: 12.5px;
+      line-height: 1.3;
+      font-weight: 600;
+      color: #202239;
+      margin: 0 0 8px;
+    }
+    
+    .ss-preview-badge-row {
+      display: flex;
+      gap: 6px;
+      margin: 0 0 10px;
+      flex-wrap: wrap;
+    }
+    
+    .ss-preview-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: rgba(32,34,57,0.06);
+      border: 1px solid rgba(32,34,57,0.08);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #202239;
+      letter-spacing: 0.01em;
+    }
+    
+    .ss-preview-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .ss-preview-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 650;
+      text-decoration: none;
+      border: 1px solid rgba(32,34,57,0.08);
+      background: rgba(28,28,30,0.04);
+      color: #1c1c1e;
+    }
+    
+    .ss-preview-pill.primary {
+      background: #202239;
+      color: #fff;
+      border-color: transparent;
+    }
+    
+    .ss-preview-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      color: rgba(28,28,30,0.55);
+      font-size: 18px;
+      line-height: 28px;
+      cursor: pointer;
+    }
+    
+    @media (max-width: 640px) {
+      .ss-preview-card {
+        gap: 10px;
+        padding: 11px;
+      }
+    
+      .ss-preview-media,
+      .ss-preview-media img {
+        width: 96px;
+        height: 96px;
+        flex-basis: 96px;
+      }
+    
+      .ss-preview-body {
+        padding-right: 12px;
+      }
+    }
+   
     .ss-onboard {
       position: fixed;
       left: 50%;
@@ -755,6 +918,11 @@
 </div>
 
 <div id="map"></div>
+
+<div id="ss-preview" class="ss-preview" hidden>
+  <button id="ss-preview-close" class="ss-preview-close" type="button" aria-label="Close preview">×</button>
+  <div id="ss-preview-inner"></div>
+</div>
 
 <div id="bottom-panel">
   <div id="panel-header">
@@ -956,7 +1124,11 @@ function _initMap(){
     setTimeout(kickSize, 150);
   });
 
-  map.on("popupclose",()=>{ clearActiveMarker(); _lastFocusedVenueId=null; });
+  map.on("click", () => {
+    clearActiveMarker();
+    hidePreviewCard();
+    _lastFocusedVenueId = null;
+  });
 
   _buildIcons();
   applyIconForViewport();
@@ -1124,6 +1296,106 @@ function firstBrands(brandString, max = 2){
     .slice(0, max)
     .join(", ");
 }
+
+function getVisiblePanelHeight(){
+  const panel = document.getElementById("bottom-panel");
+  if(!panel) return 0;
+  const expanded = panel.classList.contains("expanded");
+  return expanded ? panel.getBoundingClientRect().height : Math.max(110, panel.getBoundingClientRect().height);
+}
+
+function previewBottomOffset(){
+  const panelH = getVisiblePanelHeight();
+  return panelH + 14;
+}
+
+function syncPreviewCardPosition(){
+  const preview = document.getElementById("ss-preview");
+  const panel = document.getElementById("bottom-panel");
+  if(!preview || !panel) return;
+  preview.classList.toggle("is-raised", panel.classList.contains("expanded"));
+}
+
+function showPreviewCard(loc){
+  const preview = document.getElementById("ss-preview");
+  const inner = document.getElementById("ss-preview-inner");
+  if(!preview || !inner || !loc) return;
+
+  const web = normalizeUrl(loc.website);
+  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}`;
+  const meta = [loc.neighborhood || "", firstBrands(loc.brand, 2)].filter(Boolean).join(" • ");
+
+  const imgHtml = loc.imageUrl
+    ? `<div class="ss-preview-media">
+         <img src="${escapeHtml(loc.imageUrl)}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.parentElement?.remove()">
+       </div>`
+    : "";
+
+  const featuredHtml = loc.featuredDrink
+    ? `<div class="ss-preview-featured">Try: ${escapeHtml(loc.featuredDrink)}</div>`
+    : "";
+
+  const badgeHtml = loc.badge
+    ? `<div class="ss-preview-badge-row"><span class="ss-preview-badge">${escapeHtml(loc.badge)}</span></div>`
+    : "";
+
+  inner.innerHTML = `
+    <div class="ss-preview-card">
+      ${imgHtml}
+      <div class="ss-preview-body">
+        <div class="ss-preview-title">${escapeHtml(loc.name || "")}</div>
+        ${meta ? `<div class="ss-preview-sub">${escapeHtml(meta)}</div>` : ""}
+        ${featuredHtml}
+        ${badgeHtml}
+        <div class="ss-preview-actions">
+          <a class="ss-preview-pill primary" href="${directionsUrl}" target="_blank" rel="noopener">Directions</a>
+          ${web ? `<a class="ss-preview-pill" href="${web}" target="_blank" rel="noopener">Website</a>` : ""}
+        </div>
+      </div>
+    </div>
+  `;
+
+  preview.hidden = false;
+  syncPreviewCardPosition();
+  requestAnimationFrame(() => preview.classList.add("is-visible"));
+}
+
+function hidePreviewCard(){
+  const preview = document.getElementById("ss-preview");
+  if(!preview) return;
+  preview.classList.remove("is-visible");
+  setTimeout(() => {
+    if(!preview.classList.contains("is-visible")) preview.hidden = true;
+  }, 180);
+}
+
+function getLocationById(id){
+  return locations.find(v => String(v.id) === String(id)) || null;
+}
+
+function selectVenue(loc, opts = {}){
+  if(!loc || !map) return;
+
+  const {
+    centerMap = true,
+    zoom = 16,
+    animate = true
+  } = opts;
+
+  const marker = markersById[String(loc.id)];
+  if(marker) setActiveMarker(marker);
+
+  showPreviewCard(loc);
+
+  if(centerMap){
+    map.invalidateSize(false);
+    map.setView([loc.lat, loc.lng], zoom, { animate });
+  }
+
+  const panel = document.getElementById("bottom-panel");
+  if(panel) panel.classList.add("expanded");
+  syncPreviewCardPosition();
+}
   
 /* ─── RENDERERS ────────────────────────────────────────────────── */
 function renderMarkers(data){
@@ -1136,51 +1408,13 @@ function renderMarkers(data){
 
   data.forEach(loc => {
     const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
-    m.on("click", () => setActiveMarker(m));
-    if(loc.id) markersById[String(loc.id)] = m;
 
-    const imgHtml = loc.imageUrl
-      ? `<div class="ss-popup-img-wrap">
-           <img class="ss-popup-img" src="${loc.imageUrl}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.closest('.ss-popup-img-wrap')?.remove()">
-         </div>`
-      : "";
-
-    const web = normalizeUrl(loc.website);
-    const featuredDrink = loc.featuredDrink
-      ? `<div class="ss-popup-featured">Try: ${escapeHtml(loc.featuredDrink)}</div>`
-      : "";
-
-    const badge = loc.badge
-      ? `<div class="ss-popup-badge-row"><span class="ss-popup-badge">${escapeHtml(loc.badge)}</span></div>`
-      : "";
-
-    m.bindPopup(`
-      <div class="ss-popup ss-popup--simple">
-        <div class="ss-popup-top">
-          ${imgHtml}
-          <div class="ss-popup-text">
-            <div class="ss-popup-title">${escapeHtml(loc.name || "")}</div>
-            ${loc.neighborhood ? `<div class="ss-popup-tags">${escapeHtml(loc.neighborhood)}</div>` : ""}
-            ${featuredDrink}
-            ${badge}
-            <div class="ss-popup-actions">
-              ${web ? `<a class="ss-pill" href="${web}" target="_blank" rel="noopener">Website</a>` : ""}
-              <a class="ss-pill secondary" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}" target="_blank" rel="noopener">Directions</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    `,{
-      minWidth:220,
-      maxWidth:280,
-      closeButton:true,
-      autoPan:true,
-      keepInView:true,
-      autoPanPaddingTopLeft:[18,160],
-      autoPanPaddingBottomRight:[18,260],
-      offset:[0,-18]
+    m.on("click", (e) => {
+      if(e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
+      selectVenue(loc, { centerMap:false, animate:false });
     });
 
+    if(loc.id) markersById[String(loc.id)] = m;
     bounds.extend([loc.lat, loc.lng]);
   });
 
@@ -1385,7 +1619,7 @@ function resetMapToDefault(){
   updateActiveFilters([], []);
 
   if (map) {
-    map.closePopup();
+    hidePreviewCard();
     map.invalidateSize({ animate: false, pan: false });
     fitInitialView();
   }
@@ -1408,28 +1642,33 @@ window.SipSober.setFilters=function(payload){
 };
 
 window.SipSober.focusVenue=function(payload){
-  const id=String((typeof payload==="string"?payload:payload?.venueId)||"").trim();
-  if(!id||_lastFocusedVenueId===id) return;
-  _lastFocusedVenueId=id;
-  renderMarkers(locations); renderList(locations);
-  updateActiveFilters(getSelectedValues("brand"),getSelectedValues("n"));
-  let tries=0;
+  const id = String((typeof payload==="string" ? payload : payload?.venueId) || "").trim();
+  if(!id) return;
+
+  const loc = getLocationById(id);
+  if(!loc) return;
+
+  _lastFocusedVenueId = id;
+
+  const marker = markersById?.[id];
+  if(marker){
+    selectVenue(loc, { centerMap:true, zoom:16, animate:true });
+    return;
+  }
+
+  renderMarkers(locations);
+  renderList(locations);
+  updateActiveFilters(getSelectedValues("brand"), getSelectedValues("n"));
+
+  let tries = 0;
   (function attempt(){
-    const marker=markersById?.[id];
+    const marker = markersById?.[id];
     if(!marker){
-      if(++tries<=25) return setTimeout(attempt,120);
-      _lastFocusedVenueId=null; return;
+      if(++tries <= 25) return setTimeout(attempt, 120);
+      _lastFocusedVenueId = null;
+      return;
     }
-    const ll=marker.getLatLng();
-    map.invalidateSize(false);
-    map.setView([ll.lat,ll.lng],16,{animate:true});
-    setTimeout(()=>{
-      setActiveMarker(marker); marker.openPopup();
-      const c=document.querySelector(".leaflet-popup-close-button");
-      if(c) c.addEventListener("click",()=>{_lastFocusedVenueId=null;},{once:true});
-    },200);
-    const panel=document.getElementById("bottom-panel");
-    if(panel) panel.classList.add("expanded");
+    selectVenue(loc, { centerMap:true, zoom:16, animate:true });
   })();
 };
 
@@ -1483,11 +1722,31 @@ const searchClear=document.getElementById("searchTopClear");
 searchInput?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyFiltersUnified();document.getElementById("searchTopRow")?.classList.remove("is-open");document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");searchInput.blur();}});
 searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";applyFiltersUnified();});
 
+document.getElementById("ss-preview-close")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  clearActiveMarker();
+  hidePreviewCard();
+  _lastFocusedVenueId = null;
+});
+  
 (()=>{
   const panel=document.getElementById("bottom-panel"),toggle=document.getElementById("panel-toggle"),label=toggle?.querySelector(".label");
   if(!panel||!toggle) return;
-  function syncLabel(){const ex=panel.classList.contains("expanded");toggle.setAttribute("aria-expanded",ex?"true":"false");if(label)label.textContent=ex?"Hide":"Show";}
-  toggle.addEventListener("click",e=>{e.stopPropagation();panel.classList.toggle("expanded");syncLabel();});
+
+  function syncLabel(){
+    const ex = panel.classList.contains("expanded");
+    toggle.setAttribute("aria-expanded", ex ? "true" : "false");
+    if(label) label.textContent = ex ? "Hide" : "Show";
+    syncPreviewCardPosition();
+  }
+
+  toggle.addEventListener("click",e=>{
+    e.stopPropagation();
+    panel.classList.toggle("expanded");
+    syncLabel();
+  });
+
   if(window.matchMedia("(max-width:768px)").matches) panel.classList.add("expanded");
   syncLabel();
 })();
