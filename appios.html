@@ -1615,10 +1615,15 @@ function resetMapToDefault(){
 
   _suppressAutoFit = true;
 
-  // Clear selection FIRST so applyFiltersUnified rerenders a clean list
+  // Clear all selected venue UI/state first
   clearVenueSelection();
 
-  window.SipSober.clearUserLocation();
+  // Clear user location directly here (do NOT call window.SipSober.clearUserLocation)
+  _pendingUserLocation = null;
+  _userLocationForDistance = null;
+  if (_mapReady) _clearUserLocationLayers();
+
+  // Render once from a clean state
   applyFiltersUnified();
   updateActiveFilters([], []);
 
@@ -1627,10 +1632,9 @@ function resetMapToDefault(){
     fitInitialView();
   }
 
-  // One extra cleanup pass after the rerender cycle
+  // Final cleanup after render
   requestAnimationFrame(() => {
     clearVenueSelection();
-    syncSelectedListRow();
   });
 
   _suppressAutoFit = false;
