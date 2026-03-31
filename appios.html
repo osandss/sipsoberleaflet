@@ -719,6 +719,38 @@
       color: #fff;
       border-color: transparent;
     }
+
+    .ss-pin-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 28px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(32,34,57,0.10);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+      color: #202239;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    
+    .ss-pin-label-wrap {
+      background: transparent;
+      border: 0;
+    }
+    
+    @media (max-width: 640px) {
+      .ss-pin-label {
+        min-height: 26px;
+        padding: 0 10px;
+        font-size: 11.5px;
+      }
+    }
     
     .card.is-selected {
       padding: 12px;
@@ -984,6 +1016,7 @@ let _mapReady=false, _pendingUserLocation=null;
 let _userLocationForDistance=null, _userDot=null, _userHalo=null;
 let _activeMarker=null, _lastFocusedVenueId=null;
 let _selectedVenueId=null;
+let _selectedLabelMarker=null;
 let _suppressAutoFit = false;
 let defaultIcon, activeIcon, currentIcon;
 const mobileQuery = window.matchMedia("(max-width:767px)");
@@ -1105,6 +1138,7 @@ function makeIcon(size=[28,38],color="#1F2430",isActive=false){
 function _buildIcons(){
   const isMobile = mobileQuery.matches;
   const size = isMobile?[16,24]:[26,36];
+  const activeSize = isMobile?[18,27]:[30,42];
   defaultIcon = makeIcon(size,"#1F2430",false);
   activeIcon  = makeIcon(size,"#1F2430",true);
   currentIcon = defaultIcon;
@@ -1231,6 +1265,35 @@ function getLocationById(id){
   return locations.find(v => String(v.id) === String(id)) || null;
 }
 
+function clearSelectedPinLabel(){
+  if(_selectedLabelMarker){
+    try { map?.removeLayer(_selectedLabelMarker); } catch(e){}
+    _selectedLabelMarker = null;
+  }
+}
+
+function showSelectedPinLabel(loc){
+  if(!map || !loc) return;
+
+  clearSelectedPinLabel();
+
+  const labelHtml = `
+    <div class="ss-pin-label">${escapeHtml(loc.name || "")}</div>
+  `;
+
+  _selectedLabelMarker = L.marker([loc.lat, loc.lng], {
+    interactive: false,
+    keyboard: false,
+    zIndexOffset: 1000,
+    icon: L.divIcon({
+      className: "ss-pin-label-wrap",
+      html: labelHtml,
+      iconSize: null,
+      iconAnchor: [0, 42]
+    })
+  }).addTo(map);
+}
+  
 function selectVenue(loc, opts = {}){
   if(!loc || !map) return;
 
@@ -1250,6 +1313,8 @@ function selectVenue(loc, opts = {}){
     map.invalidateSize(false);
     map.setView([loc.lat, loc.lng], zoom, { animate });
   }
+
+  showSelectedPinLabel(loc);
 
   const panel = document.getElementById("bottom-panel");
   if(panel) panel.classList.add("expanded");
@@ -1284,6 +1349,7 @@ function clearVenueSelection(){
   _selectedVenueId = null;
   _lastFocusedVenueId = null;
   clearActiveMarker();
+  clearSelectedPinLabel();
 
   const results = document.getElementById("results");
   if(results){
@@ -1298,6 +1364,7 @@ function renderMarkers(data){
   if(!markersLayer) return { count:0, bounds:null };
   markersLayer.clearLayers();
   clearActiveMarker();
+  clearSelectedPinLabel();
   markersById = {};
 
   const bounds = L.latLngBounds([]);
