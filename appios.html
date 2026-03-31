@@ -670,118 +670,41 @@
       color: #202239;
     }
 
-    .ss-preview {
-      position: fixed;
-      left: 12px;
-      right: 12px;
-      bottom: calc(var(--panel-collapsed) + 14px + env(safe-area-inset-bottom));
-      z-index: 2600;
-      opacity: 0;
-      transform: translateY(10px);
-      pointer-events: none;
-      transition: opacity 180ms ease, transform 180ms ease;
+    .card-selected-extra {
+      display: none;
     }
     
-    #bottom-panel.expanded ~ .ss-preview,
-    body .ss-preview.is-raised {
-      bottom: calc(var(--panel-expanded) + 14px + env(safe-area-inset-bottom));
+    .card.is-selected .card-selected-extra {
+      display: block;
+      margin-top: 10px;
     }
     
-    .ss-preview.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
+    .card-selected-media {
+      width: 100%;
+      margin: 0 0 10px;
     }
     
-    .ss-preview-card {
-      position: relative;
-      display: flex;
-      gap: 12px;
-      align-items: stretch;
-      background: rgba(255,255,255,0.92);
-      border: 1px solid rgba(32,34,57,0.10);
-      border-radius: 22px;
-      box-shadow: 0 16px 38px rgba(0,0,0,0.14);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      padding: 12px;
-    }
-    
-    .ss-preview-media {
-      flex: 0 0 112px;
-      width: 112px;
-    }
-    
-    .ss-preview-media img {
-      width: 112px;
-      height: 112px;
+    .card-selected-media img {
+      width: 100%;
+      height: 138px;
       object-fit: cover;
       border-radius: 16px;
       display: block;
     }
     
-    .ss-preview-body {
-      flex: 1;
-      min-width: 0;
-      padding-right: 18px;
-    }
-    
-    .ss-preview-title {
-      font-size: 15px;
-      line-height: 1.18;
-      font-weight: 700;
-      color: #111;
-      margin: 0 0 4px;
-    }
-    
-    .ss-preview-sub {
-      font-size: 11.5px;
-      line-height: 1.25;
-      color: rgba(28,28,30,0.58);
-      margin: 0 0 8px;
-    }
-    
-    .ss-preview-featured {
-      font-size: 12.5px;
-      line-height: 1.3;
-      font-weight: 600;
-      color: #202239;
-      margin: 0 0 8px;
-    }
-    
-    .ss-preview-badge-row {
-      display: flex;
-      gap: 6px;
-      margin: 0 0 10px;
-      flex-wrap: wrap;
-    }
-    
-    .ss-preview-badge {
-      display: inline-flex;
-      align-items: center;
-      height: 22px;
-      padding: 0 9px;
-      border-radius: 999px;
-      background: rgba(32,34,57,0.06);
-      border: 1px solid rgba(32,34,57,0.08);
-      font-size: 10.5px;
-      font-weight: 700;
-      color: #202239;
-      letter-spacing: 0.01em;
-    }
-    
-    .ss-preview-actions {
+    .card-selected-actions {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+      margin-top: 10px;
     }
     
-    .ss-preview-pill {
+    .card-selected-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 30px;
-      padding: 0 12px;
+      min-height: 32px;
+      padding: 0 14px;
       border-radius: 999px;
       font-size: 11.5px;
       font-weight: 650;
@@ -791,47 +714,26 @@
       color: #1c1c1e;
     }
     
-    .ss-preview-pill.primary {
+    .card-selected-pill.primary {
       background: #202239;
       color: #fff;
       border-color: transparent;
     }
     
-    .ss-preview-close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 2;
-      width: 28px;
-      height: 28px;
-      border: 0;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.92);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      color: rgba(28,28,30,0.55);
-      font-size: 18px;
-      line-height: 28px;
-      cursor: pointer;
+    .card.is-selected {
+      padding: 12px;
+    }
+    
+    .card.is-selected .card-top {
+      margin-bottom: 6px;
     }
     
     @media (max-width: 640px) {
-      .ss-preview-card {
-        gap: 10px;
-        padding: 11px;
-      }
-    
-      .ss-preview-media,
-      .ss-preview-media img {
-        width: 96px;
-        height: 96px;
-        flex-basis: 96px;
-      }
-    
-      .ss-preview-body {
-        padding-right: 12px;
+      .card-selected-media img {
+        height: 120px;
       }
     }
-   
+    
     .ss-onboard {
       position: fixed;
       left: 50%;
@@ -951,11 +853,6 @@
 </div>
 
 <div id="map"></div>
-
-<div id="ss-preview" class="ss-preview" hidden>
-  <button id="ss-preview-close" class="ss-preview-close" type="button" aria-label="Close preview">×</button>
-  <div id="ss-preview-inner"></div>
-</div>
 
 <div id="bottom-panel">
   <div id="panel-header">
@@ -1329,77 +1226,6 @@ function firstBrands(brandString, max = 2){
     .join(", ");
 }
 
-function getVisiblePanelHeight(){
-  const panel = document.getElementById("bottom-panel");
-  if(!panel) return 0;
-  const expanded = panel.classList.contains("expanded");
-  return expanded ? panel.getBoundingClientRect().height : Math.max(110, panel.getBoundingClientRect().height);
-}
-
-function previewBottomOffset(){
-  const panelH = getVisiblePanelHeight();
-  return panelH + 14;
-}
-
-function syncPreviewCardPosition(){
-  const preview = document.getElementById("ss-preview");
-  const panel = document.getElementById("bottom-panel");
-  if(!preview || !panel) return;
-  preview.classList.toggle("is-raised", panel.classList.contains("expanded"));
-}
-
-function showPreviewCard(loc){
-  const preview = document.getElementById("ss-preview");
-  const inner = document.getElementById("ss-preview-inner");
-  if(!preview || !inner || !loc) return;
-
-  const web = normalizeUrl(loc.website);
-  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}`;
-  const meta = [loc.neighborhood || "", firstBrands(loc.brand, 2)].filter(Boolean).join(" • ");
-
-  const imgHtml = loc.imageUrl
-    ? `<div class="ss-preview-media">
-         <img src="${escapeHtml(loc.imageUrl)}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.parentElement?.remove()">
-       </div>`
-    : "";
-
-  const featuredHtml = loc.featuredDrink
-    ? `<div class="ss-preview-featured">Try: ${escapeHtml(loc.featuredDrink)}</div>`
-    : "";
-
-  const badgeHtml = loc.badge
-    ? `<div class="ss-preview-badge-row"><span class="ss-preview-badge">${escapeHtml(loc.badge)}</span></div>`
-    : "";
-
-  inner.innerHTML = `
-    <div class="ss-preview-card">
-      ${imgHtml}
-      <div class="ss-preview-body">
-        <div class="ss-preview-title">${escapeHtml(loc.name || "")}</div>
-        ${meta ? `<div class="ss-preview-sub">${escapeHtml(meta)}</div>` : ""}
-        ${featuredHtml}
-        ${badgeHtml}
-        <div class="ss-preview-actions">
-          <a class="ss-preview-pill primary" href="${directionsUrl}" target="_blank" rel="noopener">Directions</a>
-          ${web ? `<a class="ss-preview-pill" href="${web}" target="_blank" rel="noopener">Website</a>` : ""}
-        </div>
-      </div>
-    </div>
-  `;
-
-  preview.hidden = false;
-  syncPreviewCardPosition();
-  requestAnimationFrame(() => preview.classList.add("is-visible"));
-}
-
-function hidePreviewCard(){
-  const preview = document.getElementById("ss-preview");
-  if(!preview) return;
-  preview.classList.remove("is-visible");
-  setTimeout(() => {
-    if(!preview.classList.contains("is-visible")) preview.hidden = true;
-  }, 180);
-}
 
 function getLocationById(id){
   return locations.find(v => String(v.id) === String(id)) || null;
@@ -1420,8 +1246,6 @@ function selectVenue(loc, opts = {}){
   const marker = markersById[_selectedVenueId];
   if(marker) setActiveMarker(marker);
 
-  showPreviewCard(loc);
-
   if(centerMap){
     map.invalidateSize(false);
     map.setView([loc.lat, loc.lng], zoom, { animate });
@@ -1429,8 +1253,6 @@ function selectVenue(loc, opts = {}){
 
   const panel = document.getElementById("bottom-panel");
   if(panel) panel.classList.add("expanded");
-
-  syncPreviewCardPosition();
 
   requestAnimationFrame(() => {
     syncSelectedListRow();
@@ -1462,7 +1284,6 @@ function clearVenueSelection(){
   _selectedVenueId = null;
   _lastFocusedVenueId = null;
   clearActiveMarker();
-  hidePreviewCard();
 
   const results = document.getElementById("results");
   if(results){
@@ -1522,6 +1343,25 @@ function renderList(data){
       ? `<div class="card-badge-row"><span class="card-badge">${escapeHtml(loc.badge)}</span></div>`
       : "";
 
+    const web = normalizeUrl(loc.website);
+    const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}`;
+
+    const selectedImage = loc.imageUrl
+      ? `<div class="card-selected-media">
+           <img src="${escapeHtml(loc.imageUrl)}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.parentElement?.remove()">
+         </div>`
+      : "";
+
+    const selectedExtras = `
+      <div class="card-selected-extra">
+        ${selectedImage}
+        <div class="card-selected-actions">
+          <a class="card-selected-pill primary" href="${directionsUrl}" target="_blank" rel="noopener">Directions</a>
+          ${web ? `<a class="card-selected-pill" href="${web}" target="_blank" rel="noopener">Website</a>` : ""}
+        </div>
+      </div>
+    `;
+
     card.innerHTML = `
       <div class="card-top">
         <span class="card-name" data-focus-id="${escapeHtml(loc.id)}">${escapeHtml(loc.name)}</span>
@@ -1530,10 +1370,12 @@ function renderList(data){
       ${metaLine ? `<div class="meta">${escapeHtml(metaLine)}</div>` : ""}
       ${featuredDrink}
       ${badge}
+      ${selectedExtras}
     `;
 
     card.addEventListener("click", (e) => {
       if(e.target.closest(".fav-btn")) return;
+      if(e.target.closest("a")) return;
       window.SipSober?.focusVenue?.(loc.id);
     });
 
@@ -1818,11 +1660,6 @@ const searchClear=document.getElementById("searchTopClear");
 searchInput?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyFiltersUnified();document.getElementById("searchTopRow")?.classList.remove("is-open");document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");searchInput.blur();}});
 searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";applyFiltersUnified();});
 
-document.getElementById("ss-preview-close")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  clearVenueSelection();
-});
   
 (()=>{
   const panel=document.getElementById("bottom-panel"),toggle=document.getElementById("panel-toggle"),label=toggle?.querySelector(".label");
@@ -1832,7 +1669,6 @@ document.getElementById("ss-preview-close")?.addEventListener("click", (e) => {
     const ex = panel.classList.contains("expanded");
     toggle.setAttribute("aria-expanded", ex ? "true" : "false");
     if(label) label.textContent = ex ? "Hide" : "Show";
-    syncPreviewCardPosition();
   }
 
   toggle.addEventListener("click",e=>{
