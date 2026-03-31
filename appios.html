@@ -1140,7 +1140,7 @@ function _buildIcons(){
   const size = isMobile?[16,24]:[26,36];
   const activeSize = isMobile?[18,27]:[30,42];
   defaultIcon = makeIcon(size,"#1F2430",false);
-  activeIcon  = makeIcon(size,"#1F2430",true);
+  activeIcon  = makeIcon(activeSize,"#1F2430",true);
   currentIcon = defaultIcon;
   L.Marker.prototype.options.icon = currentIcon;
 }
@@ -1615,15 +1615,23 @@ function resetMapToDefault(){
 
   _suppressAutoFit = true;
 
+  // Clear selection FIRST so applyFiltersUnified rerenders a clean list
+  clearVenueSelection();
+
   window.SipSober.clearUserLocation();
   applyFiltersUnified();
   updateActiveFilters([], []);
 
   if (map) {
-    clearVenueSelection();
     map.invalidateSize({ animate: false, pan: false });
     fitInitialView();
   }
+
+  // One extra cleanup pass after the rerender cycle
+  requestAnimationFrame(() => {
+    clearVenueSelection();
+    syncSelectedListRow();
+  });
 
   _suppressAutoFit = false;
 }
