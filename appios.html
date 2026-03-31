@@ -367,15 +367,6 @@
     .card .meta { margin: 0; line-height: 1.22; }
     #bottom-panel .card p { margin: 0; line-height: 1.32; }
 
-    #bottom-panel .card a {
-      display: inline-block;
-      margin: 1px 0 3px;
-      font-size: 12px;
-      font-weight: 500;
-      color: #2f3b69;
-      text-decoration: underline;
-    }
-
     .leaflet-control-zoom { bottom: 20px; right: 20px; left: auto !important; top: auto !important; }
 
     .leaflet-top.leaflet-left {
@@ -712,32 +703,36 @@
     
     .card-selected-actions {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-top: 6px;
+      align-items: center;
+      margin-top: 8px;
     }
     
     .card-selected-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      height: 30px;
-      padding: 0 12px;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 28px;
+      min-width: 120px;
+      padding: 0 14px;
+      margin: 0 !important;
       border-radius: 999px;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 600;
-      text-decoration: none;
+      line-height: 1;
+      text-decoration: none !important;
       border: 1px solid rgba(32,34,57,0.08);
       background: rgba(28,28,30,0.04);
       color: #1c1c1e;
-      line-height: 1;
+      box-sizing: border-box;
+      vertical-align: middle;
     }
     
     .card-selected-pill.primary {
       background: #202239;
       color: #fff;
       border-color: transparent;
-      font-weight: 600;
     }
     
     .card-close-btn {
