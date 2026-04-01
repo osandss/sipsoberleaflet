@@ -1190,30 +1190,23 @@ function makePinIconSVG(hex="#2D334D", size=[28,38], opts={}){
 
   return `
   <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 28 38">
-    <defs>
-      <filter id="pinShadow" x="-50%" y="-50%" width="200%" height="200%">
-        <feDropShadow dx="0" dy="1.5" stdDeviation="1.8" flood-color="rgba(0,0,0,0.18)"/>
-      </filter>
-    </defs>
-
     ${ring ? `
       <path
         d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"
         fill="none"
-        stroke="rgba(45,51,77,0.20)"
-        stroke-width="1.8"
+        stroke="rgba(45,51,77,0.18)"
+        stroke-width="1.4"
       />
     ` : ""}
 
     <path
-      filter="url(#pinShadow)"
       d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"
-      fill="${hex}" opacity="0.88"
+      fill="${hex}"
       stroke="rgba(255,255,255,0.05)"
-      stroke-width="0.5"
+      stroke-width="0.45"
     />
 
-    <circle cx="14" cy="13" r="2.6" fill="${innerDot}" opacity="0.9" />
+    <circle cx="14" cy="13" r="3.15" fill="${innerDot}" />
   </svg>`;
 }
 
