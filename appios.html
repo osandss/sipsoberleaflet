@@ -580,7 +580,7 @@
     .card {
       position: relative;
     
-      background: #2A2F45;
+      background: #303552;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.05);
     
@@ -602,7 +602,7 @@
     }
     
     .card.is-selected {
-      background: #2E344F;
+      background: #303552;
       border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 10px 22px rgba(0,0,0,0.18);
       transform: translateY(-1px);
@@ -775,19 +775,28 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+    
       min-height: 28px;
       padding: 0 12px;
+    
       border-radius: 999px;
-      background: rgba(255,255,255,0.96);
-      border: 1px solid rgba(32,34,57,0.10);
-      box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+    
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(32,34,57,0.08);
+    
+      box-shadow: 
+        0 6px 18px rgba(0,0,0,0.10),
+        0 1px 0 rgba(255,255,255,0.6) inset;
+    
       color: #202239;
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.01em;
+    
       white-space: nowrap;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+    
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
     
     .ss-pin-label-wrap {
@@ -1174,30 +1183,63 @@ if (document.readyState === "loading") {
 }
 
 /* ─── ICONS ────────────────────────────────────────────────────── */
-function makePinIconSVG(hex="#1F2430",size=[28,38],opts={}){
-  const [w,h]=size, ring=opts.ring??false;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 28 38">
-    ${ring?`<path d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z" fill="none" stroke="rgba(32,34,57,0.20)" stroke-width="2.2"/>` : ""}
-    <path d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z" fill="${hex}" stroke="rgba(0,0,0,0.14)" stroke-width="0.5"/>
-    <circle cx="14" cy="13" r="4.6" fill="#F5F6FA"/>
+function makePinIconSVG(hex="#2D334D", size=[28,38], opts={}){
+  const [w,h] = size;
+  const ring = opts.ring ?? false;
+  const innerDot = opts.innerDot ?? "#F7F8FB";
+
+  return `
+  <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 28 38">
+    <defs>
+      <filter id="pinShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feDropShadow dx="0" dy="1.5" stdDeviation="1.8" flood-color="rgba(0,0,0,0.18)"/>
+      </filter>
+    </defs>
+
+    ${ring ? `
+      <path
+        d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"
+        fill="none"
+        stroke="rgba(45,51,77,0.20)"
+        stroke-width="1.8"
+      />
+    ` : ""}
+
+    <path
+      filter="url(#pinShadow)"
+      d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"
+      fill="${hex}"
+      stroke="rgba(255,255,255,0.08)"
+      stroke-width="0.7"
+    />
+
+    <circle cx="14" cy="13" r="4.15" fill="${innerDot}" />
   </svg>`;
 }
 
-function makeIcon(size=[28,38],color="#1F2430",isActive=false){
+function makeIcon(size=[28,38], color="#2D334D", isActive=false){
   return L.icon({
-    iconUrl:"data:image/svg+xml;utf8,"+encodeURIComponent(makePinIconSVG(color,size,{ring:isActive})),
-    iconSize:size,
-    iconAnchor:[Math.floor(size[0]/2),size[1]],
-    popupAnchor:[0,-Math.floor(size[1]*0.84)]
+    iconUrl: "data:image/svg+xml;utf8," + encodeURIComponent(
+      makePinIconSVG(color, size, {
+        ring: isActive,
+        innerDot: "#F7F8FB"
+      })
+    ),
+    iconSize: size,
+    iconAnchor: [Math.floor(size[0] / 2), size[1]],
+    popupAnchor: [0, -Math.floor(size[1] * 0.84)]
   });
 }
 
 function _buildIcons(){
   const isMobile = mobileQuery.matches;
-  const size = isMobile?[16,24]:[26,36];
-  const activeSize = isMobile?[18,27]:[30,42];
-  defaultIcon = makeIcon(size,"#1F2430",false);
-  activeIcon  = makeIcon(activeSize,"#1F2430",true);
+
+  const size = isMobile ? [15,22] : [24,33];
+  const activeSize = isMobile ? [17,25] : [27,37];
+
+  defaultIcon = makeIcon(size, "#2D334D", false);
+  activeIcon  = makeIcon(activeSize, "#2D334D", true);
+
   currentIcon = defaultIcon;
   L.Marker.prototype.options.icon = currentIcon;
 }
