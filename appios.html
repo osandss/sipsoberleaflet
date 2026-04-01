@@ -239,19 +239,21 @@
       right: 12px;
       bottom: 0;
       height: var(--panel-collapsed);
-      background: rgba(255, 255, 255, 0.72);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+    
+      background: rgba(27, 30, 49, 0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    
       border-radius: 22px 22px 0 0;
-      box-shadow: 0 -8px 22px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.18);
+    
       display: flex;
       flex-direction: column;
       padding: 8px 14px calc(10px + env(safe-area-inset-bottom));
       z-index: 2001;
-      transition: none !important;
       overflow: hidden;
     }
-
+    
     #bottom-panel.expanded { height: var(--panel-expanded); }
 
     #panel-header { flex: 0 0 auto; padding: 0 10px 6px; }
@@ -291,12 +293,12 @@
       justify-content: center;
       padding: 4px 9px;
       border-radius: 999px;
-      background: rgba(28, 28, 30, 0.035);
-      border: 1px solid rgba(28, 28, 30, 0.08);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
       font-size: 11.5px;
       font-weight: 600;
       letter-spacing: 0.01em;
-      color: rgba(28, 28, 30, 0.72);
+      color: rgba(255,255,255,0.85);
       appearance: none;
       -webkit-appearance: none;
       outline: none;
@@ -328,8 +330,8 @@
     #panel-toggle .label {
       font-size: 12px;
       font-weight: 600;
-      color: #202239;
-      opacity: 0.75;
+      color: rgba(255,255,255,0.85);
+      opacity: 1;
     }
 
     #results-count {
@@ -337,7 +339,7 @@
       margin: 0;
       font-size: 13px;
       font-weight: 500;
-      color: #5f6368;
+      color: rgba(255,255,255,0.75);
       letter-spacing: 0.01em;
       white-space: nowrap;
     }
@@ -575,13 +577,20 @@
     
     .card {
       position: relative;
+    
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.4);
+    
       padding: 12px 10px;
-      border-bottom: 1px solid rgba(28,28,30,0.08);
-      margin-bottom: 0;
+      margin-bottom: 10px;
+    
       font-size: 12px;
       color: #333;
       line-height: 1.25;
-      border-radius: 18px;
+    
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    
       cursor: pointer;
       transition:
         background 180ms ease,
@@ -625,7 +634,7 @@
     
     .card-image {
       width: 118px;
-      height: 118px;
+      height: 96px;
       object-fit: cover;
       border-radius: 14px;
       display: block;
@@ -809,7 +818,7 @@
     
       .card-image {
         width: 108px;
-        height: 108px;
+        height: 88px;
       }
     }
     
