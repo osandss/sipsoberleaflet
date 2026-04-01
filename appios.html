@@ -580,7 +580,7 @@
     .card {
       position: relative;
     
-      background: #303552;
+      background: #2C3148;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.05);
     
@@ -602,7 +602,7 @@
     }
     
     .card.is-selected {
-      background: #303552;
+      background: #2C3148;
       border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 10px 22px rgba(0,0,0,0.18);
       transform: translateY(-1px);
@@ -1495,9 +1495,7 @@ function renderList(data){
     let contextLine = "";
 
     if (loc.featuredDrink) {
-      contextLine = `<div class="card-featured">Try: ${escapeHtml(loc.featuredDrink)}</div>`;
-    } else if (loc.badge) {
-      contextLine = `<div class="card-featured">${escapeHtml(loc.badge)}</div>`;
+      contextLine = `<div class="card-featured">${escapeHtml(loc.featuredDrink)}</div>`;
     } else {
       contextLine = `<div class="card-featured">Zero-proof cocktails</div>`;
     }
