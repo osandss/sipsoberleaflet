@@ -23,7 +23,7 @@
     .leaflet-container { position: relative; }
 
     .leaflet-tile-pane {
-      filter: brightness(0.98) saturate(0.94) contrast(0.97);
+      filter: brightness(1.02) saturate(1.08) contrast(0.96);
     }
     
     .leaflet-container::before {
@@ -33,7 +33,7 @@
       pointer-events: none;
     
       /* subtle navy wash to push gray areas bluer */
-      background: rgba(42, 56, 104, 0.20);
+      background: rgba(36, 46, 92, 0.10);
     
       z-index: 200;
     }
@@ -1153,7 +1153,7 @@ function _initMap(){
     tap: false
   }).setView([40.778,-73.985],12.1);
 
-  const tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
+  const tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/voyager_nolabels/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
     subdomains: "abcd",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
