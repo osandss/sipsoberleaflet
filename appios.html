@@ -442,16 +442,16 @@
     body.ss-embed #filters { display: none !important; }
 
     .fav-btn {
-      width: 30px;
-      height: 30px;
-      flex: 0 0 30px;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
       border-radius: 999px;
       background: rgba(255,255,255,0.035);
       border: 1px solid rgba(255,255,255,0.06);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 13px;
       color: rgba(255,255,255,0.42);
       transition: all 140ms ease;
       margin-top: 0;
@@ -685,13 +685,16 @@
     
     .card-name {
       display: block;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       margin: 0 0 4px 0;
-      line-height: 1.15;
-      letter-spacing: -0.015em;
+      line-height: 1.12;
+      letter-spacing: -0.012em;
       color: rgba(255,255,255,0.97);
       cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .card .meta {
@@ -787,20 +790,18 @@
       display: none;
       align-items: center;
       justify-content: center;
-      width: 30px;
-      height: 30px;
-      flex: 0 0 30px;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.05);
       background: rgba(255,255,255,0.035);
       color: rgba(255,255,255,0.72);
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1;
       margin-top: 0;
-      
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
-    
       transition: background 160ms ease, transform 120ms ease;
     }
     
