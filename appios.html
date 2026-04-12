@@ -388,17 +388,6 @@
       white-space: nowrap;
     }
 
-    .card {
-      padding: 8px 10px;
-      border-bottom: 1px solid #eee;
-      margin-bottom: 0;
-      font-size: 12px;
-      color: #333;
-      line-height: 1.25;
-    }
-
-    .card:last-child { border-bottom: none; }
-
     .card-name {
       display: block;
       font-size: 14px;
@@ -410,7 +399,6 @@
     }
 
     .card-name:hover { text-decoration: underline; }
-    .card .meta { margin: 0; line-height: 1.22; }
     #bottom-panel .card p { margin: 0; line-height: 1.32; }
 
     .leaflet-control-zoom { bottom: 20px; right: 20px; left: auto !important; top: auto !important; }
@@ -496,9 +484,6 @@
       margin-bottom: 4px;
     }
 
-    .card {
-      cursor: pointer;
-    }
     
     .leaflet-popup-content-wrapper {
       border-radius: 18px !important;
@@ -642,13 +627,12 @@
       background: rgba(44, 49, 72, 0.88);
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.05);
-      padding: 12px 10px;
-      margin-bottom: 10px;
+      padding: 10px 10px;
+      margin-bottom: 8px;
       font-size: 12px;
       color: rgba(255,255,255,0.96);
       line-height: 1.25;
       box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-    
       cursor: pointer;
       transition:
         background 180ms ease,
@@ -681,7 +665,7 @@
     
     .card-main-row {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: flex-start;
     }
     
@@ -708,8 +692,8 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 3px;
+      gap: 8px;
+      margin-bottom: 2px;
     }
     
     .card-text {
@@ -728,27 +712,38 @@
       color: rgba(255,255,255,0.96);
       cursor: pointer;
     }
-    
+
     .card .meta {
-      margin: 0 28px 6px 0;
-      line-height: 1.24;
-      color: rgba(255,255,255,0.58);
-      font-size: 11.5px;
+      margin: 0;
+      line-height: 1.2;
     }
     
-    .card-featured {
-      font-size: 12px;
-      font-weight: 600;
-      line-height: 1.3;
-      color: rgba(255,255,255,0.92);
+    .meta-location {
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.58);
       margin: 0 0 6px;
+    }
+    
+    .meta-brand {
+      font-size: 11px;
+      color: rgba(255,255,255,0.42);
+      line-height: 1.25;
+      margin: 0 0 8px;
+    }
+  
+    .card-featured {
+      font-size: 12.5px;
+      font-weight: 500;
+      line-height: 1.35;
+      color: rgba(255,255,255,0.78);
+      margin: 4px 0 8px;
     }
 
     .card-address {
-      font-size: 11.5px;
+      font-size: 11px;
       line-height: 1.3;
-      color: rgba(255,255,255,0.48);
-      margin: 0 0 2px;
+      color: rgba(255,255,255,0.45);
+      margin: 0 0 6px;
     }
     
     .card-badge-row {
@@ -1560,7 +1555,8 @@ function renderList(data){
     const distance = _distanceLabelForVenue(loc);
     const neighborhood = loc.neighborhood || "";
     const brands = firstBrands(loc.brand, 2);
-    const metaLine = [distance, neighborhood, brands].filter(Boolean).join(" • ");
+
+    const locationLine = [distance, neighborhood].filter(Boolean).join(" • ");
 
     const tagsHtml = Array.isArray(loc.drinkTags) && loc.drinkTags.length
       ? `
@@ -1568,6 +1564,10 @@ function renderList(data){
           ${loc.drinkTags.slice(0, 2).map(tag => `<span class="card-badge">${escapeHtml(tag)}</span>`).join("")}
         </div>
       `
+      : "";
+
+    const brandLine = isSelected && brands
+      ? `<div class="meta meta-brand">${escapeHtml(brands)}</div>`
       : "";
 
     const featuredLine = isSelected
@@ -1587,6 +1587,7 @@ function renderList(data){
 
     const selectedExtras = isSelected ? `
       <div class="card-selected-extra">
+        ${brandLine}
         ${featuredLine}
         ${addressLine}
         <div class="card-selected-actions">
@@ -1615,7 +1616,7 @@ function renderList(data){
             }
           </div>
 
-          ${metaLine ? `<div class="meta">${escapeHtml(metaLine)}</div>` : ""}
+          ${locationLine ? `<div class="meta meta-location">${escapeHtml(locationLine)}</div>` : ""}
           ${tagsHtml}
           ${selectedExtras}
         </div>
