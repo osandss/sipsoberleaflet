@@ -388,19 +388,6 @@
       white-space: nowrap;
     }
 
-    .card-name {
-      display: block;
-      font-size: 14px;
-      font-weight: 600;
-      margin: 0 0 2px 0;
-      line-height: 1.18;
-      color: rgba(255,255,255,0.96);
-      cursor: pointer;
-    }
-
-    .card-name:hover { text-decoration: underline; }
-    #bottom-panel .card p { margin: 0; line-height: 1.32; }
-
     .leaflet-control-zoom { bottom: 20px; right: 20px; left: auto !important; top: auto !important; }
 
     .leaflet-top.leaflet-left {
@@ -455,33 +442,26 @@
     body.ss-embed #filters { display: none !important; }
 
     .fav-btn {
-      width: 24px;
-      height: 24px;
-      flex: 0 0 24px;
+      width: 30px;
+      height: 30px;
+      flex: 0 0 30px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.035);
       border: 1px solid rgba(255,255,255,0.06);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      color: rgba(255,255,255,0.40);
+      font-size: 14px;
+      color: rgba(255,255,255,0.42);
       transition: all 140ms ease;
-      margin-top: 1px;
+      margin-top: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     
     .fav-btn.is-fav {
-      color: rgba(255,255,255,0.95);
+      color: rgba(255,255,255,0.96);
       background: rgba(255,255,255,0.08);
-    }
-
-    .card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 4px;
     }
 
     
@@ -624,15 +604,15 @@
     
     .card {
       position: relative;
-      background: rgba(44, 49, 72, 0.88);
-      border-radius: 18px;
+      background: rgba(44, 49, 72, 0.84);
+      border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.05);
-      padding: 10px 10px;
-      margin-bottom: 8px;
+      padding: 10px;
+      margin-bottom: 9px;
       font-size: 12px;
       color: rgba(255,255,255,0.96);
       line-height: 1.25;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.14);
       cursor: pointer;
       transition:
         background 180ms ease,
@@ -642,10 +622,11 @@
     }
     
     .card.is-selected {
-      background: rgba(52, 58, 86, 0.96);
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+      background: rgba(53, 59, 88, 0.94);
+      border: 1px solid rgba(255,255,255,0.09);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
       transform: translateY(-1px);
+      padding: 11px;
     }
     
     .card.is-selected .card-name {
@@ -660,27 +641,27 @@
       top: 0;
       height: 1px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.035);
     }
     
     .card-main-row {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       align-items: flex-start;
     }
     
     .card-image-wrap {
-      width: 118px;
-      flex: 0 0 118px;
+      width: 112px;
+      flex: 0 0 112px;
     }
     
     .card-image {
-      width: 118px;
-      height: 96px;
+      width: 112px;
+      height: 92px;
       object-fit: cover;
       border-radius: 14px;
       display: block;
-      background: rgba(28,28,30,0.06);
+      background: rgba(255,255,255,0.04);
     }
     
     .card-content {
@@ -707,9 +688,9 @@
       font-size: 15px;
       font-weight: 600;
       margin: 0 0 4px 0;
-      line-height: 1.16;
+      line-height: 1.15;
       letter-spacing: -0.015em;
-      color: rgba(255,255,255,0.96);
+      color: rgba(255,255,255,0.97);
       cursor: pointer;
     }
 
@@ -720,58 +701,45 @@
     
     .meta-location {
       font-size: 11.5px;
-      color: rgba(255,255,255,0.58);
+      color: rgba(255,255,255,0.60);
       margin: 0 0 6px;
     }
     
     .meta-brand {
-      font-size: 11px;
-      color: rgba(255,255,255,0.42);
-      line-height: 1.25;
-      margin: 0 0 8px;
+      font-size: 11.25px;
+      color: rgba(255,255,255,0.48);
+      line-height: 1.3;
+      margin: 8px 0 0;
     }
 
     .card-sub {
       font-size: 12px;
-      color: rgba(255,255,255,0.72);
-      line-height: 1.3;
-      margin: 2px 0 6px;
+      color: rgba(255,255,255,0.76);
+      line-height: 1.32;
+      margin: 1px 0 0;
     }
   
-    .card-featured {
-      font-size: 12.5px;
-      font-weight: 500;
-      line-height: 1.35;
-      color: rgba(255,255,255,0.78);
-      margin: 4px 0 8px;
-    }
-
-    .card-address {
-      font-size: 11px;
-      line-height: 1.3;
-      color: rgba(255,255,255,0.45);
-      margin: 0 0 6px;
-    }
     
     .card-badge-row {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
       margin-top: 2px;
+      margin-bottom: 0;
     }
     
     .card-badge {
       display: inline-flex;
       align-items: center;
-      height: 20px;
-      padding: 0 8px;
+      height: 22px;
+      padding: 0 9px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.09);
       font-size: 10.5px;
       font-weight: 700;
       letter-spacing: 0.01em;
-      color: rgba(255,255,255,0.86);
+      color: rgba(255,255,255,0.88);
     }
     
     .card-selected-extra {
@@ -785,51 +753,50 @@
     
     .card-selected-actions {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
       align-items: center;
-      margin-top: 6px;
+      margin-top: 8px;
     }
     
     .card-selected-pill {
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
-      height: 28px;
-      padding: 0 12px;
-      min-width: auto;
+      height: 30px;
+      padding: 0 14px;
       border-radius: 999px;
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
       line-height: 1;
       text-decoration: none !important;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: rgba(255,255,255,0.94);
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.045);
+      color: rgba(255,255,255,0.95);
       box-sizing: border-box;
       vertical-align: middle;
     }
     
     .card-selected-pill.primary {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.085);
       color: #ffffff;
-      border: 1px solid rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.11);
     }
     
     .card-close-btn {
       display: none;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
-      flex: 0 0 24px;
+      width: 30px;
+      height: 30px;
+      flex: 0 0 30px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.05);
       background: rgba(255,255,255,0.035);
       color: rgba(255,255,255,0.72);
       font-size: 14px;
       line-height: 1;
-      margin-top: 1px;
+      margin-top: 0;
       
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
@@ -842,7 +809,7 @@
     }
     
     .card-close-btn:active {
-      transform: scale(0.94);
+      transform: scale(0.95);
       background: rgba(255,255,255,0.10);
     }
         
@@ -884,23 +851,16 @@
       }
     }
     
-    .card.is-selected {
-      padding: 12px;
-    }
-    
-    .card.is-selected .card-top {
-      margin-bottom: 6px;
-    }
     
     @media (max-width: 640px) {
       .card-image-wrap {
-        width: 108px;
-        flex: 0 0 108px;
+        width: 104px;
+        flex: 0 0 104px;
       }
     
       .card-image {
-        width: 108px;
-        height: 88px;
+        width: 104px;
+        height: 86px;
       }
     }
     
@@ -1426,12 +1386,29 @@ function firstBrands(brandString, max = 2){
 
 function shortNote(text){
   if(!text) return "";
-  return text
-    .replace(/^Go for /i, "")
-    .replace(/^Try /i, "")
+
+  let cleaned = String(text)
+    .replace(/^Go for\s+/i, "")
+    .replace(/^Try\s+/i, "")
+    .replace(/^Try the\s+/i, "")
+    .replace(/^Great for\s+/i, "")
+    .replace(/^Known for\s+/i, "")
+    .replace(/^Best for\s+/i, "")
+    .replace(/^Refined seasonal drinks[—-]\s*/i, "")
+    .replace(/^Modern cocktails[—-]\s*/i, "")
+    .replace(/^Creative cocktails[—-]\s*/i, "")
+    .replace(/^Tropical mocktails[—-]\s*/i, "")
     .replace(/\.$/, "")
-    .split(" or ")[0]
-    .slice(0, 60);
+    .trim();
+
+  if (!cleaned) return "";
+
+  if (cleaned.length > 58) {
+    const cut = cleaned.slice(0, 58);
+    cleaned = cut.slice(0, cut.lastIndexOf(" ")) || cut;
+  }
+
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 }
 
 
@@ -1571,27 +1548,10 @@ function renderList(data){
 
     const distance = _distanceLabelForVenue(loc);
     const neighborhood = loc.neighborhood || "";
-    const brands = firstBrands(loc.brand, 2);
-    const shortLine = shortNote(loc.featuredDrink);
-    
     const locationLine = [distance, neighborhood].filter(Boolean).join(" • ");
 
-    const tagsHtml = Array.isArray(loc.drinkTags) && loc.drinkTags.length
-      ? `
-        <div class="card-badge-row">
-          ${loc.drinkTags.slice(0, 2).map(tag => `<span class="card-badge">${escapeHtml(tag)}</span>`).join("")}
-        </div>
-      `
-      : "";
-
-    const brandLine = isSelected && brands
-      ? `<div class="meta meta-brand">${escapeHtml(brands)}</div>`
-      : "";
-
-    const featuredLine = "";
-
-    const addressLine = "";
-
+    const shortLine = shortNote(loc.featuredDrink);
+    const fullBrandLine = loc.brand || "";
     const web = normalizeUrl(loc.website);
     const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}`;
 
@@ -1599,9 +1559,18 @@ function renderList(data){
       ? `<img class="card-image" src="${escapeHtml(loc.imageUrl)}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.remove()">`
       : `<div class="card-image"></div>`;
 
+    const selectedTagsHtml = isSelected && Array.isArray(loc.drinkTags) && loc.drinkTags.length
+      ? `
+        <div class="card-badge-row">
+          ${loc.drinkTags.slice(0, 2).map(tag => `<span class="card-badge">${escapeHtml(tag)}</span>`).join("")}
+        </div>
+      `
+      : "";
+
     const selectedExtras = isSelected ? `
       <div class="card-selected-extra">
-        ${brandLine}
+        ${selectedTagsHtml}
+        ${fullBrandLine ? `<div class="meta meta-brand">${escapeHtml(fullBrandLine)}</div>` : ""}
         <div class="card-selected-actions">
           <a class="card-selected-pill primary" href="${directionsUrl}" target="_blank" rel="noopener">Directions</a>
           ${web ? `<a class="card-selected-pill" href="${web}" target="_blank" rel="noopener">Visit</a>` : ""}
@@ -1630,16 +1599,16 @@ function renderList(data){
 
           ${locationLine ? `<div class="meta meta-location">${escapeHtml(locationLine)}</div>` : ""}
 
-          ${shortLine && !isSelected
+          ${!isSelected && shortLine
             ? `<div class="card-sub">${escapeHtml(shortLine)}</div>`
             : ""}
-          
-          ${tagsHtml}
-          ${selectedExtras}
 
+          ${selectedExtras}
         </div>
       </div>
     `;
+
+    if (isSelected) card.classList.add("is-selected");
 
     card.addEventListener("click", (e) => {
       if(e.target.closest(".fav-btn")) return;
