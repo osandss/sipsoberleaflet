@@ -1555,7 +1555,11 @@ function renderList(data){
 
     const distance = _distanceLabelForVenue(loc);
     const neighborhood = loc.neighborhood || "";
-    const locationLine = [distance, neighborhood].filter(Boolean).join(" • ");
+    const address = loc.address || "";
+
+    const locationLine = distance
+      ? [distance, neighborhood].filter(Boolean).join(" • ")
+      : [neighborhood, address].filter(Boolean).join(" • ");
 
     const shortLine = shortNote(loc.featuredDrink);
     const fullBrandLine = loc.brand || "";
