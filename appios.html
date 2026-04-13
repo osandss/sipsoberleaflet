@@ -1581,7 +1581,6 @@ function renderList(data){
     const selectedExtras = isSelected ? `
       <div class="card-selected-extra">
         ${selectedTagsHtml}
-        ${fullBrandLine ? `<div class="meta meta-brand">${escapeHtml(fullBrandLine)}</div>` : ""}
         <div class="card-selected-actions">
           <a class="card-selected-pill primary" href="${directionsUrl}" target="_blank" rel="noopener">Directions</a>
           ${web ? `<a class="card-selected-pill" href="${web}" target="_blank" rel="noopener">Visit</a>` : ""}
