@@ -706,9 +706,23 @@
     
     .meta-location {
       font-size: 11.5px;
+      margin: 1px 0 4px;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+    }
+
+    .meta-neighborhood {
       color: #8C96FF;
-      margin: 2px 0 6px;
-      line-height: 1.15;
+      font-weight: 500;
+    }
+
+    .meta-divider {
+      color: rgba(255,255,255,0.35);
+      margin: 0 2px;
+    }
+
+    .meta-address {
+      color: rgba(255,255,255,0.55);
     }
     
     .meta-brand {
@@ -1557,9 +1571,9 @@ function renderList(data){
     const neighborhood = loc.neighborhood || "";
     const address = loc.address || "";
 
-    const locationLine = distance
-      ? [distance, neighborhood].filter(Boolean).join(" • ")
-      : [neighborhood, address].filter(Boolean).join(" • ");
+    const locationLine = neighborhood && address
+      ? `<span class="meta-neighborhood">${escapeHtml(neighborhood)}</span> <span class="meta-divider">•</span> <span class="meta-address">${escapeHtml(address)}</span>`
+      : `<span class="meta-neighborhood">${escapeHtml(neighborhood || address)}</span>`;
 
     const shortLine = shortNote(loc.featuredDrink);
     const fullBrandLine = loc.brand || "";
@@ -1607,7 +1621,7 @@ function renderList(data){
             }
           </div>
 
-          ${locationLine ? `<div class="meta meta-location">${escapeHtml(locationLine)}</div>` : ""}
+          ${locationLine ? `<div class="meta meta-location">${locationLine}</div>` : ""}
 
           ${!isSelected && shortLine
             ? `<div class="card-sub">${escapeHtml(shortLine)}</div>`
