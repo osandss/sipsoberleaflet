@@ -744,22 +744,30 @@
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
-      margin-top: 2px;
+      margin-top: 4px;
       margin-bottom: 0;
     }
     
     .card-badge {
       display: inline-flex;
       align-items: center;
-      height: 22px;
-      padding: 0 9px;
+      height: 20px;
+      padding: 0 8px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.055);
-      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
       font-size: 10.5px;
-      font-weight: 700;
+      font-weight: 600;
       letter-spacing: 0.01em;
-      color: rgba(255,255,255,0.88);
+      color: rgba(255,255,255,0.82);
+    }
+    
+    .card-featured-open {
+      font-size: 12px;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.28;
+      margin-top: 2px;
+      margin-bottom: 6px;
     }
     
     .card-selected-extra {
@@ -768,7 +776,7 @@
     
     .card.is-selected .card-selected-extra {
       display: block;
-      margin-top: 8px;
+      margin-top: 5px;
     }
     
     .card-selected-actions {
@@ -776,7 +784,7 @@
       gap: 6px;
       flex-wrap: wrap;
       align-items: center;
-      margin-top: 6px;
+      margin-top: 0;
     }
     
     .card-selected-pill {
@@ -1576,7 +1584,6 @@ function renderList(data){
       : `<span class="meta-neighborhood">${escapeHtml(neighborhood || address)}</span>`;
 
     const shortLine = shortNote(loc.featuredDrink);
-    const fullBrandLine = loc.brand || "";
     const web = normalizeUrl(loc.website);
     const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}`;
 
@@ -1584,7 +1591,7 @@ function renderList(data){
       ? `<img class="card-image" src="${escapeHtml(loc.imageUrl)}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.remove()">`
       : `<div class="card-image"></div>`;
 
-    const selectedTagsHtml = isSelected && Array.isArray(loc.drinkTags) && loc.drinkTags.length
+    const closedTagsHtml = !isSelected && Array.isArray(loc.drinkTags) && loc.drinkTags.length
       ? `
         <div class="card-badge-row">
           ${loc.drinkTags.slice(0, 2).map(tag => `<span class="card-badge">${escapeHtml(tag)}</span>`).join("")}
@@ -1592,9 +1599,13 @@ function renderList(data){
       `
       : "";
 
+    const selectedFeaturedHtml = isSelected && shortLine
+      ? `<div class="card-featured-open">${escapeHtml(shortLine)}</div>`
+      : "";
+
     const selectedExtras = isSelected ? `
       <div class="card-selected-extra">
-        ${selectedTagsHtml}
+        ${selectedFeaturedHtml}
         <div class="card-selected-actions">
           <a class="card-selected-pill primary" href="${directionsUrl}" target="_blank" rel="noopener">Directions</a>
           ${web ? `<a class="card-selected-pill" href="${web}" target="_blank" rel="noopener">Visit</a>` : ""}
@@ -1623,11 +1634,11 @@ function renderList(data){
 
           ${locationLine ? `<div class="meta meta-location">${locationLine}</div>` : ""}
 
-          ${!isSelected && shortLine
-            ? `<div class="card-sub">${escapeHtml(shortLine)}</div>`
-            : ""}
+          ${closedTagsHtml}
 
           ${selectedExtras}
+
+    
         </div>
       </div>
     `;
