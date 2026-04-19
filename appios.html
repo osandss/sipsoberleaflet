@@ -23,7 +23,7 @@
     .leaflet-container { position: relative; }
 
     .leaflet-tile-pane {
-      filter: brightness(1.02) saturate(1.08) contrast(0.96);
+      filter: brightness(1.01) saturate(1.12) contrast(1.02);
     }
     
     .leaflet-container::before {
@@ -32,8 +32,12 @@
       inset: 0;
       pointer-events: none;
     
-      /* subtle navy wash to push gray areas bluer */
-      background: rgba(58, 78, 150, 0.08);
+      background: linear-gradient(
+        to bottom,
+        rgba(27,30,49,0.10) 0%,
+        rgba(27,30,49,0.05) 40%,
+        rgba(27,30,49,0.02) 100%
+      );
     
       z-index: 200;
     }
@@ -1187,7 +1191,7 @@ function _initMap(){
   map.createPane("labelPane");
   map.getPane("labelPane").style.zIndex = 650;
   map.getPane("labelPane").style.pointerEvents = "none";
-  map.getPane("labelPane").style.opacity = "1";
+  map.getPane("labelPane").style.opacity = "0.92";
   
   const labelTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
