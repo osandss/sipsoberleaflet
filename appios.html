@@ -33,7 +33,7 @@
       pointer-events: none;
     
       /* subtle navy wash to push gray areas bluer */
-      background: rgba(58, 78, 150, 0.22);
+      background: rgba(58, 78, 150, 0.08);
     
       z-index: 200;
     }
@@ -1187,7 +1187,7 @@ function _initMap(){
   map.createPane("labelPane");
   map.getPane("labelPane").style.zIndex = 650;
   map.getPane("labelPane").style.pointerEvents = "none";
-  map.getPane("labelPane").style.opacity = "0.88";
+  map.getPane("labelPane").style.opacity = "1";
   
   const labelTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
