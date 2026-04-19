@@ -1578,8 +1578,8 @@ function renderMarkers(data){
     const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
 
     m.on("click", (e) => {
-      if(e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
-      selectVenue(loc, { centerMap:false, animate:false });
+      if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
+      selectVenue(loc, { centerMap:true, zoom:16, animate:true });
     });
 
     if(loc.id) markersById[String(loc.id)] = m;
