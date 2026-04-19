@@ -860,24 +860,26 @@
       align-items: center;
       justify-content: center;
     
-      min-height: 28px;
-      padding: 0 12px;
+      min-height: 24px;
+      padding: 0 11px;
     
       border-radius: 999px;
     
-      background: rgba(36, 41, 64, 0.94);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+      background: rgba(44, 51, 79, 0.94);
+      border: 1px solid rgba(255,255,255,0.07);
+      box-shadow:
+        0 6px 16px rgba(0,0,0,0.16),
+        inset 0 1px 0 rgba(255,255,255,0.03);
     
-      color: rgba(255,255,255,0.96);
-      font-size: 12px;
+      color: rgba(255,255,255,0.97);
+      font-size: 11.5px;
       font-weight: 700;
-      letter-spacing: 0.01em;
+      letter-spacing: 0.005em;
     
       white-space: nowrap;
     
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     
     .ss-pin-label-wrap {
@@ -887,12 +889,11 @@
     
     @media (max-width: 640px) {
       .ss-pin-label {
-        min-height: 26px;
+        min-height: 23px;
         padding: 0 10px;
-        font-size: 11.5px;
+        font-size: 11px;
       }
     }
-    
     
     @media (max-width: 640px) {
       .card-image-wrap {
@@ -1499,7 +1500,7 @@ function showSelectedPinLabel(loc){
       className: "ss-pin-label-wrap",
       html: labelHtml,
       iconSize: null,
-      iconAnchor: [0, 42]
+      iconAnchor: [0, 34]
     })
   }).addTo(map);
 }
