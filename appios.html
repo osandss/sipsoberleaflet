@@ -20,13 +20,10 @@
 
   <style>
 
-    .leaflet-container {
-      position: relative;
-      background: #111a3a;
-    }
-    
+    .leaflet-container { position: relative; }
+
     .leaflet-tile-pane {
-      filter: brightness(0.22) contrast(1.34) saturate(1.35) hue-rotate(210deg);
+      filter: brightness(1.01) saturate(1.12) contrast(1.02);
     }
     
     .leaflet-container::before {
@@ -34,9 +31,15 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: rgba(4, 8, 18, 0.42);
-      mix-blend-mode: multiply;
-      z-index: 199;
+    
+      background: linear-gradient(
+        to bottom,
+        rgba(27,30,49,0.10) 0%,
+        rgba(27,30,49,0.05) 40%,
+        rgba(27,30,49,0.02) 100%
+      );
+    
+      z-index: 200;
     }
     
     .leaflet-container::after {
@@ -44,9 +47,35 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: rgba(88, 118, 255, 0.34);
-      mix-blend-mode: screen;
-      z-index: 200;
+    
+      background:
+        radial-gradient(
+          circle at 50% 30%,
+          rgba(255,255,255,0) 0%,
+          rgba(27,30,49,0.04) 58%,
+          rgba(27,30,49,0.10) 100%
+        );
+    
+      z-index: 300;
+    }
+
+    #map::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 140px;
+      pointer-events: none;
+    
+      background: linear-gradient(
+        to bottom,
+        rgba(27,30,49,0.18) 0%,
+        rgba(27,30,49,0.10) 40%,
+        rgba(27,30,49,0.00) 100%
+      );
+    
+      z-index: 150;
     }
     
     :root {
@@ -192,7 +221,7 @@
       height: 100%;
 
       /* Warm fallback so blank area is never cold grey */
-      background: #111a3a;
+      background: #f0ede8;
 
       /* Promote to GPU compositor layer before tiles arrive */
       will-change: transform;
@@ -212,7 +241,7 @@
     @supports (height: 100dvh) { #map { height: 100dvh; } }
 
     /* Match #map fallback — no grey flash between map div and tiles */
-    .leaflet-container { background: #111a3a; }
+    .leaflet-container { background: #f0ede8; }
 
     .dropdown { position: relative; }
 
@@ -686,7 +715,7 @@
     }
 
     .meta-neighborhood {
-      color: #7484FF;
+      color: #8C96FF;
       font-weight: 500;
     }
 
@@ -1163,12 +1192,11 @@ function _initMap(){
   map.createPane("labelPane");
   map.getPane("labelPane").style.zIndex = 300;
   map.getPane("labelPane").style.pointerEvents = "none";
-  map.getPane("labelPane").style.opacity = "0.56";
-  map.getPane("labelPane").style.filter = "brightness(0.78) saturate(0.84)";
+  map.getPane("labelPane").style.opacity = "0.92";
 
   map.getPane("markerPane").style.zIndex = 500;
   
-  const labelTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png", {
+  const labelTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
     subdomains: "abcd",
     pane: "labelPane",
