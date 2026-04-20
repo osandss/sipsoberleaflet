@@ -22,11 +22,11 @@
 
     .leaflet-container {
       position: relative;
-      background: #151c30;
+      background: #182246;
     }
     
     .leaflet-tile-pane {
-      filter: brightness(1.04) contrast(1.10) saturate(1.18) hue-rotate(185deg);
+      filter: brightness(0.42) contrast(1.18) saturate(1.05) hue-rotate(190deg);
     }
     
     .leaflet-container::before {
@@ -34,7 +34,7 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: rgba(8, 10, 18, 0.06);
+      background: rgba(10, 16, 34, 0.34);
       mix-blend-mode: multiply;
       z-index: 199;
     }
@@ -44,8 +44,8 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: rgba(40, 62, 148, 0.22);
-      mix-blend-mode: screen;
+      background: rgba(96, 125, 255, 0.22);
+      mix-blend-mode: soft-light;
       z-index: 200;
     }
     
@@ -192,7 +192,7 @@
       height: 100%;
 
       /* Warm fallback so blank area is never cold grey */
-      background: #151c30;
+      background: #182246;
 
       /* Promote to GPU compositor layer before tiles arrive */
       will-change: transform;
@@ -212,7 +212,7 @@
     @supports (height: 100dvh) { #map { height: 100dvh; } }
 
     /* Match #map fallback — no grey flash between map div and tiles */
-    .leaflet-container { background: #151c30; }
+    .leaflet-container { background: #182246; }
 
     .dropdown { position: relative; }
 
@@ -1150,7 +1150,7 @@ function _initMap(){
     tap: false
   }).setView([40.778,-73.985],12.1);
 
-  const baseTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png", {
+  const baseTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
     subdomains: "abcd",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
@@ -1163,8 +1163,8 @@ function _initMap(){
   map.createPane("labelPane");
   map.getPane("labelPane").style.zIndex = 300;
   map.getPane("labelPane").style.pointerEvents = "none";
-  map.getPane("labelPane").style.opacity = "0.74";
-  map.getPane("labelPane").style.filter = "brightness(0.98) saturate(0.95)";
+  map.getPane("labelPane").style.opacity = "0.70";
+  map.getPane("labelPane").style.filter = "brightness(0.94) saturate(0.90)";
 
   map.getPane("markerPane").style.zIndex = 500;
   
