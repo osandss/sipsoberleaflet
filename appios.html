@@ -26,23 +26,21 @@
     }
     
     .leaflet-tile-pane {
-      filter: brightness(1.08) contrast(0.95) saturate(0.85);
+      filter: brightness(1.12) contrast(0.92) saturate(0.80);
     }
-    
-    /* REMOVE all old overlays */
+  
     .leaflet-container::before,
     #map::before {
       content: none !important;
     }
     
-    /* ADD this subtle brand tint */
     .leaflet-container::after {
       content: "";
       position: absolute;
       inset: 0;
       pointer-events: none;
     
-      background: rgba(32, 34, 57, 0.12);
+      background: rgba(27, 30, 49, 0.22);
     
       z-index: 200;
     }
@@ -684,7 +682,7 @@
     }
 
     .meta-neighborhood {
-      color: #8C96FF;
+      color: #7484FF;
       font-weight: 500;
     }
 
