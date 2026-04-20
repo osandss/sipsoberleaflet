@@ -20,62 +20,19 @@
 
   <style>
 
-    .leaflet-container { position: relative; }
-
+    .leaflet-container {
+      position: relative;
+      background: #141922;
+    }
+    
     .leaflet-tile-pane {
-      filter: brightness(1.01) saturate(1.12) contrast(1.02);
+      filter: brightness(0.92) contrast(1.05) saturate(0.90);
     }
     
-    .leaflet-container::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    
-      background: linear-gradient(
-        to bottom,
-        rgba(27,30,49,0.10) 0%,
-        rgba(27,30,49,0.05) 40%,
-        rgba(27,30,49,0.02) 100%
-      );
-    
-      z-index: 200;
-    }
-    
-    .leaflet-container::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    
-      background:
-        radial-gradient(
-          circle at 50% 30%,
-          rgba(255,255,255,0) 0%,
-          rgba(27,30,49,0.04) 58%,
-          rgba(27,30,49,0.10) 100%
-        );
-    
-      z-index: 300;
-    }
-
+    .leaflet-container::before,
+    .leaflet-container::after,
     #map::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: 140px;
-      pointer-events: none;
-    
-      background: linear-gradient(
-        to bottom,
-        rgba(27,30,49,0.18) 0%,
-        rgba(27,30,49,0.10) 40%,
-        rgba(27,30,49,0.00) 100%
-      );
-    
-      z-index: 150;
+      content: none !important;
     }
     
     :root {
@@ -221,7 +178,7 @@
       height: 100%;
 
       /* Warm fallback so blank area is never cold grey */
-      background: #f0ede8;
+      background: #141922;
 
       /* Promote to GPU compositor layer before tiles arrive */
       will-change: transform;
@@ -241,7 +198,7 @@
     @supports (height: 100dvh) { #map { height: 100dvh; } }
 
     /* Match #map fallback — no grey flash between map div and tiles */
-    .leaflet-container { background: #f0ede8; }
+    .leaflet-container { background: #141922; }
 
     .dropdown { position: relative; }
 
@@ -1179,7 +1136,7 @@ function _initMap(){
     tap: false
   }).setView([40.778,-73.985],12.1);
 
-  const baseTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
+  const baseTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
     subdomains: "abcd",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
@@ -1192,11 +1149,11 @@ function _initMap(){
   map.createPane("labelPane");
   map.getPane("labelPane").style.zIndex = 300;
   map.getPane("labelPane").style.pointerEvents = "none";
-  map.getPane("labelPane").style.opacity = "0.92";
+  map.getPane("labelPane").style.opacity = "0.78";
 
   map.getPane("markerPane").style.zIndex = 500;
   
-  const labelTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png", {
+  const labelTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
     subdomains: "abcd",
     pane: "labelPane",
