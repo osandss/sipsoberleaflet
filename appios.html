@@ -22,27 +22,33 @@
 
     .leaflet-container {
       position: relative;
-      background: #141922;
+      background: #0a0d16;
     }
     
+    /* Darken the actual raster tiles so grey tones get pushed down */
     .leaflet-tile-pane {
-      filter: brightness(1.14) contrast(1.00) saturate(1.00);
+      filter: brightness(0.62) contrast(1.28) saturate(0.82);
     }
     
-    .leaflet-container::before,
-    #map::before {
-      content: none !important;
+    /* First overlay: black/deep navy darkening layer */
+    .leaflet-container::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: rgba(6, 8, 16, 0.42);
+      mix-blend-mode: multiply;
+      z-index: 199;
     }
     
+    /* Second overlay: navy tint layer */
     .leaflet-container::after {
       content: "";
       position: absolute;
       inset: 0;
       pointer-events: none;
-    
-      background: rgba(52, 72, 136, 0.34);
-      mix-blend-mode: color;
-    
+      background: rgba(22, 30, 78, 0.42);
+      mix-blend-mode: screen;
       z-index: 200;
     }
     
@@ -189,7 +195,7 @@
       height: 100%;
 
       /* Warm fallback so blank area is never cold grey */
-      background: #141922;
+      background: #0a0d16;
 
       /* Promote to GPU compositor layer before tiles arrive */
       will-change: transform;
@@ -209,7 +215,7 @@
     @supports (height: 100dvh) { #map { height: 100dvh; } }
 
     /* Match #map fallback — no grey flash between map div and tiles */
-    .leaflet-container { background: #141922; }
+    .leaflet-container { background: #0a0d16; }
 
     .dropdown { position: relative; }
 
@@ -1160,7 +1166,8 @@ function _initMap(){
   map.createPane("labelPane");
   map.getPane("labelPane").style.zIndex = 300;
   map.getPane("labelPane").style.pointerEvents = "none";
-  map.getPane("labelPane").style.opacity = "0.78";
+  map.getPane("labelPane").style.opacity = "0.58";
+  map.getPane("labelPane").style.filter = "brightness(0.82) saturate(0.85)";
 
   map.getPane("markerPane").style.zIndex = 500;
   
