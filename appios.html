@@ -22,11 +22,11 @@
 
     .leaflet-container {
       position: relative;
-      background: #182246;
+      background: #131a33;
     }
     
     .leaflet-tile-pane {
-      filter: brightness(0.42) contrast(1.18) saturate(1.05) hue-rotate(190deg);
+      filter: brightness(0.26) contrast(1.30) saturate(1.08) hue-rotate(198deg);
     }
     
     .leaflet-container::before {
@@ -34,7 +34,7 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: rgba(10, 16, 34, 0.34);
+      background: rgba(6, 10, 22, 0.46);
       mix-blend-mode: multiply;
       z-index: 199;
     }
@@ -44,7 +44,7 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: rgba(96, 125, 255, 0.22);
+      background: rgba(92, 122, 255, 0.30);
       mix-blend-mode: soft-light;
       z-index: 200;
     }
@@ -192,7 +192,7 @@
       height: 100%;
 
       /* Warm fallback so blank area is never cold grey */
-      background: #182246;
+      background: #131a33;
 
       /* Promote to GPU compositor layer before tiles arrive */
       will-change: transform;
@@ -212,7 +212,7 @@
     @supports (height: 100dvh) { #map { height: 100dvh; } }
 
     /* Match #map fallback — no grey flash between map div and tiles */
-    .leaflet-container { background: #182246; }
+    .leaflet-container { background: #131a33; }
 
     .dropdown { position: relative; }
 
@@ -1163,8 +1163,8 @@ function _initMap(){
   map.createPane("labelPane");
   map.getPane("labelPane").style.zIndex = 300;
   map.getPane("labelPane").style.pointerEvents = "none";
-  map.getPane("labelPane").style.opacity = "0.70";
-  map.getPane("labelPane").style.filter = "brightness(0.94) saturate(0.90)";
+  map.getPane("labelPane").style.opacity = "0.62";
+  map.getPane("labelPane").style.filter = "brightness(0.86) saturate(0.88)";
 
   map.getPane("markerPane").style.zIndex = 500;
   
