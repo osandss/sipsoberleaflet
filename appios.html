@@ -26,13 +26,25 @@
     }
     
     .leaflet-tile-pane {
-      filter: brightness(0.92) contrast(1.05) saturate(0.90);
+      filter: brightness(1.08) contrast(0.95) saturate(0.85);
     }
     
+    /* REMOVE all old overlays */
     .leaflet-container::before,
-    .leaflet-container::after,
     #map::before {
       content: none !important;
+    }
+    
+    /* ADD this subtle brand tint */
+    .leaflet-container::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    
+      background: rgba(32, 34, 57, 0.12);
+    
+      z-index: 200;
     }
     
     :root {
