@@ -20,13 +20,10 @@
 
   <style>
 
-    .leaflet-container {
-      position: relative;
-      background: #12182B;
-    }
+    .leaflet-container { position: relative; }
 
     .leaflet-tile-pane {
-      filter: brightness(0.65) saturate(1.30) contrast(1.08);
+      filter: brightness(1.01) saturate(1.12) contrast(1.02);
     }
     
     .leaflet-container::before {
@@ -34,8 +31,14 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: rgba(27, 30, 49, 0.32);
-      mix-blend-mode: multiply;
+    
+      background: linear-gradient(
+        to bottom,
+        rgba(27,30,49,0.10) 0%,
+        rgba(27,30,49,0.05) 40%,
+        rgba(27,30,49,0.02) 100%
+      );
+    
       z-index: 200;
     }
     
@@ -44,14 +47,15 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
+    
       background:
         radial-gradient(
           circle at 50% 30%,
           rgba(255,255,255,0) 0%,
-          rgba(27,30,49,0.10) 58%,
-          rgba(27,30,49,0.20) 100%
+          rgba(27,30,49,0.04) 58%,
+          rgba(27,30,49,0.10) 100%
         );
-      mix-blend-mode: multiply;
+    
       z-index: 300;
     }
 
@@ -63,12 +67,14 @@
       top: 0;
       height: 140px;
       pointer-events: none;
+    
       background: linear-gradient(
         to bottom,
-        rgba(27,30,49,0.28) 0%,
-        rgba(27,30,49,0.14) 40%,
+        rgba(27,30,49,0.18) 0%,
+        rgba(27,30,49,0.10) 40%,
         rgba(27,30,49,0.00) 100%
       );
+    
       z-index: 150;
     }
     
@@ -215,7 +221,7 @@
       height: 100%;
 
       /* Warm fallback so blank area is never cold grey */
-      background: #12182B;
+      background: #f0ede8;
 
       /* Promote to GPU compositor layer before tiles arrive */
       will-change: transform;
@@ -235,7 +241,7 @@
     @supports (height: 100dvh) { #map { height: 100dvh; } }
 
     /* Match #map fallback — no grey flash between map div and tiles */
-    .leaflet-container { background: #12182B; }
+    .leaflet-container { background: #f0ede8; }
 
     .dropdown { position: relative; }
 
@@ -1173,21 +1179,35 @@ function _initMap(){
     tap: false
   }).setView([40.778,-73.985],12.1);
 
-  const baseTiles = L.tileLayer(
-    "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
-    {
-      maxZoom: 20,
-      attribution: "&copy; OpenMapTiles &copy; OpenStreetMap contributors",
-      updateWhenIdle: true,
-      keepBuffer: 6,
-      detectRetina: false,
-      updateWhenZooming: false
-    }
-  );
+  const baseTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
+    maxZoom: 20,
+    subdomains: "abcd",
+    attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
+    updateWhenIdle: true,
+    keepBuffer: 6,
+    detectRetina: false,
+    updateWhenZooming: false
+  });
   
+  map.createPane("labelPane");
+  map.getPane("labelPane").style.zIndex = 300;
+  map.getPane("labelPane").style.pointerEvents = "none";
+  map.getPane("labelPane").style.opacity = "0.92";
+
   map.getPane("markerPane").style.zIndex = 500;
   
+  const labelTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png", {
+    maxZoom: 20,
+    subdomains: "abcd",
+    pane: "labelPane",
+    updateWhenIdle: true,
+    keepBuffer: 6,
+    detectRetina: false,
+    updateWhenZooming: false
+  });
+  
   baseTiles.addTo(map);
+  labelTiles.addTo(map);
   
   baseTiles.once("load", () => {
     document.body.classList.remove("map-loading");
