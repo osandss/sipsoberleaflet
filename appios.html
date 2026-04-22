@@ -631,9 +631,15 @@
     }
     
     .card.is-selected {
-      background: rgba(44, 49, 72, 0.92); /* slightly deeper */
-      border: 1px solid rgba(20, 24, 45, 0.7); /* darker, not white */
-      box-shadow: 0 10px 22px rgba(0,0,0,0.22);
+      background: rgba(44, 49, 72, 0.92);
+      
+      border: 1px solid rgba(255,255,255,0.06); /* very subtle, not dominant */
+    
+      box-shadow:
+        0 8px 18px rgba(0,0,0,0.18),          /* main lift */
+        0 0 0 1px rgba(30, 36, 64, 0.55),     /* soft navy edge */
+        inset 0 1px 0 rgba(255,255,255,0.03); /* top highlight */
+    
       transform: translateY(-1px) scale(0.988);
     }
     
