@@ -763,27 +763,6 @@
       line-height: 1;
     }
     
-    .card-selected-extra {
-      display: none;
-    }
-    
-    .card.is-selected .card-selected-extra {
-      display: block;
-      margin-top: 5px;
-    }
-    
-    .card-selected-extra.compact {
-      margin-top: 5px;
-    }
-    
-    .card-selected-actions {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-top: 0;
-    }
-    
     .card-selected-pill {
       display: inline-flex !important;
       align-items: center !important;
@@ -805,6 +784,33 @@
       background: rgba(255,255,255,0.09);
       color: #ffffff;
       border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .card-badge-row--selected {
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .card-selected-pill--inline {
+      height: 20px;
+      padding: 0 8px;
+      font-size: 9.5px;
+      flex: 0 0 auto;
+    }
+    
+    .route-pill {
+      background: rgba(255,255,255,0.075);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.96);
+    }
+    
+    .route-pill-icon {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 4px;
+      font-size: 9px;
+      line-height: 1;
+      opacity: 0.92;
     }
     
     .card-close-btn {
@@ -1623,23 +1629,20 @@ function renderList(data){
       ? `<img class="card-image" src="${escapeHtml(loc.imageUrl)}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.remove()">`
       : `<div class="card-image"></div>`;
 
-    const drinkPillsHtml = Array.isArray(loc.drinkTags) && loc.drinkTags.length
-      ? `
-        <div class="card-badge-row">
-          ${loc.drinkTags.slice(0, 2).map(tag => `
-            <span class="card-badge drink-pill"><span class="drink-pill-icon">🍸</span>${escapeHtml(tag)}</span>
-          `).join("")}
-        </div>
-      `
-      : "";
+    const visibleDrinkTags = Array.isArray(loc.drinkTags)
+      ? (isSelected ? loc.drinkTags.slice(0, 1) : loc.drinkTags.slice(0, 2))
+      : [];
     
-    const selectedExtras = isSelected ? `
-      <div class="card-selected-extra compact">
-        <div class="card-selected-actions">
-          <a class="card-selected-pill primary" href="${directionsUrl}" target="_blank" rel="noopener">Directions</a>
-        </div>
+    const inlineActionRowHtml = (visibleDrinkTags.length || isSelected) ? `
+      <div class="card-badge-row card-badge-row--selected">
+        ${visibleDrinkTags.map(tag => `
+          <span class="card-badge drink-pill"><span class="drink-pill-icon">🍸</span>${escapeHtml(tag)}</span>
+        `).join("")}
+        ${isSelected ? `<a class="card-selected-pill primary card-selected-pill--inline route-pill" href="${directionsUrl}" target="_blank" rel="noopener"><span class="route-pill-icon">↗</span>Directions</a>` : ""}
       </div>
     ` : "";
+    
+    const selectedExtras = "";
 
     card.innerHTML = `
       <div class="card-main-row">
@@ -1662,9 +1665,7 @@ function renderList(data){
 
           ${locationLine ? `<div class="meta meta-location">${locationLine}</div>` : ""}
 
-          ${drinkPillsHtml}
-
-          ${selectedExtras}
+          ${inlineActionRowHtml}
 
     
         </div>
