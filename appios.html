@@ -631,13 +631,14 @@
     }
     
     .card.is-selected {
-      background: rgba(44, 49, 72, 0.84); /* SAME as default */
-      border: 1px solid rgba(255,255,255,0.12); /* stronger */
+      background: rgba(44, 49, 72, 0.84);
+      border: 1px solid rgba(140,150,255,0.34);
       box-shadow:
-        0 14px 30px rgba(0,0,0,0.32),
+        0 8px 18px rgba(0,0,0,0.18),
+        0 0 0 1px rgba(140,150,255,0.10),
         inset 0 1px 0 rgba(255,255,255,0.04);
       transform: translateY(-2px);
-      padding: 9px; /* keep same as default */
+      padding: 9px;
     }
     
     .card.is-selected .card-name {
@@ -652,7 +653,7 @@
       top: 0;
       height: 1px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.035);
+      background: rgba(255,255,255,0.06);
     }
     
     .card-main-row {
