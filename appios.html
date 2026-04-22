@@ -622,9 +622,6 @@
       flex: 0 0 104px;
       overflow: hidden;
       border-radius: 14px;
-      transition:
-        width 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
-        flex-basis 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     
     .card-image {
@@ -634,22 +631,17 @@
       border-radius: 14px;
       display: block;
       background: rgba(255,255,255,0.04);
-      transform: scale(1);
-      transition:
-        width 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
-        height 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
-        transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     
     .card.is-selected .card-image-wrap {
-      width: 124px;
-      flex: 0 0 124px;
+      width: 104px;
+      flex: 0 0 104px;
     }
     
     .card.is-selected .card-image {
-      width: 124px;
-      height: 88px;
-      transform: scale(1.03);
+      width: 104px;
+      height: 74px;
+      transform: none;
     }
     
     .card-content {
@@ -777,11 +769,11 @@
     
     .card.is-selected .card-selected-extra {
       display: block;
-      margin-top: 6px;
+      margin-top: 5px;
     }
     
     .card-selected-extra.compact {
-      margin-top: 6px;
+      margin-top: 5px;
     }
     
     .card-selected-actions {
@@ -796,23 +788,23 @@
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
-      height: 24px;
-      padding: 0 10px;
+      height: 22px;
+      padding: 0 9px;
       border-radius: 999px;
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 600;
       letter-spacing: 0.01em;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.05);
       color: rgba(255,255,255,0.92);
       box-sizing: border-box;
       text-decoration: none;
     }
     
     .card-selected-pill.primary {
-      background: rgba(255,255,255,0.085);
+      background: rgba(255,255,255,0.09);
       color: #ffffff;
-      border: 1px solid rgba(255,255,255,0.11);
+      border: 1px solid rgba(255,255,255,0.10);
     }
     
     .card-close-btn {
@@ -897,13 +889,14 @@
       }
     
       .card.is-selected .card-image-wrap {
-        width: 116px;
-        flex: 0 0 116px;
+        width: 96px;
+        flex: 0 0 96px;
       }
     
       .card.is-selected .card-image {
-        width: 116px;
-        height: 84px;
+        width: 96px;
+        height: 72px;
+        transform: none;
       }
     }
     
@@ -1644,7 +1637,6 @@ function renderList(data){
       <div class="card-selected-extra compact">
         <div class="card-selected-actions">
           <a class="card-selected-pill primary" href="${directionsUrl}" target="_blank" rel="noopener">Directions</a>
-          ${web ? `<a class="card-selected-pill" href="${web}" target="_blank" rel="noopener">Visit</a>` : ""}
         </div>
       </div>
     ` : "";
