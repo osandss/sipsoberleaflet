@@ -1186,12 +1186,12 @@ function _initMap(){
   map.createPane("labelPane");
   map.getPane("labelPane").style.zIndex = 300;
   map.getPane("labelPane").style.pointerEvents = "none";
-  map.getPane("labelPane").style.opacity = "0.92";
-
+  map.getPane("labelPane").style.opacity = "0.52";
+  
   map.getPane("markerPane").style.zIndex = 500;
   
   const labelTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png", {
-    maxZoom: 20,
+    maxZoom: 17,
     subdomains: "abcd",
     pane: "labelPane",
     updateWhenIdle: true,
