@@ -278,12 +278,12 @@
       bottom: 0;
       height: var(--panel-collapsed);
     
-      background: rgba(27, 30, 49, 0.76);
+      background: rgba(27, 30, 49, 0.68);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
     
       border-radius: 22px 22px 0 0;
-      box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.10);
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
     
       display: flex;
       flex-direction: column;
@@ -1505,7 +1505,7 @@ function selectVenue(loc, opts = {}){
 
   const {
     centerMap = true,
-    zoom = 16,
+    zoom = 15,
     animate = true
   } = opts;
 
@@ -1741,7 +1741,7 @@ function applyFiltersUnified(){
       map.fitBounds(bounds, {
         paddingTopLeft: [16, window.SipSober?.isEmbed ? 80 : 120],
         paddingBottomRight: [16, panelH + 40],
-        maxZoom: 16,
+        maxZoom: 15,
         animate: false
       });
     }
