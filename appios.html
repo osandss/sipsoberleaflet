@@ -283,7 +283,7 @@
       -webkit-backdrop-filter: blur(18px);
     
       border-radius: 22px 22px 0 0;
-      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.14);
+      box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.10);
     
       display: flex;
       flex-direction: column;
@@ -610,50 +610,36 @@
       position: relative;
       background: rgba(44, 49, 72, 0.84);
       border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.045);
       padding: 9px;
       margin-bottom: 9px;
       font-size: 12px;
       color: rgba(255,255,255,0.96);
       line-height: 1.25;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.10);
       cursor: pointer;
       transition:
         transform 160ms ease,
         box-shadow 160ms ease,
-        background 180ms ease,
-        border-color 180ms ease;
+        border-color 160ms ease,
+        background 180ms ease;
     }
 
     .card:active {
-      transform: translateY(-1px) scale(0.985);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      transform: translateY(-1px) scale(0.988);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.14);
     }
     
     .card.is-selected {
       background: rgba(44, 49, 72, 0.84);
-      border: 1px solid rgba(255,255,255,0.09);
-      box-shadow:
-        0 10px 22px rgba(0,0,0,0.20),
-        0 0 0 1px rgba(58,66,100,0.42),
-        inset 0 1px 0 rgba(255,255,255,0.04);
-      transform: translateY(-2px);
+      border: 1px solid rgba(255,255,255,0.11);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.14);
+      transform: translateY(-1px);
       padding: 9px;
     }
     
     .card.is-selected .card-name {
       color: rgba(255,255,255,0.96);
-    }
-    
-    .card.is-selected::after {
-      content: "";
-      position: absolute;
-      left: 10px;
-      right: 10px;
-      top: 0;
-      height: 1px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.05);
     }
     
     .card-main-row {
