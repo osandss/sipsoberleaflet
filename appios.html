@@ -619,10 +619,15 @@
       box-shadow: 0 6px 18px rgba(0,0,0,0.14);
       cursor: pointer;
       transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
         background 180ms ease,
-        border-color 180ms ease,
-        box-shadow 180ms ease,
-        transform 180ms ease;
+        border-color 180ms ease;
+    }
+
+    .card:active {
+      transform: translateY(-1px) scale(0.985);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
     }
     
     .card.is-selected {
@@ -632,7 +637,7 @@
         0 10px 24px rgba(0,0,0,0.22),
         inset 0 1px 0 rgba(255,255,255,0.03);
       transform: translateY(-1px);
-      padding: 11px;
+      padding: 10px;
     }
     
     .card.is-selected .card-name {
@@ -903,7 +908,7 @@
     
       .card-image {
         width: 104px;
-        height: 86px;
+        height: 84px;
       }
     }
     
