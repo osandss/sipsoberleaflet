@@ -730,13 +730,16 @@
       letter-spacing: 0.02em;
       color: rgba(255,255,255,0.9);
     }
-    
-    .card-featured-open {
-      font-size: 12px;
-      color: rgba(255,255,255,0.72);
-      line-height: 1.28;
-      margin-top: 2px;
-      margin-bottom: 6px;
+
+    .drink-pill {
+      background: rgba(140,150,255,0.11);
+      border: 1px solid rgba(140,150,255,0.18);
+      color: #C9D0FF;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      height: 20px;
+      padding: 0 8px;
     }
     
     .card-selected-extra {
@@ -745,7 +748,11 @@
     
     .card.is-selected .card-selected-extra {
       display: block;
-      margin-top: 5px;
+      margin-top: 6px;
+    }
+    
+    .card-selected-extra.compact {
+      margin-top: 6px;
     }
     
     .card-selected-actions {
@@ -760,22 +767,16 @@
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
-    
-      height: 26px;
-      padding: 0 11px;
-    
+      height: 24px;
+      padding: 0 10px;
       border-radius: 999px;
-    
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.01em;
-    
       border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.04);
       color: rgba(255,255,255,0.92);
-    
       box-sizing: border-box;
-      
       text-decoration: none;
     }
     
@@ -1583,7 +1584,6 @@ function renderList(data){
           ? `<span class="meta-neighborhood">${escapeHtml(neighborhood)}</span> <span class="meta-divider">•</span> <span class="meta-address">${escapeHtml(address)}</span>`
           : `<span class="meta-neighborhood">${escapeHtml(neighborhood || address)}</span>`);
 
-    const shortLine = shortNote(loc.featuredDrink);
     const web = normalizeUrl(loc.website);
     const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}`;
 
@@ -1591,21 +1591,18 @@ function renderList(data){
       ? `<img class="card-image" src="${escapeHtml(loc.imageUrl)}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.remove()">`
       : `<div class="card-image"></div>`;
 
-    const closedTagsHtml = !isSelected && Array.isArray(loc.drinkTags) && loc.drinkTags.length
+    const drinkPillsHtml = Array.isArray(loc.drinkTags) && loc.drinkTags.length
       ? `
         <div class="card-badge-row">
-          ${loc.drinkTags.slice(0, 1).map(tag => `<span class="card-badge">${escapeHtml(tag)}</span>`).join("")}
+          ${loc.drinkTags.slice(0, 2).map(tag => `
+            <span class="card-badge drink-pill">${escapeHtml(tag)}</span>
+          `).join("")}
         </div>
       `
       : "";
-
-    const selectedFeaturedHtml = isSelected && shortLine
-      ? `<div class="card-featured-open">${escapeHtml(shortLine)}</div>`
-      : "";
-
+    
     const selectedExtras = isSelected ? `
-      <div class="card-selected-extra">
-        ${selectedFeaturedHtml}
+      <div class="card-selected-extra compact">
         <div class="card-selected-actions">
           <a class="card-selected-pill primary" href="${directionsUrl}" target="_blank" rel="noopener">Directions</a>
           ${web ? `<a class="card-selected-pill" href="${web}" target="_blank" rel="noopener">Visit</a>` : ""}
@@ -1634,7 +1631,7 @@ function renderList(data){
 
           ${locationLine ? `<div class="meta meta-location">${locationLine}</div>` : ""}
 
-          ${closedTagsHtml}
+          ${drinkPillsHtml}
 
           ${selectedExtras}
 
