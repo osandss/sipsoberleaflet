@@ -329,33 +329,6 @@
       top: auto;
       background: transparent;
     }
-
-    #sortBtn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    
-      padding: 3px 8px;
-      border-radius: 999px;
-    
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-    
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    
-      color: rgba(255,255,255,0.65);
-    
-      appearance: none;
-      -webkit-appearance: none;
-      outline: none;
-    
-      cursor: default;
-      pointer-events: none;
-    
-      opacity: 0.85;
-    }
     
     #panel-toggle {
       width: 100%;
@@ -387,9 +360,9 @@
     #results-count {
       flex: 0 0 auto;
       margin: 0;
-      font-size: 12px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.62);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.72);
       letter-spacing: 0.01em;
       white-space: nowrap;
     }
@@ -1033,7 +1006,6 @@
     <div id="panel-meta-row">
       <div id="active-filters" class="active-filters"></div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <button id="sortBtn" type="button">A–Z</button>
         <div id="results-count" class="results-count"></div>
       </div>
     </div>
@@ -1595,7 +1567,15 @@ function renderList(data){
   if(!results) return;
 
   results.innerHTML = "";
-  if(rc) rc.textContent = data.length === 0 ? "No places found" : `${data.length} place${data.length === 1 ? "" : "s"}`;
+
+  if (rc) {
+    if (data.length === 0) {
+      rc.textContent = "No places found";
+    } else {
+      const sortText = _userLocationForDistance ? "Nearby" : "A–Z";
+      rc.textContent = `${data.length} place${data.length === 1 ? "" : "s"} • ${sortText}`;
+    }
+  }
 
   data.forEach(loc => {
     const card = document.createElement("div");
@@ -1721,8 +1701,7 @@ function applyFiltersUnified(){
   } else {
     filtered.sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"}));
   }
-  const sortBtn=document.getElementById("sortBtn");
-  if(sortBtn) sortBtn.textContent=hasLoc?"Miles":"A–Z";
+  
   renderList(filtered);
   if(!map) return;
   const{count,bounds}=renderMarkers(filtered);
