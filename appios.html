@@ -741,6 +741,14 @@
       height: 20px;
       padding: 0 8px;
     }
+
+    .drink-pill-icon {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 4px;
+      font-size: 10px;
+      line-height: 1;
+    }
     
     .card-selected-extra {
       display: none;
@@ -1595,7 +1603,7 @@ function renderList(data){
       ? `
         <div class="card-badge-row">
           ${loc.drinkTags.slice(0, 2).map(tag => `
-            <span class="card-badge drink-pill">${escapeHtml(tag)}</span>
+            <span class="card-badge drink-pill"><span class="drink-pill-icon">🍸</span>${escapeHtml(tag)}</span>
           `).join("")}
         </div>
       `
