@@ -293,6 +293,7 @@
       padding: 8px 14px calc(10px + env(safe-area-inset-bottom));
       z-index: 2001;
       overflow: hidden;
+      transition: height 220ms cubic-bezier(0.22, 1, 0.36, 1);
     }
     
     #bottom-panel.selected { height: var(--panel-selected); }
@@ -1565,7 +1566,7 @@ function selectVenue(loc, opts = {}){
   _panelUserExpanded = false;
   setPanelState("selected");
   
-  applyFiltersUnified();
+  applyFiltersUnified({ preserveMapView: true });
 
   _preserveMapViewOnSelect = false;
 
@@ -1755,7 +1756,9 @@ function renderList(data){
 }
   
 /* ─── FILTER + APPLY ────────────────────────────────────────────── */
-function applyFiltersUnified(){
+function applyFiltersUnified(opts = {}){
+  const { preserveMapView = false } = opts;
+  
   closeAllMenus();
   const brands=getSelectedValues("brand"), hoods=getSelectedValues("n");
   const q=(document.getElementById("searchTopInput")?.value||"").trim();
@@ -1792,7 +1795,7 @@ function applyFiltersUnified(){
     !q.length &&
     !hasLoc;
 
-  if (!_suppressAutoFit && !_preserveMapViewOnSelect) {
+  if (!preserveMapView && !_suppressAutoFit && !_preserveMapViewOnSelect) {
     if (isDefaultView) {
       fitInitialView();
     } else if (count > 0 && bounds) {
@@ -1862,11 +1865,11 @@ window.SipSober.setUserLocation=function(lat,lng){
   _pendingUserLocation=null;
   _showUserLocation(LAT,LNG);
   _userLocationForDistance={lat:LAT,lng:LNG};
-  applyFiltersUnified();
-  map.invalidateSize(false);
-  map.setView([LAT,LNG],Math.max(map.getZoom(),15),{animate:true});
   _panelUserExpanded = true;
   setPanelState("expanded");
+  applyFiltersUnified({ preserveMapView: true });
+  map.invalidateSize(false);
+  map.setView([LAT,LNG], Math.max(map.getZoom(),15), { animate:true });
 };
 
 window.SipSober.clearUserLocation=function(){
@@ -2052,13 +2055,13 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
     if(_panelState === "expanded"){
       _panelUserExpanded = false;
       setPanelState(_selectedVenueId ? "selected" : "collapsed");
-      applyFiltersUnified();
+      applyFiltersUnified({ preserveMapView: true });
       return;
     }
-
+    
     _panelUserExpanded = true;
     setPanelState("expanded");
-    applyFiltersUnified();
+    applyFiltersUnified({ preserveMapView: true });
   });
 
   setPanelState("collapsed");
