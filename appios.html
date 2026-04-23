@@ -1156,6 +1156,7 @@ let _activeMarker=null, _lastFocusedVenueId=null;
 let _selectedVenueId=null;
 let _selectedLabelMarker=null;
 let _suppressAutoFit = false;
+let _preserveMapViewOnSelect = false;
 let defaultIcon, activeIcon, currentIcon;
 const mobileQuery = window.matchMedia("(max-width:767px)");
 
@@ -1515,15 +1516,20 @@ function selectVenue(loc, opts = {}){
   _selectedVenueId = String(loc.id || "");
   _lastFocusedVenueId = _selectedVenueId;
 
+  _preserveMapViewOnSelect = true;
+
   if(centerMap){
+    const targetZoom = Math.max(map.getZoom(), zoom);
     map.invalidateSize(false);
-    map.setView([loc.lat, loc.lng], zoom, { animate });
+    map.setView([loc.lat, loc.lng], targetZoom, { animate });
   }
 
   const panel = document.getElementById("bottom-panel");
   if(panel) panel.classList.add("expanded");
 
   applyFiltersUnified();
+
+  _preserveMapViewOnSelect = false;
 
   const marker = markersById[_selectedVenueId];
   if(marker) setActiveMarker(marker);
@@ -1630,7 +1636,7 @@ function renderList(data){
       : `<div class="card-image"></div>`;
 
     const visibleDrinkTags = Array.isArray(loc.drinkTags)
-      ? (isSelected ? loc.drinkTags.slice(0, 1) : loc.drinkTags.slice(0, 2))
+      ? loc.drinkTags.slice(0, 1)
       : [];
     
     const inlineActionRowHtml = (visibleDrinkTags.length || isSelected) ? `
@@ -1734,7 +1740,7 @@ function applyFiltersUnified(){
     !q.length &&
     !hasLoc;
 
-    if (!_suppressAutoFit) {
+  if (!_suppressAutoFit && !_preserveMapViewOnSelect) {
     if (isDefaultView) {
       fitInitialView();
     } else if (count > 0 && bounds) {
