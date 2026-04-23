@@ -79,7 +79,8 @@
     }
     
     :root {
-      --panel-collapsed: 18vh;
+      --panel-collapsed: 10.5vh;
+      --panel-selected: 24vh;
       --panel-expanded: 38vh;
     }
 
@@ -294,6 +295,7 @@
       overflow: hidden;
     }
     
+    #bottom-panel.selected { height: var(--panel-selected); }
     #bottom-panel.expanded { height: var(--panel-expanded); }
 
     #panel-header {
@@ -1157,6 +1159,8 @@ let _selectedVenueId=null;
 let _selectedLabelMarker=null;
 let _suppressAutoFit = false;
 let _preserveMapViewOnSelect = false;
+let _panelUserExpanded = false;
+let _panelState = "collapsed"; // "collapsed" | "selected" | "expanded"
 let defaultIcon, activeIcon, currentIcon;
 const mobileQuery = window.matchMedia("(max-width:767px)");
 
@@ -1503,6 +1507,39 @@ function showSelectedPinLabel(loc){
     })
   }).addTo(map);
 }
+
+function setPanelState(state){
+  const panel = document.getElementById("bottom-panel");
+  const toggle = document.getElementById("panel-toggle");
+  const label = toggle?.querySelector(".label");
+  if(!panel || !toggle) return;
+
+  panel.classList.remove("selected", "expanded");
+
+  if(state === "selected"){
+    panel.classList.add("selected");
+  } else if(state === "expanded"){
+    panel.classList.add("expanded");
+  }
+
+  _panelState = state;
+
+  toggle.setAttribute("aria-expanded", state === "expanded" ? "true" : "false");
+
+  if(label){
+    if(state === "expanded") label.textContent = "Hide";
+    else if(state === "selected") label.textContent = "Show all";
+    else label.textContent = "Show";
+  }
+}
+
+function getVisibleResults(data){
+  if(_selectedVenueId && !_panelUserExpanded){
+    const selected = data.find(v => String(v.id) === String(_selectedVenueId));
+    return selected ? [selected] : [];
+  }
+  return data;
+}
   
 function selectVenue(loc, opts = {}){
   if(!loc || !map) return;
@@ -1511,6 +1548,7 @@ function selectVenue(loc, opts = {}){
     centerMap = true,
     zoom = 15,
     animate = true
+
   } = opts;
 
   _selectedVenueId = String(loc.id || "");
@@ -1524,9 +1562,9 @@ function selectVenue(loc, opts = {}){
     map.setView([loc.lat, loc.lng], targetZoom, { animate });
   }
 
-  const panel = document.getElementById("bottom-panel");
-  if(panel) panel.classList.add("expanded");
-
+  _panelUserExpanded = false;
+  setPanelState("selected");
+  
   applyFiltersUnified();
 
   _preserveMapViewOnSelect = false;
@@ -1565,9 +1603,12 @@ function syncSelectedListRow(){
 function clearVenueSelection(){
   _selectedVenueId = null;
   _lastFocusedVenueId = null;
+  _panelUserExpanded = false;
+
   clearActiveMarker();
   clearSelectedPinLabel();
 
+  setPanelState("collapsed");
   applyFiltersUnified();
 }
   
@@ -1727,7 +1768,9 @@ function applyFiltersUnified(){
     filtered.sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"}));
   }
   
-  renderList(filtered);
+  const visibleList = getVisibleResults(filtered);
+
+  renderList(visibleList);
   if(!map) return;
   const{count,bounds}=renderMarkers(filtered);
   updateActiveFilters(brands,hoods);
@@ -1813,8 +1856,8 @@ window.SipSober.setUserLocation=function(lat,lng){
   applyFiltersUnified();
   map.invalidateSize(false);
   map.setView([LAT,LNG],Math.max(map.getZoom(),15),{animate:true});
-  const panel=document.getElementById("bottom-panel");
-  if(panel) panel.classList.add("expanded");
+  _panelUserExpanded = true;
+  setPanelState("expanded");
 };
 
 window.SipSober.clearUserLocation=function(){
@@ -1861,6 +1904,8 @@ function resetMapToDefault(){
   if (si) si.value = "";
 
   _suppressAutoFit = true;
+  _panelUserExpanded = false;
+  setPanelState("collapsed");
 
   // Clear all selected venue UI/state first
   clearVenueSelection();
@@ -1988,27 +2033,27 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
 
   
 (()=>{
-  const panel=document.getElementById("bottom-panel"),toggle=document.getElementById("panel-toggle"),label=toggle?.querySelector(".label");
-  if(!panel||!toggle) return;
+  const panel = document.getElementById("bottom-panel");
+  const toggle = document.getElementById("panel-toggle");
+  if(!panel || !toggle) return;
 
-  function syncLabel(){
-    const ex = panel.classList.contains("expanded");
-    toggle.setAttribute("aria-expanded", ex ? "true" : "false");
-    if(label) label.textContent = ex ? "Hide" : "Show";
-  }
-
-  toggle.addEventListener("click",e=>{
+  toggle.addEventListener("click", e => {
     e.stopPropagation();
-    panel.classList.toggle("expanded");
-    syncLabel();
+
+    if(_panelState === "expanded"){
+      _panelUserExpanded = false;
+      setPanelState(_selectedVenueId ? "selected" : "collapsed");
+      applyFiltersUnified();
+      return;
+    }
+
+    _panelUserExpanded = true;
+    setPanelState("expanded");
+    applyFiltersUnified();
   });
 
-  if(window.matchMedia("(max-width:768px)").matches) panel.classList.add("expanded");
-  syncLabel();
+  setPanelState("collapsed");
 })();
-
-// Render list immediately (map init is async but list doesn't need it)
-renderList(locations.slice().sort((a,b)=>(a.name||"").localeCompare(b.name||"")));
 </script>
 
 <script>
