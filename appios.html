@@ -1152,7 +1152,7 @@ document.body.classList.add("map-loading");
 })();
 
 /* ─── STATE ────────────────────────────────────────────────────── */
-let map, markersLayer, hotspotLayer, markersById={};
+let map, markersLayer, markersById={};
 let _mapReady=false, _pendingUserLocation=null;
 let _userLocationForDistance=null, _userDot=null, _userHalo=null;
 let _activeMarker=null, _lastFocusedVenueId=null;
@@ -1225,7 +1225,6 @@ function _initMap(){
   map.options.maxBoundsViscosity = 0.1;
   map.setMinZoom(11.5);
   markersLayer = L.layerGroup().addTo(map);
-  hotspotLayer = L.layerGroup().addTo(map);
 
   /* ─── FIX 5: Clean, two-step invalidateSize sequence ────────────
      • rAF frame 1 → layout is done
@@ -1647,54 +1646,6 @@ function renderMarkers(data){
 
   return { count:data.length, bounds:data.length ? bounds : null };
 }
-
-function renderHotspots(data){
-  if(!map || !hotspotLayer) return;
-
-  hotspotLayer.clearLayers();
-
-  // Keep default map clean
-  if(!Array.isArray(data) || data.length < 4) return;
-
-  const groups = {};
-
-  data.forEach(loc => {
-    const key = String(loc.neighborhood || "other");
-    if(!groups[key]) groups[key] = [];
-    groups[key].push(loc);
-  });
-
-  Object.values(groups).forEach(group => {
-    // Only emphasize neighborhoods with meaningful density
-    if(group.length < 3) return;
-
-    const avgLat = group.reduce((sum, loc) => sum + Number(loc.lat || 0), 0) / group.length;
-    const avgLng = group.reduce((sum, loc) => sum + Number(loc.lng || 0), 0) / group.length;
-
-    // Subtle size scaling
-    const radius = Math.min(190, 70 + (group.length * 12));
-
-    L.circle([avgLat, avgLng], {
-      radius,
-      stroke: false,
-      fill: true,
-      fillColor: "#8c9bff",
-      fillOpacity: 0.08,
-      interactive: false,
-      pane: "overlayPane"
-    }).addTo(hotspotLayer);
-
-    L.circle([avgLat, avgLng], {
-      radius: radius * 0.62,
-      stroke: false,
-      fill: true,
-      fillColor: "#c9d6ff",
-      fillOpacity: 0.05,
-      interactive: false,
-      pane: "overlayPane"
-    }).addTo(hotspotLayer);
-  });
-}
   
 function renderList(data){
   const results = document.getElementById("results");
@@ -1834,7 +1785,6 @@ function applyFiltersUnified(opts = {}){
   renderList(visibleList);
   if(!map) return;
   const{count,bounds}=renderMarkers(filtered);
-  renderHotspots(filtered);
   updateActiveFilters(brands,hoods);
   const panel=document.getElementById("bottom-panel");
   const panelH=panel?panel.getBoundingClientRect().height:0;
