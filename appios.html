@@ -80,7 +80,7 @@
     
     :root {
       --panel-collapsed: 9vh;
-      --panel-selected: 22vh;
+      --panel-selected: 21vh;
       --panel-expanded: 38vh;
     }
 
@@ -311,6 +311,14 @@
       padding: 6px 0 10px;
     }
 
+    #bottom-panel.selected #panel-body {
+      overflow-y: hidden;
+    }
+    
+    #bottom-panel.expanded #panel-body {
+      overflow-y: auto;
+    }
+    
     #results { padding: 0; }
 
     #panel-meta-row {
@@ -354,9 +362,9 @@
     }
 
     #panel-toggle .label {
-      font-size: 10.5px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.46);
+      font-size: 10.75px;
+      font-weight: 650;
+      color: rgba(255,255,255,0.50);
       opacity: 1;
     }
 
