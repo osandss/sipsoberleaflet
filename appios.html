@@ -1663,7 +1663,9 @@ function renderList(data){
   results.innerHTML = "";
 
   if (rc) {
-    if (data.length === 0) {
+    if (_selectedVenueId && !_panelUserExpanded) {
+      rc.textContent = "";
+    } else if (data.length === 0) {
       rc.textContent = "No places found";
     } else {
       const sortText = _userLocationForDistance ? "Nearby" : "A–Z";
