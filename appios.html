@@ -700,7 +700,7 @@
     }
 
     .meta-neighborhood {
-      color: #8c9bff;
+      color: #91b0fa;
       font-weight: 500;
     }
 
@@ -758,7 +758,7 @@
     .drink-pill {
       background: rgba(140,150,255,0.11);
       border: 1px solid rgba(140,150,255,0.18);
-      color: #c9d6ff;
+      color: #c9deff;
       font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.01em;
@@ -1902,8 +1902,8 @@ function fitInitialView(){
   const panelH = panel ? panel.getBoundingClientRect().height : 0;
 
   const defaultBounds = L.latLngBounds(
-    [40.715, -74.03],  // lower-left (trim lower Manhattan)
-    [40.835, -73.93]   // upper-right (show more upper Manhattan)
+    [40.695, -74.035],
+    [40.805, -73.925]
   );
 
   map.fitBounds(defaultBounds, {
