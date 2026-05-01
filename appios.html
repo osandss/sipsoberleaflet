@@ -1398,22 +1398,44 @@ function matchesSearch(loc,q){
 }
 
 /* ─── FILTER CHIPS ─────────────────────────────────────────────── */
-function updateActiveFilters(selectedBrands,selectedNeighborhoods){
-  const c=document.getElementById("active-filters");
+function updateActiveFilters(selectedBrands, selectedNeighborhoods){
+  const c = document.getElementById("active-filters");
   if(!c) return;
-  c.innerHTML="";
-  const has=selectedBrands.length||selectedNeighborhoods.length;
-  c.style.display=has?"flex":"none";
-  if(!has) return;
-  function pill(type,value){
-    const p=document.createElement("span"); p.className="filter-pill";
-    const x=document.createElement("span"); x.className="filter-pill-x"; x.textContent="×";
-    const l=document.createElement("span"); l.textContent=value;
-    x.addEventListener("click",()=>clearSingleFilter(type,value));
-    p.appendChild(x); p.appendChild(l); c.appendChild(p);
+
+  c.innerHTML = "";
+
+  const has = selectedBrands.length || selectedNeighborhoods.length;
+
+  // Hide filter pills while a selected venue card is open
+  const hideWhileSelected = _selectedVenueId && !_panelUserExpanded;
+
+  if(!has || hideWhileSelected){
+    c.style.display = "none";
+    return;
   }
-  selectedNeighborhoods.forEach(n=>pill("neighborhood",n));
-  selectedBrands.forEach(b=>pill("brand",b));
+
+  c.style.display = "flex";
+
+  function pill(type, value){
+    const p = document.createElement("span");
+    p.className = "filter-pill";
+
+    const x = document.createElement("span");
+    x.className = "filter-pill-x";
+    x.textContent = "×";
+
+    const l = document.createElement("span");
+    l.textContent = value;
+
+    x.addEventListener("click", () => clearSingleFilter(type, value));
+
+    p.appendChild(x);
+    p.appendChild(l);
+    c.appendChild(p);
+  }
+
+  selectedNeighborhoods.forEach(n => pill("neighborhood", n));
+  selectedBrands.forEach(b => pill("brand", b));
 }
 
 function clearSingleFilter(type,value){
