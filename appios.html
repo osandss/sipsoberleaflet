@@ -1224,6 +1224,7 @@ let _suppressAutoFit = false;
 let _preserveMapViewOnSelect = false;
 let _panelUserExpanded = false;
 let _panelState = "collapsed"; // "collapsed" | "selected" | "expanded"
+let _activeDrinkType = "";
 let defaultIcon, activeIcon, currentIcon;
 const mobileQuery = window.matchMedia("(max-width:767px)");
 
@@ -1444,6 +1445,27 @@ function getSelectedValues(prefix){
 function matchesSearch(loc,q){
   if(!q) return true;
   return [loc.name,loc.address,loc.brand,loc.neighborhood].filter(Boolean).join(" ").toLowerCase().includes(q.toLowerCase());
+}
+
+function normalizeDrinkType(value){
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/s$/, "");
+}
+
+function venueHasDrinkType(loc, drinkType){
+  if(!drinkType) return true;
+
+  const target = normalizeDrinkType(drinkType);
+
+  const types = Array.isArray(loc.drinkTypes)
+    ? loc.drinkTypes
+    : Array.isArray(loc.drinkTags)
+      ? loc.drinkTags
+      : [];
+
+  return types.some(type => normalizeDrinkType(type) === target);
 }
 
 /* ─── FILTER CHIPS ─────────────────────────────────────────────── */
@@ -1851,7 +1873,8 @@ function applyFiltersUnified(opts = {}){
   let filtered=locations.filter(loc=>{
     const brandOK=brands.length?brands.some(b=>(loc.brand||"").toLowerCase().includes(b.toLowerCase())):true;
     const hoodOK=hoods.length?hoods.includes(loc.neighborhood):true;
-    return brandOK&&hoodOK&&matchesSearch(loc,q);
+    const drinkOK=venueHasDrinkType(loc, _activeDrinkType);
+    return brandOK&&hoodOK&&drinkOK&&matchesSearch(loc,q);
   });
   const hasLoc=!!_userLocationForDistance;
   if(hasLoc){
@@ -1879,6 +1902,7 @@ function applyFiltersUnified(opts = {}){
     !brands.length &&
     !hoods.length &&
     !q.length &&
+    !_activeDrinkType &&
     !hasLoc;
 
   if (!preserveMapView && !_suppressAutoFit && !_preserveMapViewOnSelect) {
@@ -2002,6 +2026,7 @@ function resetMapToDefault(){
   if (si) si.value = "";
 
   _suppressAutoFit = true;
+  _activeDrinkType = "";
   _panelUserExpanded = false;
   setPanelState("collapsed");
 
@@ -2041,6 +2066,25 @@ window.SipSober.setFilters=function(payload){
   const hoods=Array.isArray(payload?.neighborhoods)?payload.neighborhoods:[];
   document.querySelectorAll('input[id^="brand-"]').forEach(cb=>{cb.checked=brands.includes(cb.value);});
   document.querySelectorAll('input[id^="n-"]').forEach(cb=>{cb.checked=hoods.includes(cb.value);});
+  applyFiltersUnified();
+};
+
+window.SipSober.setDrinkType=function(drinkType){
+  _activeDrinkType = String(drinkType || "").trim();
+
+  _selectedVenueId = null;
+  _lastFocusedVenueId = null;
+  clearActiveMarker();
+  clearSelectedPinLabel();
+
+  _panelUserExpanded = true;
+  setPanelState("expanded");
+
+  applyFiltersUnified();
+};
+
+window.SipSober.clearDrinkType=function(){
+  _activeDrinkType = "";
   applyFiltersUnified();
 };
 
