@@ -238,7 +238,7 @@
       display: flex;
       justify-content: center;
       align-items: flex-end;
-      gap: 0;
+      gap: 18px;
       position: relative;
       z-index: 2;
     }
@@ -255,19 +255,13 @@
       pointer-events: none;
     }
 
-    .hero-phones .phone-center {
-      width: clamp(214px, 24vw, 292px);
-      z-index: 3;
-      transform: translateZ(70px);
-    }
-
     .hero-phones .phone-left {
-      transform: translateX(42px) rotateY(24deg) rotateZ(-2.5deg) translateY(8px);
+      transform: translateX(20px) rotateY(18deg) rotateZ(-2deg);
       z-index: 2;
     }
-
+    
     .hero-phones .phone-right {
-      transform: translateX(-42px) rotateY(-24deg) rotateZ(2.5deg) translateY(8px);
+      transform: translateX(-20px) rotateY(-18deg) rotateZ(2deg);
       z-index: 1;
     }
 
@@ -657,8 +651,7 @@
 
           <div class="hero-phones">
             <img src="feature-map.png" class="phone phone-left" alt="Sip Sober map view showing zero-proof venues">
-            <img src="feature-filters.png" class="phone phone-center" alt="Sip Sober filters for neighborhood and brand">
-            <img src="feature-favorites.png" class="phone phone-right" alt="Sip Sober saved favorites screen">
+            <img src="feature-home.png" class="phone phone-right" alt="Sip Sober home screen">
           </div>
         </div>
       </div>
