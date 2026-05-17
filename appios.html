@@ -1225,6 +1225,7 @@ let _preserveMapViewOnSelect = false;
 let _panelUserExpanded = false;
 let _panelState = "collapsed"; // "collapsed" | "selected" | "expanded"
 let _activeDrinkType = "";
+let _activeGuideVenueIds = [];
 let defaultIcon, activeIcon, currentIcon;
 const mobileQuery = window.matchMedia("(max-width:767px)");
 
@@ -1868,11 +1869,22 @@ function applyFiltersUnified(opts = {}){
   closeAllMenus();
   const brands=getSelectedValues("brand"), hoods=getSelectedValues("n");
   const q=(document.getElementById("searchTopInput")?.value||"").trim();
-  let filtered=locations.filter(loc=>{
-    const brandOK=brands.length?brands.some(b=>(loc.brand||"").toLowerCase().includes(b.toLowerCase())):true;
-    const hoodOK=hoods.length?hoods.includes(loc.neighborhood):true;
-    const drinkOK=venueHasDrinkType(loc, _activeDrinkType);
-    return brandOK&&hoodOK&&drinkOK&&matchesSearch(loc,q);
+  let filtered = locations.filter(loc => {
+    const guideOK = _activeGuideVenueIds.length
+      ? _activeGuideVenueIds.includes(String(loc.id))
+      : true;
+  
+    const brandOK = brands.length
+      ? brands.some(b => (loc.brand || "").toLowerCase().includes(b.toLowerCase()))
+      : true;
+  
+    const hoodOK = hoods.length
+      ? hoods.includes(loc.neighborhood)
+      : true;
+  
+    const drinkOK = venueHasDrinkType(loc, _activeDrinkType);
+  
+    return guideOK && brandOK && hoodOK && drinkOK && matchesSearch(loc, q);
   });
   const hasLoc=!!_userLocationForDistance;
   if(hasLoc){
@@ -1901,6 +1913,7 @@ function applyFiltersUnified(opts = {}){
     !hoods.length &&
     !q.length &&
     !_activeDrinkType &&
+    !_activeGuideVenueIds.length &&
     !hasLoc;
 
   if (!preserveMapView && !_suppressAutoFit && !_preserveMapViewOnSelect) {
@@ -2025,6 +2038,7 @@ function resetMapToDefault(){
 
   _suppressAutoFit = true;
   _activeDrinkType = "";
+  _activeGuideVenueIds = [];
   _panelUserExpanded = false;
   setPanelState("collapsed");
 
@@ -2067,6 +2081,24 @@ window.SipSober.setFilters=function(payload){
   applyFiltersUnified();
 };
 
+window.SipSober.setGuideVenueIds = function(ids){
+  _activeGuideVenueIds = Array.isArray(ids)
+    ? ids.map(String).filter(Boolean)
+    : [];
+
+  _activeDrinkType = "";
+
+  _selectedVenueId = null;
+  _lastFocusedVenueId = null;
+  clearActiveMarker();
+  clearSelectedPinLabel();
+
+  _panelUserExpanded = true;
+  setPanelState("expanded");
+
+  applyFiltersUnified();
+};
+  
 window.SipSober.setDrinkType=function(drinkType){
   _activeDrinkType = String(drinkType || "").trim();
 
