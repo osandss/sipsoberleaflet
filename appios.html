@@ -2081,10 +2081,14 @@ window.SipSober.setFilters=function(payload){
   applyFiltersUnified();
 };
 
-window.SipSober.setGuideVenueIds = function(ids){
-  _activeGuideVenueIds = Array.isArray(ids)
-    ? ids.map(String).filter(Boolean)
-    : [];
+window.SipSober.setGuideVenueIds = function(payload){
+  const ids = Array.isArray(payload)
+    ? payload
+    : Array.isArray(payload?.ids)
+      ? payload.ids
+      : [];
+
+  _activeGuideVenueIds = ids.map(String).filter(Boolean);
 
   _activeDrinkType = "";
 
