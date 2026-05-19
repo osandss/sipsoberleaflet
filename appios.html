@@ -1870,9 +1870,11 @@ function applyFiltersUnified(opts = {}){
   const brands=getSelectedValues("brand"), hoods=getSelectedValues("n");
   const q=(document.getElementById("searchTopInput")?.value||"").trim();
   let filtered = locations.filter(loc => {
-    const guideOK = _activeGuideVenueIds.length
-      ? _activeGuideVenueIds.includes(String(loc.id))
-      : true;
+    // GUIDE MODE WINS:
+    // If Xcode sends guide venue IDs, show exactly those venues.
+    if (_activeGuideVenueIds.length) {
+      return _activeGuideVenueIds.includes(String(loc.id));
+    }
   
     const brandOK = brands.length
       ? brands.some(b => (loc.brand || "").toLowerCase().includes(b.toLowerCase()))
@@ -1884,8 +1886,9 @@ function applyFiltersUnified(opts = {}){
   
     const drinkOK = venueHasDrinkType(loc, _activeDrinkType);
   
-    return guideOK && brandOK && hoodOK && drinkOK && matchesSearch(loc, q);
+    return brandOK && hoodOK && drinkOK && matchesSearch(loc, q);
   });
+  
   const hasLoc=!!_userLocationForDistance;
   if(hasLoc){
     filtered.sort((a,b)=>{
@@ -2090,7 +2093,16 @@ window.SipSober.setGuideVenueIds = function(payload){
 
   _activeGuideVenueIds = ids.map(String).filter(Boolean);
 
+  // Guide mode clears drink mode
   _activeDrinkType = "";
+
+  // Clear visible web filters/search so old filters do not interfere
+  document.querySelectorAll('input[id^="brand-"], input[id^="n-"]').forEach(cb => {
+    cb.checked = false;
+  });
+
+  const si = document.getElementById("searchTopInput");
+  if (si) si.value = "";
 
   _selectedVenueId = null;
   _lastFocusedVenueId = null;
@@ -2098,24 +2110,28 @@ window.SipSober.setGuideVenueIds = function(payload){
   clearSelectedPinLabel();
 
   _panelUserExpanded = true;
-  setPanelState("expanded");
+  setPanelState(_activeGuideVenueIds.length ? "expanded" : "collapsed");
 
   applyFiltersUnified();
 };
   
-window.SipSober.setDrinkType=function(drinkType){
-  _activeDrinkType = String(drinkType || "").trim();
+window.SipSober.setDrinkType = function(drinkType){
+  const nextDrinkType = String(drinkType || "").trim();
 
-  // IMPORTANT: drink mode and guide mode cannot both be active
-  _activeGuideVenueIds = [];
+  _activeDrinkType = nextDrinkType;
+
+  // Drink mode and guide mode cannot both be active
+  if (nextDrinkType) {
+    _activeGuideVenueIds = [];
+  }
 
   _selectedVenueId = null;
   _lastFocusedVenueId = null;
   clearActiveMarker();
   clearSelectedPinLabel();
 
-  _panelUserExpanded = true;
-  setPanelState("expanded");
+  _panelUserExpanded = !!nextDrinkType;
+  setPanelState(nextDrinkType ? "expanded" : "collapsed");
 
   applyFiltersUnified();
 };
