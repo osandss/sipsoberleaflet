@@ -2106,6 +2106,9 @@ window.SipSober.setGuideVenueIds = function(payload){
 window.SipSober.setDrinkType=function(drinkType){
   _activeDrinkType = String(drinkType || "").trim();
 
+  // IMPORTANT: drink mode and guide mode cannot both be active
+  _activeGuideVenueIds = [];
+
   _selectedVenueId = null;
   _lastFocusedVenueId = null;
   clearActiveMarker();
