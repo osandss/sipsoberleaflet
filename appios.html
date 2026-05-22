@@ -2084,6 +2084,35 @@ window.SipSober.setFilters=function(payload){
   applyFiltersUnified();
 };
 
+window.SipSober.setDiscoverMode = function(payload){
+  const ids = Array.isArray(payload?.guideVenueIds)
+    ? payload.guideVenueIds.map(String).filter(Boolean)
+    : [];
+
+  const drinkType = String(payload?.drinkType || "").trim();
+
+  _activeGuideVenueIds = ids;
+  _activeDrinkType = ids.length ? "" : drinkType;
+
+  document.querySelectorAll('input[id^="brand-"], input[id^="n-"]').forEach(cb => {
+    cb.checked = false;
+  });
+
+  const si = document.getElementById("searchTopInput");
+  if (si) si.value = "";
+
+  _selectedVenueId = null;
+  _lastFocusedVenueId = null;
+  clearActiveMarker();
+  clearSelectedPinLabel();
+
+  const hasMode = _activeGuideVenueIds.length || _activeDrinkType;
+  _panelUserExpanded = !!hasMode;
+  setPanelState(hasMode ? "expanded" : "collapsed");
+
+  applyFiltersUnified();
+};
+
 window.SipSober.setGuideVenueIds = function(payload){
   const ids = Array.isArray(payload)
     ? payload
