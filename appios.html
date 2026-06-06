@@ -1793,9 +1793,15 @@ function renderList(data){
       ? `<img class="card-image" src="${escapeHtml(loc.imageUrl)}" alt="${escapeHtml(loc.name || "")}" loading="lazy" onerror="this.remove()">`
       : `<div class="card-image"></div>`;
 
-    const visibleDrinkTags = Array.isArray(loc.drinkTags)
-      ? loc.drinkTags.slice(0, 1)
-      : [];
+    let visibleDrinkTags = [];
+
+		if (_activeDrinkType && venueHasDrinkType(loc, _activeDrinkType)) {
+  		// When filtering, override pill with active drink type
+  		visibleDrinkTags = [_activeDrinkType];
+		} else if (Array.isArray(loc.drinkTags) && loc.drinkTags.length) {
+  		// Otherwise show venue’s curated tag
+  		visibleDrinkTags = [loc.drinkTags[0]];
+		}
     
     const inlineActionRowHtml = (visibleDrinkTags.length || isSelected) ? `
       <div class="card-badge-row card-badge-row--selected">
