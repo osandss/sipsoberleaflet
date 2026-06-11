@@ -1455,6 +1455,28 @@ function normalizeDrinkType(value){
     .replace(/s$/, "");
 }
 
+const DRINK_ICONS = {
+  "spritz": "🍊",
+  "negroni": "🟥",
+  "espresso martini": "☕",
+  "mule": "🥃",
+  "mojito": "🌿",
+  "margarita": "🍋",
+  "paloma": "🍊",
+  "cosmo": "🍸",
+  "nojito": "🌿",
+  "beer": "🍺",
+  "na beer": "🍺",
+  "sour": "🍋"
+};
+
+function getDrinkIcon(drinkName){
+  if(!drinkName) return "🍸";
+
+  const key = normalizeDrinkType(drinkName);
+  return DRINK_ICONS[key] || "🍸";
+}
+
 function venueHasDrinkType(loc, drinkType){
   if(!drinkType) return true;
 
@@ -1806,7 +1828,7 @@ function renderList(data){
     const inlineActionRowHtml = (visibleDrinkTags.length || isSelected) ? `
       <div class="card-badge-row card-badge-row--selected">
         ${visibleDrinkTags.map(tag => `
-          <span class="card-badge drink-pill"><span class="drink-pill-icon">🍸</span>${escapeHtml(tag)}</span>
+          <span class="card-badge drink-pill"><span class="drink-pill-icon">${getDrinkIcon(tag)}</span>${escapeHtml(tag)}</span>
         `).join("")}
         ${isSelected ? `<a class="card-selected-pill primary card-selected-pill--inline route-pill" href="${directionsUrl}" target="_blank" rel="noopener"><span class="route-pill-icon">↗</span>Directions</a>` : ""}
       </div>
