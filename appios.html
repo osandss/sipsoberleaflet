@@ -456,9 +456,9 @@
     body.ss-embed #filters { display: none !important; }
 
     .fav-btn {
-      width: 22px;
-      height: 22px;
-      flex: 0 0 22px;
+      width: 26px;
+      height: 26px;
+      flex: 0 0 26px;
       border-radius: 999px;
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.05);
@@ -473,8 +473,8 @@
     }
 
 	.fav-btn svg {
-	  width: 11px;
-	  height: 11px;
+	  width: 14px;
+	  height: 14px;
 	  display: block;
 	}
 	    
@@ -825,12 +825,20 @@
     }
 
     .drink-pill-icon {
-      display: inline-flex;
-      align-items: center;
-      margin-right: 4px;
-      font-size: 10px;
-      line-height: 1;
-    }
+	  display: inline-flex;
+	  align-items: center;
+	  justify-content: center;
+	  width: 11px;
+	  height: 11px;
+	  margin-right: 4px;
+	  line-height: 1;
+	}
+	
+	.drink-pill-icon svg {
+	  width: 11px;
+	  height: 11px;
+	  display: block;
+	}
     
     .card-selected-pill {
       display: inline-flex !important;
@@ -1468,26 +1476,12 @@ function normalizeDrinkType(value){
     .replace(/s$/, "");
 }
 
-const DRINK_ICONS = {
-  "spritz": "🍊",
-  "negroni": "🟥",
-  "espresso martini": "☕",
-  "mule": "🥃",
-  "mojito": "🌿",
-  "margarita": "🍋",
-  "paloma": "🍊",
-  "cosmo": "🍸",
-  "nojito": "🌿",
-  "beer": "🍺",
-  "na beer": "🍺",
-  "sour": "🍋"
-};
-
-function getDrinkIcon(drinkName){
-  if(!drinkName) return "🍸";
-
-  const key = normalizeDrinkType(drinkName);
-  return DRINK_ICONS[key] || "🍸";
+function getDrinkIcon(){
+  return `
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M7 4h10l-3.5 6v4.5h2.5v1.5h-8v-1.5h2.5V10L7 4z"/>
+    </svg>
+  `;
 }
 
 function venueHasDrinkType(loc, drinkType){
@@ -1841,7 +1835,7 @@ function renderList(data){
     const inlineActionRowHtml = (visibleDrinkTags.length || isSelected) ? `
       <div class="card-badge-row card-badge-row--selected">
         ${visibleDrinkTags.map(tag => `
-          <span class="card-badge drink-pill"><span class="drink-pill-icon">${getDrinkIcon(tag)}</span>${escapeHtml(tag)}</span>
+          <span class="card-badge drink-pill"><span class="drink-pill-icon">${getDrinkIcon()}</span>${escapeHtml(tag)}</span>
         `).join("")}
         ${isSelected ? `<a class="card-selected-pill primary card-selected-pill--inline route-pill" href="${directionsUrl}" target="_blank" rel="noopener"><span class="route-pill-icon">↗</span>Directions</a>` : ""}
       </div>
