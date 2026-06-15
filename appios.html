@@ -686,12 +686,13 @@
     }
     
     .card-image-wrap {
-      width: 104px;
-      flex: 0 0 104px;
-      overflow: hidden;
-      border-radius: 15px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-    }
+	  position: relative;
+	  width: 104px;
+	  flex: 0 0 104px;
+	  overflow: hidden;
+	  border-radius: 15px;
+	  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+	}
     
     .card-image {
       width: 104px;
@@ -828,15 +829,14 @@
 	  display: inline-flex;
 	  align-items: center;
 	  justify-content: center;
-	  width: 11px;
-	  height: 11px;
-	  margin-right: 4px;
-	  line-height: 1;
+	  width: 13px;
+	  height: 13px;
+	  margin-right: 5px;
 	}
 	
 	.drink-pill-icon svg {
-	  width: 11px;
-	  height: 11px;
+	  width: 13px;
+	  height: 13px;
 	  display: block;
 	}
     
@@ -891,34 +891,45 @@
     }
     
     .card-close-btn {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      flex: 0 0 22px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.05);
-      background: rgba(255,255,255,0.03);
-      color: rgba(255,255,255,0.78);
-      font-size: 10.5px;
-      line-height: 1;
-      margin-top: 0;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: background 160ms ease, transform 120ms ease;
-    }
-    
-    .card.is-selected .card-close-btn {
-      display: inline-flex;
-    }
-    
-    .card-close-btn:active {
-      transform: scale(0.94);
-      background: rgba(255,255,255,0.14);
-      border-color: rgba(255,255,255,0.10);
-      color: rgba(255,255,255,0.88);
-    }
+	  position: absolute;
+	  top: 6px;
+	  right: 6px;
+	
+	  display: none;
+	  align-items: center;
+	  justify-content: center;
+	
+	  width: 22px;
+	  height: 22px;
+	
+	  border: 0;
+	  border-radius: 999px;
+	
+	  background: rgba(28,31,49,0.78);
+	  backdrop-filter: blur(8px);
+	  -webkit-backdrop-filter: blur(8px);
+	
+	  color: rgba(255,255,255,0.92);
+	  font-size: 11px;
+	  line-height: 1;
+	
+	  cursor: pointer;
+	  z-index: 5;
+	
+	  box-shadow:
+	    0 4px 12px rgba(0,0,0,0.22),
+	    inset 0 1px 0 rgba(255,255,255,0.06);
+	
+	  transition: transform 120ms ease, background 120ms ease;
+	}
+	
+	.card.is-selected .card-close-btn {
+	  display: inline-flex;
+	}
+	
+	.card-close-btn:active {
+	  transform: scale(0.92);
+	}
         
     .ss-pin-label {
       display: inline-flex;
@@ -1478,8 +1489,10 @@ function normalizeDrinkType(value){
 
 function getDrinkIcon(){
   return `
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M7 4h10l-3.5 6v4.5h2.5v1.5h-8v-1.5h2.5V10L7 4z"/>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M4 5h16l-8 8-8-8z"/>
+      <path d="M12 13v5"/>
+      <path d="M8 18h8"/>
     </svg>
   `;
 }
@@ -1846,8 +1859,14 @@ function renderList(data){
     card.innerHTML = `
       <div class="card-main-row">
         <div class="card-image-wrap">
-          ${cardImage}
-        </div>
+		  ${cardImage}
+		
+		  ${
+		    isSelected
+		      ? `<button class="card-close-btn" type="button" aria-label="Close selected card">×</button>`
+		      : ""
+		  }
+		</div>
 
         <div class="card-content">
           <div class="card-header-row">
@@ -1855,15 +1874,11 @@ function renderList(data){
               <span class="card-name" data-focus-id="${escapeHtml(loc.id)}">${escapeHtml(loc.name)}</span>
             </div>
 
-            ${
-              isSelected
-                ? `<button class="card-close-btn" type="button" aria-label="Close selected card">×</button>`
-                : `<button class="fav-btn" data-id="${escapeHtml(loc.id)}" aria-label="Save">
-					  <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-					    <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/>
-					  </svg>
-					</button>`
-            }
+            <button class="fav-btn" data-id="${escapeHtml(loc.id)}" aria-label="Save">
+			  <svg viewBox="0 0 24 24" fill="currentColor">
+			    <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/>
+			  </svg>
+			</button>
           </div>
 
           ${locationLine ? `<div class="meta meta-location">${locationLine}</div>` : ""}
