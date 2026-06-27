@@ -26,7 +26,7 @@
       --ss-radius-xl: 28px;
       --ss-radius-lg: 22px;
       --ss-radius-md: 18px;
-      --ss-max: 1080px;
+      --ss-max: 1160px;
     }
 
     * {
@@ -470,31 +470,49 @@
       color: var(--ss-text-faint);
     }
 
-    @media (max-width: 1040px) {
-      .hero-grid,
-      .feature-grid,
-      .how-grid {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 1180px) {
 
-      .hero-copy {
-        max-width: 100%;
-        text-align: center;
-        padding-bottom: 0;
+      .hero-grid{
+        grid-template-columns:1fr;
+        gap:28px;
+        min-height:auto;
       }
-
-      .hero-subtitle {
-        margin-left: auto;
-        margin-right: auto;
+    
+      .hero-copy{
+        max-width:720px;
+        margin:0 auto;
+        text-align:center;
+        padding-bottom:0;
       }
-
-      .hero-cta {
-        align-items: center;
+    
+      .hero-logo{
+        text-align:center;
+        margin-bottom:28px;
       }
-
-      .hero-visual {
-        min-height: 620px;
+    
+      .eyebrow{
+        text-align:center;
       }
+    
+      .hero-title{
+        max-width:none;
+        margin-left:auto;
+        margin-right:auto;
+      }
+    
+      .hero-subtitle{
+        margin-left:auto;
+        margin-right:auto;
+      }
+    
+      .hero-cta{
+        align-items:center;
+      }
+    
+      .hero-visual{
+        min-height:520px;
+      }
+    
     }
 
     @media (max-width: 720px) {
@@ -517,8 +535,7 @@
       
       .hero-title {
         font-size:40px;
-        margin-left:auto;
-        margin-right:auto;
+        max-width:9ch;
       }
 
       .hero-subtitle {
@@ -531,7 +548,7 @@
       }
 
       .hero-visual {
-        min-height: 360px;
+        min-height: 340px;
       }
 
       .hero-phones .phone {
