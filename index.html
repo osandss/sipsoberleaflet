@@ -71,25 +71,6 @@
       margin: 0 auto;
     }
 
-    .brand {
-      font-family:
-        "Avenir Next Condensed",
-        "Avenir Next",
-        Avenir,
-        -apple-system,
-        BlinkMacSystemFont,
-        "SF Pro Display",
-        "Helvetica Neue",
-        Arial,
-        "Lexend",
-        sans-serif;
-      font-size: 30px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.95);
-    }
-
     .hero {
       position: relative;
       padding: 30px 0 12px;
@@ -113,6 +94,29 @@
       gap: 24px;
       align-items: center;
       min-height: 720px;
+    }
+
+    .hero-logo {
+      font-family:
+        "Avenir Next Condensed",
+        "Avenir Next",
+        Avenir,
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "Helvetica Neue",
+        Arial,
+        "Lexend",
+        sans-serif;
+    
+      font-size: 30px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    
+      color: rgba(255,255,255,.96);
+    
+      margin-bottom: 34px;
     }
     
     .eyebrow {
@@ -436,7 +440,7 @@
         Arial,
         "Lexend",
         sans-serif;
-      font-size: clamp(30px, 5vw, 40px);
+      font-size: clamp(27px, 5vw, 35px);
       line-height: 0.95;
       letter-spacing: -0.04em;
       margin-bottom: 8px;
@@ -492,10 +496,7 @@
     }
 
     @media (max-width: 720px) {
-      
-      .brand {
-        font-size: 28px;
-      }
+
 
       .hero {
         padding-top: 24px;
@@ -566,7 +567,9 @@
     <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-  
+
+          <div class="hero-logo">Sip Sober</div>
+          
           <div class="eyebrow">NYC ZERO-PROOF GUIDE</div>
           
           <h1 class="hero-title">
