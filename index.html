@@ -71,23 +71,6 @@
       margin: 0 auto;
     }
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      background: rgba(24, 27, 45, 0.58);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .topbar-inner {
-      min-height: 82px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
     .brand {
       font-family:
         "Avenir Next Condensed",
@@ -131,20 +114,20 @@
       align-items: center;
       min-height: 720px;
     }
-
+    
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.06);
-      color: rgba(255,255,255,0.82);
+      display: block;
+      padding: 0;
+      border: none;
+      background: none;
+    
       font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
+      font-weight: 700;
+      letter-spacing: .22em;
       text-transform: uppercase;
+    
+      color: rgba(255,255,255,.60);
+    
       margin-bottom: 18px;
     }
 
@@ -296,7 +279,7 @@
         Arial,
         "Lexend",
         sans-serif;
-      font-size: clamp(30px, 5vw, 46px);
+      font-size: clamp(30px, 5vw, 42px);
       line-height: 0.95;
       letter-spacing: -0.04em;
       margin-bottom: 12px;
@@ -347,7 +330,7 @@
     .feature-card {
       border-radius: 26px;
       padding: 22px;
-      min-height: 220px;
+      min-height: 180px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -453,7 +436,7 @@
         Arial,
         "Lexend",
         sans-serif;
-      font-size: clamp(30px, 5vw, 46px);
+      font-size: clamp(30px, 5vw, 40px);
       line-height: 0.95;
       letter-spacing: -0.04em;
       margin-bottom: 8px;
@@ -509,10 +492,7 @@
     }
 
     @media (max-width: 720px) {
-      .topbar-inner {
-        min-height: 68px;
-      }
-
+      
       .brand {
         font-size: 28px;
       }
@@ -582,21 +562,20 @@
 </head>
 <body>
   <div class="page">
-    <header class="topbar">
-      <div class="container topbar-inner">
-        <a class="brand" href="/">Sip Sober</a>
-      </div>
-    </header>
 
     <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <div class="eyebrow">NYC Zero-Proof Discovery</div>
-
-          <h1 class="hero-title">The zero-proof map for NYC</h1>
-
+  
+          <div class="eyebrow">NYC ZERO-PROOF GUIDE</div>
+          
+          <h1 class="hero-title">
+            Find where to go.<br>
+            Know what to order.
+          </h1>
+        
           <p class="hero-subtitle">
-              Find where to go, what to order, and the zero-proof drinks worth trying across NYC.
+            Browse neighborhood guides, discover drink cards, and explore NYC's best zero-proof bars and restaurants—all in one app.
           </p>
 
           <div class="hero-cta">
@@ -623,13 +602,6 @@
     </section>
 
     <main>
-      <section id="about" class="section">
-        <div class="container">
-          <div class="intro-line">
-            <p>Sip Sober helps you find bars and restaurants serving real zero-proof cocktails.</p>
-          </div>
-        </div>
-      </section>
 
       <section id="guides" class="section">
         <div class="container">
@@ -637,7 +609,7 @@
             <div class="section-kicker">Explore Sip Sober</div>
             <h2 class="section-title">Find the right spot faster.</h2>
             <p class="section-copy">
-              Browse curated neighborhood guides, discover drink cards by cocktail style, and use the map when you're ready to go.
+              Discover curated neighborhood guides, browse drinks by style, or explore the map.
             </p>
           </div>
       
