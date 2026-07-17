@@ -636,10 +636,11 @@
         inset 0 1px 0 rgba(255,255,255,0.025);
       cursor: pointer;
       transition:
-        transform 75ms cubic-bezier(0.2, 0.8, 0.2, 1),
-        box-shadow 90ms ease,
-        border-color 120ms ease,
-        background 140ms ease;
+	    transform .34s cubic-bezier(.22,1,.36,1),
+	    box-shadow .34s cubic-bezier(.22,1,.36,1),
+	    border-color .34s cubic-bezier(.22,1,.36,1),
+	    background .34s cubic-bezier(.22,1,.36,1),
+	    opacity .25s ease;
     }
 
     .card::before {
@@ -666,22 +667,20 @@
     }
     
     .card.is-selected{
-	  background: rgba(42,46,68,.86);
-	  border:1px solid rgba(170,185,255,.22);
-	  transform:translateY(-1px);
-	
-	  box-shadow:
-	    0 0 0 1px rgba(255,255,255,.05),
-	    0 8px 22px rgba(0,0,0,.16),
-	    0 1px 6px rgba(0,0,0,.08);
-	
-	  transition:
-	    transform .22s cubic-bezier(.22,1,.36,1),
-	    box-shadow .22s,
-	    border-color .22s,
-	    background .22s;
+	    background: rgba(52,57,84,.95);
+		border: 1px solid rgba(170,195,255,.40);
+	    transform: translateY(-3px) scale(1.018);
+	    box-shadow:
+	        0 0 0 1px rgba(255,255,255,.08),
+	        0 0 28px rgba(132,165,255,.18),
+	        0 14px 34px rgba(0,0,0,.22);
+	    transition:
+	        transform .34s cubic-bezier(.22,1,.36,1),
+	        box-shadow .34s cubic-bezier(.22,1,.36,1),
+	        border-color .34s cubic-bezier(.22,1,.36,1),
+	        background .34s cubic-bezier(.22,1,.36,1);
 	}
-    
+	    
     .card.is-selected .card-name {
       color: rgba(255,255,255,0.96);
     }
