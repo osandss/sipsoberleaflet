@@ -668,17 +668,15 @@
     
     .card.is-selected{
 	    background: rgba(52,57,84,.95);
-		border: 1px solid rgba(170,195,255,.40);
-	    transform: translateY(-3px) scale(1.018);
+	    border: 0.8px solid rgba(27,30,49,.55);
+	    transform: none;
 	    box-shadow:
-	        0 0 0 1px rgba(255,255,255,.08),
-	        0 0 28px rgba(132,165,255,.18),
-	        0 14px 34px rgba(0,0,0,.22);
+	        0 8px 20px rgba(0,0,0,.16),
+	        inset 0 1px 0 rgba(255,255,255,.05);
 	    transition:
-	        transform .34s cubic-bezier(.22,1,.36,1),
-	        box-shadow .34s cubic-bezier(.22,1,.36,1),
-	        border-color .34s cubic-bezier(.22,1,.36,1),
-	        background .34s cubic-bezier(.22,1,.36,1);
+	        background .25s ease,
+	        box-shadow .25s ease,
+	        border-color .25s ease;
 	}
 	    
     .card.is-selected .card-name {
