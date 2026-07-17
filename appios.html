@@ -2280,8 +2280,19 @@ document.addEventListener("click",e=>{
     const venueId=favBtn.dataset.id;
     const v=locations.find(x=>String(x.id)===String(venueId)); if(!v) return;
     favBtn.classList.toggle("is-fav");
-    window.webkit?.messageHandlers?.favorites?.postMessage({action:"toggle",venue:{venueId:String(v.id),name:v.name||"",address:v.address||"",website:normalizeUrl(v.website||""),neighborhood:v.neighborhood||"",brands:v.brand||""}});
-    return;
+	window.webkit?.messageHandlers?.favorites?.postMessage({
+	    action: "toggle",
+	    venue: {
+	        venueId: String(v.id),
+	        name: v.name || "",
+	        address: v.address || "",
+	        website: normalizeUrl(v.website || ""),
+	        neighborhood: v.neighborhood || "",
+	        brands: v.brand || "",
+	        imageUrl: v.imageUrl || ""
+	    }
+	});    
+	return;
   }
   const nameEl=e.target.closest(".card-name[data-focus-id]");
   if(nameEl){e.preventDefault();e.stopPropagation();window.SipSober?.focusVenue(nameEl.dataset.focusId);return;}
