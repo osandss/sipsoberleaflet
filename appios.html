@@ -667,12 +667,14 @@
     }
     
     .card.is-selected{
-	    background: rgba(42, 46, 68, 0.86);
-	    border: 0.8px solid rgba(27,30,49,.55);
+	    background: rgba(42,46,68,.86); /* same background */
+	    border: 0.8px solid rgba(27,30,49,.42);
 	    transform: none;
 	    box-shadow:
-	        0 8px 20px rgba(0,0,0,.16),
-	        inset 0 1px 0 rgba(255,255,255,.05);
+	        0 2px 6px rgba(0,0,0,.08),
+	        0 10px 22px rgba(0,0,0,.18),
+	        0 0 0 1px rgba(255,255,255,.015),
+	        inset 0 1px 0 rgba(255,255,255,.03);
 	    transition:
 	        background .25s ease,
 	        box-shadow .25s ease,
