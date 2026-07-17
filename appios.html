@@ -665,15 +665,22 @@
       transition: transform 50ms ease, box-shadow 50ms ease;
     }
     
-    .card.is-selected {
-      background: rgba(42, 46, 68, 0.96);
-      border-color: rgba(145,176,250,0.14);
-      box-shadow:
-        0 18px 32px -10px rgba(8, 10, 20, 0.34),
-        0 8px 16px -8px rgba(8, 10, 20, 0.22),
-        inset 0 1px 0 rgba(255,255,255,0.045);
-      transform: translateY(-2px) scale(0.996);
-    }
+    .card.is-selected{
+	  background: rgba(52,58,86,.98);
+	  border:1px solid rgba(145,176,250,.22);
+	  transform:translateY(-3px);
+	
+	  box-shadow:
+	    0 18px 40px rgba(0,0,0,.28),
+	    0 8px 18px rgba(0,0,0,.18),
+	    inset 0 1px 0 rgba(255,255,255,.06);
+	
+	  transition:
+	    transform .22s cubic-bezier(.22,1,.36,1),
+	    box-shadow .22s,
+	    border-color .22s,
+	    background .22s;
+	}
     
     .card.is-selected .card-name {
       color: rgba(255,255,255,0.96);
@@ -703,16 +710,11 @@
       background: rgba(255,255,255,0.04);
     }
     
-    .card.is-selected .card-image-wrap {
-      width: 104px;
-      flex: 0 0 104px;
-    }
-    
-    .card.is-selected .card-image {
-      width: 104px;
-      height: 74px;
-      transform: none;
-    }
+    .card.is-selected .card-image-wrap{
+	    box-shadow:
+	        0 10px 24px rgba(0,0,0,.22),
+	        inset 0 0 0 1px rgba(255,255,255,.06);
+	}
     
     .card-content {
       flex: 1;
@@ -889,51 +891,6 @@
       line-height: 1;
       opacity: 0.92;
     }
-    
-    .card-close-btn{
-	  position:absolute;
-	  top:8px;
-	  left:8px;
-	
-	  display:none;
-	  align-items:center;
-	  justify-content:center;
-	
-	  width:26px;
-	  height:26px;
-	
-	  border:none;
-	  border-radius:999px;
-	
-	  background:rgba(28,31,49,.72);
-	  backdrop-filter:blur(12px);
-	  -webkit-backdrop-filter:blur(12px);
-	
-	  color:#fff;
-	  font-size:15px;
-	  font-weight:500;
-	  line-height:1;
-	
-	  cursor:pointer;
-	  z-index:30;
-	
-	  transition:
-	    transform .15s ease,
-	    background .15s ease,
-	    opacity .15s ease;
-	}
-	
-	.card.is-selected .card-close-btn{
-	  display:flex;
-	}
-	
-	.card-close-btn:hover{
-	  background:rgba(28,31,49,.88);
-	}
-	
-	.card-close-btn:active{
-	  transform:scale(.92);
-	}
         
     .ss-pin-label {
       display: inline-flex;
@@ -1693,11 +1650,7 @@ function setPanelState(state){
 }
 
 function getVisibleResults(data){
-  if(_selectedVenueId && !_panelUserExpanded){
-    const selected = data.find(v => String(v.id) === String(_selectedVenueId));
-    return selected ? [selected] : [];
-  }
-  return data;
+    return data;
 }
   
 function selectVenue(loc, opts = {}){
@@ -1755,7 +1708,7 @@ function syncSelectedListRow(){
   selected.classList.add("is-selected");
   selected.scrollIntoView({
     behavior: "smooth",
-    block: "nearest"
+    block: "center"
   });
 }
 
@@ -1871,12 +1824,6 @@ function renderList(data){
 	  <div class="card-main-row">
 		  <div class="card-image-wrap">
 		    ${cardImage}
-		
-		    ${
-		      isSelected
-		        ? `<button class="card-close-btn" type="button" aria-label="Close selected card">×</button>`
-		        : ""
-		    }
 		  </div>
 
         <div class="card-content">
@@ -1905,13 +1852,6 @@ function renderList(data){
 
     card.addEventListener("click", (e) => {
       if(e.target.closest(".fav-btn")) return;
-
-      if(e.target.closest(".card-close-btn")) {
-        e.preventDefault();
-        e.stopPropagation();
-        clearVenueSelection({ preserveMapView: true });
-        return;
-      }
 
       if(e.target.closest("a")) return;
       window.SipSober?.focusVenue?.(loc.id);
