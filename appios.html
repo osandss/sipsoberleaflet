@@ -350,7 +350,9 @@
       overflow-y: auto;
     }
     
-    #results { padding: 0; }
+   #results {
+	  padding: 6px 6px 12px;
+	}
 
     #panel-meta-row {
       display: flex;
@@ -669,12 +671,14 @@
     
     .card.is-selected {
 	  background: rgba(43, 47, 70, 0.96);
-	  border: 1px solid rgba(15, 18, 32, 0.38);
+	  border: 1px solid rgba(255,255,255,0.07);
+	  border-radius: 20px;
 	  transform: translateY(-1px);
 	  z-index: 2;
 	
 	  box-shadow:
-	    0 4px 10px rgba(8, 10, 20, 0.20),
+	    0 0 14px rgba(8, 10, 20, 0.26),
+	    0 7px 18px rgba(8, 10, 20, 0.22),
 	    inset 0 1px 0 rgba(255,255,255,0.055);
 	
 	  transition:
@@ -683,19 +687,7 @@
 	    border-color .28s ease,
 	    background .28s ease;
 	}
-	
-	.card.is-selected::after {
-	  content: "";
-	  position: absolute;
-	  inset: -4px;
-	  border-radius: 24px;
-	  pointer-events: none;
-	  z-index: -1;
-	
-	  box-shadow:
-	    0 0 12px rgba(8, 10, 20, 0.24),
-	    0 6px 18px rgba(8, 10, 20, 0.18);
-	}
+
 	    
     .card.is-selected .card-name {
       color: rgba(255,255,255,0.96);
