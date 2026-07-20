@@ -1696,12 +1696,13 @@ function selectVenue(loc, opts = {}){
   });
 }
 
-function syncSelectedListRow({ behavior = "smooth" } = {}){
+function syncSelectedListRow(){
   const results = document.getElementById("results");
   const panelBody = document.getElementById("panel-body");
 
   if(!results || !panelBody) return;
 
+  // Remove old selected styling
   results.querySelectorAll(".card").forEach(card => {
     card.classList.remove("is-selected");
   });
@@ -1719,12 +1720,25 @@ function syncSelectedListRow({ behavior = "smooth" } = {}){
 
   if(!selected) return;
 
+  // Keep selected card styling in all panel states
   selected.classList.add("is-selected");
 
+  // ONLY center when one venue is selected
+  // Do not move the list when the panel is expanded
+  if(_panelState !== "selected") return;
+
+  const panelRect = panelBody.getBoundingClientRect();
+  const selectedRect = selected.getBoundingClientRect();
+
+  const currentScrollTop = panelBody.scrollTop;
+
+  const selectedCenter =
+    (selectedRect.top - panelRect.top)
+    + currentScrollTop
+    + (selectedRect.height / 2);
+
   const targetScrollTop =
-    selected.offsetTop
-    - (panelBody.clientHeight / 2)
-    + (selected.offsetHeight / 2);
+    selectedCenter - (panelBody.clientHeight / 2);
 
   const maxScrollTop =
     panelBody.scrollHeight - panelBody.clientHeight;
@@ -1736,7 +1750,7 @@ function syncSelectedListRow({ behavior = "smooth" } = {}){
 
   panelBody.scrollTo({
     top: clampedScrollTop,
-    behavior
+    behavior: "auto"
   });
 }
 
@@ -2304,36 +2318,38 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
   const toggle = document.getElementById("panel-toggle");
   if(!panel || !toggle) return;
 
-  function recenterSelectedAfterPanelChange(){
-    if(!_selectedVenueId) return;
-
-    setTimeout(() => {
-      syncSelectedListRow({ behavior: "smooth" });
-    }, 240);
-  }
-
   toggle.addEventListener("click", e => {
     e.stopPropagation();
 
+    // EXPANDED → SELECTED OR COLLAPSED
     if(_panelState === "expanded"){
       _panelUserExpanded = false;
 
-      setPanelState(
-        _selectedVenueId ? "selected" : "collapsed"
-      );
+      const nextState =
+        _selectedVenueId ? "selected" : "collapsed";
+
+      setPanelState(nextState);
 
       applyFiltersUnified({ preserveMapView: true });
 
-      recenterSelectedAfterPanelChange();
+      // Only center when returning to selected mode.
+      // Wait for the panel height transition to finish.
+      if(nextState === "selected"){
+        setTimeout(() => {
+          syncSelectedListRow();
+        }, 230);
+      }
+
       return;
     }
 
+    // SELECTED OR COLLAPSED → EXPANDED
     _panelUserExpanded = true;
+
     setPanelState("expanded");
 
+    // Do not recenter anything when opening Show all
     applyFiltersUnified({ preserveMapView: true });
-
-    recenterSelectedAfterPanelChange();
   });
 
   setPanelState("collapsed");
