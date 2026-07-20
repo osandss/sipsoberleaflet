@@ -1696,9 +1696,11 @@ function selectVenue(loc, opts = {}){
   });
 }
 
-function syncSelectedListRow(){
+function syncSelectedListRow({ behavior = "smooth" } = {}){
   const results = document.getElementById("results");
-  if(!results) return;
+  const panelBody = document.getElementById("panel-body");
+
+  if(!results || !panelBody) return;
 
   results.querySelectorAll(".card").forEach(card => {
     card.classList.remove("is-selected");
@@ -1706,14 +1708,35 @@ function syncSelectedListRow(){
 
   if(!_selectedVenueId) return;
 
-  const escapedId = window.CSS && CSS.escape ? CSS.escape(_selectedVenueId) : _selectedVenueId;
-  const selected = results.querySelector(`.card[data-venue-id="${escapedId}"]`);
+  const escapedId =
+    window.CSS && CSS.escape
+      ? CSS.escape(_selectedVenueId)
+      : _selectedVenueId;
+
+  const selected = results.querySelector(
+    `.card[data-venue-id="${escapedId}"]`
+  );
+
   if(!selected) return;
 
   selected.classList.add("is-selected");
-  selected.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
+
+  const targetScrollTop =
+    selected.offsetTop
+    - (panelBody.clientHeight / 2)
+    + (selected.offsetHeight / 2);
+
+  const maxScrollTop =
+    panelBody.scrollHeight - panelBody.clientHeight;
+
+  const clampedScrollTop = Math.max(
+    0,
+    Math.min(targetScrollTop, maxScrollTop)
+  );
+
+  panelBody.scrollTo({
+    top: clampedScrollTop,
+    behavior
   });
 }
 
@@ -2275,26 +2298,42 @@ const searchInput=document.getElementById("searchTopInput");
 const searchClear=document.getElementById("searchTopClear");
 searchInput?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyFiltersUnified();document.getElementById("searchTopRow")?.classList.remove("is-open");document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");searchInput.blur();}});
 searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";applyFiltersUnified();});
-
   
 (()=>{
   const panel = document.getElementById("bottom-panel");
   const toggle = document.getElementById("panel-toggle");
   if(!panel || !toggle) return;
 
+  function recenterSelectedAfterPanelChange(){
+    if(!_selectedVenueId) return;
+
+    setTimeout(() => {
+      syncSelectedListRow({ behavior: "smooth" });
+    }, 240);
+  }
+
   toggle.addEventListener("click", e => {
     e.stopPropagation();
 
     if(_panelState === "expanded"){
       _panelUserExpanded = false;
-      setPanelState(_selectedVenueId ? "selected" : "collapsed");
+
+      setPanelState(
+        _selectedVenueId ? "selected" : "collapsed"
+      );
+
       applyFiltersUnified({ preserveMapView: true });
+
+      recenterSelectedAfterPanelChange();
       return;
     }
-    
+
     _panelUserExpanded = true;
     setPanelState("expanded");
+
     applyFiltersUnified({ preserveMapView: true });
+
+    recenterSelectedAfterPanelChange();
   });
 
   setPanelState("collapsed");
