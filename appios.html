@@ -1229,6 +1229,7 @@ let _suppressAutoFit = false;
 let _preserveMapViewOnSelect = false;
 let _panelUserExpanded = false;
 let _panelState = "collapsed"; // "collapsed" | "selected" | "expanded"
+let _isCollapsingToSelected = false;
 let _activeDrinkType = "";
 let _activeGuideVenueIds = [];
 let defaultIcon, activeIcon, currentIcon;
@@ -1681,6 +1682,12 @@ function selectVenue(loc, opts = {}){
   }
 
   _panelUserExpanded = false;
+
+  // IMPORTANT:
+  // If we're coming from Show All, prevent renderList()
+  // from trying to center while the panel is still collapsing.
+  _isCollapsingToSelected = wasExpanded;
+
   setPanelState("selected");
 
   applyFiltersUnified({ preserveMapView: true });
@@ -1692,8 +1699,8 @@ function selectVenue(loc, opts = {}){
 
   showSelectedPinLabel(loc);
 
-  // If the panel was already selected/collapsed,
-  // center normally right away.
+  // Normal selected/collapsed behavior:
+  // center immediately.
   if(!wasExpanded){
     requestAnimationFrame(() => {
       syncSelectedListRow();
@@ -1701,30 +1708,35 @@ function selectVenue(loc, opts = {}){
     return;
   }
 
-  // If selection happened from Show all, wait until the
-  // 55vh → 30vh panel transition is finished before
-  // calculating the final centered position.
+  // Coming from Show All:
+  // wait until the panel has COMPLETELY finished collapsing
+  // before doing the one and only centering operation.
   const panel = document.getElementById("bottom-panel");
 
   if(!panel){
+    _isCollapsingToSelected = false;
+
     requestAnimationFrame(() => {
       syncSelectedListRow();
     });
+
     return;
   }
 
-  let didCenter = false;
+  let finished = false;
 
-  const centerAfterCollapse = () => {
-    if(didCenter) return;
-    didCenter = true;
+  const finishCollapse = () => {
+    if(finished) return;
+    finished = true;
+
+    _isCollapsingToSelected = false;
 
     if(
       _panelState === "selected" &&
       _selectedVenueId === String(loc.id || "")
     ){
       requestAnimationFrame(() => {
-        syncSelectedListRow();
+        syncSelectedListRow({ behavior: "auto" });
       });
     }
   };
@@ -1733,19 +1745,23 @@ function selectVenue(loc, opts = {}){
     if(e.target !== panel || e.propertyName !== "height") return;
 
     panel.removeEventListener("transitionend", handleTransitionEnd);
-    centerAfterCollapse();
+    finishCollapse();
   };
 
   panel.addEventListener("transitionend", handleTransitionEnd);
 
-  // Fallback in case WKWebView does not fire transitionend.
+  // WKWebView fallback
   setTimeout(() => {
     panel.removeEventListener("transitionend", handleTransitionEnd);
-    centerAfterCollapse();
+    finishCollapse();
   }, 280);
 }
+	
+function syncSelectedListRow(opts = {}){
+  const {
+    behavior = "smooth"
+  } = opts;
 
-function syncSelectedListRow(){
   const results = document.getElementById("results");
   const panelBody = document.getElementById("panel-body");
 
@@ -1769,12 +1785,16 @@ function syncSelectedListRow(){
 
   if(!selected) return;
 
-  // Keep selected card styling in all panel states
+  // Selected styling can always be applied immediately.
   selected.classList.add("is-selected");
 
-  // ONLY center when one venue is selected
-  // Do not move the list when the panel is expanded
+  // Only center in selected mode.
   if(_panelState !== "selected") return;
+
+  // CRITICAL:
+  // If Show All is currently collapsing from 55vh → 30vh,
+  // do NOT calculate a scroll position yet.
+  if(_isCollapsingToSelected) return;
 
   const panelRect = panelBody.getBoundingClientRect();
   const selectedRect = selected.getBoundingClientRect();
@@ -1799,7 +1819,7 @@ function syncSelectedListRow(){
 
   panelBody.scrollTo({
     top: clampedScrollTop,
-    behavior: "smooth"
+    behavior: behavior
   });
 }
 
