@@ -357,6 +357,30 @@
       drop-shadow(0 8px 16px rgba(6,9,22,0.12));
   }
 
+    .showcase-media img {
+  ...
+}
+
+.feature-icon{
+  width:170px;
+  height:170px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:999px;
+
+  font-size:72px;
+
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+
     /* ==========================================
    DOWNLOAD
 ========================================== */
@@ -682,11 +706,8 @@
       </div>
 
       <div class="showcase-media">
-        <img
-          src="feature-home.png"
-          alt="Sip Sober neighborhood guides"
-        >
-      </div>
+        <div class="feature-icon">📍</div>
+    </div>
 
     </div>
   </section>
@@ -709,11 +730,8 @@
       </div>
 
       <div class="showcase-media">
-        <img
-          src="drink-cards.png"
-          alt="Sip Sober drink category cards"
-        >
-      </div>
+        <div class="feature-icon">🍸</div>
+    </div>
 
     </div>
   </section>
@@ -736,11 +754,8 @@
       </div>
 
       <div class="showcase-media">
-        <img
-          src="feature-map.png"
-          alt="Sip Sober zero-proof map"
-        >
-      </div>
+        <div class="feature-icon">🗺️</div>
+    </div>
 
     </div>
   </section>
