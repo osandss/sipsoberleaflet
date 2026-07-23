@@ -1596,7 +1596,6 @@ function shortNote(text){
   return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 }
 
-
 function getLocationById(id){
   return locations.find(v => String(v.id) === String(id)) || null;
 }
@@ -1672,7 +1671,7 @@ function selectVenue(loc, opts = {}){
 
   _selectedVenueId = String(loc.id || "");
   _lastFocusedVenueId = _selectedVenueId;
-  _panelUserExpanded = false;
+
   _preserveMapViewOnSelect = true;
 
   if(centerMap){
@@ -1680,6 +1679,13 @@ function selectVenue(loc, opts = {}){
     map.invalidateSize(false);
     map.setView([loc.lat, loc.lng], targetZoom, { animate });
   }
+
+  _panelUserExpanded = false;
+
+  // IMPORTANT:
+  // If we're coming from Show All, prevent renderList()
+  // from trying to center while the panel is still collapsing.
+  _isCollapsingToSelected = wasExpanded;
 
   setPanelState("selected");
 
@@ -1692,27 +1698,36 @@ function selectVenue(loc, opts = {}){
 
   showSelectedPinLabel(loc);
 
-  requestAnimationFrame(() => {
-    syncSelectedListRow({
-      behavior: wasExpanded ? "smooth" : "auto",
-      useSelectedPanelHeight: wasExpanded
+  // Normal selected/collapsed behavior:
+  // center immediately.
+  if(!wasExpanded){
+    requestAnimationFrame(() => {
+      syncSelectedListRow();
     });
-  });
+    return;
+  }
+
+  // Coming from Show All:
+  // wait until the panel has COMPLETELY finished collapsing
+  // before doing the one and only centering operation.
+  _isCollapsingToSelected = false;
+
+requestAnimationFrame(() => {
+    syncSelectedListRow({ behavior: "auto" });
+});
 }
 	
 function syncSelectedListRow(opts = {}){
   const {
-    behavior = "auto",
-    useSelectedPanelHeight = false
+    behavior = "smooth"
   } = opts;
 
-  const panel = document.getElementById("bottom-panel");
-  const panelHeader = document.getElementById("panel-header");
-  const panelBody = document.getElementById("panel-body");
   const results = document.getElementById("results");
+  const panelBody = document.getElementById("panel-body");
 
-  if(!panel || !panelHeader || !panelBody || !results) return;
+  if(!results || !panelBody) return;
 
+  // Remove old selected styling
   results.querySelectorAll(".card").forEach(card => {
     card.classList.remove("is-selected");
   });
@@ -1730,72 +1745,39 @@ function syncSelectedListRow(opts = {}){
 
   if(!selected) return;
 
+  // Selected styling can always be applied immediately.
   selected.classList.add("is-selected");
 
+  // Only center in selected mode.
   if(_panelState !== "selected") return;
 
+  // CRITICAL:
+  // If Show All is currently collapsing from 55vh → 30vh,
+  // do NOT calculate a scroll position yet.
+  if(_isCollapsingToSelected) return;
+
+  const panelRect = panelBody.getBoundingClientRect();
   const selectedRect = selected.getBoundingClientRect();
-  const panelBodyRect = panelBody.getBoundingClientRect();
+
   const currentScrollTop = panelBody.scrollTop;
 
   const selectedCenter =
-    selectedRect.top -
-    panelBodyRect.top +
-    currentScrollTop +
-    selectedRect.height / 2;
-
-  let visibleBodyHeight = panelBody.clientHeight;
-
-  /*
-    When the panel is changing from 55vh to 30vh, clientHeight still
-    reflects the animated in-between height. Calculate the final
-    selected-panel body height instead.
-  */
-  if(useSelectedPanelHeight){
-    const rootStyles = getComputedStyle(document.documentElement);
-    const selectedValue = rootStyles
-      .getPropertyValue("--panel-selected")
-      .trim();
-
-    let finalPanelHeight = window.innerHeight * 0.30;
-
-    if(selectedValue.endsWith("vh")){
-      finalPanelHeight =
-        window.innerHeight * (parseFloat(selectedValue) / 100);
-    } else if(selectedValue.endsWith("px")){
-      finalPanelHeight = parseFloat(selectedValue);
-    }
-
-    const panelStyles = getComputedStyle(panel);
-
-    const paddingTop =
-      parseFloat(panelStyles.paddingTop) || 0;
-
-    const paddingBottom =
-      parseFloat(panelStyles.paddingBottom) || 0;
-
-    visibleBodyHeight =
-      finalPanelHeight -
-      panelHeader.offsetHeight -
-      paddingTop -
-      paddingBottom;
-  }
+    (selectedRect.top - panelRect.top)
+    + currentScrollTop
+    + (selectedRect.height / 2);
 
   const targetScrollTop =
-    selectedCenter - visibleBodyHeight / 2;
+    selectedCenter - (panelBody.clientHeight / 2);
 
   const maxScrollTop =
-    panelBody.scrollHeight - visibleBodyHeight;
+    panelBody.scrollHeight - panelBody.clientHeight;
 
   const clampedScrollTop = Math.max(
     0,
     Math.min(targetScrollTop, maxScrollTop)
   );
 
-  panelBody.scrollTo({
-    top: clampedScrollTop,
-    behavior
-  });
+  panelBody.scrollTop = clampedScrollTop;
 }
 
 function clearVenueSelection(opts = {}){
