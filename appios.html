@@ -1711,50 +1711,11 @@ function selectVenue(loc, opts = {}){
   // Coming from Show All:
   // wait until the panel has COMPLETELY finished collapsing
   // before doing the one and only centering operation.
-  const panel = document.getElementById("bottom-panel");
+  _isCollapsingToSelected = false;
 
-  if(!panel){
-    _isCollapsingToSelected = false;
-
-    requestAnimationFrame(() => {
-      syncSelectedListRow();
-    });
-
-    return;
-  }
-
-  let finished = false;
-
-  const finishCollapse = () => {
-    if(finished) return;
-    finished = true;
-
-    _isCollapsingToSelected = false;
-
-    if(
-      _panelState === "selected" &&
-      _selectedVenueId === String(loc.id || "")
-    ){
-      requestAnimationFrame(() => {
-        syncSelectedListRow({ behavior: "auto" });
-      });
-    }
-  };
-
-  const handleTransitionEnd = (e) => {
-    if(e.target !== panel || e.propertyName !== "height") return;
-
-    panel.removeEventListener("transitionend", handleTransitionEnd);
-    finishCollapse();
-  };
-
-  panel.addEventListener("transitionend", handleTransitionEnd);
-
-  // WKWebView fallback
-  setTimeout(() => {
-    panel.removeEventListener("transitionend", handleTransitionEnd);
-    finishCollapse();
-  }, 280);
+requestAnimationFrame(() => {
+    syncSelectedListRow({ behavior: "auto" });
+});
 }
 	
 function syncSelectedListRow(opts = {}){
@@ -2404,10 +2365,10 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
       // Only center when returning to selected mode.
       // Wait for the panel height transition to finish.
       if(nextState === "selected"){
-        setTimeout(() => {
-          syncSelectedListRow();
-        }, 230);
-      }
+	  	requestAnimationFrame(() => {
+	    	syncSelectedListRow({ behavior: "auto" });
+	  	});
+	  }
 
       return;
     }
