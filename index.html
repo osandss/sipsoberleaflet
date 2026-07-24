@@ -323,36 +323,52 @@
     color: var(--ss-text-soft);
   }
   
-  .showcase-media {
-    width: 100%;
-    max-width: 300px;
-    min-height: 200px;
-    padding: 24px;
+  .showcase-media{
+    position: relative;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    justify-self: center;
+    width:100%;
+    max-width:300px;
+    height:200px;
 
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    justify-self:center;
 
-    background:
-      radial-gradient(
-        220px 140px at 50% 35%,
-        rgba(105,121,187,0.12),
-        transparent 72%
-      ),
-      rgba(255,255,255,0.018);
+    overflow:hidden;
 
-    overflow: hidden;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.06);
+
+    background:#1d2135;
 }
 
+  .showcase-photo{
+    position:absolute;
+    inset:0;
 
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+}
+
+  .showcase-overlay{
+      position:absolute;
+      inset:0;
+  
+      background:rgba(16,18,30,.52);
+  
+      z-index:1;
+  }
+  
   .showcase-icon{
+    position:relative;
+    z-index:2;
+
     font-size:52px;
     line-height:1;
-    color:rgba(255,255,255,.92);
+    color:#fff;
     font-weight:300;
     user-select:none;
 }
@@ -682,7 +698,16 @@
       </div>
 
       <div class="showcase-media">
+
+        <img
+            class="showcase-photo"
+            src="showcase-map.png"
+            alt="Neighborhood Guides">
+    
+        <div class="showcase-overlay"></div>
+    
         <div class="showcase-icon">⌖</div>
+    
     </div>
 
     </div>
@@ -706,7 +731,16 @@
       </div>
 
       <div class="showcase-media">
+
+        <img
+            class="showcase-photo"
+            src="showcase-drinks.png"
+            alt="Drink Cards">
+    
+        <div class="showcase-overlay"></div>
+    
         <div class="showcase-icon">◐</div>
+    
     </div>
 
     </div>
@@ -730,7 +764,16 @@
       </div>
 
       <div class="showcase-media">
+
+        <img
+            class="showcase-photo"
+            src="showcase-saved.png"
+            alt="Map and Favorites">
+    
+        <div class="showcase-overlay"></div>
+    
         <div class="showcase-icon">⌁</div>
+    
     </div>
 
     </div>
