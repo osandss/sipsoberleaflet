@@ -336,12 +336,21 @@
     }
 
     #panel-body {
-      flex: 1 1 auto;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 12px 8px 16px;
-    }
-
+	  flex: 1 1 auto;
+	  overflow-y: auto;
+	  -webkit-overflow-scrolling: touch;
+	  padding: 12px 8px 16px;
+	
+	  /* Prevent the browser from changing the scroll position
+	     while the panel and cards are being rebuilt. */
+	  overflow-anchor: none;
+	}
+	
+	#results,
+	.card {
+	  overflow-anchor: none;
+	}
+	  
     #bottom-panel.selected #panel-body {
 	  overflow-y: auto;
 	}
@@ -1667,63 +1676,149 @@ function selectVenue(loc, opts = {}){
     animate = true
   } = opts;
 
+  const panel = document.getElementById("bottom-panel");
+  const panelBody = document.getElementById("panel-body");
+
   const wasExpanded = _panelState === "expanded";
 
   _selectedVenueId = String(loc.id || "");
   _lastFocusedVenueId = _selectedVenueId;
+  _panelUserExpanded = false;
 
   _preserveMapViewOnSelect = true;
 
   if(centerMap){
     const targetZoom = Math.max(map.getZoom(), zoom);
+
     map.invalidateSize(false);
-    map.setView([loc.lat, loc.lng], targetZoom, { animate });
+    map.setView(
+      [loc.lat, loc.lng],
+      targetZoom,
+      { animate }
+    );
   }
 
-  _panelUserExpanded = false;
-
-  // IMPORTANT:
-  // If we're coming from Show All, prevent renderList()
-  // from trying to center while the panel is still collapsing.
+  /*
+   * When coming from Show All, keep this true until the
+   * panel's height transition has completely finished.
+   */
   _isCollapsingToSelected = wasExpanded;
+
+  /*
+   * Stop any remaining iOS momentum scrolling while the
+   * panel is shrinking. Otherwise the list can bounce.
+   */
+  if(wasExpanded && panelBody){
+    panelBody.style.overflowY = "hidden";
+    panelBody.style.webkitOverflowScrolling = "auto";
+  }
+
+  let collapseFinished = false;
+  let collapseFallback = null;
+
+  const finishCollapse = () => {
+    if(collapseFinished) return;
+    collapseFinished = true;
+
+    if(panel){
+      panel.removeEventListener(
+        "transitionend",
+        handleTransitionEnd
+      );
+    }
+
+    if(collapseFallback){
+      clearTimeout(collapseFallback);
+    }
+
+    /*
+     * Wait two paint frames so WebKit has applied the final
+     * 30vh panel height before measuring and centering.
+     */
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        _isCollapsingToSelected = false;
+
+        syncSelectedListRow({
+          behavior: "auto"
+        });
+
+        /*
+         * Re-enable scrolling only after the selected card
+         * has been positioned.
+         */
+        if(panelBody){
+          panelBody.style.overflowY = "auto";
+          panelBody.style.webkitOverflowScrolling = "touch";
+        }
+      });
+    });
+  };
+
+  const handleTransitionEnd = (event) => {
+    if(event.target !== panel) return;
+    if(event.propertyName !== "height") return;
+
+    finishCollapse();
+  };
+
+  /*
+   * Attach the listener BEFORE changing the panel state.
+   */
+  if(wasExpanded && panel){
+    panel.addEventListener(
+      "transitionend",
+      handleTransitionEnd
+    );
+
+    /*
+     * Safety fallback for WebKit in case transitionend
+     * does not fire. The CSS transition lasts 220ms.
+     */
+    collapseFallback = setTimeout(
+      finishCollapse,
+      280
+    );
+  }
 
   setPanelState("selected");
 
-  applyFiltersUnified({ preserveMapView: true });
+  applyFiltersUnified({
+    preserveMapView: true
+  });
 
   _preserveMapViewOnSelect = false;
 
   const marker = markersById[_selectedVenueId];
-  if(marker) setActiveMarker(marker);
+
+  if(marker){
+    setActiveMarker(marker);
+  }
 
   showSelectedPinLabel(loc);
 
-  // Normal selected/collapsed behavior:
-  // center immediately.
+  /*
+   * If the panel was already short, there is no height
+   * transition to wait for.
+   */
   if(!wasExpanded){
+    _isCollapsingToSelected = false;
+
     requestAnimationFrame(() => {
-      syncSelectedListRow();
+      syncSelectedListRow({
+        behavior: "auto"
+      });
     });
+
     return;
   }
 
-  // Coming from Show All:
-// wait until the panel has COMPLETELY finished collapsing
-// before doing the one and only centering operation.
-_isCollapsingToSelected = false;
-
-const panel = document.getElementById("bottom-panel");
-
-const onPanelTransitionEnd = (e) => {
-  if (e.propertyName !== "height") return;
-
-  panel.removeEventListener("transitionend", onPanelTransitionEnd);
-
-  syncSelectedListRow({ behavior: "auto" });
-};
-
-panel.addEventListener("transitionend", onPanelTransitionEnd);
+  /*
+   * For the expanded case, finishCollapse() will perform
+   * the one and only centering operation after shrinking.
+   */
 }
+
 	
 function syncSelectedListRow(opts = {}){
   const {
