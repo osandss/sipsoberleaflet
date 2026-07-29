@@ -1708,13 +1708,21 @@ function selectVenue(loc, opts = {}){
   }
 
   // Coming from Show All:
-  // wait until the panel has COMPLETELY finished collapsing
-  // before doing the one and only centering operation.
-  _isCollapsingToSelected = false;
+// wait until the panel has COMPLETELY finished collapsing
+// before doing the one and only centering operation.
+_isCollapsingToSelected = false;
 
-requestAnimationFrame(() => {
-    syncSelectedListRow({ behavior: "auto" });
-});
+const panel = document.getElementById("bottom-panel");
+
+const onPanelTransitionEnd = (e) => {
+  if (e.propertyName !== "height") return;
+
+  panel.removeEventListener("transitionend", onPanelTransitionEnd);
+
+  syncSelectedListRow({ behavior: "auto" });
+};
+
+panel.addEventListener("transitionend", onPanelTransitionEnd);
 }
 	
 function syncSelectedListRow(opts = {}){
