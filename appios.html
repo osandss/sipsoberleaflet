@@ -1239,6 +1239,7 @@ let _preserveMapViewOnSelect = false;
 let _panelUserExpanded = false;
 let _panelState = "collapsed"; // "collapsed" | "selected" | "expanded"
 let _isCollapsingToSelected = false;
+let _expandedScrollTop = 0;
 let _activeDrinkType = "";
 let _activeGuideVenueIds = [];
 let defaultIcon, activeIcon, currentIcon;
@@ -2460,8 +2461,14 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
     e.stopPropagation();
 
     // EXPANDED → SELECTED OR COLLAPSED
-    if(_panelState === "expanded"){
-      _panelUserExpanded = false;
+	if(_panelState === "expanded"){
+	
+	  const panelBody = document.getElementById("panel-body");
+	  if(panelBody){
+	    _expandedScrollTop = panelBody.scrollTop;
+	  }
+	
+	  _panelUserExpanded = false;
 
       const nextState =
         _selectedVenueId ? "selected" : "collapsed";
@@ -2482,10 +2489,6 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
     }
 
     // SELECTED OR COLLAPSED → EXPANDED
-
-	// Remember where the user was
-	const panelBody = document.getElementById("panel-body");
-	const savedScrollTop = panelBody ? panelBody.scrollTop : 0;
 	
 	// Leaving selected mode.
 	// We only keep the scroll position.
@@ -2505,7 +2508,7 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
 	requestAnimationFrame(() => {
 	  const panelBody = document.getElementById("panel-body");
 	  if(panelBody){
-	    panelBody.scrollTop = savedScrollTop;
+	    panelBody.scrollTop = _expandedScrollTop;
 	  }
 	});
   });
