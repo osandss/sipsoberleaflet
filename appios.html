@@ -2482,12 +2482,32 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
     }
 
     // SELECTED OR COLLAPSED → EXPANDED
-    _panelUserExpanded = true;
 
-    setPanelState("expanded");
-
-    // Do not recenter anything when opening Show all
-    applyFiltersUnified({ preserveMapView: true });
+	// Remember where the user was
+	const panelBody = document.getElementById("panel-body");
+	const savedScrollTop = panelBody ? panelBody.scrollTop : 0;
+	
+	// Leaving selected mode.
+	// We only keep the scroll position.
+	_selectedVenueId = null;
+	_lastFocusedVenueId = null;
+	
+	clearActiveMarker();
+	clearSelectedPinLabel();
+	
+	_panelUserExpanded = true;
+	
+	setPanelState("expanded");
+	
+	applyFiltersUnified({ preserveMapView: true });
+	
+	// Restore the previous scroll position.
+	requestAnimationFrame(() => {
+	  const panelBody = document.getElementById("panel-body");
+	  if(panelBody){
+	    panelBody.scrollTop = savedScrollTop;
+	  }
+	});
   });
 
   setPanelState("collapsed");
