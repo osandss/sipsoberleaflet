@@ -1664,7 +1664,16 @@ function setPanelState(state){
 }
 
 function getVisibleResults(data){
-    return data;
+  // When a venue is selected and the panel is collapsed,
+  // show only that selected venue card.
+  if (_selectedVenueId && !_panelUserExpanded) {
+    return data.filter(loc =>
+      String(loc.id) === String(_selectedVenueId)
+    );
+  }
+
+  // When the panel is expanded, show the full filtered list.
+  return data;
 }
   
 function selectVenue(loc, opts = {}){
