@@ -1404,10 +1404,10 @@ function _buildIcons(){
   const isMobile = mobileQuery.matches;
 
   const size = isMobile ? [12,18] : [18,26];
-  const activeSize = isMobile ? [16,24] : [24,34];
+  const activeSize = isMobile ? [20,30] : [30,44];
 
   defaultIcon = makeIcon(size, "#3A415F", false);
-  activeIcon  = makeIcon(activeSize, "#809BFF", true);
+  activeIcon  = makeIcon(activeSize, "#3A415F", true);
 
   currentIcon = defaultIcon;
   L.Marker.prototype.options.icon = currentIcon;
