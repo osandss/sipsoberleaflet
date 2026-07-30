@@ -2024,28 +2024,75 @@ function clearVenueSelection(opts = {}){
 }
   
 /* ─── RENDERERS ────────────────────────────────────────────────── */
-function renderMarkers(data){
-  if(!markersLayer) return { count:0, bounds:null };
+function renderMarkers(data) {
+  if (!markersLayer) {
+    return {
+      count: 0,
+      bounds: null
+    };
+  }
+
   markersLayer.clearLayers();
   clearActiveMarker();
   clearSelectedPinLabel();
+
   markersById = {};
 
   const bounds = L.latLngBounds([]);
 
   data.forEach(loc => {
-    const m = L.marker([loc.lat, loc.lng]).addTo(markersLayer);
+    const marker = L.marker([
+      loc.lat,
+      loc.lng
+    ]).addTo(markersLayer);
 
-    m.on("click", (e) => {
-      if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
-      selectVenue(loc, { centerMap:true, zoom:15, animate:true });
+    marker.on("click", event => {
+      if (event.originalEvent) {
+        L.DomEvent.stopPropagation(
+          event.originalEvent
+        );
+      }
+
+      selectVenue(loc, {
+        centerMap: true,
+        zoom: 15,
+        animate: true
+      });
     });
 
-    if(loc.id) markersById[String(loc.id)] = m;
-    bounds.extend([loc.lat, loc.lng]);
+    if (loc.id) {
+      markersById[String(loc.id)] = marker;
+    }
+
+    bounds.extend([
+      loc.lat,
+      loc.lng
+    ]);
   });
 
-  return { count:data.length, bounds:data.length ? bounds : null };
+  /*
+   * Restore selection after a legitimate filter render.
+   */
+  if (_selectedVenueId) {
+    const selectedMarker =
+      markersById[String(_selectedVenueId)];
+
+    const selectedLocation =
+      getLocationById(_selectedVenueId);
+
+    if (selectedMarker) {
+      setActiveMarker(selectedMarker);
+
+      if (selectedLocation) {
+        showSelectedPinLabel(selectedLocation);
+      }
+    }
+  }
+
+  return {
+    count: data.length,
+    bounds: data.length ? bounds : null
+  };
 }
   
 function renderList(data){
