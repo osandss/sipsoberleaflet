@@ -2649,36 +2649,38 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
       return;
     }
 
-    // SELECTED OR COLLAPSED → EXPANDED
+        // SELECTED OR COLLAPSED → EXPANDED
 
-	_selectedVenueId = null;
-	_lastFocusedVenueId = null;
+	    _selectedVenueId = null;
+	    _lastFocusedVenueId = null;
 	
-	clearActiveMarker();
-	clearSelectedPinLabel();
+	    clearActiveMarker();
+	    clearSelectedPinLabel();
 	
-	_panelUserExpanded = true;
+	    _panelUserExpanded = true;
 	
-	setPanelState("expanded");
+	    setPanelState("expanded");
 	
-	refreshSelectionUI();
+	    refreshSelectionUI();
 	
-	/*
-	 * Wait until all cards are visible and their layout
-	 * has been recalculated before restoring the position.
-	 */
-	requestAnimationFrame(() => {
-	  requestAnimationFrame(() => {
-	    const panelBody = document.getElementById("panel-body");
+	    /*
+	     * Wait until all cards are visible and their layout
+	     * has been recalculated before restoring the position.
+	     */
+	    requestAnimationFrame(() => {
+	      requestAnimationFrame(() => {
+	        const panelBody = document.getElementById("panel-body");
 	
-	    if (panelBody) {
-	      panelBody.scrollTop = _expandedScrollTop;
-	    }
-	  });
-	});
-
-  setPanelState("collapsed");
-})();
+	        if (panelBody) {
+	          panelBody.scrollTop = _expandedScrollTop;
+	        }
+	      });
+	    });
+	
+	  }); // closes toggle.addEventListener
+	
+	})(); // closes the IIFE
+	
 </script>
 
 <script>
