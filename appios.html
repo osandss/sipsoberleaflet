@@ -1793,9 +1793,7 @@ function selectVenue(loc, opts = {}){
 
   setPanelState("selected");
 
-  applyFiltersUnified({
-    preserveMapView: true
-  });
+  refreshSelectionUI();
 
   _preserveMapViewOnSelect = false;
 
@@ -1807,6 +1805,7 @@ function selectVenue(loc, opts = {}){
 
   showSelectedPinLabel(loc);
 
+	
   /*
    * If the panel was already short, there is no height
    * transition to wait for.
@@ -1891,6 +1890,116 @@ function syncSelectedListRow(opts = {}){
   );
 
   panelBody.scrollTop = clampedScrollTop;
+}
+
+function refreshSelectionUI() {
+  const results = document.getElementById("results");
+  const rc = document.getElementById("results-count");
+
+  if (!results) return;
+
+  results.querySelectorAll(".card").forEach(card => {
+    const venueId = String(card.dataset.venueId || "");
+    const selected =
+      venueId === String(_selectedVenueId || "");
+
+    card.classList.toggle("is-selected", selected);
+
+    /*
+     * In selected mode, keep all cards in the DOM but
+     * visually show only the selected card.
+     */
+    card.style.display =
+      (_selectedVenueId &&
+       !_panelUserExpanded &&
+       !selected)
+        ? "none"
+        : "";
+
+    /*
+     * Add or remove the Directions button without
+     * rebuilding the entire card.
+     */
+    let actionRow =
+      card.querySelector(".card-badge-row--selected");
+
+    let directionsButton =
+      actionRow?.querySelector(".route-pill");
+
+    if (selected) {
+      const loc = getLocationById(venueId);
+
+      if (loc) {
+        const directionsUrl =
+          `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+            (loc.name || "") + " " + (loc.address || "")
+          )}`;
+
+        /*
+         * Some cards may not already have a badge row.
+         * Create one when needed.
+         */
+        if (!actionRow) {
+          actionRow = document.createElement("div");
+          actionRow.className =
+            "card-badge-row card-badge-row--selected";
+
+          card
+            .querySelector(".card-content")
+            ?.appendChild(actionRow);
+        }
+
+        if (!directionsButton) {
+          directionsButton = document.createElement("a");
+          directionsButton.className =
+            "card-selected-pill primary card-selected-pill--inline route-pill";
+
+          directionsButton.target = "_blank";
+          directionsButton.rel = "noopener";
+
+          directionsButton.innerHTML = `
+            <span class="route-pill-icon">↗</span>
+            Directions
+          `;
+
+          actionRow?.appendChild(directionsButton);
+        }
+
+        directionsButton.href = directionsUrl;
+      }
+    } else if (directionsButton) {
+      directionsButton.remove();
+
+      /*
+       * Remove the row if Directions was its only content.
+       */
+      if (
+        actionRow &&
+        !actionRow.querySelector(".drink-pill")
+      ) {
+        actionRow.remove();
+      }
+    }
+  });
+
+  /*
+   * Hide the result count while one venue is selected.
+   */
+  if (rc && _selectedVenueId && !_panelUserExpanded) {
+    rc.textContent = "";
+  }
+
+  /*
+   * Hide or restore filter pills based on selection state.
+   */
+  updateActiveFilters(
+    getSelectedValues("brand"),
+    getSelectedValues("n")
+  );
+
+  syncSelectedListRow({
+    behavior: "auto"
+  });
 }
 
 function clearVenueSelection(opts = {}){
