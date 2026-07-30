@@ -1691,6 +1691,10 @@ function selectVenue(loc, opts = {}){
 
   const wasExpanded = _panelState === "expanded";
 
+  if (wasExpanded && panelBody) {
+	_expandedScrollTop = panelBody.scrollTop;
+  }
+
   _selectedVenueId = String(loc.id || "");
   _lastFocusedVenueId = _selectedVenueId;
   _panelUserExpanded = false;
@@ -2646,9 +2650,7 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
     }
 
     // SELECTED OR COLLAPSED → EXPANDED
-	
-	// Leaving selected mode.
-	// We only keep the scroll position.
+
 	_selectedVenueId = null;
 	_lastFocusedVenueId = null;
 	
@@ -2661,14 +2663,19 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
 	
 	refreshSelectionUI();
 	
-	// Restore the previous scroll position.
+	/*
+	 * Wait until all cards are visible and their layout
+	 * has been recalculated before restoring the position.
+	 */
 	requestAnimationFrame(() => {
-	  const panelBody = document.getElementById("panel-body");
-	  if(panelBody){
-	    panelBody.scrollTop = _expandedScrollTop;
-	  }
+	  requestAnimationFrame(() => {
+	    const panelBody = document.getElementById("panel-body");
+	
+	    if (panelBody) {
+	      panelBody.scrollTop = _expandedScrollTop;
+	    }
+	  });
 	});
-  });
 
   setPanelState("collapsed");
 })();
