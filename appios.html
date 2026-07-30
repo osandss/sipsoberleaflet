@@ -1963,6 +1963,11 @@ function renderList(data){
     card.dataset.venueId = String(loc.id || "");
     const isSelected = _selectedVenueId === String(loc.id);
 
+	const shouldHide =
+	  _selectedVenueId &&
+	  !_panelUserExpanded &&
+	  !isSelected;
+
     const distance = _distanceLabelForVenue(loc);
     const neighborhood = loc.neighborhood || "";
     const address = loc.address || "";
@@ -2031,6 +2036,10 @@ function renderList(data){
 
     if (isSelected) card.classList.add("is-selected");
 
+	if (shouldHide) {
+	  card.style.display = "none";
+	}
+
     card.addEventListener("click", (e) => {
       if(e.target.closest(".fav-btn")) return;
 
@@ -2087,10 +2096,9 @@ function applyFiltersUnified(opts = {}){
   } else {
     filtered.sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{sensitivity:"base"}));
   }
-  
-  const visibleList = getVisibleResults(filtered);
 
-  renderList(visibleList);
+  renderList(filtered);
+	
   if(!map) return;
   const{count,bounds}=renderMarkers(filtered);
   updateActiveFilters(brands,hoods);
