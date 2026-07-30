@@ -2632,7 +2632,7 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
 
       setPanelState(nextState);
 
-      applyFiltersUnified({ preserveMapView: true });
+      refreshSelectionUI();
 
       // Only center when returning to selected mode.
       // Wait for the panel height transition to finish.
