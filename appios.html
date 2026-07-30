@@ -2003,24 +2003,17 @@ function refreshSelectionUI() {
 }
 
 function clearVenueSelection(opts = {}){
-  const { preserveMapView = false } = opts;
-
   _selectedVenueId = null;
   _lastFocusedVenueId = null;
   _panelUserExpanded = false;
+  _isCollapsingToSelected = false;
 
   clearActiveMarker();
   clearSelectedPinLabel();
 
   setPanelState("collapsed");
 
-  if (preserveMapView) {
-    _suppressAutoFit = true;
-    applyFiltersUnified();
-    _suppressAutoFit = false;
-  } else {
-    applyFiltersUnified();
-  }
+  refreshSelectionUI();
 }
   
 /* ─── RENDERERS ────────────────────────────────────────────────── */
