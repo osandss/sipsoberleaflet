@@ -2659,7 +2659,7 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
 	
 	setPanelState("expanded");
 	
-	applyFiltersUnified({ preserveMapView: true });
+	refreshSelectionUI();
 	
 	// Restore the previous scroll position.
 	requestAnimationFrame(() => {
