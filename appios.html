@@ -1534,9 +1534,24 @@ function updateActiveFilters(selectedBrands, selectedNeighborhoods){
   selectedBrands.forEach(b => pill("brand", b));
 }
 
-function clearSingleFilter(type,value){
-  if(type==="brand") document.querySelectorAll('input[id^="brand-"]').forEach(cb=>{if(cb.value===value)cb.checked=false;});
-  else document.querySelectorAll('input[id^="n-"]').forEach(cb=>{if(cb.value===value)cb.checked=false;});
+function clearSingleFilter(type, value) {
+  if (type === "brand") {
+    document.querySelectorAll('input[id^="brand-"]').forEach(cb => {
+      if (cb.value === value) cb.checked = false;
+    });
+  } else {
+    document.querySelectorAll('input[id^="n-"]').forEach(cb => {
+      if (cb.value === value) cb.checked = false;
+    });
+  }
+
+  // Notify the native iOS app so its filter sheet stays in sync
+  window.webkit?.messageHandlers?.filters?.postMessage({
+    action: "remove",
+    type,
+    value
+  });
+
   applyFiltersUnified();
 }
 
