@@ -907,33 +907,40 @@
     }
         
     .ss-pin-label {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    
-      min-height: 25px;
-      padding: 0 12px;
-      border-radius: 999px;
-    
-      background: rgba(42, 46, 68, 0.94);
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow:
-        0 8px 18px rgba(8,10,20,0.18),
-        inset 0 1px 0 rgba(255,255,255,0.06);
-          
-      color: rgba(255,255,255,0.97);
-      font-size: 11px;
-      font-weight: 750;
-      letter-spacing: 0.01em;
-    
-      white-space: nowrap;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    
-      transform: translateY(-2px);
-      transition: transform 120ms ease, opacity 120ms ease;
-      position: relative;
-    }
+	  display: inline-flex;
+	  align-items: center;
+	  justify-content: center;
+	
+	  min-height: 28px;
+	  padding: 0 14px;
+	  border-radius: 999px;
+	
+	  background: rgba(48, 53, 80, 0.96);
+	  border: 1px solid rgba(255,255,255,0.16);
+	
+	  box-shadow:
+	    0 10px 18px rgba(8,10,20,0.24),
+	    0 20px 34px rgba(8,10,20,0.18),
+	    inset 0 1px 0 rgba(255,255,255,0.08);
+	
+	  color: rgba(255,255,255,0.98);
+	  font-size: 11.5px;
+	  font-weight: 700;
+	  letter-spacing: 0.01em;
+	
+	  white-space: nowrap;
+	
+	  backdrop-filter: blur(12px);
+	  -webkit-backdrop-filter: blur(12px);
+	
+	  transform: translateY(-8px);
+	
+	  transition:
+	    transform 180ms cubic-bezier(.22,1,.36,1),
+	    box-shadow 180ms cubic-bezier(.22,1,.36,1);
+	
+	  position: relative;
+	}
     
     @media (max-width: 640px) {
       .ss-pin-label {
@@ -1404,7 +1411,7 @@ function _buildIcons(){
   const isMobile = mobileQuery.matches;
 
   const size = isMobile ? [12,18] : [18,26];
-  const activeSize = isMobile ? [20,30] : [30,44];
+  const activeSize = isMobile ? [24,36] : [36,52];
 
   defaultIcon = makeIcon(size, "#3A415F", false);
   activeIcon  = makeIcon(activeSize, "#3A415F", true);
@@ -1649,7 +1656,7 @@ function showSelectedPinLabel(loc){
       className: "ss-pin-label-wrap",
       html: labelHtml,
       iconSize: null,
-      iconAnchor: [0, 34]
+      iconAnchor: [0, 42]
     })
   }).addTo(map);
 }
