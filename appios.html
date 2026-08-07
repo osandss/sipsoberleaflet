@@ -961,6 +961,36 @@
 	  background: transparent !important;
 	  border: 0 !important;
 	}
+
+	/* ─── VENUE NAMES WHEN ZOOMED IN ───────────────────────────── */
+
+	.ss-venue-name-wrap {
+	  background: transparent !important;
+	  border: 0 !important;
+	  pointer-events: none !important;
+	}
+	
+	.ss-venue-name {
+	  position: relative;
+	  display: block;
+	
+	  color: #202239;
+	  font-size: 10px;
+	  font-weight: 650;
+	  line-height: 1.1;
+	  letter-spacing: -0.01em;
+	
+	  white-space: nowrap;
+	
+	  /* Keeps the name readable over streets/buildings */
+	  text-shadow:
+	    0 1px 2px rgba(255,255,255,1),
+	    1px 0 2px rgba(255,255,255,1),
+	    -1px 0 2px rgba(255,255,255,1),
+	    0 -1px 2px rgba(255,255,255,1);
+	
+	  transform: translate(-50%, -100%);
+	}
     
     @media (max-width: 640px) {
       .ss-pin-label {
@@ -1261,6 +1291,7 @@ let _userLocationForDistance=null, _userDot=null, _userHalo=null;
 let _activeMarker=null, _lastFocusedVenueId=null;
 let _selectedVenueId=null;
 let _selectedLabelMarker=null;
+let _venueNameLabels = {};
 let _suppressAutoFit = false;
 let _preserveMapViewOnSelect = false;
 let _panelUserExpanded = false;
@@ -1359,6 +1390,10 @@ function _initMap(){
 
   map.on("click", () => {
     clearVenueSelection({ preserveMapView: true });
+  });
+
+  map.on("zoomend", () => {
+	updateVenueNameLabels();
   });
 
   _buildIcons();
@@ -1681,6 +1716,80 @@ function showSelectedPinLabel(loc){
   }).addTo(map);
 }
 
+/* ─── VENUE NAMES AT CLOSE ZOOM ─────────────────────────────── */
+
+const VENUE_NAME_ZOOM = 16;
+
+function clearVenueNameLabels(){
+  Object.values(_venueNameLabels).forEach(label => {
+    try {
+      map?.removeLayer(label);
+    } catch(e) {}
+  });
+
+  _venueNameLabels = {};
+}
+
+function updateVenueNameLabels(){
+  if(!map) return;
+
+  const shouldShow =
+    map.getZoom() >= VENUE_NAME_ZOOM;
+
+  Object.entries(_venueNameLabels).forEach(([id, label]) => {
+    const isSelected =
+      String(id) === String(_selectedVenueId || "");
+
+    /*
+     * Show normal venue names only when:
+     * 1. We're zoomed in enough
+     * 2. This venue is NOT currently selected
+     */
+    const visible =
+      shouldShow && !isSelected;
+
+    const el = label.getElement();
+
+    if(el){
+      el.style.display = visible ? "" : "none";
+    }
+  });
+}
+
+function createVenueNameLabel(loc){
+  if(!map || !loc || !loc.id) return;
+
+  const id = String(loc.id);
+
+  const label = L.marker(
+    [loc.lat, loc.lng],
+    {
+      interactive: false,
+      keyboard: false,
+      zIndexOffset: 200,
+
+      icon: L.divIcon({
+        className: "ss-venue-name-wrap",
+
+        html: `
+          <div class="ss-venue-name">
+            ${escapeHtml(loc.name || "")}
+          </div>
+        `,
+
+        iconSize: null,
+
+        /*
+         * Places the text just above the normal pin.
+         */
+        iconAnchor: [0, 22]
+      })
+    }
+  ).addTo(map);
+
+  _venueNameLabels[id] = label;
+}
+
 function setPanelState(state){
   const panel = document.getElementById("bottom-panel");
   const toggle = document.getElementById("panel-toggle");
@@ -1850,7 +1959,7 @@ function selectVenue(loc, opts = {}){
   }
 
   showSelectedPinLabel(loc);
-
+  updateVenueNameLabels();
 	
   /*
    * If the panel was already short, there is no height
@@ -2056,7 +2165,8 @@ function clearVenueSelection(opts = {}){
 
   clearActiveMarker();
   clearSelectedPinLabel();
-
+  updateVenueNameLabels();
+  
   setPanelState("collapsed");
 
   refreshSelectionUI();
@@ -2074,6 +2184,7 @@ function renderMarkers(data) {
   markersLayer.clearLayers();
   clearActiveMarker();
   clearSelectedPinLabel();
+  clearVenueNameLabels();
 
   markersById = {};
 
@@ -2100,13 +2211,15 @@ function renderMarkers(data) {
     });
 
     if (loc.id) {
-      markersById[String(loc.id)] = marker;
-    }
-
-    bounds.extend([
-      loc.lat,
-      loc.lng
-    ]);
+	  markersById[String(loc.id)] = marker;
+	
+	  createVenueNameLabel(loc);
+	}
+	
+	bounds.extend([
+	  loc.lat,
+	  loc.lng
+	]);
   });
 
   /*
@@ -2128,6 +2241,8 @@ function renderMarkers(data) {
     }
   }
 
+  updateVenueNameLabels();
+	
   return {
     count: data.length,
     bounds: data.length ? bounds : null
