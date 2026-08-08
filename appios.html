@@ -968,6 +968,18 @@
 	  background: transparent !important;
 	  border: 0 !important;
 	  pointer-events: none !important;
+	
+	  opacity: 0;
+	  visibility: hidden;
+	
+	  transition:
+	    opacity 320ms cubic-bezier(.22, 1, .36, 1),
+	    visibility 320ms ease;
+	}
+	
+	.ss-venue-name-wrap.is-visible {
+	  opacity: 1;
+	  visibility: visible;
 	}
 	
 	.ss-venue-name {
@@ -1750,9 +1762,9 @@ function updateVenueNameLabels(){
 
     const el = label.getElement();
 
-    if(el){
-      el.style.display = visible ? "" : "none";
-    }
+	if(el){
+	  el.classList.toggle("is-visible", visible);
+	}
   });
 }
 
