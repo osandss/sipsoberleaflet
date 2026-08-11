@@ -905,6 +905,30 @@
       line-height: 1;
       opacity: 0.92;
     }
+
+	/* ─── SELECTED MAP PIN MOTION ───────────────────────────── */
+
+	.leaflet-marker-icon.ss-pin-selected {
+	  animation: ssPinSelect 250ms cubic-bezier(.22,1,.36,1) both;
+	  transform-origin: 50% 100%;
+	}
+	
+	@keyframes ssPinSelect {
+	  0% {
+	    transform: scale(0.82);
+	    opacity: 0.82;
+	  }
+	
+	  65% {
+	    transform: scale(1.06);
+	    opacity: 1;
+	  }
+	
+	  100% {
+	    transform: scale(1);
+	    opacity: 1;
+	  }
+	}
         
     .ss-pin-label {
 	  display: inline-flex;
@@ -934,11 +958,20 @@
 	  -webkit-backdrop-filter: blur(10px);
 	
 	  position: relative;
-	  transform: translate(-50%, -14px);
+
+	  animation: ssPinLabelIn 240ms cubic-bezier(.22,1,.36,1) both;
+	}
+
+	@keyframes ssPinLabelIn {
+	  from {
+	    opacity: 0;
+	    transform: translate(-50%, -8px) scale(0.94);
+	  }
 	
-	  transition:
-	    transform 160ms cubic-bezier(.22,1,.36,1),
-	    opacity 120ms ease;
+	  to {
+	    opacity: 1;
+	    transform: translate(-50%, -14px) scale(1);
+	  }
 	}
 
 	.ss-pin-label::after {
@@ -1496,15 +1529,28 @@ L.marker = function(latlng,options){
 
 function setActiveMarker(m){
   if(_activeMarker&&_activeMarker!==m) _activeMarker.setIcon(defaultIcon);
+
   _activeMarker=m||null;
-  if(_activeMarker) _activeMarker.setIcon(activeIcon);
+
+  if(_activeMarker){
+    _activeMarker.setIcon(activeIcon);
+
+    requestAnimationFrame(() => {
+      const el = _activeMarker?.getElement();
+      if(!el) return;
+
+      el.classList.remove("ss-pin-selected");
+      void el.offsetWidth;
+      el.classList.add("ss-pin-selected");
+    });
+  }
 }
 
 function clearActiveMarker(){
   if(_activeMarker) _activeMarker.setIcon(defaultIcon);
   _activeMarker=null;
 }
-
+	
 function applyIconForViewport(){
   if(!map) return;
   _buildIcons();
