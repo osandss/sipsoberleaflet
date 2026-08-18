@@ -4064,11 +4064,21 @@ window.SipSober.setDiscoverMode = function(payload){
   clearActiveMarker();
   clearSelectedPinLabel();
 
-  const hasMode = _activeGuideVenueIds.length || _activeDrinkType;
-  _panelUserExpanded = !!hasMode;
-  setPanelState(hasMode ? "expanded" : "collapsed");
+  const isGuideMode = _activeGuideVenueIds.length > 0;
+  const isDrinkMode = !!_activeDrinkType;
+	
+  if (isDrinkMode) {
+	  _panelUserExpanded = false;
+	  setPanelState("collapsed");
+	} else if (isGuideMode) {
+	  _panelUserExpanded = true;
+	  setPanelState("expanded");
+	} else {
+	  _panelUserExpanded = false;
+	  setPanelState("collapsed");
+	}
 
-  applyFiltersUnified();
+	applyFiltersUnified();
 };
 
 window.SipSober.setGuideVenueIds = function(payload){
