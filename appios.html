@@ -2775,7 +2775,7 @@ function _initMap(){
     tap: false
   }).setView([40.790,-73.985],12.1);
 
-  const baseTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
+  const baseTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png?key=cb1_32mn_1_c50a8550ac3189af34a5b1e6", {
     maxZoom: 20,
     subdomains: "abcd",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
@@ -2792,7 +2792,7 @@ function _initMap(){
   
   map.getPane("markerPane").style.zIndex = 500;
   
-  const labelTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png", {
+  const labelTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png?key=cb1_32mn_1_c50a8550ac3189af34a5b1e6", {
     maxZoom: 17,
     subdomains: "abcd",
     pane: "labelPane",
