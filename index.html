@@ -238,9 +238,15 @@
 
     .hero-phones .phone-video {
       width: clamp(260px, 32vw, 380px);
-      filter: none;
-      -webkit-mask-image: radial-gradient(ellipse 62% 60% at 50% 50%, black 55%, transparent 92%);
-      mask-image: radial-gradient(ellipse 62% 60% at 50% 50%, black 55%, transparent 92%);
+      filter:
+        drop-shadow(0 24px 44px rgba(8,10,22,0.28))
+        drop-shadow(0 10px 18px rgba(8,10,22,0.12));
+      -webkit-mask-image: url("sipsober-hero-mask.png");
+      mask-image: url("sipsober-hero-mask.png");
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
     }
     
     .section-kicker {
