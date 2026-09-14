@@ -236,17 +236,24 @@
       z-index: 1;
     }
 
-    .hero-phones .phone-video {
+    .hero-phones .phone-video-mask {
       width: clamp(260px, 32vw, 380px);
-      filter:
-        drop-shadow(0 24px 44px rgba(8,10,22,0.28))
-        drop-shadow(0 10px 18px rgba(8,10,22,0.12));
+      aspect-ratio: 1462 / 2950;
       -webkit-mask-image: url("sipsober-hero-mask.png");
       mask-image: url("sipsober-hero-mask.png");
       -webkit-mask-size: 100% 100%;
       mask-size: 100% 100%;
       -webkit-mask-repeat: no-repeat;
       mask-repeat: no-repeat;
+      filter:
+        drop-shadow(0 24px 44px rgba(8,10,22,0.28))
+        drop-shadow(0 10px 18px rgba(8,10,22,0.12));
+    }
+    
+    .hero-phones .phone-video {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
     
     .section-kicker {
@@ -665,10 +672,12 @@
         <div class="hero-visual" aria-hidden="true">
 
           <div class="hero-phones">
-            <video class="phone phone-video" autoplay muted loop playsinline
-                   poster="sipsober-hero-poster.jpg" aria-label="Sip Sober map screen, live in the app">
-              <source src="sipsober-hero-mockup_2.mp4" type="video/mp4">
-            </video>
+            <div class="phone-video-mask">
+              <video class="phone-video" autoplay muted loop playsinline
+                     poster="sipsober-hero-poster.jpg" aria-label="Sip Sober map screen, live in the app">
+                <source src="sipsober-hero-mockup_2.mp4" type="video/mp4">
+              </video>
+            </div>
           </div>
         </div>
       </div>
