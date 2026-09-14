@@ -91,11 +91,13 @@
     .hero-grid {
       position: relative;
       z-index: 1;
-      display: grid;
-      grid-template-columns: 0.98fr 1.02fr;
-      gap: 24px;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      min-height: 720px;
+    
+      gap: 36px;
+      min-height: auto;
+      text-align: center;
     }
 
     .hero-logo {
@@ -136,8 +138,10 @@
     }
 
     .hero-copy {
-      max-width: 530px;
-      padding: 18px 0 42px;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 36px 0 0;
+      text-align: center;
     }
 
     .hero-title {
@@ -152,26 +156,26 @@
         Arial,
         "Lexend",
         sans-serif;
-      font-size: clamp(38px, 7vw, 65px);
-      line-height: 0.88;
+      font-size: clamp(44px, 7vw, 72px);
+      line-height: 0.92;
       letter-spacing: -0.045em;
-      max-width: 12.5ch;
-      margin-bottom: 18px;
+      max-width: 10ch;
+      margin: 0 auto 20px;
       color: var(--ss-text-main);
     }
 
     .hero-subtitle {
+      max-width: 520px;
+      margin: 0 auto 24px;
       font-size: 16px;
       line-height: 1.68;
       color: rgba(255,255,255,0.84);
-      max-width: 36ch;
-      margin-bottom: 24px;
     }
 
     .hero-cta {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       gap: 10px;
       margin-top: 4px;
     }
@@ -190,19 +194,21 @@
 
     .hero-visual {
       position: relative;
-      min-height: 680px;
+      width: 100%;
+      min-height: auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      perspective: 1400px;
-      transform-style: preserve-3d;
+      padding: 10px 0 70px;
+      perspective: none;
+      transform-style: flat;
     }
 
     .hero-phones {
       display: flex;
       justify-content: center;
-      align-items: flex-end;
-      gap: 18px;
+      align-items: center;
+      width: 100%;
       position: relative;
       z-index: 2;
     }
@@ -230,36 +236,12 @@
     }
 
     .hero-phones .phone-video {
-      width: clamp(220px, 26vw, 320px);
+      width: clamp(260px, 32vw, 380px);
       filter: none;
-      -webkit-mask-image: radial-gradient(ellipse 60% 58% at 50% 50%, black 58%, transparent 94%);
-      mask-image: radial-gradient(ellipse 60% 58% at 50% 50%, black 58%, transparent 94%);
+      -webkit-mask-image: none;
+      mask-image: none;
     }
     
-    .shape {
-      position: absolute;
-      border-radius: 999px;
-      filter: blur(8px);
-      pointer-events: none;
-      opacity: 0.9;
-    }
-
-    .shape-1 {
-      width: 280px;
-      height: 280px;
-      top: 70px;
-      right: 40px;
-      background: rgba(92, 112, 188, 0.17);
-    }
-
-    .shape-2 {
-      width: 360px;
-      height: 360px;
-      bottom: 48px;
-      left: 20px;
-      background: rgba(70, 82, 136, 0.14);
-    }
-
     .section-kicker {
       font-size: 12px;
       font-weight: 600;
@@ -675,8 +657,6 @@
         </div>
 
         <div class="hero-visual" aria-hidden="true">
-          <div class="shape shape-1"></div>
-          <div class="shape shape-2"></div>
 
           <div class="hero-phones">
             <video class="phone phone-video" autoplay muted loop playsinline
