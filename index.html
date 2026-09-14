@@ -229,6 +229,13 @@
       z-index: 1;
     }
 
+    .hero-phones .phone-video {
+      width: clamp(220px, 26vw, 320px);
+      filter: none;
+      -webkit-mask-image: radial-gradient(ellipse 60% 58% at 50% 50%, black 58%, transparent 94%);
+      mask-image: radial-gradient(ellipse 60% 58% at 50% 50%, black 58%, transparent 94%);
+    }
+    
     .shape {
       position: absolute;
       border-radius: 999px;
@@ -672,8 +679,10 @@
           <div class="shape shape-2"></div>
 
           <div class="hero-phones">
-            <img src="feature-map.png" class="phone phone-left" alt="Sip Sober map view showing zero-proof venues">
-            <img src="feature-home.png" class="phone phone-right" alt="Sip Sober home screen">
+            <video class="phone phone-video" autoplay muted loop playsinline
+                   poster="hero-poster.jpg" aria-label="Sip Sober map screen, live in the app">
+              <source src="hero-mockup.mp4" type="video/mp4">
+            </video>
           </div>
         </div>
       </div>
