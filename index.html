@@ -237,11 +237,24 @@
     }
 
     
-    .hero-phones .phone-video {
+    .hero-phones .phone-video-crop {
+      position: relative;
       width: clamp(260px, 32vw, 380px);
-      filter: none;
-      -webkit-mask-image: radial-gradient(ellipse 96% 96% at 50% 50%, black 88%, transparent 100%);
-      mask-image: radial-gradient(ellipse 96% 96% at 50% 50%, black 88%, transparent 100%);
+      aspect-ratio: 1342 / 2758;
+      overflow: hidden;
+      border-radius: 16.84% / 8.19%;
+      filter:
+        drop-shadow(0 24px 44px rgba(8,10,22,0.28))
+        drop-shadow(0 10px 18px rgba(8,10,22,0.12));
+    }
+
+    .hero-phones .phone-video {
+      position: absolute;
+      top: -3.48%;
+      left: -4.47%;
+      width: 108.94%;
+      height: auto;
+      display: block;
     }
     
     .section-kicker {
@@ -660,10 +673,12 @@
         <div class="hero-visual" aria-hidden="true">
 
           <div class="hero-phones">
-            <video class="phone phone-video" autoplay muted loop playsinline
-                   poster="sipsober-hero-poster.jpg" aria-label="Sip Sober map screen, live in the app">
-              <source src="sipsober-hero-mockup_2.mp4" type="video/mp4">
-            </video>
+            <div class="phone-video-crop">
+              <video class="phone-video" autoplay muted loop playsinline
+                     poster="sipsober-hero-poster.jpg" aria-label="Sip Sober map screen, live in the app">
+                <source src="sipsober-hero-mockup_2.mp4" type="video/mp4">
+              </video>
+            </div>
           </div>
         </div>
       </div>
