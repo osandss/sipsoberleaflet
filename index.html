@@ -239,10 +239,12 @@
     
     .hero-phones .phone-video-crop {
       position: relative;
-      width: clamp(260px, 32vw, 380px);
+      width: clamp(200px, 24vw, 300px);
       aspect-ratio: 1342 / 2758;
       overflow: hidden;
       border-radius: 16.84% / 8.19%;
+      transform: scale(1);
+      will-change: transform;
       filter:
         drop-shadow(0 24px 44px rgba(8,10,22,0.28))
         drop-shadow(0 10px 18px rgba(8,10,22,0.12));
@@ -255,6 +257,34 @@
       width: 108.94%;
       height: auto;
       display: block;
+    }
+
+    /* Hero copy load-in */
+    .hero-copy > * {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.8s cubic-bezier(.16,.84,.44,1),
+                  transform 0.8s cubic-bezier(.16,.84,.44,1);
+    }
+    .hero-copy.hero-loaded > *:nth-child(1) { transition-delay: 0.05s; }
+    .hero-copy.hero-loaded > *:nth-child(2) { transition-delay: 0.15s; }
+    .hero-copy.hero-loaded > *:nth-child(3) { transition-delay: 0.25s; }
+    .hero-copy.hero-loaded > *:nth-child(4) { transition-delay: 0.35s; }
+    .hero-copy.hero-loaded > *:nth-child(5) { transition-delay: 0.45s; }
+    .hero-copy.hero-loaded > * {
+      opacity: 1;
+      transform: none;
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      .hero-copy > * {
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      .hero-phones .phone-video-crop {
+        transition: none !important;
+      }
     }
     
     .section-kicker {
@@ -785,6 +815,7 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   
+    // Showcase images fade in every time they enter/leave view
     var showcaseMedia = document.querySelectorAll(".showcase-media");
     if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches && "IntersectionObserver" in window) {
       var mediaObserver = new IntersectionObserver(function (entries) {
@@ -795,6 +826,47 @@
       showcaseMedia.forEach(function (el) { mediaObserver.observe(el); });
     } else {
       showcaseMedia.forEach(function (el) { el.classList.add("in-view"); });
+    }
+  
+    // Hero copy loads in on page load
+    var heroCopy = document.querySelector(".hero-copy");
+    if (heroCopy) {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          heroCopy.classList.add("hero-loaded");
+        });
+      });
+    }
+  
+    // Phone mock zooms in/out as you scroll through the hero, either direction
+    var heroSection = document.querySelector(".hero");
+    var phoneCrop = document.querySelector(".hero-phones .phone-video-crop");
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  
+    if (heroSection && phoneCrop && !reduceMotion) {
+      var MIN_SCALE = 0.92;
+      var MAX_SCALE = 1.05;
+      var ticking = false;
+  
+      var updatePhoneScale = function () {
+        var heroHeight = heroSection.offsetHeight || 1;
+        var progress = window.scrollY / (heroHeight * 0.8);
+        progress = Math.max(0, Math.min(1, progress));
+        var scale = MIN_SCALE + progress * (MAX_SCALE - MIN_SCALE);
+        phoneCrop.style.transform = "scale(" + scale.toFixed(3) + ")";
+        ticking = false;
+      };
+  
+      var onScroll = function () {
+        if (!ticking) {
+          window.requestAnimationFrame(updatePhoneScale);
+          ticking = true;
+        }
+      };
+  
+      updatePhoneScale();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
     }
   </script>
 </body>
