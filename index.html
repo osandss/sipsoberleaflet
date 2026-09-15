@@ -784,15 +784,12 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
-
+  
     var showcaseMedia = document.querySelectorAll(".showcase-media");
     if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches && "IntersectionObserver" in window) {
       var mediaObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-            mediaObserver.unobserve(entry.target);
-          }
+          entry.target.classList.toggle("in-view", entry.isIntersecting);
         });
       }, { threshold: 0.3 });
       showcaseMedia.forEach(function (el) { mediaObserver.observe(el); });
