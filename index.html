@@ -326,55 +326,31 @@
     color: var(--ss-text-soft);
   }
   
-  .showcase-media{
-    position: relative;
-
-    width:100%;
-    max-width:300px;
-    height:200px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    justify-self:center;
-
-    overflow:hidden;
-
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.06);
-
-    background:#1d2135;
-}
-
-  .showcase-photo{
-    position:absolute;
-    inset:0;
-
-    width:100%;
-    height:100%;
-
-    object-fit:cover;
-}
-
-  .showcase-overlay{
-      position:absolute;
-      inset:0;
+    .showcase-media{
+      width:100%;
+      max-width:300px;
+      justify-self:center;
   
-      background: rgba(16,18,30,.36);
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+      box-shadow: 0 20px 44px rgba(6,7,18,0.28);
   
-      z-index:1;
+      opacity:0;
+      transform: scale(0.92) translateY(14px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
   }
   
-  .showcase-icon{
-    position:relative;
-    z-index:2;
-
-    font-size:52px;
-    line-height:1;
-    color:#fff;
-    font-weight:300;
-    user-select:none;
-}
+    .showcase-media.in-view{
+      opacity:1;
+      transform:none;
+  }
+  
+    .showcase-photo{
+      display:block;
+      width:100%;
+      height:auto;
+  }
 
 
     /* ==========================================
@@ -600,13 +576,7 @@
 
   .showcase-media {
     max-width: 280px;
-    min-height: 190px;
-    padding: 20px;
     border-radius: 16px;
-  }
-
-  .showcase-icon {
-    font-size: 46px;
   }
 
   .download-section {
@@ -708,10 +678,6 @@
             src="showcase-map.png"
             alt="Neighborhood Guides">
     
-        <div class="showcase-overlay"></div>
-    
-        <div class="showcase-icon">⌖</div>
-    
     </div>
 
     </div>
@@ -740,10 +706,6 @@
             class="showcase-photo"
             src="showcase-drinks.png"
             alt="Drink Cards">
-    
-        <div class="showcase-overlay"></div>
-    
-        <div class="showcase-icon">◐</div>
     
     </div>
 
@@ -774,10 +736,7 @@
             src="showcase-saved.png"
             alt="Map and Favorites">
     
-        <div class="showcase-overlay"></div>
-    
-        <div class="showcase-icon">⌁</div>
-    
+
     </div>
 
     </div>
@@ -825,6 +784,21 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    var showcaseMedia = document.querySelectorAll(".showcase-media");
+    if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches && "IntersectionObserver" in window) {
+      var mediaObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            mediaObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      showcaseMedia.forEach(function (el) { mediaObserver.observe(el); });
+    } else {
+      showcaseMedia.forEach(function (el) { el.classList.add("in-view"); });
+    }
   </script>
 </body>
 </html>
