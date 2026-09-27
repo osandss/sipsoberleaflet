@@ -1036,54 +1036,6 @@
       }
     }
     
-    .ss-onboard {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%) translateY(8px);
-      top: 120px;
-      z-index: 5000;
-      width: calc(100% - 32px);
-      max-width: 420px;
-      opacity: 0;
-      transition: opacity 220ms ease, transform 220ms ease;
-      pointer-events: none;
-    }
-
-    .ss-onboard.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
-    .ss-onboard[hidden] { display: none !important; }
-
-    .ss-onboard__content {
-      pointer-events: auto;
-      background: rgba(255,255,255,0.92);
-      border: 1px solid rgba(32,34,57,0.12);
-      border-radius: 18px;
-      padding: 12px 14px;
-      box-shadow: 0 10px 26px rgba(0,0,0,0.12);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-    }
-
-    .ss-onboard__title { font-size: 13px; font-weight: 800; color: #202239; margin-bottom: 3px; }
-    .ss-onboard__text { font-size: 12px; line-height: 1.3; color: rgba(0,0,0,0.65); margin-bottom: 8px; }
-    .ss-onboard__actions { display: flex; gap: 10px; align-items: center; }
-
-    .ss-onboard__btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      height: 30px;
-      padding: 0 11px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .ss-onboard__btn--primary { border: 0; color: #fff; background: #202239; }
-    .ss-onboard__btn--ghost { border: 1px solid rgba(32,34,57,0.18); color: #202239; background: rgba(255,255,255,0.65); }
   </style>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-W6LRN7EDH7"></script>
@@ -1096,16 +1048,6 @@
 </head>
 
 <body>
-
-<div id="ss-onboard" class="ss-onboard" role="status" aria-live="polite" hidden>
-  <div class="ss-onboard__content">
-    <div class="ss-onboard__title">Welcome to Sip Sober</div>
-    <div class="ss-onboard__text">Explore over 100 NYC venues serving alcohol-free drinks.</div>
-    <div class="ss-onboard__actions">
-      <button id="ss-onboard-ok" class="ss-onboard__btn ss-onboard__btn--primary" type="button">Got it</button>
-    </div>
-  </div>
-</div>
 
 <div id="filters" class="topbar filterbar">
   <div class="dropdown" id="brandDD">
@@ -4302,21 +4244,6 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
 	
 	})(); // closes the IIFE
 	
-</script>
-
-<script>
-(function(){
-  const KEY="ss_seen_map_onboarding_v1";
-  function showOnboarding(){
-    if(localStorage.getItem(KEY)==="true") return;
-    const el=document.getElementById("ss-onboard"); if(!el) return;
-    el.hidden=false; requestAnimationFrame(()=>el.classList.add("is-visible"));
-    const ok=document.getElementById("ss-onboard-ok");
-    function dismiss(){localStorage.setItem(KEY,"true");el.classList.remove("is-visible");setTimeout(()=>(el.hidden=true),240);}
-    ok?.addEventListener("click",dismiss);
-  }
-  window.addEventListener("load",()=>setTimeout(showOnboarding,450));
-})();
 </script>
 
 </body>
