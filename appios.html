@@ -737,7 +737,7 @@
     
     .card-name {
 	  display: block;
-	  font-size: 15px;
+	  font-size: 14px;
 	  font-weight: 650;
 	  margin: 0 0 5px;
 	  line-height: 1.25;
@@ -4167,51 +4167,55 @@ searchInput?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault
 searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";applyFiltersUnified();});
   
 
+
 (() => {
   const panel = document.getElementById("bottom-panel");
   const toggle = document.getElementById("panel-toggle");
 
   if (!panel || !toggle) return;
 
+  const DRAG_THRESHOLD = 35;
+  const DRAG_START_THRESHOLD = 6;
+
+  let tracking = false;
+  let dragging = false;
   let startY = 0;
   let startX = 0;
-  let tracking = false;
-  let didDrag = false;
+  let startHeight = 0;
+  let currentHeight = 0;
+  let activePointerId = null;
   let suppressClick = false;
 
-  const DRAG_THRESHOLD = 35;
+  function panelHeightFor(state) {
+    const css = getComputedStyle(document.documentElement);
 
-  // MARK: - Existing panel toggle behavior
-  function togglePanel() {
+    const variable = state === "expanded"
+      ? "--panel-expanded"
+      : state === "selected"
+        ? "--panel-selected"
+        : "--panel-collapsed";
 
-    // EXPANDED → SELECTED OR COLLAPSED
-    if (_panelState === "expanded") {
+    const value = css.getPropertyValue(variable).trim();
 
-      const panelBody = document.getElementById("panel-body");
-
-      if (panelBody) {
-        _expandedScrollTop = panelBody.scrollTop;
-      }
-
-      _panelUserExpanded = false;
-
-      const nextState = _selectedVenueId
-        ? "selected"
-        : "collapsed";
-
-      setPanelState(nextState);
-      refreshSelectionUI();
-
-      if (nextState === "selected") {
-        requestAnimationFrame(() => {
-          syncSelectedListRow({ behavior: "auto" });
-        });
-      }
-
-      return;
+    if (value.endsWith("vh")) {
+      return window.innerHeight * parseFloat(value) / 100;
     }
 
-    // SELECTED OR COLLAPSED → EXPANDED
+    if (value.endsWith("px")) {
+      return parseFloat(value);
+    }
+
+    return panel.getBoundingClientRect().height;
+  }
+
+  function resetDragStyles() {
+    panel.style.removeProperty("height");
+    panel.style.removeProperty("transition");
+    toggle.style.removeProperty("cursor");
+  }
+
+  // MARK: - Existing panel behavior
+  function expandPanel() {
     _selectedVenueId = null;
     _lastFocusedVenueId = null;
 
@@ -4226,7 +4230,6 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const panelBody = document.getElementById("panel-body");
-
         if (panelBody) {
           panelBody.scrollTop = _expandedScrollTop;
         }
@@ -4234,7 +4237,38 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
     });
   }
 
-  // MARK: - Tap
+  function collapsePanel() {
+    const panelBody = document.getElementById("panel-body");
+
+    if (panelBody) {
+      _expandedScrollTop = panelBody.scrollTop;
+    }
+
+    _panelUserExpanded = false;
+
+    const nextState = _selectedVenueId
+      ? "selected"
+      : "collapsed";
+
+    setPanelState(nextState);
+    refreshSelectionUI();
+
+    if (nextState === "selected") {
+      requestAnimationFrame(() => {
+        syncSelectedListRow({ behavior: "auto" });
+      });
+    }
+  }
+
+  function togglePanel() {
+    if (_panelState === "expanded") {
+      collapsePanel();
+    } else {
+      expandPanel();
+    }
+  }
+
+  // MARK: - Tap to toggle
   toggle.addEventListener("click", (event) => {
     event.stopPropagation();
 
@@ -4246,68 +4280,111 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
     togglePanel();
   });
 
-  // MARK: - Drag start
+  // MARK: - Begin drag
   toggle.addEventListener("pointerdown", (event) => {
     if (event.button !== undefined && event.button !== 0) return;
+    if (tracking) return;
 
+    tracking = true;
+    dragging = false;
+
+    activePointerId = event.pointerId;
     startY = event.clientY;
     startX = event.clientX;
 
-    tracking = true;
-    didDrag = false;
+    startHeight = panel.getBoundingClientRect().height;
+    currentHeight = startHeight;
 
     toggle.setPointerCapture?.(event.pointerId);
   });
 
-  // MARK: - Drag movement
+  // MARK: - Follow finger
   toggle.addEventListener("pointermove", (event) => {
-    if (!tracking) return;
+    if (!tracking || event.pointerId !== activePointerId) return;
 
     const deltaY = event.clientY - startY;
     const deltaX = event.clientX - startX;
 
-    if (
-      Math.abs(deltaY) > 10 &&
-      Math.abs(deltaY) > Math.abs(deltaX)
-    ) {
-      didDrag = true;
+    if (!dragging) {
+      if (
+        Math.abs(deltaY) < DRAG_START_THRESHOLD ||
+        Math.abs(deltaY) <= Math.abs(deltaX)
+      ) {
+        return;
+      }
+
+      dragging = true;
+
+      panel.style.transition = "none";
+      toggle.style.cursor = "grabbing";
     }
+
+    const minHeight = panelHeightFor(
+      _panelState === "selected" ? "selected" : "collapsed"
+    );
+    const maxHeight = panelHeightFor("expanded");
+
+    currentHeight = Math.max(
+      minHeight,
+      Math.min(maxHeight, startHeight - deltaY)
+    );
+
+    panel.style.height = `${currentHeight}px`;
   });
 
-  // MARK: - Drag release
+  // MARK: - Release and snap
   toggle.addEventListener("pointerup", (event) => {
-    if (!tracking) return;
+    if (!tracking || event.pointerId !== activePointerId) return;
 
     tracking = false;
+    activePointerId = null;
 
-    const deltaY = event.clientY - startY;
-    const deltaX = event.clientX - startX;
+    if (!dragging) return;
 
-    if (
-      !didDrag ||
-      Math.abs(deltaY) < DRAG_THRESHOLD ||
-      Math.abs(deltaY) <= Math.abs(deltaX)
-    ) {
-      return;
-    }
-
-    // Suppress the click generated after releasing a drag.
+    dragging = false;
     suppressClick = true;
 
-    // UP → expand
-    if (deltaY < 0 && _panelState !== "expanded") {
-      togglePanel();
+    const deltaY = event.clientY - startY;
+    const expandedHeight = panelHeightFor("expanded");
+    const lowerHeight = panelHeightFor(
+      _panelState === "selected" ? "selected" : "collapsed"
+    );
+
+    const midpoint = (expandedHeight + lowerHeight) / 2;
+
+    let shouldExpand;
+
+    if (Math.abs(deltaY) >= DRAG_THRESHOLD) {
+      shouldExpand = deltaY < 0;
+    } else {
+      shouldExpand = currentHeight >= midpoint;
     }
 
-    // DOWN → collapse
-    if (deltaY > 0 && _panelState === "expanded") {
-      togglePanel();
+    // Restore the CSS transition while preserving the
+    // current dragged height as the animation's starting point.
+    panel.style.removeProperty("transition");
+    void panel.offsetHeight;
+
+    if (shouldExpand && _panelState !== "expanded") {
+      expandPanel();
+    } else if (!shouldExpand && _panelState === "expanded") {
+      collapsePanel();
     }
+
+    // Animate from the dragged height to the CSS state height.
+    panel.style.removeProperty("height");
+    toggle.style.removeProperty("cursor");
   });
 
+  // MARK: - Cancel drag
   toggle.addEventListener("pointercancel", () => {
+    if (!tracking) return;
+
     tracking = false;
-    didDrag = false;
+    dragging = false;
+    activePointerId = null;
+
+    resetDragStyles();
   });
 
 })();
