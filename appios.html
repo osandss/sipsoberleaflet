@@ -382,32 +382,34 @@
 	  top: auto;
 	  background: transparent;
 	}
-    
+	  
     #panel-toggle {
 	  width: 100%;
 	  border: 0;
 	  background: transparent;
-	  padding: 6px 0 8px;
+	  padding: 10px 0 12px;
 	  display: flex;
 	  flex-direction: column;
 	  align-items: center;
-	  gap: 6px;
-	  cursor: pointer;
+	  justify-content: center;
+	  gap: 0;
+	  cursor: grab;
+	  touch-action: none;
+	  user-select: none;
+	  -webkit-user-select: none;
 	  -webkit-tap-highlight-color: transparent;
 	}
-
-    #panel-toggle .handle {
-	  width: 38px;
-	  height: 4px;
+	  
+	#panel-toggle .handle {
+	  width: 42px;
+	  height: 5px;
 	  border-radius: 999px;
-	  background: rgba(218,225,245,0.45);
+	  background: rgba(218,225,245,0.55);
+	  transition: background 180ms ease;
 	}
 	
 	#panel-toggle .label {
-	  font-size: 10px;
-	  font-weight: 600;
-	  color: rgba(225,231,248,0.65);
-	  opacity: 1;
+	  display: none;
 	}
 
     #results-count {
@@ -3170,29 +3172,33 @@ function createVenueNameLabel(loc){
   _venueNameLabels[id] = label;
 }
 
-function setPanelState(state){
+function setPanelState(state) {
   const panel = document.getElementById("bottom-panel");
   const toggle = document.getElementById("panel-toggle");
-  const label = toggle?.querySelector(".label");
-  if(!panel || !toggle) return;
+
+  if (!panel || !toggle) return;
 
   panel.classList.remove("selected", "expanded");
 
-  if(state === "selected"){
+  if (state === "selected") {
     panel.classList.add("selected");
-  } else if(state === "expanded"){
+  } else if (state === "expanded") {
     panel.classList.add("expanded");
   }
 
   _panelState = state;
 
-  toggle.setAttribute("aria-expanded", state === "expanded" ? "true" : "false");
+  toggle.setAttribute(
+    "aria-expanded",
+    state === "expanded" ? "true" : "false"
+  );
 
-  if(label){
-    if(state === "expanded") label.textContent = "Hide";
-    else if(state === "selected") label.textContent = "Show all";
-    else label.textContent = "Show all";
-  }
+  toggle.setAttribute(
+    "aria-label",
+    state === "expanded"
+      ? "Collapse venue panel"
+      : "Expand venue panel"
+  );
 }
 
 function getVisibleResults(data){
@@ -4160,73 +4166,152 @@ const searchClear=document.getElementById("searchTopClear");
 searchInput?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyFiltersUnified();document.getElementById("searchTopRow")?.classList.remove("is-open");document.getElementById("searchToggle")?.setAttribute("aria-expanded","false");searchInput.blur();}});
 searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";applyFiltersUnified();});
   
-(()=>{
+
+(() => {
   const panel = document.getElementById("bottom-panel");
   const toggle = document.getElementById("panel-toggle");
-  if(!panel || !toggle) return;
 
-  toggle.addEventListener("click", e => {
-    e.stopPropagation();
+  if (!panel || !toggle) return;
+
+  let startY = 0;
+  let startX = 0;
+  let tracking = false;
+  let didDrag = false;
+  let suppressClick = false;
+
+  const DRAG_THRESHOLD = 35;
+
+  // MARK: - Existing panel toggle behavior
+  function togglePanel() {
 
     // EXPANDED → SELECTED OR COLLAPSED
-	if(_panelState === "expanded"){
-	
-	  const panelBody = document.getElementById("panel-body");
-	  if(panelBody){
-	    _expandedScrollTop = panelBody.scrollTop;
-	  }
-	
-	  _panelUserExpanded = false;
+    if (_panelState === "expanded") {
 
-      const nextState =
-        _selectedVenueId ? "selected" : "collapsed";
+      const panelBody = document.getElementById("panel-body");
+
+      if (panelBody) {
+        _expandedScrollTop = panelBody.scrollTop;
+      }
+
+      _panelUserExpanded = false;
+
+      const nextState = _selectedVenueId
+        ? "selected"
+        : "collapsed";
 
       setPanelState(nextState);
-
       refreshSelectionUI();
 
-      // Only center when returning to selected mode.
-      // Wait for the panel height transition to finish.
-      if(nextState === "selected"){
-	  	requestAnimationFrame(() => {
-	    	syncSelectedListRow({ behavior: "auto" });
-	  	});
-	  }
+      if (nextState === "selected") {
+        requestAnimationFrame(() => {
+          syncSelectedListRow({ behavior: "auto" });
+        });
+      }
 
       return;
     }
 
-        // SELECTED OR COLLAPSED → EXPANDED
+    // SELECTED OR COLLAPSED → EXPANDED
+    _selectedVenueId = null;
+    _lastFocusedVenueId = null;
 
-	    _selectedVenueId = null;
-	    _lastFocusedVenueId = null;
-	
-	    clearActiveMarker();
-	    clearSelectedPinLabel();
-	
-	    _panelUserExpanded = true;
-	
-	    setPanelState("expanded");
-	
-	    refreshSelectionUI();
-	
-	    /*
-	     * Wait until all cards are visible and their layout
-	     * has been recalculated before restoring the position.
-	     */
-	    requestAnimationFrame(() => {
-	      requestAnimationFrame(() => {
-	        const panelBody = document.getElementById("panel-body");
-	
-	        if (panelBody) {
-	          panelBody.scrollTop = _expandedScrollTop;
-	        }
-	      });
-	    });
-	
-	  }); // closes toggle.addEventListener
-	
-	})(); // closes the IIFE
+    clearActiveMarker();
+    clearSelectedPinLabel();
+
+    _panelUserExpanded = true;
+
+    setPanelState("expanded");
+    refreshSelectionUI();
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const panelBody = document.getElementById("panel-body");
+
+        if (panelBody) {
+          panelBody.scrollTop = _expandedScrollTop;
+        }
+      });
+    });
+  }
+
+  // MARK: - Tap
+  toggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+
+    if (suppressClick) {
+      suppressClick = false;
+      return;
+    }
+
+    togglePanel();
+  });
+
+  // MARK: - Drag start
+  toggle.addEventListener("pointerdown", (event) => {
+    if (event.button !== undefined && event.button !== 0) return;
+
+    startY = event.clientY;
+    startX = event.clientX;
+
+    tracking = true;
+    didDrag = false;
+
+    toggle.setPointerCapture?.(event.pointerId);
+  });
+
+  // MARK: - Drag movement
+  toggle.addEventListener("pointermove", (event) => {
+    if (!tracking) return;
+
+    const deltaY = event.clientY - startY;
+    const deltaX = event.clientX - startX;
+
+    if (
+      Math.abs(deltaY) > 10 &&
+      Math.abs(deltaY) > Math.abs(deltaX)
+    ) {
+      didDrag = true;
+    }
+  });
+
+  // MARK: - Drag release
+  toggle.addEventListener("pointerup", (event) => {
+    if (!tracking) return;
+
+    tracking = false;
+
+    const deltaY = event.clientY - startY;
+    const deltaX = event.clientX - startX;
+
+    if (
+      !didDrag ||
+      Math.abs(deltaY) < DRAG_THRESHOLD ||
+      Math.abs(deltaY) <= Math.abs(deltaX)
+    ) {
+      return;
+    }
+
+    // Suppress the click generated after releasing a drag.
+    suppressClick = true;
+
+    // UP → expand
+    if (deltaY < 0 && _panelState !== "expanded") {
+      togglePanel();
+    }
+
+    // DOWN → collapse
+    if (deltaY > 0 && _panelState === "expanded") {
+      togglePanel();
+    }
+  });
+
+  toggle.addEventListener("pointercancel", () => {
+    tracking = false;
+    didDrag = false;
+  });
+
+})();
+
 	
 </script>
 
