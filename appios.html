@@ -4216,24 +4216,23 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
 
   // MARK: - Existing panel behavior
   function expandPanel() {
-    _selectedVenueId = null;
-    _lastFocusedVenueId = null;
-
-    clearActiveMarker();
-    clearSelectedPinLabel();
-
-    _panelUserExpanded = true;
+    // Keep the selected venue when expanding.
+    // Only show the full venue list if nothing is selected.
+    _panelUserExpanded = !_selectedVenueId;
 
     setPanelState("expanded");
     refreshSelectionUI();
 
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const panelBody = document.getElementById("panel-body");
-        if (panelBody) {
-          panelBody.scrollTop = _expandedScrollTop;
-        }
-      });
+	  requestAnimationFrame(() => {
+	    const panelBody = document.getElementById("panel-body");
+
+	    if (panelBody) {
+		  panelBody.scrollTop = _selectedVenueId
+		    ? 0
+		    : _expandedScrollTop;
+	    }
+	  });
     });
   }
 
