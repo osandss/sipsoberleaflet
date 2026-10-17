@@ -1021,6 +1021,88 @@
         transform: none;
       }
     }
+
+ /* =========================================
+   SELECTED VENUE — EXPANDED DETAILS
+========================================= */
+
+/* Hidden in compact panel and regular venue list */
+.selected-venue-extras {
+  display: none;
+}
+
+/* Only show details when a selected venue is expanded */
+#bottom-panel.expanded .card.is-selected .selected-venue-extras {
+  display: block;
+  margin-top: 18px;
+  padding: 0 12px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Detail sections */
+.venue-detail-section {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.venue-detail-section:last-child {
+  border-bottom: none;
+}
+
+/* Small uppercase headings */
+.venue-detail-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  color: rgba(195, 207, 239, 0.78);
+  margin-bottom: 10px;
+}
+
+/* Descriptions and brands */
+.venue-detail-description {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* Drink category pills */
+.venue-detail-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.venue-detail-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+}
+
+/* Website */
+.venue-detail-website {
+  padding-bottom: 8px;
+}
+
+.venue-detail-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.venue-detail-link span:last-child {
+  font-size: 18px;
+  color: rgba(195, 207, 239, 0.85);
+}
     
   </style>
 
@@ -3700,7 +3782,73 @@ function renderList(data){
       </div>
     ` : "";
     
-    const selectedExtras = "";
+    // MARK: - Expanded Venue Details
+
+const featuredDrink = String(loc.featuredDrink || "").trim();
+
+const drinkTypes = Array.isArray(loc.drinkTypes)
+  ? loc.drinkTypes.filter(Boolean)
+  : [];
+
+const brands = String(loc.brand || "")
+  .split(",")
+  .map(brand => brand.trim())
+  .filter(Boolean);
+
+const venueWebsite = normalizeUrl(loc.website);
+
+const selectedExtras = `
+  <div class="selected-venue-extras">
+
+    ${featuredDrink ? `
+      <div class="venue-detail-section">
+        <div class="venue-detail-label">WHAT TO ORDER</div>
+        <p class="venue-detail-description">
+          ${escapeHtml(featuredDrink)}
+        </p>
+      </div>
+    ` : ""}
+
+    ${drinkTypes.length ? `
+      <div class="venue-detail-section">
+        <div class="venue-detail-label">ZERO-PROOF OPTIONS</div>
+
+        <div class="venue-detail-pills">
+          ${drinkTypes.map(type => `
+            <span class="venue-detail-pill">
+              ${escapeHtml(type)}
+            </span>
+          `).join("")}
+        </div>
+      </div>
+    ` : ""}
+
+    ${brands.length ? `
+      <div class="venue-detail-section">
+        <div class="venue-detail-label">BRANDS</div>
+
+        <p class="venue-detail-description">
+          ${brands.map(escapeHtml).join(" · ")}
+        </p>
+      </div>
+    ` : ""}
+
+    ${venueWebsite ? `
+      <div class="venue-detail-section venue-detail-website">
+        <a
+          href="${escapeHtml(venueWebsite)}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="venue-detail-link"
+        >
+          <span>Visit website</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    ` : ""}
+
+  </div>
+`;
 
     card.innerHTML = `
 	  <div class="card-main-row">
@@ -3728,6 +3876,8 @@ function renderList(data){
     
         </div>
       </div>
+	  
+	  ${selectedExtras}
     `;
 
     if (isSelected) card.classList.add("is-selected");
