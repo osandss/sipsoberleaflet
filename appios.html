@@ -80,7 +80,7 @@
     
     :root {
 	  --panel-collapsed: 30vh;
-	  --panel-selected: 24vh;
+	  --panel-selected: 205px;
 	  --panel-expanded: 55vh;
 	}
 
@@ -353,8 +353,8 @@
 	
 	#bottom-panel.selected #panel-body {
 	  overflow-y: hidden;
-	  padding-top: 8px;
-	  padding-bottom: 8px;
+	  padding: 4px 6px 8px;
+	  flex: 0 1 auto;
 	}
     
     #bottom-panel.expanded #panel-body {
@@ -673,9 +673,9 @@
 	  background: transparent;
 	  border: none;
 	  border-radius: 0;
-	
-	  padding: 15px 12px;
-	  margin: 4px 0;
+	  
+	  padding: 8px 6px 10px;
+	  margin: 0;
 	
 	  transform: none;
 	  z-index: 2;
