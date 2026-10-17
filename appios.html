@@ -703,15 +703,16 @@
 	.card-image-wrap {
 	  position: relative;
 	  width: 106px;
+	  height: 106px;
 	  flex: 0 0 106px;
 	  overflow: hidden;
 	  border-radius: 13px;
 	  box-shadow: none;
 	}
-    
-    .card-image {
+	
+	.card-image {
 	  width: 106px;
-	  height: 86px;
+	  height: 106px;
 	  object-fit: cover;
 	  border-radius: 13px;
 	  display: block;
@@ -759,12 +760,36 @@
     .card .meta {
       line-height: 1.2;
     }
-    
+	  
     .meta-location {
 	  font-size: 11.5px;
 	  margin: 5px 0 0;
 	  line-height: 1.4;
 	  letter-spacing: 0;
+	}
+	
+	.meta-location .meta-neighborhood {
+	  display: block;
+	  color: #A7BAFF;
+	  font-size: 12px;
+	  font-weight: 600;
+	  line-height: 1.35;
+	}
+	
+	.meta-location .meta-address {
+	  display: block;
+	  color: rgba(255,255,255,0.68);
+	  font-size: 11.5px;
+	  font-weight: 400;
+	  line-height: 1.35;
+	  margin-top: 2px;
+	}
+	
+	.meta-location .meta-distance {
+	  font-size: 11.5px;
+	  font-weight: 650;
+	  color: rgba(255,255,255,0.92);
+	  margin-bottom: 3px;
 	}
 	
 	.meta-neighborhood {
@@ -3758,12 +3783,19 @@ function renderList(data){
     const distance = _distanceLabelForVenue(loc);
     const neighborhood = loc.neighborhood || "";
     const address = loc.address || "";
-
-    const locationLine = distance
-      ? `<span class="meta-distance">${distance}</span> <span class="meta-divider">•</span> <span class="meta-neighborhood">${escapeHtml(neighborhood)}</span> <span class="meta-divider">•</span> <span class="meta-address">${escapeHtml(address)}</span>`
-      : (neighborhood && address
-          ? `<span class="meta-neighborhood">${escapeHtml(neighborhood)}</span> <span class="meta-divider">•</span> <span class="meta-address">${escapeHtml(address)}</span>`
-          : `<span class="meta-neighborhood">${escapeHtml(neighborhood || address)}</span>`);
+	const locationLine = `
+	  ${distance ? `
+	    <div class="meta-distance">${escapeHtml(distance)}</div>
+	  ` : ""}
+	
+	  ${neighborhood ? `
+	    <div class="meta-neighborhood">${escapeHtml(neighborhood)}</div>
+	  ` : ""}
+	
+	  ${address ? `
+	    <div class="meta-address">${escapeHtml(address)}</div>
+	  ` : ""}
+	`;
 
     const web = normalizeUrl(loc.website);
     const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.name || "") + " " + (loc.address || ""))}`;
