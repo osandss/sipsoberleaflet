@@ -1037,8 +1037,9 @@
   display: none;
 }
 
-/* Only show details when a selected venue is expanded */
-#bottom-panel.expanded .card.is-selected .selected-venue-extras {
+/* Show details when expanded OR while dragging upward */
+#bottom-panel.expanded .card.is-selected .selected-venue-extras,
+#bottom-panel.drag-reveal .card.is-selected .selected-venue-extras {
   display: block;
   margin-top: 18px;
   padding: 0 12px 24px;
@@ -4485,6 +4486,16 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
     );
 
     panel.style.height = `${currentHeight}px`;
+	
+	// Reveal selected venue details while dragging upward
+	if (_selectedVenueId) {
+	  const revealHeight = minHeight + 45;
+	
+	  panel.classList.toggle(
+	    "drag-reveal",
+	    currentHeight >= revealHeight
+	  );
+	}
   });
 
   // MARK: - Release and snap
@@ -4528,18 +4539,20 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
 
     // Animate from the dragged height to the CSS state height.
     panel.style.removeProperty("height");
-    toggle.style.removeProperty("cursor");
+	toggle.style.removeProperty("cursor");
+	panel.classList.remove("drag-reveal");
   });
 
   // MARK: - Cancel drag
   toggle.addEventListener("pointercancel", () => {
-    if (!tracking) return;
-
-    tracking = false;
-    dragging = false;
-    activePointerId = null;
-
-    resetDragStyles();
+	if (!tracking) return;
+	
+	tracking = false;
+	dragging = false;
+	activePointerId = null;
+	
+	panel.classList.remove("drag-reveal");
+	resetDragStyles();
   });
 
 })();
