@@ -3511,28 +3511,9 @@ function syncSelectedListRow(opts = {}){
   // do NOT calculate a scroll position yet.
   if(_isCollapsingToSelected) return;
 
-  const panelRect = panelBody.getBoundingClientRect();
-  const selectedRect = selected.getBoundingClientRect();
-
-  const currentScrollTop = panelBody.scrollTop;
-
-  const selectedCenter =
-    (selectedRect.top - panelRect.top)
-    + currentScrollTop
-    + (selectedRect.height / 2);
-
-  const targetScrollTop =
-    selectedCenter - (panelBody.clientHeight / 2);
-
-  const maxScrollTop =
-    panelBody.scrollHeight - panelBody.clientHeight;
-
-  const clampedScrollTop = Math.max(
-    0,
-    Math.min(targetScrollTop, maxScrollTop)
-  );
-
-  panelBody.scrollTop = clampedScrollTop;
+  // Always start at the top of the selected venue.
+  // Users can scroll down to see THE SPOT and other details.
+  panelBody.scrollTop = 0;
 }
 
 function refreshSelectionUI() {
