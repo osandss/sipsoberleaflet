@@ -1111,6 +1111,34 @@
   color: rgba(255,255,255,0.88);
 }
 
+/* =========================================
+   THE SPOT — EDITORIAL ACCENT
+========================================= */
+
+.venue-detail-section--spot {
+  padding-top: 17px;
+  padding-bottom: 19px;
+}
+
+.venue-detail-section--spot .venue-detail-label {
+  margin-bottom: 12px;
+}
+
+.venue-spot-accent {
+  border-left: 3px solid #A7BAFF;
+  padding: 2px 0 2px 15px;
+  margin-left: 1px;
+}
+
+.venue-spot-accent .venue-detail-description {
+  margin: 0;
+  color: rgba(255,255,255,0.92);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0.005em;
+}
+
 /* Drink category pills */
 .venue-detail-pills {
   display: flex;
@@ -3774,13 +3802,16 @@ const selectedExtras = `
   <div class="selected-venue-extras">
 
     ${featuredDrink ? `
-      <div class="venue-detail-section">
-        <div class="venue-detail-label">THE SPOT</div>
-        <p class="venue-detail-description">
-          ${escapeHtml(featuredDrink)}
-        </p>
-      </div>
-    ` : ""}
+	  <div class="venue-detail-section venue-detail-section--spot">
+	    <div class="venue-detail-label">THE SPOT</div>
+	
+	    <div class="venue-spot-accent">
+	      <p class="venue-detail-description">
+	        ${escapeHtml(featuredDrink)}
+	      </p>
+	    </div>
+	  </div>
+	` : ""}
 
     ${drinkTypes.length ? `
       <div class="venue-detail-section">
