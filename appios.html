@@ -352,9 +352,11 @@
 	}
 	
 	#bottom-panel.selected #panel-body {
-	  overflow-y: hidden;
+	  overflow-y: auto;
+	  -webkit-overflow-scrolling: touch;
 	  padding: 0 6px 8px;
-	  flex: 0 1 auto;
+	  flex: 1 1 auto;
+	  min-height: 0;
 	}
 
 	/* Tighter spacing when viewing an expanded selected venue */
@@ -1071,13 +1073,13 @@
    SELECTED VENUE — EXPANDED DETAILS
 ========================================= */
 
+/* Hide additional details in the regular venue list */
 .selected-venue-extras {
   display: none;
 }
 
-/* Show details when expanded or dragging upward */
-#bottom-panel.expanded .card.is-selected .selected-venue-extras,
-#bottom-panel.drag-reveal .card.is-selected .selected-venue-extras {
+/* Always show details for the selected venue */
+#bottom-panel .card.is-selected .selected-venue-extras {
   display: block;
   margin-top: 12px;
   padding: 0 8px 12px;
