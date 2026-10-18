@@ -2819,8 +2819,6 @@ let _preserveMapViewOnSelect = false;
 let _panelUserExpanded = false;
 let _panelState = "collapsed"; // "collapsed" | "selected" | "expanded"
 let _isCollapsingToSelected = false;
-let _expandedScrollTop = 0;
-let _panelStateBeforeSelection = "collapsed";
 let _activeDrinkType = "";
 let _activeGuideVenueIds = [];
 let defaultIcon, activeIcon, currentIcon;
@@ -3367,18 +3365,7 @@ function selectVenue(loc, opts = {}){
   const panel = document.getElementById("bottom-panel");
   const panelBody = document.getElementById("panel-body");
 
-  // Remember the panel size before opening a venue.
-  if (!_selectedVenueId) {
-    _panelStateBeforeSelection =
-      _panelState === "expanded" ? "expanded" : "collapsed";
-
-    if (panelBody) {
-      _expandedScrollTop = panelBody.scrollTop;
-    }
-  }
-
-// Used by the existing panel transition animation.
-const wasExpanded = _panelState === "expanded";
+  const wasExpanded = _panelState === "expanded";
 
   _selectedVenueId = String(loc.id || "");
   _lastFocusedVenueId = _selectedVenueId;
@@ -3673,11 +3660,6 @@ function refreshSelectionUI() {
 }
 
 function clearVenueSelection(opts = {}) {
-  const panelBody = document.getElementById("panel-body");
-
-  const savedScrollTop = _expandedScrollTop;
-  const restoreState = _panelStateBeforeSelection;
-
   _selectedVenueId = null;
   _lastFocusedVenueId = null;
   _panelUserExpanded = false;
@@ -3687,21 +3669,8 @@ function clearVenueSelection(opts = {}) {
   clearSelectedPinLabel();
   updateVenueNameLabels();
 
-  // Restore the panel's previous size.
-  setPanelState(restoreState);
-
-  // Restore the full venue list.
+  setPanelState("collapsed");
   refreshSelectionUI();
-
-  // Restore the previous scroll position once the
-  // list is visible and the panel has resized.
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      if (panelBody) {
-        panelBody.scrollTop = savedScrollTop;
-      }
-    });
-  });
 }
 	
 /* ─── RENDERERS ────────────────────────────────────────────────── */
@@ -4462,13 +4431,6 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
   }
 
   function collapsePanel() {
-    const panelBody = document.getElementById("panel-body");
-
-    // Never replace the saved list position with
-    // a selected venue's detail scroll position.
-    if (panelBody && !_selectedVenueId) {
-      _expandedScrollTop = panelBody.scrollTop;
-    }
 
     _panelUserExpanded = false;
 
