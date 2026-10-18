@@ -2820,6 +2820,7 @@ let _panelUserExpanded = false;
 let _panelState = "collapsed"; // "collapsed" | "selected" | "expanded"
 let _isCollapsingToSelected = false;
 let _expandedScrollTop = 0;
+let _panelStateBeforeSelection = "collapsed";
 let _activeDrinkType = "";
 let _activeGuideVenueIds = [];
 let defaultIcon, activeIcon, currentIcon;
@@ -3366,11 +3367,18 @@ function selectVenue(loc, opts = {}){
   const panel = document.getElementById("bottom-panel");
   const panelBody = document.getElementById("panel-body");
 
-  // Save the regular list position only when entering
-  // a selection from the unselected venue list.
-  if (!_selectedVenueId && panelBody) {
-	_expandedScrollTop = panelBody.scrollTop;
+  // Remember the panel size before opening a venue.
+  if (!_selectedVenueId) {
+    _panelStateBeforeSelection =
+      _panelState === "expanded" ? "expanded" : "collapsed";
+
+    if (panelBody) {
+      _expandedScrollTop = panelBody.scrollTop;
+    }
   }
+
+// Used by the existing panel transition animation.
+const wasExpanded = _panelState === "expanded";
 
   _selectedVenueId = String(loc.id || "");
   _lastFocusedVenueId = _selectedVenueId;
@@ -3666,7 +3674,9 @@ function refreshSelectionUI() {
 
 function clearVenueSelection(opts = {}) {
   const panelBody = document.getElementById("panel-body");
+
   const savedScrollTop = _expandedScrollTop;
+  const restoreState = _panelStateBeforeSelection;
 
   _selectedVenueId = null;
   _lastFocusedVenueId = null;
@@ -3677,11 +3687,14 @@ function clearVenueSelection(opts = {}) {
   clearSelectedPinLabel();
   updateVenueNameLabels();
 
-  setPanelState("collapsed");
+  // Restore the panel's previous size.
+  setPanelState(restoreState);
+
+  // Restore the full venue list.
   refreshSelectionUI();
 
-  // Wait for the full venue list to become visible again
-  // before restoring its previous scroll position.
+  // Restore the previous scroll position once the
+  // list is visible and the panel has resized.
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       if (panelBody) {
@@ -3690,7 +3703,7 @@ function clearVenueSelection(opts = {}) {
     });
   });
 }
-  
+	
 /* ─── RENDERERS ────────────────────────────────────────────────── */
 function renderMarkers(data) {
   if (!markersLayer) {
