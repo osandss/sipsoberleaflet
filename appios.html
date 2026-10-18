@@ -3366,9 +3366,9 @@ function selectVenue(loc, opts = {}){
   const panel = document.getElementById("bottom-panel");
   const panelBody = document.getElementById("panel-body");
 
-  const wasExpanded = _panelState === "expanded";
-
-  if (wasExpanded && panelBody) {
+  // Save the regular list position only when entering
+  // a selection from the unselected venue list.
+  if (!_selectedVenueId && panelBody) {
 	_expandedScrollTop = panelBody.scrollTop;
   }
 
@@ -3664,7 +3664,10 @@ function refreshSelectionUI() {
   });
 }
 
-function clearVenueSelection(opts = {}){
+function clearVenueSelection(opts = {}) {
+  const panelBody = document.getElementById("panel-body");
+  const savedScrollTop = _expandedScrollTop;
+
   _selectedVenueId = null;
   _lastFocusedVenueId = null;
   _panelUserExpanded = false;
@@ -3673,10 +3676,19 @@ function clearVenueSelection(opts = {}){
   clearActiveMarker();
   clearSelectedPinLabel();
   updateVenueNameLabels();
-  
-  setPanelState("collapsed");
 
+  setPanelState("collapsed");
   refreshSelectionUI();
+
+  // Wait for the full venue list to become visible again
+  // before restoring its previous scroll position.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (panelBody) {
+        panelBody.scrollTop = savedScrollTop;
+      }
+    });
+  });
 }
   
 /* ─── RENDERERS ────────────────────────────────────────────────── */
@@ -4439,7 +4451,9 @@ searchClear?.addEventListener("click",()=>{if(searchInput)searchInput.value="";a
   function collapsePanel() {
     const panelBody = document.getElementById("panel-body");
 
-    if (panelBody) {
+    // Never replace the saved list position with
+    // a selected venue's detail scroll position.
+    if (panelBody && !_selectedVenueId) {
       _expandedScrollTop = panelBody.scrollTop;
     }
 
