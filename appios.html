@@ -23,8 +23,12 @@
     .leaflet-container { position: relative; }
 
     .leaflet-tile-pane {
-      filter: brightness(0.92) contrast(1.05);
-    }
+	  filter:
+	    brightness(0.96)
+	    contrast(1.08)
+	    saturate(0.72)
+	    hue-rotate(5deg);
+	}
     
     .leaflet-container::before {
       content: "";
