@@ -2944,53 +2944,58 @@ if (document.readyState === "loading") {
   requestAnimationFrame(_initMap);
 }
 
+
 /* ─── ICONS ────────────────────────────────────────────────────── */
-function makePinIconSVG(hex="#2D334D", size=[28,38], opts={}){
+
+// Circular venue marker — Sip Sober
+function makePinIconSVG(hex="#465071", size=[20,20], opts={}){
   const [w,h] = size;
-  const ring = opts.ring ?? false;
-  const innerDot = opts.innerDot ?? "#F7F8FB";
+  const isActive = opts.ring ?? false;
 
   return `
-  <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 28 38">
-    ${ring ? `
-      <path
-        d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"
-        fill="none"
-        stroke="rgba(32,34,57,0.24)"
-        stroke-width="1.6"
-      />
-    ` : ""}
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="${w}" height="${h}"
+         viewBox="0 0 40 40">
 
-    <path
-      d="M14 0C6.82 0 1 5.82 1 13c0 9.75 11.4 23.4 12.01 24.13a1.25 1.25 0 0 0 1.98 0C15.6 36.4 27 22.75 27 13 27 5.82 21.18 0 14 0z"
-      fill="${hex}" opacity="0.92"
-      stroke="rgba(255,255,255,0.05)"
-      stroke-width="0.45"
-    />
+      ${isActive ? `
+        <circle cx="20" cy="20" r="18.5"
+          fill="rgba(89,91,117,0.18)" />
+      ` : ""}
 
-    <circle cx="14" cy="13" r="3.9" fill="${innerDot}" />
-  </svg>`;
+      <circle cx="20" cy="20"
+        r="${isActive ? 14.5 : 15.5}"
+        fill="${hex}"
+        stroke="${isActive ? "#A7BAFF" : "#FFFFFF"}"
+        stroke-width="${isActive ? 2.5 : 3}" />
+
+      <circle cx="20" cy="20"
+        r="${isActive ? 4.5 : 4}"
+        fill="#F7F8FB" />
+    </svg>
+  `;
 }
 
-function makeIcon(size=[28,38], color="#2D334D", isActive=false){
+function makeIcon(size=[20,20], color="#465071", isActive=false){
   return L.icon({
     iconUrl: "data:image/svg+xml;utf8," + encodeURIComponent(
       makePinIconSVG(color, size, {
-        ring: isActive,
-        innerDot: "#F7F8FB"
+        ring: isActive
       })
     ),
     iconSize: size,
-    iconAnchor: [Math.floor(size[0] / 2), size[1]],
-    popupAnchor: [0, -Math.floor(size[1] * 0.84)]
+    iconAnchor: [
+      Math.floor(size[0] / 2),
+      Math.floor(size[1] / 2)
+    ],
+    popupAnchor: [0, -Math.floor(size[1] / 2)]
   });
 }
 
 function _buildIcons(){
   const isMobile = mobileQuery.matches;
 
-  const size = isMobile ? [12,18] : [18,26];
-  const activeSize = isMobile ? [17,25] : [28,40];
+  const size = isMobile ? [20,20] : [24,24];
+  const activeSize = isMobile ? [32,32] : [36,36];
 
   defaultIcon = makeIcon(size, "#465071", false);
   activeIcon = makeIcon(activeSize, "#2D334D", true);
@@ -2998,6 +3003,7 @@ function _buildIcons(){
   currentIcon = defaultIcon;
   L.Marker.prototype.options.icon = currentIcon;
 }
+
 
 const __origMarkerFactory = L.marker;
 L.marker = function(latlng,options){
