@@ -2974,14 +2974,14 @@ function makePinIconSVG(hex="#465071", size=[20,20], opts={}){
         cy="20"
         r="${isActive ? 14.5 : 15.5}"
         fill="${hex}"
-        stroke="${isActive ? "#7579A1" : "#747E9B"}"
-        stroke-width="${isActive ? 2 : 0.8}"
+        stroke="${isActive ? "#7579A1" : "none"}"
+		stroke-width="${isActive ? 2 : 0}"
       />
 
       <circle
         cx="20"
         cy="20"
-        r="${isActive ? 4 : 3.2}"
+        r="${isActive ? 4 : 2.8}"
         fill="#F7F8FB"
       />
 
@@ -3009,7 +3009,7 @@ function makeIcon(size=[20,20], color="#465071", isActive=false){
 function _buildIcons(){
   const isMobile = mobileQuery.matches;
 
-  const size = isMobile ? [20,20] : [24,24];
+  const size = isMobile ? [16,16] : [20,20];
   const activeSize = isMobile ? [32,32] : [36,36];
 
   defaultIcon = makeIcon(size, "#465071", false);
