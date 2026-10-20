@@ -2948,32 +2948,47 @@ if (document.readyState === "loading") {
 /* ─── ICONS ────────────────────────────────────────────────────── */
 
 // Circular venue marker — Sip Sober
+
 function makePinIconSVG(hex="#465071", size=[20,20], opts={}){
   const [w,h] = size;
   const isActive = opts.ring ?? false;
 
   return `
     <svg xmlns="http://www.w3.org/2000/svg"
-         width="${w}" height="${h}"
+         width="${w}"
+         height="${h}"
          viewBox="0 0 40 40">
 
       ${isActive ? `
-        <circle cx="20" cy="20" r="18.5"
-          fill="rgba(89,91,117,0.18)" />
+        <circle
+          cx="20"
+          cy="20"
+          r="18.5"
+          fill="#595B75"
+          fill-opacity="0.18"
+        />
       ` : ""}
 
-      <circle cx="20" cy="20"
+      <circle
+        cx="20"
+        cy="20"
         r="${isActive ? 14.5 : 15.5}"
         fill="${hex}"
         stroke="${isActive ? "#7579A1" : "#747E9B"}"
-		stroke-width="${isActive ? 2 : 0.8}"
+        stroke-width="${isActive ? 2 : 0.8}"
+      />
 
-      <circle cx="20" cy="20"
+      <circle
+        cx="20"
+        cy="20"
         r="${isActive ? 4 : 3.2}"
-        fill="#F7F8FB" />
+        fill="#F7F8FB"
+      />
+
     </svg>
   `;
 }
+
 
 function makeIcon(size=[20,20], color="#465071", isActive=false){
   return L.icon({
