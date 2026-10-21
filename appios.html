@@ -1113,122 +1113,113 @@
 
 }
 
- /* =========================================
+ 
+/* =========================================
    SELECTED VENUE — EXPANDED DETAILS
 ========================================= */
 
-/* Hide additional details in the regular venue list */
 .selected-venue-extras {
   display: none;
 }
 
-/* Always show details for the selected venue */
 #bottom-panel .card.is-selected .selected-venue-extras {
   display: block;
-  margin-top: 12px;
-  padding: 0 8px 12px;
-  border-top: 1px solid rgba(255,255,255,0.12);
+  margin-top: 14px;
+  padding: 0 8px 16px;
+  border-top: 1px solid rgba(255,255,255,0.10);
 }
 
-/* Detail sections */
 .venue-detail-section {
-  padding: 15px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.09);
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .venue-detail-section:last-child {
   border-bottom: none;
 }
 
-/* Small uppercase headings */
 .venue-detail-label {
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.13em;
-  color: rgba(195,207,239,0.78);
-  margin-bottom: 8px;
-}
-
-/* Descriptions and brands */
-.venue-detail-description {
-  margin: 0;
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: rgba(255,255,255,0.88);
-}
-
-/* =========================================
-   THE SPOT — EDITORIAL ACCENT
-========================================= */
-
-.venue-detail-section--spot {
-  padding-top: 17px;
-  padding-bottom: 19px;
-}
-
-.venue-detail-section--spot .venue-detail-label {
+  letter-spacing: 0.16em;
+  color: rgba(190,202,233,0.85);
   margin-bottom: 12px;
 }
 
+.venue-detail-description {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.88);
+}
+
+/* WHY GO */
+
+.venue-detail-section--spot {
+  padding-top: 20px;
+  padding-bottom: 21px;
+}
+
 .venue-spot-accent {
-  border-left: 2px solid rgba(167, 186, 255, 0.75);
+  border-left: 2px solid rgba(167,186,255,0.70);
   padding: 2px 0 2px 15px;
   margin-left: 1px;
 }
 
 .venue-spot-accent .venue-detail-description {
-  margin: 0;
-  color: rgba(255,255,255,0.92);
+  color: rgba(255,255,255,0.94);
   font-size: 13px;
-  font-weight: 400;
   line-height: 1.65;
   letter-spacing: 0.005em;
 }
 
-/* Drink category pills */
+/* ZERO-PROOF DRINK CATEGORIES */
+
 .venue-detail-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 8px;
 }
 
 .venue-detail-pill {
   display: inline-flex;
   align-items: center;
-  padding: 6px 11px;
-  border-radius: 100px;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.10);
-  color: rgba(255,255,255,0.9);
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(167,186,255,0.09);
+  border: 1px solid rgba(167,186,255,0.20);
+  color: rgba(240,243,255,0.95);
   font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.3;
 }
 
-/* =========================================
-   BRANDS — REFINED LABELS
-========================================= */
+/* ZERO-PROOF BRANDS */
 
 .venue-brand-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 8px;
   margin-top: 2px;
 }
 
 .venue-brand-item {
   display: inline-flex;
   align-items: center;
-  padding: 7px 11px;
-  border-radius: 9px;
-  background: rgba(167, 186, 255, 0.055);
-  border: 1px solid rgba(167, 186, 255, 0.13);
-  color: rgba(235, 239, 250, 0.88);
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.045);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(235,239,250,0.9);
   font-size: 11.5px;
   font-weight: 500;
   line-height: 1.3;
 }
 
-/* Website */
+/* VENUE WEBSITE */
+
 .venue-detail-website {
+  padding-top: 17px;
   padding-bottom: 8px;
 }
 
@@ -1236,16 +1227,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: rgba(255,255,255,0.95);
-  font-size: 13px;
+  color: rgba(255,255,255,0.96);
+  font-size: 12.5px;
   font-weight: 600;
   text-decoration: none;
 }
 
 .venue-detail-link span:last-child {
   font-size: 18px;
-  color: rgba(195,207,239,0.85);
+  color: rgba(167,186,255,0.9);
 }
+
     
   </style>
 
@@ -3879,7 +3871,7 @@ const selectedExtras = `
 
     ${featuredDrink ? `
 	  <div class="venue-detail-section venue-detail-section--spot">
-	    <div class="venue-detail-label">THE SPOT</div>
+	    <div class="venue-detail-label">WHY GO</div>
 	
 	    <div class="venue-spot-accent">
 	      <p class="venue-detail-description">
@@ -3891,7 +3883,7 @@ const selectedExtras = `
 
     ${drinkTypes.length ? `
       <div class="venue-detail-section">
-        <div class="venue-detail-label">ZERO-PROOF OPTIONS</div>
+        <div class="venue-detail-label">ZERO-PROOF DRINKS</div>
 
         <div class="venue-detail-pills">
           ${drinkTypes.map(type => `
@@ -3905,7 +3897,7 @@ const selectedExtras = `
 
     ${brands.length ? `
 	  <div class="venue-detail-section venue-detail-section--brands">
-	    <div class="venue-detail-label">BRANDS</div>
+	    <div class="venue-detail-label">ZERO-PROOF BRANDS</div>
 	    <div class="venue-brand-list">
 	      ${brands.map(brand => `
 	        <span class="venue-brand-item">${escapeHtml(brand)}</span>
