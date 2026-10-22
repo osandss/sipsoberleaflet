@@ -3129,10 +3129,9 @@ if (document.readyState === "loading") {
 
 
 /* ─── ICONS ────────────────────────────────────────────────────── */
-
 // Circular venue marker — Sip Sober
 
-function makePinIconSVG(hex="#465071", size=[20,20], opts={}){
+function makePinIconSVG(hex="#595B75", size=[20,20], opts={}){
   const [w,h] = size;
   const isActive = opts.ring ?? false;
 
@@ -3155,18 +3154,20 @@ function makePinIconSVG(hex="#465071", size=[20,20], opts={}){
       <circle
         cx="20"
         cy="20"
-        r="${isActive ? 14.5 : 15.5}"
+        r="${isActive ? 14.5 : 13}"
         fill="${hex}"
         stroke="${isActive ? "#7579A1" : "none"}"
-		stroke-width="${isActive ? 2 : 0}"
+        stroke-width="${isActive ? 2 : 0}"
       />
 
-      <circle
-        cx="20"
-        cy="20"
-        r="${isActive ? 4.8 : 5.0}"
-        fill="#F7F8FB"
-      />
+      ${isActive ? `
+        <circle
+          cx="20"
+          cy="20"
+          r="4.8"
+          fill="#F7F8FB"
+        />
+      ` : ""}
 
     </svg>
   `;
@@ -3195,7 +3196,7 @@ function _buildIcons(){
   const size = isMobile ? [18,18] : [22,22];
   const activeSize = isMobile ? [32,32] : [36,36];
 
-  defaultIcon = makeIcon(size, "#465071", false);
+  defaultIcon = makeIcon(size, "#595B75", false);
   activeIcon = makeIcon(activeSize, "#2D334D", true);
 
   currentIcon = defaultIcon;
