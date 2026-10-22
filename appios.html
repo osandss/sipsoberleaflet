@@ -3141,20 +3141,6 @@ function makePinIconSVG(hex="#2D334D", size=[20,20], opts={}){
          height="${h}"
          viewBox="0 0 40 40">
 
-      <defs>
-        <filter id="venuePinShadow"
-                x="-60%" y="-60%"
-                width="220%" height="240%">
-          <feDropShadow
-			dx="0"
-			dy="0.6"
-			stdDeviation="0.65"
-			flood-color="#111629"
-			flood-opacity="${isActive ? 0.22 : 0.18}"
-		  />
-        </filter>
-      </defs>
-
       ${isActive ? `
         <circle
           cx="20"
@@ -3172,7 +3158,6 @@ function makePinIconSVG(hex="#2D334D", size=[20,20], opts={}){
         fill="${hex}"
         stroke="#7579A1"
         stroke-width="${isActive ? 2 : 1.2}"
-        filter="url(#venuePinShadow)"
       />
 
       <circle
