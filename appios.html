@@ -958,6 +958,11 @@
    SHARED SELECTED VENUE ACTIONS
 ========================================= */
 
+	/* Hide actions on regular venue cards */
+	.card:not(.is-selected) .venue-selected-actions {
+	  display: none;
+	}
+	  
 	.venue-selected-actions {
 	  display: flex;
 	  align-items: center;
@@ -3972,7 +3977,7 @@ const brands = String(loc.brand || "")
 
 const venueWebsite = normalizeUrl(loc.website);
 
-const selectedActionRowHtml = isSelected ? `
+const selectedActionRowHtml = `
   <div class="venue-selected-actions">
     <a
       class="venue-selected-action"
@@ -3996,7 +4001,7 @@ const selectedActionRowHtml = isSelected ? `
       </a>
     ` : ""}
   </div>
-` : "";
+`;
 
 const selectedExtras = `
   <div class="selected-venue-extras">
