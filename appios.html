@@ -961,8 +961,9 @@
 	.venue-selected-actions {
 	  display: flex;
 	  align-items: center;
-	  gap: 8px;
-	  margin-top: 9px;
+	  flex-wrap: wrap;
+	  gap: 10px;
+	  margin: 16px 6px 0;
 	}
 	
 	.venue-selected-action {
@@ -3769,70 +3770,6 @@ function refreshSelectionUI() {
         ? "none"
         : "";
 
-    /*
-     * Add or remove the Directions button without
-     * rebuilding the entire card.
-     */
-    let actionRow =
-      card.querySelector(".card-badge-row--selected");
-
-    let directionsButton =
-      actionRow?.querySelector(".route-pill");
-
-    if (selected) {
-      const loc = getLocationById(venueId);
-
-      if (loc) {
-        const directionsUrl =
-          `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-            (loc.name || "") + " " + (loc.address || "")
-          )}`;
-
-        /*
-         * Some cards may not already have a badge row.
-         * Create one when needed.
-         */
-        if (!actionRow) {
-          actionRow = document.createElement("div");
-          actionRow.className =
-            "card-badge-row card-badge-row--selected";
-
-          card
-            .querySelector(".card-content")
-            ?.appendChild(actionRow);
-        }
-
-        if (!directionsButton) {
-          directionsButton = document.createElement("a");
-          directionsButton.className =
-            "card-selected-pill primary card-selected-pill--inline route-pill";
-
-          directionsButton.target = "_blank";
-          directionsButton.rel = "noopener";
-
-          directionsButton.innerHTML = `
-            <span class="route-pill-icon">↗</span>
-            Directions
-          `;
-
-          actionRow?.appendChild(directionsButton);
-        }
-
-        directionsButton.href = directionsUrl;
-      }
-    } else if (directionsButton) {
-      directionsButton.remove();
-
-      /*
-       * Remove the row if Directions was its only content.
-       */
-      if (
-        actionRow &&
-        !actionRow.querySelector(".drink-pill")
-      ) {
-        actionRow.remove();
-      }
-    }
   });
 
   /*
@@ -4125,12 +4062,12 @@ const selectedExtras = `
           ${locationLine ? `<div class="meta meta-location">${locationLine}</div>` : ""}
 
           ${inlineActionRowHtml}
-		  ${selectedActionRowHtml}
-    
-        </div>
-      </div>
-	  
-	  ${selectedExtras}
+
+			</div>
+			</div>
+			
+			${selectedActionRowHtml}
+			${selectedExtras}
     `;
 
     if (isSelected) card.classList.add("is-selected");
