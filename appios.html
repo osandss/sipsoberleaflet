@@ -1244,6 +1244,110 @@
   color: rgba(167,186,255,0.9);
 }
 
+
+/* =========================================
+   SELECTED VENUE — ORGANIZED DETAILS
+========================================= */
+
+#bottom-panel .card.is-selected .selected-venue-extras {
+  margin-top: 14px;
+  padding: 0 8px 18px;
+  border-top: none;
+}
+
+/* Website action */
+
+.venue-expanded-actions {
+  display: flex;
+  gap: 9px;
+  padding: 4px 0 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+.venue-expanded-website {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 8px 16px;
+  border-radius: 11px;
+  background: rgba(255,255,255,0.075);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.96);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.venue-expanded-website span {
+  color: #A7BAFF;
+  font-size: 16px;
+}
+
+/* Detail sections */
+
+.selected-venue-extras .venue-detail-section {
+  padding: 19px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.09);
+}
+
+.selected-venue-extras .venue-detail-section:last-child {
+  border-bottom: none;
+}
+
+.selected-venue-extras .venue-detail-label {
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.35;
+  color: rgba(255,255,255,0.97);
+  margin-bottom: 11px;
+}
+
+/* About */
+
+.selected-venue-extras .venue-detail-section--spot {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.selected-venue-extras .venue-detail-description {
+  margin: 0;
+  padding: 0;
+  border: none;
+  color: rgba(235,238,248,0.88);
+  font-size: 12.5px;
+  line-height: 1.65;
+  letter-spacing: 0;
+}
+
+/* Drink pills */
+
+.selected-venue-extras .venue-detail-pills {
+  gap: 8px;
+}
+
+.selected-venue-extras .venue-detail-pill {
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+/* Brand pills */
+
+.selected-venue-extras .venue-brand-list {
+  margin-top: 0;
+  gap: 8px;
+}
+
+.selected-venue-extras .venue-brand-item {
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 11.5px;
+}
+
     
   </style>
 
@@ -3872,25 +3976,36 @@ const brands = String(loc.brand || "")
 
 const venueWebsite = normalizeUrl(loc.website);
 
+
 const selectedExtras = `
   <div class="selected-venue-extras">
 
+    ${venueWebsite ? `
+      <div class="venue-expanded-actions">
+        <a
+          href="${escapeHtml(venueWebsite)}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="venue-expanded-website"
+        >
+          <span aria-hidden="true">↗</span>
+          Website
+        </a>
+      </div>
+    ` : ""}
+
     ${featuredDrink ? `
-	  <div class="venue-detail-section venue-detail-section--spot">
-	    <div class="venue-detail-label">WHY GO</div>
-	
-	    <div class="venue-spot-accent">
-	      <p class="venue-detail-description">
-	        ${escapeHtml(featuredDrink)}
-	      </p>
-	    </div>
-	  </div>
-	` : ""}
+      <div class="venue-detail-section venue-detail-section--spot">
+        <div class="venue-detail-label">About</div>
+        <p class="venue-detail-description">
+          ${escapeHtml(featuredDrink)}
+        </p>
+      </div>
+    ` : ""}
 
     ${drinkTypes.length ? `
       <div class="venue-detail-section">
-        <div class="venue-detail-label">ZERO-PROOF DRINKS</div>
-
+        <div class="venue-detail-label">Zero-proof drinks</div>
         <div class="venue-detail-pills">
           ${drinkTypes.map(type => `
             <span class="venue-detail-pill">
@@ -3902,32 +4017,21 @@ const selectedExtras = `
     ` : ""}
 
     ${brands.length ? `
-	  <div class="venue-detail-section venue-detail-section--brands">
-	    <div class="venue-detail-label">ZERO-PROOF BRANDS</div>
-	    <div class="venue-brand-list">
-	      ${brands.map(brand => `
-	        <span class="venue-brand-item">${escapeHtml(brand)}</span>
-	      `).join("")}
-	    </div>
-	  </div>
-	` : ""}
-
-    ${venueWebsite ? `
-      <div class="venue-detail-section venue-detail-website">
-        <a
-          href="${escapeHtml(venueWebsite)}"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="venue-detail-link"
-        >
-          <span>Visit website</span>
-          <span aria-hidden="true">↗</span>
-        </a>
+      <div class="venue-detail-section venue-detail-section--brands">
+        <div class="venue-detail-label">Brands available</div>
+        <div class="venue-brand-list">
+          ${brands.map(brand => `
+            <span class="venue-brand-item">
+              ${escapeHtml(brand)}
+            </span>
+          `).join("")}
+        </div>
       </div>
     ` : ""}
 
   </div>
 `;
+
 
     card.innerHTML = `
 	  <div class="card-main-row">
