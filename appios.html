@@ -3099,7 +3099,7 @@ function _initMap(){
     clearVenueSelection({ preserveMapView: true });
   });
 
-  map.on("zoomend", () => {
+  map.on("zoomend moveend", () => {
 	updateVenueNameLabels();
   });
 
@@ -3449,31 +3449,70 @@ function clearVenueNameLabels(){
   _venueNameLabels = {};
 }
 
+
 function updateVenueNameLabels(){
-  if(!map) return;
+  if (!map) return;
 
-  const shouldShow =
-    map.getZoom() >= VENUE_NAME_ZOOM;
+  const shouldShow = map.getZoom() >= VENUE_NAME_ZOOM;
+  const occupied = [];
+  const padding = 6;
 
-  Object.entries(_venueNameLabels).forEach(([id, label]) => {
-    const isSelected =
-      String(id) === String(_selectedVenueId || "");
-
-    /*
-     * Show normal venue names only when:
-     * 1. We're zoomed in enough
-     * 2. This venue is NOT currently selected
-     */
-    const visible =
-      shouldShow && !isSelected;
-
+  // First hide all normal labels.
+  Object.values(_venueNameLabels).forEach(label => {
     const el = label.getElement();
+    if (el) el.classList.remove("is-visible");
+  });
 
-	if(el){
-	  el.classList.toggle("is-visible", visible);
-	}
+  if (!shouldShow) return;
+
+  // Keep the selected venue's normal label hidden,
+  // because it already has its own floating name pill.
+  const candidates = Object.entries(_venueNameLabels)
+    .filter(([id, label]) =>
+      String(id) !== String(_selectedVenueId || "") &&
+      !!label.getElement()
+    )
+    .map(([id, label]) => ({
+      id,
+      label,
+      el: label.getElement()
+    }));
+
+  // Avoid labels competing with the selected name pill.
+  const selectedPill = document.querySelector(
+    ".ss-pin-label-wrap"
+  );
+
+  if (selectedPill) {
+    const rect = selectedPill.getBoundingClientRect();
+
+    if (rect.width && rect.height) {
+      occupied.push(rect);
+    }
+  }
+
+  candidates.forEach(({ el }) => {
+    // Temporarily show the label so we can measure it.
+    el.classList.add("is-visible");
+
+    const text = el.querySelector(".ss-venue-name");
+    const rect = (text || el).getBoundingClientRect();
+
+    const overlaps = occupied.some(other =>
+      rect.left < other.right + padding &&
+      rect.right > other.left - padding &&
+      rect.top < other.bottom + padding &&
+      rect.bottom > other.top - padding
+    );
+
+    if (overlaps) {
+      el.classList.remove("is-visible");
+    } else {
+      occupied.push(rect);
+    }
   });
 }
+
 
 function createVenueNameLabel(loc){
   if(!map || !loc || !loc.id) return;
