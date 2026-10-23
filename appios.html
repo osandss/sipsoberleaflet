@@ -3183,10 +3183,10 @@ function makeIcon(size=[20,28], color="#2D334D", isActive=false){
 function _buildIcons(){
   const isMobile = mobileQuery.matches;
 
-  const size = isMobile ? [17,24] : [20,28];
-  const activeSize = isMobile ? [26,36] : [30,42];
+  const size = isMobile ? [12,17] : [15,21];
+  const activeSize = isMobile ? [24,34] : [28,39];
 
-  defaultIcon = makeIcon(size, "#2D334D", false);
+  defaultIcon = makeIcon(size, "#595B75", false);
   activeIcon = makeIcon(activeSize, "#2D334D", true);
 
   currentIcon = defaultIcon;
