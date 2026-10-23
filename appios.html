@@ -1110,11 +1110,11 @@
 	  position: relative;
 	  display: block;
 	
-	  color: #202239;
+	  color: #666B82;
 	  font-size: 10px;
-	  font-weight: 650;
-	  line-height: 1.1;
-	  letter-spacing: -0.01em;
+	  font-weight: 500;
+	  line-height: 1.2;
+	  letter-spacing: 0;
 	
 	  white-space: nowrap;
 	
@@ -3437,7 +3437,7 @@ function showSelectedPinLabel(loc){
 
 /* ─── VENUE NAMES AT CLOSE ZOOM ─────────────────────────────── */
 
-const VENUE_NAME_ZOOM = 16;
+const VENUE_NAME_ZOOM = 15;
 
 function clearVenueNameLabels(){
   Object.values(_venueNameLabels).forEach(label => {
@@ -4271,8 +4271,8 @@ function fitInitialView(){
   const panelH = panel ? panel.getBoundingClientRect().height : 0;
 
   const defaultBounds = L.latLngBounds(
-    [40.725, -74.020],
-    [40.805, -73.950]
+  	[40.735, -74.015],
+  	[40.795, -73.955]
   );
 
   map.fitBounds(defaultBounds, {
