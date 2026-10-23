@@ -3184,7 +3184,7 @@ function _buildIcons(){
   const isMobile = mobileQuery.matches;
 
   const size = isMobile ? [12,17] : [15,21];
-  const activeSize = isMobile ? [24,34] : [28,39];
+  const activeSize = isMobile ? [19,27] : [23,32];
 
   defaultIcon = makeIcon(size, "#595B75", false);
   activeIcon = makeIcon(activeSize, "#2D334D", true);
@@ -4271,8 +4271,8 @@ function fitInitialView(){
   const panelH = panel ? panel.getBoundingClientRect().height : 0;
 
   const defaultBounds = L.latLngBounds(
-    [40.715, -74.025],
-    [40.815, -73.945]
+    [40.725, -74.020],
+    [40.805, -73.950]
   );
 
   map.fitBounds(defaultBounds, {
