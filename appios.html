@@ -1180,149 +1180,132 @@
 
 }
 
-
  
 /* =========================================
    SELECTED VENUE — EXPANDED DETAILS
 ========================================= */
 
+/* Hidden until a venue is selected */
 .selected-venue-extras {
   display: none;
 }
 
+/* Expanded details container */
 #bottom-panel .card.is-selected .selected-venue-extras {
   display: block;
-  margin-top: 14px;
-  padding: 0 8px 16px;
-  border-top: 1px solid rgba(255,255,255,0.10);
+  margin-top: 8px;
+  padding: 0 8px 18px;
+  border-top: none;
 }
 
-.venue-detail-section {
-  padding: 15px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.venue-detail-section:last-child {
+/* Individual detail sections */
+.selected-venue-extras .venue-detail-section {
+  padding: 13px 0;
   border-bottom: none;
 }
 
-.venue-detail-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  color: rgba(190,202,233,0.85);
-  margin-bottom: 12px;
+/* First section */
+.selected-venue-extras .venue-detail-section:first-child {
+  padding-top: 16px;
 }
 
-.venue-detail-description {
-  margin: 0;
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: rgba(255,255,255,0.88);
+/* Last section */
+.selected-venue-extras .venue-detail-section:last-child {
+  padding-bottom: 6px;
 }
 
-/* WHY GO */
-
-.venue-detail-section--spot {
-  padding-top: 20px;
-  padding-bottom: 21px;
-}
-
-.venue-spot-accent {
-  border-left: 2px solid rgba(167,186,255,0.70);
-  padding: 2px 0 2px 15px;
-  margin-left: 1px;
-}
-
-.venue-spot-accent .venue-detail-description {
-  color: rgba(255,255,255,0.94);
+/* Section headings */
+.selected-venue-extras .venue-detail-label {
+  margin: 0 0 9px;
   font-size: 13px;
-  line-height: 1.65;
-  letter-spacing: 0.005em;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: 0;
+  color: rgba(255,255,255,0.96);
 }
 
-/* ZERO-PROOF DRINK CATEGORIES */
-
-.venue-detail-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+/* Supporting venue description */
+.selected-venue-extras .venue-detail-description {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: rgba(235,238,248,0.73);
 }
 
-.venue-detail-pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 7px 12px;
-  border-radius: 10px;
-  background: rgba(167,186,255,0.13);
-  border: 1px solid rgba(167,186,255,0.28);
-  color: rgba(245,247,255,0.98);
-  font-size: 11.5px;
+/* =========================================
+   WHY GO
+========================================= */
+
+/* Main recommendation */
+.selected-venue-extras .venue-whygo {
+  margin: 0 0 8px;
+  padding: 0;
+  color: #C7D3FF;
+  font-size: 13px;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.55;
 }
 
-/* ZERO-PROOF BRANDS */
+/* =========================================
+   ZERO-PROOF DRINK CATEGORIES
+========================================= */
 
-.venue-brand-list {
+.selected-venue-extras .venue-detail-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
   margin-top: 2px;
 }
 
-.venue-brand-item {
+/* Individual drink pills */
+.selected-venue-extras .venue-detail-pill {
   display: inline-flex;
   align-items: center;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.045);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: rgba(235,239,250,0.9);
-  font-size: 11.5px;
+  padding: 6px 10px;
+  border-radius: 9px;
+  background: rgba(167,186,255,0.10);
+  border: 1px solid rgba(167,186,255,0.20);
+  color: #D4DEFF;
+  font-size: 11px;
   font-weight: 500;
   line-height: 1.3;
 }
 
-/* VENUE WEBSITE */
+/* =========================================
+   ZERO-PROOF BRANDS
+========================================= */
 
-.venue-detail-website {
-  padding-top: 17px;
-  padding-bottom: 8px;
-}
-
-.venue-detail-link {
+/* Inline brand information */
+.selected-venue-extras .venue-brands-inline {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: rgba(245,247,255,0.96);
-  font-size: 12.5px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+/* Small Brands label */
+.selected-venue-extras .venue-brands-inline-label {
+  color: rgba(255,255,255,0.50);
   font-weight: 600;
-  text-decoration: none;
-  padding: 5px 0;
-  transition: opacity 0.2s ease;
 }
 
-.venue-detail-link:active {
-  opacity: 0.65;
+/* Brand names */
+.selected-venue-extras .venue-brands-inline-value {
+  color: rgba(255,255,255,0.80);
+  font-weight: 500;
 }
-	  
-.venue-detail-link span:last-child {
-  font-size: 18px;
-  color: rgba(167,186,255,0.9);
-}
-
 
 
 /* =========================================
-   SELECTED VENUE — ORGANIZED DETAILS
+   SELECTED VENUE — ACTION BUTTONS
 ========================================= */
-
-#bottom-panel .card.is-selected .selected-venue-extras {
-  margin-top: 4px;
-  padding: 0 8px 18px;
-  border-top: none;
-}
 
 /* Website action */
 
@@ -1354,116 +1337,39 @@
   font-size: 16px;
 }
 
-/* Detail sections */
-
-.selected-venue-extras .venue-detail-section {
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.09);
-}
-
-.selected-venue-extras .venue-detail-section:last-child {
-  border-bottom: none;
-}
-
-.selected-venue-extras .venue-detail-label {
-  font-size: 14px;
-  font-weight: 650;
-  letter-spacing: 0;
-  line-height: 1.35;
-  color: rgba(255,255,255,0.97);
-  margin-bottom: 11px;
-}
-
-/* About */
-
-.selected-venue-extras .venue-detail-section--spot {
-  padding-top: 16px;
-  padding-bottom: 18px;
-}
-
-.selected-venue-extras .venue-detail-description {
-  margin: 0;
-  padding: 0;
-  border: none;
-  color: rgba(235,238,248,0.88);
-  font-size: 12.5px;
-  line-height: 1.65;
-  letter-spacing: 0;
-}
-
-/* Drink pills */
-
-.selected-venue-extras .venue-detail-pills {
-  gap: 8px;
-}
-
-.selected-venue-extras .venue-detail-pill {
-  padding: 6px 10px;
-  border-radius: 9px;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-/* Brand pills */
-
-.selected-venue-extras .venue-brand-list {
-  margin-top: 0;
-  gap: 8px;
-}
-
-.selected-venue-extras .venue-brand-item {
-  padding: 6px 10px;
-  border-radius: 9px;
-  font-size: 11px;
-}
-
 /* =========================================
-   EXPANDED VENUE — THE VIBE
+   EXPANDED VENUE — THE EXPERIENCE
 ========================================= */
 
-.venue-vibe-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px 16px;
-  margin-top: 4px;
-}
+/* Container for experience tags */
 
-.venue-vibe-item {
+.selected-venue-extras .venue-experience-tags {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 2px;
 }
 
-.venue-vibe-item--full {
-  grid-column: 1 / -1;
-}
+/* Individual experience tags */
 
-.venue-vibe-key,
-.venue-selection-label {
-  color: rgba(255, 255, 255, 0.52);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
+.selected-venue-extras .venue-experience-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-.venue-vibe-value {
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 9px;
+
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.09);
+
+  color: rgba(255,255,255,0.84);
+
+  font-size: 11px;
   font-weight: 500;
-  line-height: 1.5;
-}
+  line-height: 1.3;
 
-/* =========================================
-   EXPANDED VENUE — ZERO-PROOF SELECTION
-========================================= */
-
-.venue-selection-group + .venue-selection-group {
-  margin-top: 18px;
-}
-
-.venue-selection-label {
-  margin-bottom: 10px;
+  white-space: normal;
 }
     
   </style>
@@ -4808,7 +4714,10 @@ const brands = String(loc.brand || "")
   .map(brand => brand.trim())
   .filter(Boolean);
 
-// NEW — Expanded venue information
+// NEW — Refined expanded venue information
+
+const whyGo = String(loc.whyGo || "").trim();
+
 const vibe = loc.vibe || {};
 
 const atmosphere = Array.isArray(vibe.atmosphere)
@@ -4819,9 +4728,8 @@ const bestFor = Array.isArray(vibe.bestFor)
   ? vibe.bestFor.filter(Boolean)
   : [];
 
-const setting = String(vibe.setting || "").trim();
-
-const hasVibe = atmosphere.length || bestFor.length || setting;
+// Combine atmosphere and best-for tags
+const experienceTags = [...new Set([...atmosphere, ...bestFor])];
 
 const venueWebsite = normalizeUrl(loc.website);
 
@@ -4878,75 +4786,63 @@ const selectedActionRowHtml = `
 const selectedExtras = `
   <div class="selected-venue-extras">
 
-    ${featuredDrink ? `
-      <div class="venue-detail-section venue-detail-section--spot">
-        <div class="venue-detail-label">About</div>
-        <p class="venue-detail-description">
-          ${escapeHtml(featuredDrink)}
-        </p>
+    ${(whyGo || featuredDrink) ? `
+      <div class="venue-detail-section venue-detail-section--why">
+
+        <div class="venue-detail-label">Why Go</div>
+
+        ${whyGo ? `
+          <p class="venue-whygo">
+            ${escapeHtml(whyGo)}
+          </p>
+        ` : ""}
+
+        ${featuredDrink ? `
+          <p class="venue-detail-description">
+            ${escapeHtml(featuredDrink)}
+          </p>
+        ` : ""}
+
       </div>
     ` : ""}
 
-    ${hasVibe ? `
-      <div class="venue-detail-section venue-detail-section--vibe">
-        <div class="venue-detail-label">The Vibe</div>
+    ${experienceTags.length ? `
+      <div class="venue-detail-section venue-detail-section--experience">
 
-        <div class="venue-vibe-grid">
+        <div class="venue-detail-label">The Experience</div>
 
-          ${atmosphere.length ? `
-            <div class="venue-vibe-item">
-              <span class="venue-vibe-key">Atmosphere</span>
-              <span class="venue-vibe-value">
-                ${atmosphere.map(escapeHtml).join(" · ")}
-              </span>
-            </div>
-          ` : ""}
-
-          ${bestFor.length ? `
-            <div class="venue-vibe-item">
-              <span class="venue-vibe-key">Best For</span>
-              <span class="venue-vibe-value">
-                ${bestFor.map(escapeHtml).join(" · ")}
-              </span>
-            </div>
-          ` : ""}
-
-          ${setting ? `
-            <div class="venue-vibe-item venue-vibe-item--full">
-              <span class="venue-vibe-key">Setting</span>
-              <span class="venue-vibe-value">
-                ${escapeHtml(setting)}
-              </span>
-            </div>
-          ` : ""}
-
+        <div class="venue-experience-tags">
+          ${experienceTags.map(tag => `
+            <span class="venue-experience-tag">
+              ${escapeHtml(tag)}
+            </span>
+          `).join("")}
         </div>
+
       </div>
     ` : ""}
 
-    ${drinkTypes.length || brands.length ? `
-      <div class="venue-detail-section venue-detail-section--selection">
-        <div class="venue-detail-label">Zero-Proof Selection</div>
+    ${(drinkTypes.length || brands.length) ? `
+      <div class="venue-detail-section venue-detail-section--drinks">
+
+        <div class="venue-detail-label">Zero-Proof Drinks</div>
 
         ${drinkTypes.length ? `
-          <div class="venue-selection-group">
-            <div class="venue-selection-label">Drink Styles</div>
-            <div class="venue-detail-pills">
-              ${drinkTypes.map(type => `
-                <span class="venue-detail-pill">${escapeHtml(type)}</span>
-              `).join("")}
-            </div>
+          <div class="venue-detail-pills">
+            ${drinkTypes.map(type => `
+              <span class="venue-detail-pill">
+                ${escapeHtml(type)}
+              </span>
+            `).join("")}
           </div>
         ` : ""}
 
         ${brands.length ? `
-          <div class="venue-selection-group">
-            <div class="venue-selection-label">Brands Available</div>
-            <div class="venue-brand-list">
-              ${brands.map(brand => `
-                <span class="venue-brand-item">${escapeHtml(brand)}</span>
-              `).join("")}
-            </div>
+          <div class="venue-brands-inline">
+            <span class="venue-brands-inline-label">Brands</span>
+            <span class="venue-brands-inline-value">
+              ${brands.map(escapeHtml).join(" · ")}
+            </span>
           </div>
         ` : ""}
 
