@@ -1198,28 +1198,28 @@
 
 #bottom-panel .card.is-selected .selected-venue-extras {
   display: block;
-  margin-top: 8px;
+  margin-top: 10px;
   padding: 0 8px 18px;
   border-top: none;
 }
 
 
 /* =========================================
-   VENUE OVERVIEW
+   VENUE OVERVIEW — WHY GO
 ========================================= */
 
 .selected-venue-extras .venue-overview {
-  padding: 12px 0 18px;
+  padding: 14px 0 20px;
 }
 
-/* Why You'll Like It */
+/* Small editorial heading */
 
 .selected-venue-extras .venue-overview-label {
-  margin-bottom: 10px;
+  margin-bottom: 9px;
   color: #A7BAFF;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -1233,34 +1233,9 @@
   line-height: 1.6;
 }
 
-/* Experience tags */
-
-.selected-venue-extras .venue-overview-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 14px;
-}
-
-.selected-venue-extras .venue-overview-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 10px;
-  border-radius: 9px;
-
-  background: rgba(255,255,255,0.055);
-  border: 1px solid rgba(255,255,255,0.09);
-
-  color: rgba(255,255,255,0.84);
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1.3;
-}
-
 
 /* =========================================
-   ZERO-PROOF OPTIONS
+   ZERO-PROOF DRINKS
 ========================================= */
 
 .selected-venue-extras .venue-zero-proof {
@@ -1268,66 +1243,43 @@
   border-top: 1px solid rgba(255,255,255,0.10);
 }
 
-/* Main heading */
+/* Section heading */
 
 .selected-venue-extras .venue-zero-proof-heading {
-  margin-bottom: 16px;
-  color: rgba(255,255,255,0.96);
-  font-size: 14px;
-  font-weight: 650;
-  line-height: 1.35;
-}
-
-/* Drink styles and brands groups */
-
-.selected-venue-extras .venue-zero-proof-group {
-  margin-bottom: 16px;
-}
-
-.selected-venue-extras .venue-zero-proof-group:last-child {
-  margin-bottom: 0;
-}
-
-/* Small category labels */
-
-.selected-venue-extras .venue-zero-proof-label {
-  margin-bottom: 9px;
-  color: rgba(255,255,255,0.55);
+  margin-bottom: 11px;
+  color: #A7BAFF;
   font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-transform: uppercase;
 }
 
-/* Drink pills */
+/* Drink styles — plain text */
 
-.selected-venue-extras .venue-detail-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-
-.selected-venue-extras .venue-detail-pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 10px;
-  border-radius: 9px;
-
-  background: rgba(167,186,255,0.10);
-  border: 1px solid rgba(167,186,255,0.20);
-
-  color: #D4DEFF;
-  font-size: 11px;
+.selected-venue-extras .venue-zero-proof-drinks {
+  margin: 0 0 8px;
+  color: rgba(255,255,255,0.94);
+  font-size: 13px;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.55;
 }
 
-/* Brand names */
+/* Brand information */
 
 .selected-venue-extras .venue-zero-proof-brands {
-  color: rgba(255,255,255,0.85);
+  margin: 0;
+  color: rgba(255,255,255,0.74);
   font-size: 12px;
-  font-weight: 500;
-  line-height: 1.5;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+/* Brands label */
+
+.selected-venue-extras .venue-brands-label {
+  color: rgba(255,255,255,0.52);
+  font-weight: 600;
 }
     
   </style>
@@ -4741,31 +4693,23 @@ const selectedActionRowHtml = `
   </div>
 `;
 
+/* =========================================
+   SELECTED VENUE — EDITORIAL DETAILS
+========================================= */
+
 const selectedExtras = `
   <div class="selected-venue-extras">
 
-    ${(whyGo || featuredDrink || experienceTags.length) ? `
+    ${(whyGo || featuredDrink) ? `
       <div class="venue-overview">
 
-        ${(whyGo || featuredDrink) ? `
-          <div class="venue-overview-label">
-            Why You'll Like It
-          </div>
+        <div class="venue-overview-label">
+          Why Go
+        </div>
 
-          <p class="venue-overview-description">
-            ${escapeHtml(whyGo || featuredDrink)}
-          </p>
-        ` : ""}
-
-        ${experienceTags.length ? `
-          <div class="venue-overview-tags">
-            ${experienceTags.map(tag => `
-              <span class="venue-overview-tag">
-                ${escapeHtml(tag)}
-              </span>
-            `).join("")}
-          </div>
-        ` : ""}
+        <p class="venue-overview-description">
+          ${escapeHtml(whyGo || featuredDrink)}
+        </p>
 
       </div>
     ` : ""}
@@ -4774,39 +4718,20 @@ const selectedExtras = `
       <div class="venue-zero-proof">
 
         <div class="venue-zero-proof-heading">
-          Zero-Proof Options
+          Zero-Proof Drinks
         </div>
 
         ${drinkTypes.length ? `
-          <div class="venue-zero-proof-group">
-
-            <div class="venue-zero-proof-label">
-              Drink Styles
-            </div>
-
-            <div class="venue-detail-pills">
-              ${drinkTypes.map(type => `
-                <span class="venue-detail-pill">
-                  ${escapeHtml(type)}
-                </span>
-              `).join("")}
-            </div>
-
-          </div>
+          <p class="venue-zero-proof-drinks">
+            ${drinkTypes.map(escapeHtml).join(" · ")}
+          </p>
         ` : ""}
 
         ${brands.length ? `
-          <div class="venue-zero-proof-group">
-
-            <div class="venue-zero-proof-label">
-              Brands Available
-            </div>
-
-            <div class="venue-zero-proof-brands">
-              ${brands.map(escapeHtml).join(" · ")}
-            </div>
-
-          </div>
+          <p class="venue-zero-proof-brands">
+            <span class="venue-brands-label">Brands:</span>
+            ${brands.map(escapeHtml).join(" · ")}
+          </p>
         ` : ""}
 
       </div>
