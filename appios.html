@@ -1200,13 +1200,13 @@
 
 /* Individual detail sections */
 .selected-venue-extras .venue-detail-section {
-  padding: 13px 0;
+  padding: 10px 0;
   border-bottom: none;
 }
 
 /* First section */
 .selected-venue-extras .venue-detail-section:first-child {
-  padding-top: 16px;
+  padding-top: 12px;
 }
 
 /* Last section */
@@ -1222,6 +1222,12 @@
   line-height: 1.35;
   letter-spacing: 0;
   color: rgba(255,255,255,0.96);
+}
+
+/* Slightly quieter heading for Why Go */
+
+.selected-venue-extras .venue-detail-section--why .venue-detail-label {
+  font-size: 12px;
 }
 
 /* Supporting venue description */
@@ -1242,11 +1248,11 @@
 
 /* Main recommendation */
 .selected-venue-extras .venue-whygo {
-  margin: 0 0 8px;
+  margin: 0;
   padding: 0;
   color: #C7D3FF;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.55;
 }
 
@@ -4787,24 +4793,16 @@ const selectedExtras = `
   <div class="selected-venue-extras">
 
     ${(whyGo || featuredDrink) ? `
-      <div class="venue-detail-section venue-detail-section--why">
+  <div class="venue-detail-section venue-detail-section--why">
 
-        <div class="venue-detail-label">Why Go</div>
+    <div class="venue-detail-label">Why Go</div>
 
-        ${whyGo ? `
-          <p class="venue-whygo">
-            ${escapeHtml(whyGo)}
-          </p>
-        ` : ""}
+    <p class="venue-whygo">
+      ${escapeHtml(whyGo || featuredDrink)}
+    </p>
 
-        ${featuredDrink ? `
-          <p class="venue-detail-description">
-            ${escapeHtml(featuredDrink)}
-          </p>
-        ` : ""}
-
-      </div>
-    ` : ""}
+  </div>
+` : ""}
 
     ${experienceTags.length ? `
       <div class="venue-detail-section venue-detail-section--experience">
