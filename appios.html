@@ -1416,6 +1416,55 @@
   border-radius: 9px;
   font-size: 11px;
 }
+
+/* =========================================
+   EXPANDED VENUE — THE VIBE
+========================================= */
+
+.venue-vibe-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 16px;
+  margin-top: 4px;
+}
+
+.venue-vibe-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.venue-vibe-item--full {
+  grid-column: 1 / -1;
+}
+
+.venue-vibe-key,
+.venue-selection-label {
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.venue-vibe-value {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* =========================================
+   EXPANDED VENUE — ZERO-PROOF SELECTION
+========================================= */
+
+.venue-selection-group + .venue-selection-group {
+  margin-top: 18px;
+}
+
+.venue-selection-label {
+  margin-bottom: 10px;
+}
     
   </style>
 
@@ -4031,6 +4080,21 @@ const brands = String(loc.brand || "")
   .map(brand => brand.trim())
   .filter(Boolean);
 
+// NEW — Expanded venue information
+const vibe = loc.vibe || {};
+
+const atmosphere = Array.isArray(vibe.atmosphere)
+  ? vibe.atmosphere.filter(Boolean)
+  : [];
+
+const bestFor = Array.isArray(vibe.bestFor)
+  ? vibe.bestFor.filter(Boolean)
+  : [];
+
+const setting = String(vibe.setting || "").trim();
+
+const hasVibe = atmosphere.length || bestFor.length || setting;
+
 const venueWebsite = normalizeUrl(loc.website);
 
 const selectedActionRowHtml = `
@@ -4095,35 +4159,74 @@ const selectedExtras = `
       </div>
     ` : ""}
 
-    ${drinkTypes.length ? `
-      <div class="venue-detail-section">
-        <div class="venue-detail-label">Zero-proof drinks</div>
-        <div class="venue-detail-pills">
-          ${drinkTypes.map(type => `
-            <span class="venue-detail-pill">
-              ${escapeHtml(type)}
-            </span>
-          `).join("")}
+    ${hasVibe ? `
+      <div class="venue-detail-section venue-detail-section--vibe">
+        <div class="venue-detail-label">The Vibe</div>
+
+        <div class="venue-vibe-grid">
+
+          ${atmosphere.length ? `
+            <div class="venue-vibe-item">
+              <span class="venue-vibe-key">Atmosphere</span>
+              <span class="venue-vibe-value">
+                ${atmosphere.map(escapeHtml).join(" · ")}
+              </span>
+            </div>
+          ` : ""}
+
+          ${bestFor.length ? `
+            <div class="venue-vibe-item">
+              <span class="venue-vibe-key">Best For</span>
+              <span class="venue-vibe-value">
+                ${bestFor.map(escapeHtml).join(" · ")}
+              </span>
+            </div>
+          ` : ""}
+
+          ${setting ? `
+            <div class="venue-vibe-item venue-vibe-item--full">
+              <span class="venue-vibe-key">Setting</span>
+              <span class="venue-vibe-value">
+                ${escapeHtml(setting)}
+              </span>
+            </div>
+          ` : ""}
+
         </div>
       </div>
     ` : ""}
 
-    ${brands.length ? `
-      <div class="venue-detail-section venue-detail-section--brands">
-        <div class="venue-detail-label">Brands available</div>
-        <div class="venue-brand-list">
-          ${brands.map(brand => `
-            <span class="venue-brand-item">
-              ${escapeHtml(brand)}
-            </span>
-          `).join("")}
-        </div>
+    ${drinkTypes.length || brands.length ? `
+      <div class="venue-detail-section venue-detail-section--selection">
+        <div class="venue-detail-label">Zero-Proof Selection</div>
+
+        ${drinkTypes.length ? `
+          <div class="venue-selection-group">
+            <div class="venue-selection-label">Drink Styles</div>
+            <div class="venue-detail-pills">
+              ${drinkTypes.map(type => `
+                <span class="venue-detail-pill">${escapeHtml(type)}</span>
+              `).join("")}
+            </div>
+          </div>
+        ` : ""}
+
+        ${brands.length ? `
+          <div class="venue-selection-group">
+            <div class="venue-selection-label">Brands Available</div>
+            <div class="venue-brand-list">
+              ${brands.map(brand => `
+                <span class="venue-brand-item">${escapeHtml(brand)}</span>
+              `).join("")}
+            </div>
+          </div>
+        ` : ""}
+
       </div>
     ` : ""}
 
   </div>
 `;
-
 
     card.innerHTML = `
 	  <div class="card-main-row">
