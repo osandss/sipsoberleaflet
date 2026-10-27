@@ -439,18 +439,22 @@
 
 	#panel-close {
 	  display: none;
-	  width: 24px;
-	  height: 24px;
+	  width: 30px;
+	  height: 30px;
 	  padding: 0;
-	  border: 0;
+	  border: 1px solid rgba(255,255,255,0.12);
 	  border-radius: 50%;
-	  background: rgba(255,255,255,0.06);
-	  color: rgba(255,255,255,0.65);
-	  font-size: 17px;
+	
+	  background: rgba(29,33,52,0.82);
+	  color: rgba(255,255,255,0.95);
+	
+	  font-size: 20px;
 	  font-weight: 300;
 	  line-height: 1;
+	
 	  align-items: center;
 	  justify-content: center;
+	
 	  cursor: pointer;
 	  flex-shrink: 0;
 	}
@@ -458,6 +462,14 @@
 	#bottom-panel.selected #panel-close,
 	#bottom-panel.expanded:has(.card.is-selected) #panel-close {
 	  display: flex;
+	}
+
+	/* Float the close button over the expanded venue photograph */
+	#bottom-panel.expanded:has(.card.is-selected) #panel-close {
+	  position: absolute;
+	  top: 57px;
+	  left: 48px;
+	  z-index: 10;
 	}
 	  
     #results-count {
