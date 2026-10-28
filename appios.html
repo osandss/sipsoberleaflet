@@ -733,6 +733,7 @@
 	}
 	
 	.card.is-selected {
+	  position: relative;
 	  background: transparent;
 	  border: none;
 	  border-radius: 0;
@@ -1216,6 +1217,23 @@
   height: 145px;
   flex: 0 0 auto;
   border-radius: 14px;
+}
+
+/* Bookmark — top-right of expanded image */
+#bottom-panel.expanded .card.is-selected .fav-btn {
+  position: absolute;
+  top: 20px;
+  right: 18px;
+  z-index: 10;
+
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+
+  border-radius: 50%;
+  background: rgba(29,33,52,0.72);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #A7BAFF;
 }
 
 /* Expanded venue typography */
