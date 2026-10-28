@@ -1293,34 +1293,82 @@
   text-transform: uppercase;
 }
 
-/* Two-column information rows */
+/* =========================================
+   DRINK STYLE
+========================================= */
 
 .selected-venue-extras .venue-zero-proof-group {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.selected-venue-extras .venue-zero-proof-group:last-child {
   margin-bottom: 0;
 }
 
-/* Left column — category */
+/* Drink icon + drink name */
+
+.selected-venue-extras .venue-zero-proof-group--drinks {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Drink icon */
+
+.selected-venue-extras .venue-zero-proof-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+
+  border-radius: 50%;
+  background: rgba(167,186,255,0.10);
+  border: 1px solid rgba(167,186,255,0.14);
+
+  color: #A7BAFF;
+  font-size: 17px;
+}
+
+/* Drink name */
+
+.selected-venue-extras .venue-zero-proof-value {
+  color: rgba(255,255,255,0.94);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+
+/* =========================================
+   BRANDS AVAILABLE
+========================================= */
+
+/* Move brands further below the drink */
+
+.selected-venue-extras .venue-zero-proof-group--brands {
+  margin-top: 20px;
+  padding-left: 40px;
+}
+
+/* Brands heading */
 
 .selected-venue-extras .venue-zero-proof-label {
-  color: rgba(255,255,255,0.58);
-  font-size: 11.5px;
-  font-weight: 400;
+  display: block;
+  margin-bottom: 5px;
+
+  color: rgba(255,255,255,0.50);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
   line-height: 1.5;
 }
 
-/* Right column — information */
+/* Brand names */
 
-.selected-venue-extras .venue-zero-proof-value {
-  color: rgba(255,255,255,0.90);
+.selected-venue-extras .venue-zero-proof-brands {
+  color: rgba(255,255,255,0.78);
   font-size: 12px;
-  font-weight: 500;
-  line-height: 1.5;
-  overflow-wrap: break-word;
+  font-weight: 400;
+  line-height: 1.55;
 }
     
   </style>
@@ -4763,7 +4811,8 @@ const selectedExtras = `
 	    </div>
 		
 		${drinkTypes.length ? `
-		  <div class="venue-zero-proof-group">
+		  <div class="venue-zero-proof-group venue-zero-proof-group--drinks">
+		    <span class="venue-zero-proof-icon" aria-hidden="true">♧</span>
 		    <span class="venue-zero-proof-value">
 		      ${drinkTypes.map(escapeHtml).join(", ")}
 		    </span>
@@ -4771,10 +4820,11 @@ const selectedExtras = `
 		` : ""}
 		
 		${brands.length ? `
-		  <div class="venue-zero-proof-group">
-		    <span class="venue-zero-proof-label">
+		  <div class="venue-zero-proof-group venue-zero-proof-group--brands">
+		    <span class="venue-zero-proof-label">Brands Available</span>
+		    <div class="venue-zero-proof-brands">
 		      ${brands.map(escapeHtml).join(", ")}
-		    </span>
+		    </div>
 		  </div>
 		` : ""}
 	
