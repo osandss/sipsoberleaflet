@@ -4812,7 +4812,22 @@ const selectedExtras = `
 		
 		${drinkTypes.length ? `
 		  <div class="venue-zero-proof-group venue-zero-proof-group--drinks">
-		    <span class="venue-zero-proof-icon" aria-hidden="true">♧</span>
+		    <span class="venue-zero-proof-icon" aria-hidden="true">
+			  <svg
+			    width="17"
+			    height="17"
+			    viewBox="0 0 24 24"
+			    fill="none"
+			    stroke="currentColor"
+			    stroke-width="1.7"
+			    stroke-linecap="round"
+			    stroke-linejoin="round"
+			  >
+			    <path d="M3 4h18L12 14 3 4Z"/>
+			    <path d="M12 14v6"/>
+			    <path d="M7 21h10"/>
+			  </svg>
+			</span>
 		    <span class="venue-zero-proof-value">
 		      ${drinkTypes.map(escapeHtml).join(", ")}
 		    </span>
