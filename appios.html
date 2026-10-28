@@ -847,6 +847,20 @@
 	  line-height: 1.35;
 	  margin-top: 2px;
 	}
+
+	/* Address pin — hidden on regular cards */
+	.meta-address-pin {
+	  display: none;
+	}
+	
+	/* Show pin in expanded selected venue */
+	
+	#bottom-panel.expanded .card.is-selected .meta-address-pin {
+	  display: inline-block;
+	  vertical-align: -2px;
+	  margin-right: 4px;
+	  color: #A7BAFF;
+	}
 	
 	.meta-location .meta-distance {
 	  font-size: 11.5px;
@@ -4678,7 +4692,22 @@ function renderList(data){
 	  ` : ""}
 	
 	  ${address ? `
-	    <div class="meta-address">${escapeHtml(address)}</div>
+	    <div class="meta-address">
+		  <svg class="meta-address-pin"
+			   width="13"
+			   height="13"
+			   viewBox="0 0 24 24"
+			   fill="none"
+			   stroke="currentColor"
+			   stroke-width="1.8"
+			   stroke-linecap="round"
+			   stroke-linejoin="round"
+			   aria-hidden="true">
+		    <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/>
+		    <circle cx="12" cy="10" r="2.5"/>
+		  </svg>
+		  <span>${escapeHtml(address)}</span>
+	    </div>
 	  ` : ""}
 	`;
 
