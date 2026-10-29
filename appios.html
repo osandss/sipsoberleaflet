@@ -1216,6 +1216,10 @@
 
 /* Close button — scrolls with expanded venue image */
 
+.venue-image-close {
+  display: none;
+}
+		
 #bottom-panel.expanded .card.is-selected .venue-image-close {
   position: absolute;
   top: 12px;
@@ -4938,19 +4942,17 @@ const selectedExtras = `
     card.innerHTML = `
 	  <div class="card-main-row">
 	    <div class="card-image-wrap">
-	      ${cardImage}
-	
-	      ${isSelected ? `
-	        <button
-	          class="venue-image-close"
-	          type="button"
-	          aria-label="Close selected venue"
-	          onclick="event.stopPropagation(); clearVenueSelection({ preserveMapView: true })"
-	        >
-	          &times;
-	        </button>
-	      ` : ""}
-	    </div>
+		  ${cardImage}
+		
+		  <button
+		    class="venue-image-close"
+		    type="button"
+		    aria-label="Close selected venue"
+		    onclick="event.stopPropagation(); clearVenueSelection({ preserveMapView: true })"
+		  >
+		    &times;
+		  </button>
+		</div>
 
         <div class="card-content">
           <div class="card-header-row">
