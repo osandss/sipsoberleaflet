@@ -1410,38 +1410,39 @@
    BRANDS AVAILABLE
 ========================================= */
 
-/* Move brands further below the drink */
+/* Brands layout */
 .selected-venue-extras .venue-zero-proof-group--brands {
   display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  column-gap: 8px;
-  row-gap: 2px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
   margin-top: 0;
 }
 
+/* Spacing when a drink appears above */
 .selected-venue-extras .venue-zero-proof-group--drinks
 + .venue-zero-proof-group--brands {
-  margin-top: 9px;
+  margin-top: 14px;
 }
 
 /* Brands heading */
 .selected-venue-extras .venue-zero-proof-label {
-  display: inline;
+  display: block;
   margin-bottom: 0;
 
-  color: rgba(255,255,255,0.50);
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 1.5;
+  color: #A7BAFF;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.35;
+  text-transform: uppercase;
 }
 
 /* Brand names */
-
 .selected-venue-extras .venue-zero-proof-brands {
+  display: block;
   color: rgba(255,255,255,0.78);
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 400;
   line-height: 1.55;
 }
