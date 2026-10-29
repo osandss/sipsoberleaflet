@@ -1021,9 +1021,9 @@
 	  padding: 3px 12px;
 	
 	  /* Brighter, more defined appearance */
-	  border: 1px solid rgba(167,186,255,0.35);
+	  border: 1px solid rgba(167,186,255,0.20);
 	  border-radius: 9px;
-	  background: rgba(167,186,255,0.20);
+	  background: rgba(167,186,255,0.08);
 	
 	  color: rgba(255,255,255,0.98);
 	  font-size: 11.5px;
@@ -1032,16 +1032,19 @@
 	  text-decoration: none;
 	  white-space: nowrap;
 	}
+
+	.venue-selected-action--directions {
+	  background: rgba(167,186,255,0.30);
+	  border-color: rgba(167,186,255,0.45);
+	}
 	
 	/* Selected venue action icons */
-
 	.venue-selected-action .venue-action-icon {
 	  width: 15px;
 	  height: 15px;
 	  flex-shrink: 0;
 	  color: #A7BAFF;
 	}
-	
 	
 	.venue-selected-action:active {
 	  opacity: 0.7;
@@ -1218,24 +1221,30 @@
   flex: 0 0 auto;
   border-radius: 14px;
 }
-
-/* Bookmark — top-right of expanded image */
+		
+/* Bookmark — match expanded photo close button */
 #bottom-panel.expanded .card.is-selected .fav-btn {
   position: absolute;
   top: 20px;
   right: 18px;
   z-index: 10;
 
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  padding: 0;
 
   border-radius: 50%;
-  background: rgba(29,33,52,0.72);
+  background: rgba(29,33,52,0.68);
   border: 1px solid rgba(255,255,255,0.12);
-  color: #A7BAFF;
+
+  color: rgba(255,255,255,0.95);
 }
 
+#bottom-panel.expanded .card.is-selected .fav-btn.is-fav {
+  color: #A7BAFF;
+}
+		
 /* Expanded venue typography */
 #bottom-panel.expanded .card.is-selected .card-name {
   font-size: 20px;
@@ -4792,7 +4801,7 @@ const venueWebsite = normalizeUrl(loc.website);
 const selectedActionRowHtml = `
   <div class="venue-selected-actions">
     <a
-      class="venue-selected-action"
+      class="venue-selected-action venue-selected-action--directions"
       href="${escapeHtml(directionsUrl)}"
       target="_blank"
       rel="noopener noreferrer"
@@ -4814,7 +4823,7 @@ const selectedActionRowHtml = `
 
     ${venueWebsite ? `
       <a
-        class="venue-selected-action"
+        class="venue-selected-action venue-selected-action--website"
         href="${escapeHtml(venueWebsite)}"
         target="_blank"
         rel="noopener noreferrer"
