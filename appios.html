@@ -832,6 +832,22 @@
 	  font-weight: 600;
 	  line-height: 1.35;
 	}
+
+	/* Venue category + experience */
+
+	.meta-location .meta-experience {
+	  display: block;
+	  margin-top: 4px;
+	
+	  color: rgba(255,255,255,0.72);
+	  font-size: 11px;
+	  font-weight: 500;
+	  line-height: 1.4;
+	
+	  white-space: nowrap;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	}
 	
 	.meta-location .meta-address {
 	  display: block;
@@ -931,8 +947,9 @@
 	  padding: 0 7px;
 	}
 
-	/* Hide drink pill only in expanded venue details */
-	#bottom-panel.expanded .card.is-selected .card-badge-row {
+	/* Hide compact card details in expanded venue view */
+	#bottom-panel.expanded .card.is-selected .card-badge-row,
+	#bottom-panel.expanded .card.is-selected .meta-experience {
 	  display: none;
 	}
 
@@ -4735,13 +4752,37 @@ function renderList(data){
     const distance = _distanceLabelForVenue(loc);
     const neighborhood = loc.neighborhood || "";
     const address = loc.address || "";
+
+	// Regular venue card — category + experience
+	const category = String(loc.category || "").trim();
+	
+	const cardBestFor = Array.isArray(loc.vibe?.bestFor)
+	  ? loc.vibe.bestFor.filter(Boolean)
+	  : [];
+	
+	const cardAtmosphere = Array.isArray(loc.vibe?.atmosphere)
+	  ? loc.vibe.atmosphere.filter(Boolean)
+	  : [];
+	
+	const cardExperience = cardBestFor[0] || cardAtmosphere[0] || "";
+	
+	const cardExperienceText = [category, cardExperience]
+	  .filter(Boolean)
+	  .join(" · ");
+	  
 	const locationLine = `
 	  ${distance ? `
 	    <div class="meta-distance">${escapeHtml(distance)}</div>
 	  ` : ""}
 	
-	  ${neighborhood ? `
+	    ${neighborhood ? `
 	    <div class="meta-neighborhood">${escapeHtml(neighborhood)}</div>
+	  ` : ""}
+	
+	  ${cardExperienceText ? `
+	    <div class="meta-experience">
+	      ${escapeHtml(cardExperienceText)}
+	    </div>
 	  ` : ""}
 	
 	  ${address ? `
