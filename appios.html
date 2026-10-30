@@ -790,7 +790,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 6px;
-      margin-bottom: 0;
+      margin-bottom: 3px;
     }
     
     .card-text {
@@ -4754,7 +4754,11 @@ function renderList(data){
     const address = loc.address || "";
 
 	// Regular venue card — category + experience
-	const category = String(loc.category || "").trim();
+
+	const category = String(loc.category || "")
+	  .trim()
+	  .replace(/\s+Restaurant$/i, "")
+	  .replace(/^Neighborhood Bar$/i, "Bar");
 	
 	const cardBestFor = Array.isArray(loc.vibe?.bestFor)
 	  ? loc.vibe.bestFor.filter(Boolean)
