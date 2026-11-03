@@ -5437,9 +5437,26 @@ document.addEventListener("click",e=>{
 	        website: normalizeUrl(v.website || ""),
 	        neighborhood: v.neighborhood || "",
 	        brands: v.brand || "",
-	        imageUrl: v.imageUrl || ""
+	        imageUrl: v.imageUrl || "",
+	
+	        // Additional Saved venue details
+	        category: v.category || "",
+	
+	        drinkTypes:
+	            Array.isArray(v.drinkTags) && v.drinkTags.length
+	                ? v.drinkTags
+	                : Array.isArray(v.drinkTypes)
+	                    ? v.drinkTypes
+	                    : [],
+	
+	        atmosphere:
+	            Array.isArray(v.vibe?.atmosphere)
+	                ? v.vibe.atmosphere.join(", ")
+	                : "",
+	
+	        whyGo: v.whyGo || ""
 	    }
-	});    
+	});
 	return;
   }
   const nameEl=e.target.closest(".card-name[data-focus-id]");
