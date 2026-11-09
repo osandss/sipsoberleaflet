@@ -5558,8 +5558,8 @@ window.SipSober.setUserLocation=function(lat,lng){
   _pendingUserLocation=null;
   _showUserLocation(LAT,LNG);
   _userLocationForDistance={lat:LAT,lng:LNG};
-  _panelUserExpanded = true;
-  setPanelState("expanded");
+  _panelUserExpanded = false;
+  setPanelState("collapsed");
   applyFiltersUnified({ preserveMapView: true });
   map.invalidateSize(false);
   map.setView([LAT,LNG], Math.max(map.getZoom(),15), { animate:true });
