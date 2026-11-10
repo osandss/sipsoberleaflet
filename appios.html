@@ -398,14 +398,14 @@
 	}
 
     #panel-meta-row .active-filters {
-	  flex: 1 1 auto;
 	  display: none;
 	  flex-wrap: wrap;
+	  align-items: center;
 	  gap: 6px;
+	  width: 100%;
 	  margin: 0;
 	  padding: 0;
 	  position: static;
-	  top: auto;
 	  background: transparent;
 	}
 	  
@@ -1536,6 +1536,7 @@
   </div>
 </div>
 
+
 <div id="map"></div>
 
 <div id="bottom-panel">
@@ -1544,27 +1545,32 @@
       <span class="handle" aria-hidden="true"></span>
       <span class="label">Show</span>
     </button>
+
     <div id="panel-meta-row">
-      <div id="active-filters" class="active-filters"></div>
-      <div style="display:flex;align-items:center;gap:8px;">
+
+      <div class="panel-results-row">
         <div id="results-count" class="results-count"></div>
 
-		<button
-		  id="panel-close"
-		  type="button"
-		  aria-label="Close selected venue"
-		  onclick="clearVenueSelection({ preserveMapView: true })"
-		>
-		  &times;
-		</button>
-		  
+        <button
+          id="panel-close"
+          type="button"
+          aria-label="Close selected venue"
+          onclick="clearVenueSelection({ preserveMapView: true })"
+        >
+          &times;
+        </button>
       </div>
+
+      <div id="active-filters" class="active-filters"></div>
+
     </div>
   </div>
+
   <div id="panel-body">
     <div id="results"></div>
   </div>
 </div>
+
 
 <script>
 /* ─── DATA ─────────────────────────────────────────────────────── */
