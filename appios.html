@@ -389,13 +389,22 @@
 	  padding: 0;
 	}
 
-    #panel-meta-row {
+    
+	#panel-meta-row {
 	  display: flex;
-	  align-items: center;
-	  justify-content: space-between;
+	  flex-direction: column;
+	  align-items: stretch;
 	  gap: 8px;
 	  margin-top: 0;
 	}
+	
+	.panel-results-row {
+	  display: flex;
+	  align-items: center;
+	  justify-content: space-between;
+	  width: 100%;
+	}
+
 
     #panel-meta-row .active-filters {
 	  display: none;
