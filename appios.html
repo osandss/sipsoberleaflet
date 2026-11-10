@@ -5134,10 +5134,11 @@ function renderMarkers(data) {
   };
 }
   
-function renderList(data){
+
+function renderList(data) {
   const results = document.getElementById("results");
   const rc = document.getElementById("results-count");
-  if(!results) return;
+  if (!results) return;
 
   results.innerHTML = "";
 
@@ -5150,18 +5151,16 @@ function renderList(data){
       const brands = getSelectedValues("brand");
       const hoods = getSelectedValues("n");
 
-      let resultLabel;
+      let resultLabel = "";
 
       if (hoods.length > 0) {
         resultLabel = hoods.join(", ");
       } else if (brands.length > 0 || _activeDrinkType) {
         resultLabel = "Filtered";
-      } else {
-        resultLabel = _userLocationForDistance ? "Nearby" : "A–Z";
       }
 
       rc.textContent =
-        `${data.length} place${data.length === 1 ? "" : "s"} • ${resultLabel}`;
+        `${data.length} place${data.length === 1 ? "" : "s"}${resultLabel ? " • " + resultLabel : ""}`;
     }
   }
 
