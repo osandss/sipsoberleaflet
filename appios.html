@@ -5147,8 +5147,21 @@ function renderList(data){
     } else if (data.length === 0) {
       rc.textContent = "No places found";
     } else {
-      const sortText = _userLocationForDistance ? "Nearby" : "A–Z";
-      rc.textContent = `${data.length} place${data.length === 1 ? "" : "s"} • ${sortText}`;
+      const brands = getSelectedValues("brand");
+      const hoods = getSelectedValues("n");
+
+      let resultLabel;
+
+      if (hoods.length > 0) {
+        resultLabel = hoods.join(", ");
+      } else if (brands.length > 0 || _activeDrinkType) {
+        resultLabel = "Filtered";
+      } else {
+        resultLabel = _userLocationForDistance ? "Nearby" : "A–Z";
+      }
+
+      rc.textContent =
+        `${data.length} place${data.length === 1 ? "" : "s"} • ${resultLabel}`;
     }
   }
 
