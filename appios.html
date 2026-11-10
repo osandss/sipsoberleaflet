@@ -4245,12 +4245,37 @@ function _initMap(){
   labelTiles.addTo(map);
   
   baseTiles.once("load", () => {
+  if (map) {
+    map.invalidateSize({ animate: false, pan: false });
+  }
+
+  const revealMap = () => {
     document.body.classList.remove("map-loading");
     document.body.classList.add("map-ready");
-    if (map) {
-      map.invalidateSize({ animate: false, pan: false });
+  };
+
+  // Normal behavior for first-time users and older app versions
+  if (window.SipSober.locationMode !== "authorized") {
+    revealMap();
+    return;
+  }
+
+  // Wait briefly for returning users' coordinates
+  const started = Date.now();
+
+  const waitForLocation = () => {
+    if (
+      window.SipSober.startupLocationHandled ||
+      Date.now() - started >= 1200
+    ) {
+      revealMap();
+    } else {
+      setTimeout(waitForLocation, 50);
     }
-  });
+  };
+
+  waitForLocation();
+});
 
   map.setMaxBounds(manhattanLockBounds);
   map.options.maxBoundsViscosity = 0.1;
@@ -5562,18 +5587,43 @@ function _distanceLabelForVenue(loc){
   return m<0.1?"<0.1 mi":`${m.toFixed(1)} mi`;
 }
 
-window.SipSober.setUserLocation=function(lat,lng){
-  const LAT=Number(lat),LNG=Number(lng);
-  if(!Number.isFinite(LAT)||!Number.isFinite(LNG)) return;
-  if(!_mapReady){_pendingUserLocation={lat:LAT,lng:LNG};return;}
-  _pendingUserLocation=null;
-  _showUserLocation(LAT,LNG);
-  _userLocationForDistance={lat:LAT,lng:LNG};
+window.SipSober.setUserLocation = function(lat, lng) {
+  const LAT = Number(lat);
+  const LNG = Number(lng);
+
+  if (!Number.isFinite(LAT) || !Number.isFinite(LNG)) return;
+
+  if (!_mapReady) {
+    _pendingUserLocation = { lat: LAT, lng: LNG };
+    return;
+  }
+
+  _pendingUserLocation = null;
+
+  _showUserLocation(LAT, LNG);
+  _userLocationForDistance = { lat: LAT, lng: LNG };
+
   _panelUserExpanded = false;
   setPanelState("collapsed");
+
   applyFiltersUnified({ preserveMapView: true });
   map.invalidateSize(false);
-  map.setView([LAT,LNG], Math.max(map.getZoom(),15), { animate:true });
+
+  // First automatic location update for returning users:
+  // position immediately, without the Manhattan animation.
+  const isStartupLocation =
+    window.SipSober.locationMode === "authorized" &&
+    !window.SipSober.startupLocationHandled;
+
+  if (isStartupLocation) {
+    window.SipSober.startupLocationHandled = true;
+  }
+
+  map.setView(
+    [LAT, LNG],
+    Math.max(map.getZoom(), 15),
+    { animate: !isStartupLocation }
+  );
 };
 
 window.SipSober.clearUserLocation=function(){
