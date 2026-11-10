@@ -235,14 +235,18 @@
       transform: translateZ(0);
     }
 
-    body.map-loading #map {
-      opacity: 0;
-    }
-
-    body.map-ready #map {
-      opacity: 1;
-      transition: opacity 0.18s ease;
-    }
+    /* Hide map and results panel during initial loading */
+	body.map-loading #map,
+	body.map-loading #bottom-panel {
+	  opacity: 0;
+	}
+	
+	/* Reveal map and results together */
+	body.map-ready #map,
+	body.map-ready #bottom-panel {
+	  opacity: 1;
+	  transition: opacity 0.18s ease;
+	}
     
     @supports (height: 100dvh) { #map { height: 100dvh; } }
 
@@ -394,7 +398,7 @@
 	  display: flex;
 	  flex-direction: column;
 	  align-items: stretch;
-	  gap: 0;
+	  gap: 8px;
 	  margin-top: 0;
 	}
 	
