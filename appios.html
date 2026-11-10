@@ -5163,19 +5163,9 @@ function renderList(data) {
     } else if (data.length === 0) {
       rc.textContent = "No places found";
     } else {
-      const brands = getSelectedValues("brand");
-      const hoods = getSelectedValues("n");
-
-      let resultLabel = "";
-
-      if (hoods.length > 0) {
-        resultLabel = hoods.join(", ");
-      } else if (brands.length > 0 || _activeDrinkType) {
-        resultLabel = "Filtered";
-      }
-
-      rc.textContent =
-        `${data.length} place${data.length === 1 ? "" : "s"}${resultLabel ? " • " + resultLabel : ""}`;
+      
+	rc.textContent =
+	  `${data.length} place${data.length === 1 ? "" : "s"}`;
     }
   }
 
