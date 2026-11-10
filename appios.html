@@ -4163,8 +4163,19 @@ document.body.classList.add("map-loading");
 
 (function(){
   const p = new URLSearchParams(window.location.search);
-  window.SipSober.isEmbed = p.get("embed")==="1";
-  if(window.SipSober.isEmbed) document.body.classList.add("ss-embed");
+
+  window.SipSober.isEmbed = p.get("embed") === "1";
+
+  // Startup location mode sent by Xcode
+  // Older App Store versions default to normal map behavior
+  window.SipSober.locationMode =
+    p.get("locationMode") === "authorized"
+      ? "authorized"
+      : "default";
+
+  if (window.SipSober.isEmbed) {
+    document.body.classList.add("ss-embed");
+  }
 })();
 
 /* ─── STATE ────────────────────────────────────────────────────── */
