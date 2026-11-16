@@ -157,7 +157,7 @@
         Arial,
         "Lexend",
         sans-serif;
-      font-size: clamp(36px, 7vw, 60px);
+      font-size: clamp(36px, 7vw, 57px);
       line-height: 0.92;
       letter-spacing: -0.045em;
       max-width: none;
@@ -453,7 +453,7 @@
 
 
 /* ==========================================
-   CARD IMAGES — IDENTICAL SIZES
+   CARD IMAGES — MATCHING SIZE + ALIGNMENT
 ========================================== */
 
 .showcase-media {
@@ -482,14 +482,16 @@
   transform: translateY(0);
 }
 
+/* All three screenshots have identical dimensions */
+
 .showcase-photo {
   display: block;
 
   width: 100%;
   height: 100%;
 
-  object-fit: contain;
-  object-position: center bottom;
+  object-fit: cover;
+  object-position: center top;
 
   border-radius: 14px 14px 0 0;
 }
@@ -806,15 +808,18 @@
 
           <div class="hero-logo">Sip Sober</div>
           
-          <div class="eyebrow">NYC ZERO-PROOF GUIDE</div>
+          <div class="eyebrow">
+            THE ZERO-PROOF MAP FOR NYC
+          </div>
           
           <h1 class="hero-title">
             Find where<br>
             to go. Know what to order.
           </h1>
-        
+          
           <p class="hero-subtitle">
-            Browse neighborhood guides, discover drink cards, and explore NYC's best zero-proof bars and restaurants—all in one app.
+            Discover NYC bars, restaurants, and drinks worth going out for.
+            All in one app.
           </p>
 
           <div class="hero-cta">
