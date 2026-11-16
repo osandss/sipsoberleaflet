@@ -297,90 +297,297 @@
     }
 
     /* ==========================================
-   PRODUCT SHOWCASE
+   PRODUCT SHOWCASE — THREE FEATURE CARDS
 ========================================== */
 
-  .showcase {
-    padding: 74px 0;
-  }
-  
-  .showcase + .showcase {
-    border-top: 1px solid rgba(255,255,255,0.055);
-  }
-  
-  .showcase-row {
-    display: grid;
-    grid-template-columns: 470px 300px;
-    justify-content: center;
-    align-items: center;
-    gap: 42px;
+.features-section {
+  padding: 100px 0 110px;
+  position: relative;
 }
-  
-  .showcase-row-reverse .showcase-copy {
-    order: 2;
+
+/* Section heading */
+
+.features-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 52px;
+}
+
+.features-header .section-kicker {
+  margin-bottom: 16px;
+}
+
+.features-heading {
+  font-family:
+    "Avenir Next Condensed",
+    "Avenir Next",
+    Avenir,
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "Helvetica Neue",
+    Arial,
+    "Lexend",
+    sans-serif;
+
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+
+  color: var(--ss-text-main);
+
+  margin-bottom: 16px;
+}
+
+.features-subtitle {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ss-text-soft);
+}
+
+
+/* ==========================================
+   THREE-COLUMN GRID
+========================================== */
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+
+/* ==========================================
+   FEATURE CARD
+========================================== */
+
+.feature-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  background: linear-gradient(
+    160deg,
+    #292E46 0%,
+    #252A40 55%,
+    #22263B 100%
+  );
+
+  border: 1px solid rgba(255,255,255,0.075);
+
+  border-radius: 24px;
+
+  overflow: hidden;
+
+  box-shadow: 0 18px 42px rgba(6,8,20,0.12);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+@media (hover: hover) {
+  .feature-card:hover {
+    transform: translateY(-5px);
+
+    border-color: rgba(167,186,255,0.20);
+
+    box-shadow: 0 24px 48px rgba(6,8,20,0.22);
   }
-  
-  .showcase-row-reverse .showcase-media {
-    order: 1;
+}
+
+
+/* ==========================================
+   CARD TEXT
+========================================== */
+
+.feature-card-copy {
+  padding: 30px 28px 0;
+}
+
+.feature-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+
+  color: rgba(167,186,255,0.82);
+
+  margin-bottom: 14px;
+}
+
+.feature-card-title {
+  font-family:
+    "Avenir Next Condensed",
+    "Avenir Next",
+    Avenir,
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "Helvetica Neue",
+    Arial,
+    "Lexend",
+    sans-serif;
+
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+
+  color: var(--ss-text-main);
+
+  margin-bottom: 14px;
+}
+
+.feature-card-description {
+  font-size: 14px;
+  line-height: 1.65;
+
+  color: var(--ss-text-soft);
+
+  max-width: 32ch;
+}
+
+
+/* ==========================================
+   CARD IMAGES — IDENTICAL SIZES
+========================================== */
+
+.showcase-media {
+  width: 100%;
+  height: 350px;
+
+  margin-top: auto;
+  padding: 28px 20px 0;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  overflow: hidden;
+
+  opacity: 0;
+  transform: translateY(18px);
+
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.showcase-media.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.showcase-photo {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+  object-position: center bottom;
+
+  border-radius: 14px 14px 0 0;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+
+  .features-section {
+    padding: 80px 0;
   }
-  
-  .showcase-copy {
-    max-width: 400px;
+
+  .features-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
   }
-  
-  .showcase-title {
-    font-family:
-      "Avenir Next Condensed",
-      "Avenir Next",
-      Avenir,
-      -apple-system,
-      BlinkMacSystemFont,
-      "SF Pro Display",
-      "Helvetica Neue",
-      Arial,
-      "Lexend",
-      sans-serif;
-  
-    font-size: clamp(34px, 4vw, 42px);
-    line-height: 1;
-    letter-spacing: -0.035em;
-    color: var(--ss-text-main);
-  
-    margin-bottom: 18px;
+
+  .feature-card:last-child {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: 440px;
+    justify-self: center;
   }
-  
-  .showcase-text {
-    max-width: 40ch;
-    font-size: 16px;
-    line-height: 1.65;
-    color: var(--ss-text-soft);
+
+  .showcase-media {
+    height: 330px;
   }
-  
-    .showcase-media{
-      width:100%;
-      max-width:300px;
-      justify-self:center;
-  
-      overflow:hidden;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.06);
-      box-shadow: 0 20px 44px rgba(6,7,18,0.28);
-  
-      opacity:0;
-      transform: scale(0.92) translateY(14px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+  .features-section {
+    padding: 70px 0 80px;
   }
-  
-    .showcase-media.in-view{
-      opacity:1;
-      transform:none;
+
+  .features-header {
+    margin-bottom: 34px;
   }
-  
-    .showcase-photo{
-      display:block;
-      width:100%;
-      height:auto;
+
+  .features-heading {
+    font-size: 36px;
   }
+
+  .features-subtitle {
+    font-size: 14px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .feature-card:last-child {
+    grid-column: auto;
+    max-width: none;
+  }
+
+  .feature-card {
+    border-radius: 22px;
+  }
+
+  .feature-card-copy {
+    padding: 28px 26px 0;
+  }
+
+  .feature-card-title {
+    font-size: 30px;
+  }
+
+  .feature-card-description {
+    font-size: 14px;
+  }
+
+  .showcase-media {
+    height: 350px;
+    padding: 24px 20px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-card,
+  .showcase-media {
+    transition: none !important;
+  }
+
+  .showcase-media {
+    opacity: 1;
+    transform: none;
+  }
+}
 
 
     /* ==========================================
@@ -493,34 +700,7 @@
     .hero-visual {
       min-height: 520px;
     }
-  
-    .showcase-row,
-    .showcase-row-reverse {
-      grid-template-columns: 1fr;
-      gap: 42px;
-    }
-  
-    .showcase-row-reverse .showcase-copy,
-    .showcase-row-reverse .showcase-media {
-      order: initial;
-    }
-  
-    .showcase-copy {
-      max-width: 620px;
-      margin: 0 auto;
-      text-align: center;
-    }
-  
-    .showcase-text {
-      margin-left: auto;
-      margin-right: auto;
-    }
-  
-    .showcase-media {
-      width: 100%;
-      max-width: clamp(280px, 45vw, 420px);
-      margin: 0 auto;
-    }
+
   }
 
    @media (max-width: 720px) {
@@ -585,28 +765,6 @@
 
   .hero-phones .phone-right {
     transform: translateX(-10px) rotateY(-12deg) rotateZ(1deg);
-  }
-
-  .showcase {
-    padding: 62px 0;
-  }
-
-  .showcase-row {
-    gap: 28px;
-  }
-
-  .showcase-title {
-    font-size: 34px;
-  }
-
-  .showcase-text {
-    font-size: 15px;
-    line-height: 1.65;
-  }
-
-  .showcase-media {
-    max-width: 280px;
-    border-radius: 16px;
   }
 
   .download-section {
@@ -685,92 +843,150 @@
 
     <main>
 
-  <!-- NEIGHBORHOOD GUIDES -->
-  <section class="showcase">
-    <div class="container showcase-row">
+  <!-- ==========================================
+     SIP SOBER — APP FEATURES
+========================================== -->
 
-      <div class="showcase-copy">
-        <div class="section-kicker">Neighborhood Guides</div>
+<section class="features-section">
 
-        <h2 class="showcase-title">
-          Find the right neighborhood for the night.
-        </h2>
+  <div class="container">
 
-        <p class="showcase-text">
-          Browse curated guides to zero-proof bars and restaurants across West Village, SoHo, Chelsea, FiDi, and more.
-        </p>
+    <!-- SECTION HEADING -->
+
+    <div class="features-header">
+
+      <div class="section-kicker">
+        THE APP
       </div>
 
-      <div class="showcase-media">
+      <h2 class="features-heading">
+        Explore NYC's zero-proof scene.
+      </h2>
 
-        <img
+      <p class="features-subtitle">
+        Three ways to find your next spot.
+      </p>
+
+    </div>
+
+
+    <!-- THREE FEATURE CARDS -->
+
+    <div class="features-grid">
+
+
+      <!-- CARD 1 — NEIGHBORHOOD GUIDES -->
+
+      <article class="feature-card">
+
+        <div class="feature-card-copy">
+
+          <div class="feature-card-label">
+            EXPLORE
+          </div>
+
+          <h3 class="feature-card-title">
+            Neighborhood Guides
+          </h3>
+
+          <p class="feature-card-description">
+            Find your next spot with curated guides
+            across NYC's neighborhoods.
+          </p>
+
+        </div>
+
+        <div class="showcase-media">
+
+          <img
             class="showcase-photo"
             src="showmap.png"
-            alt="Neighborhood Guides">
-    
-    </div>
+            alt="Sip Sober neighborhood guides"
+            loading="lazy"
+          >
 
-    </div>
-  </section>
+        </div>
+
+      </article>
 
 
-  <!-- DRINK CARDS -->
-  <section class="showcase">
-    <div class="container showcase-row showcase-row-reverse">
 
-      <div class="showcase-copy">
-        <div class="section-kicker">Drink Cards</div>
+      <!-- CARD 2 — DRINK CARDS -->
 
-        <h2 class="showcase-title">
-          Start with what you want to order.
-        </h2>
+      <article class="feature-card">
 
-        <p class="showcase-text">
-          Discover venues serving spritzes, margaritas, negronis, espresso martinis, mojitos, and more.
-        </p>
-      </div>
+        <div class="feature-card-copy">
 
-      <div class="showcase-media">
+          <div class="feature-card-label">
+            DISCOVER
+          </div>
 
-        <img
+          <h3 class="feature-card-title">
+            Drink Cards
+          </h3>
+
+          <p class="feature-card-description">
+            In the mood for a spritz, margarita,
+            or espresso martini? Start here.
+          </p>
+
+        </div>
+
+        <div class="showcase-media">
+
+          <img
             class="showcase-photo"
             src="showhome.png"
-            alt="Drink Cards">
-    
-    </div>
+            alt="Sip Sober drink discovery cards"
+            loading="lazy"
+          >
 
-    </div>
-  </section>
+        </div>
+
+      </article>
 
 
-  <!-- MAP AND FAVORITES -->
-  <section class="showcase">
-    <div class="container showcase-row">
 
-      <div class="showcase-copy">
-        <div class="section-kicker">Map + Favorites</div>
+      <!-- CARD 3 — MAP + FAVORITES -->
 
-        <h2 class="showcase-title">
-          Explore the city and save your go-tos.
-        </h2>
+      <article class="feature-card">
 
-        <p class="showcase-text">
-          Search the map, filter by neighborhood or brand, and keep your favorite places ready for the next night out.
-        </p>
-      </div>
+        <div class="feature-card-copy">
 
-      <div class="showcase-media">
+          <div class="feature-card-label">
+            SAVE
+          </div>
 
-        <img
+          <h3 class="feature-card-title">
+            Map + Favorites
+          </h3>
+
+          <p class="feature-card-description">
+            Explore the map, filter your search,
+            and save places for later.
+          </p>
+
+        </div>
+
+        <div class="showcase-media">
+
+          <img
             class="showcase-photo"
             src="showsave.png"
-            alt="Map and Favorites">
-    
+            alt="Sip Sober saved favorite places"
+            loading="lazy"
+          >
+
+        </div>
+
+      </article>
+
 
     </div>
 
-    </div>
-  </section>
+  </div>
+
+</section>
 
 
   <!-- DOWNLOAD -->
